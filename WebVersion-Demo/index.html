@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tool List Maker</title>
+<link rel="icon" href="icon.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="top">
+  <button class="brand" id="home"><i></i><h1>Tool List Maker<b>.</b></h1></button>
+  <nav class="mainnav"><button data-nav="#" id="nav-m"></button><button data-nav="#crib" id="nav-c"></button></nav>
+  <nav class="crumbs" id="crumbs"></nav>
+  <span class="sp"></span>
+  <span id="tbar"></span>
+  <div class="lang" role="group" aria-label="Language / Langue"><button data-lang="en">EN</button><button data-lang="fr">FR</button></div>
+  <button class="tb" id="b-logo"></button>
+  <button class="tb" id="b-backup"></button>
+  <button class="tb" id="b-restore"></button>
+  <input type="file" id="f-restore" accept=".json,application/json" hidden>
+  <input type="file" id="f-logo" accept="image/png,image/jpeg" hidden>
+</header>
+<div class="view" id="view"></div>
+<div class="overlay" id="ov" hidden></div>
+<div class="toast" id="toast" hidden></div>
+<datalist id="types"></datalist>
+<datalist id="holders"></datalist>
+<datalist id="codes"></datalist>
+<script src="lib/jspdf.umd.min.js"></script>
+<script src="lib/pdf.min.js"></script>
+<script src="lib/pdf.worker.min.js"></script>
+<script src="js/fonts.js"></script>
+<script src="js/sheet-pdf.js"></script>
+<script src="js/app.js"></script>
+</body></html>
