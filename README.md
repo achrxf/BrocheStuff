@@ -1,75 +1,58 @@
-# Tool Manager · Tool List Maker
+# ToolManager
 
-**Try it in your browser (nothing to install):**
-### 👉 https://achrxf.github.io/ToolManager/WebVersion-Demo/
+Tool lists, tool crib and holders for a CNC machining shop: every machine, its articles and their tools in one place, a clean A4 **Fiche outils** for each article, and the stock of every tool code and holder.
 
-**Windows program:** [Program/ToolListMaker-Windows.zip](Program/ToolListMaker-Windows.zip)
+| | Open | What it is |
+|---|---|---|
+| **Web** | [achrxf.github.io/ToolManager/Web](https://achrxf.github.io/ToolManager/Web/) | The program in the browser. Starts empty; your data stays in your browser. |
+| **Demo** | [achrxf.github.io/ToolManager/Demo](https://achrxf.github.io/ToolManager/Demo/) | The same program filled with a made-up workshop: 20 machines (3, 4 and 5 axes; BT30 / BT40 / BT50 / HSK63), 500 articles, ~500 tool codes, ~130 holders and a month of stock moves. |
+| **App** | [App/ToolManager-Windows.zip](https://github.com/achrxf/ToolManager/raw/main/App/ToolManager-Windows.zip) | The Windows program (10/11, 64-bit). Unzip, keep `ToolManager.exe` and `resources.neu` together, double-click. See [`App/LISEZ-MOI.txt`](App/LISEZ-MOI.txt). |
 
----
-
-Tool Manager keeps every CNC machine, its articles and their tools in one place, and prints a clean **tool list sheet** (A4 PDF) for each article. A **tool crib** keeps every tool code (F… / M…) with its details and stock.
-
-Built for a machining shop where articles had no tool lists: one place per machine, one sheet per article, and tool prep can see what is on the shelf.
-
-## What it does
-
-**Machines and articles**
-- One card per machine, with how many of its articles are done.
-- Each machine has its articles: number, index, designation, program, material.
-- Each article has its tools: tool number, type, Ø, R / ∠, LS (stick-out), Z, holder, code.
-- Paste the tool rows straight from Excel.
-- Status per article (Not started / In progress / Done) with a progress bar, and filters.
-- Search by article, program, or by tool code: `F241` lists every article that uses it and in which pocket.
-- Copy an article to make a new index or put it on another machine.
-
-**Tool list sheet**
-- A4 PDF with the article, the tool table and a sign-off block, ready to print.
-- Live preview while you type (can be switched off).
-- Your logo on every sheet.
-
-**Tool crib**
-- One card per tool code: type, Ø, R / ∠, Z, cut length, overall length, usual LS, grade/coating, brand & reference, supplier, location, notes.
-- Stock with − / +, minimum, count correction and a history of every movement.
-- Shows every article that uses the code.
-- Codes used in articles but missing from the crib can be added in one click.
-- **Tool prep** per article: what to take out, with stock and location, and "take from stock" in one click.
-- Order list (CSV) of the codes at or below their minimum.
-
-**Languages:** English and French (the sheet follows the language too).
-
-## Your data
-
-Everything stays on the computer that uses it.
-- **Web version:** saved in that browser. Use **Back up** to save it to a file, **Restore** to load it on another PC or browser.
-- **Windows program:** saved in `Documents\Tool List Maker`, with an automatic backup copy every day.
-
-Nothing is sent anywhere. People opening the demo link start with an empty program and never see anyone else's work.
+The web version and the demo also have a **Download the app** button at the top right.
 
 ## Folders
 
-| Folder | What's inside |
-|---|---|
-| `WebVersion-Demo/` | The web version. `index.html` plus its `css/`, `js/`, `lib/` and `fonts/`. Works on GitHub Pages, or by opening `index.html` from the folder. |
-| `Program/` | The Windows program, zipped. Unzip and run `Tool List Maker.exe` (Windows 10/11, 64-bit). |
+```
+Web/   index.html   the web version (one file, works offline once opened)
+Demo/  index.html   the web version with demo data (kept apart from your real data)
+App/   ToolManager-Windows.zip + LISEZ-MOI.txt
+```
 
-## Windows program
+## What it does
 
-1. Download [ToolListMaker-Windows.zip](Program/ToolListMaker-Windows.zip) and unzip it.
-2. Keep `Tool List Maker.exe` and `resources.neu` together, and double-click the exe.
-3. The first time, Windows may say "Windows protected your PC" (the program isn't signed): click **More info → Run anyway**.
+**Services.** On opening, each person picks a service: *Préparateur méthode* (machines, articles, tool sheets), *Préparateur outil* (tool crib, holders, stock log), *Production* (find a tool, a holder or an article, read the sheet, take or return a tool, leave a comment) or *Admin* (everything). Stock moves are logged with the person's name and time.
 
-To move your web data into the program: **Back up** in the web version, then **Restore** in the program.
+**Machines and articles.** Machine cards with spindle taper (BT40 / BT50 / …) and progress; articles with number, index, designation, reference, program, material; the tool list (T, type, Ø, R / ∠, LS, LT, Z, holder, code) with a drawing that explains each box, Excel paste, live PDF preview, **print** and **PDF**. A holder of the wrong taper for the machine is flagged.
+
+**Tool crib.** Every F / M code with its details, sketch or photo, stock with − / +, minimum, history, where it is used, order list (CSV). Coded references (`FR-2T-ALU-D16,00-CAR-R2,000-Z03-LU32-LT100`) fill the card by themselves.
+
+**Holders.** Every holder by taper (BT40 blue, BT50 amber), type, clamping, nose Ø, length, stock and where it is used. References like `PER-50-25-42-130` are read automatically.
+
+**Production.** One search box for codes, holders and articles; the location in big letters, the stock, the tool list and the sheet; comments saved in the stock log.
+
+**Excel models** (download, preview, print on A4) for machines, tool crib, holders, articles and a blank tool sheet to fill by hand. Imports read the columns by their titles (French or English) with a preview first. Every table can be resized like Excel (drag the column edge). French and English, light and dark mode.
+
+## Your data
+
+Nothing is sent anywhere.
+- **Web:** saved in the browser that uses it. **Sauvegarder / Back up** writes a file; **Restaurer / Restore** reads it on another PC.
+- **Windows program:** saved in `Documents\ToolManager` with a daily backup copy.
+- **Demo:** kept separately from the web version, with a **Reset the demo** button.
+
+Each PC keeps its own data: to share one database between several PCs, a shared folder or a small server is the next step.
 
 ## Built with
 
-[jsPDF](https://github.com/parallax/jsPDF) (PDF sheets) · [PDF.js](https://github.com/mozilla/pdf.js) (live preview) · [Neutralinojs](https://neutralino.js.org) (Windows program) · fonts: Barlow Semi Condensed and IBM Plex (SIL Open Font License).
+[SheetJS](https://sheetjs.com) · [jsPDF](https://github.com/parallax/jsPDF) · [PDF.js](https://github.com/mozilla/pdf.js) · [Neutralinojs](https://neutralino.js.org) · fonts Barlow Semi Condensed and IBM Plex (SIL Open Font License).
 
 ---
 
 ## En français
 
-**Essayer dans le navigateur :** https://achrxf.github.io/ToolManager/WebVersion-Demo/ · **Programme Windows :** [Program/ToolListMaker-Windows.zip](Program/ToolListMaker-Windows.zip)
+ToolManager regroupe les machines CNC, leurs articles et leurs outils, produit une **fiche outils** A4 pour chaque article, et suit le stock des codes outils et des porte-outils.
 
-Tool Manager regroupe les machines CNC, leurs articles et leurs outils, et produit une **fiche outils** A4 (PDF) pour chaque article. Le **magasin outils** garde chaque code outil (F… / M…) avec ses caractéristiques et son stock : entrées / sorties, minimum, historique, préparation des outils par article et liste de commande.
+- **Web** : https://achrxf.github.io/ToolManager/Web/ — le programme dans le navigateur, vide au départ.
+- **Démo** : https://achrxf.github.io/ToolManager/Demo/ — atelier fictif de 20 machines et 500 articles.
+- **Programme Windows** : [App/ToolManager-Windows.zip](https://github.com/achrxf/ToolManager/raw/main/App/ToolManager-Windows.zip) — décompressez, gardez `ToolManager.exe` et `resources.neu` ensemble, double-cliquez (voir `LISEZ-MOI.txt`).
 
-Les données restent sur l'ordinateur qui les utilise (navigateur, ou `Documents\Tool List Maker` pour le programme). Utilisez **Sauvegarder** / **Restaurer** pour les déplacer. Choisissez EN / FR en haut de l'écran.
+Au démarrage, choisissez votre service : Préparateur méthode, Préparateur outil, Production, ou Accès admin. Les données restent sur l'ordinateur qui les utilise (navigateur, ou `Documents\ToolManager` pour le programme). **Sauvegarder / Restaurer** pour les déplacer.
