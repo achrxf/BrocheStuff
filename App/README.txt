@@ -1,0 +1,58 @@
+ToolManager 2.0 — Windows program
+
+INSTALL
+1. Unzip the "ToolManager" folder anywhere (Desktop, Documents, USB stick…).
+2. Keep ToolManager.exe and resources.neu together in the same folder.
+3. Double-click ToolManager.exe.
+   The first time, Windows may say "Windows protected your PC" (the program is
+   not signed): click "More info" then "Run anyway".
+
+Windows 10 or 11 (64-bit). Nothing else to install.
+
+YOUR DATA
+- Everything is saved automatically in  Documents\ToolManager  (data.json),
+  with a backup copy every day (Backups folder).
+- PDF sheets go to  Documents\ToolManager\Sheets.
+- Nothing is sent over the internet.
+- To bring data over from the web version: "Back up" in the browser, then
+  "Restore" in the program (Admin access → Restore).
+
+START
+- When it opens, choose your service: Methods planner, Tool planner, Production,
+  or "Admin access" (bottom right) to see everything.
+- The Excel models (machines, tool crib, holders, articles, tool sheet) can be
+  downloaded and printed from the start screen.
+- The first time, the program asks for your language (English or French) and
+  remembers it.
+
+-----------------------------------------------------------------------------
+FRANÇAIS
+
+ToolManager 2.0 — programme Windows
+====================================
+
+INSTALLER
+1. Décompressez le dossier "ToolManager" où vous voulez (Bureau, Documents, clé USB…).
+2. Gardez ToolManager.exe et resources.neu ensemble dans le même dossier.
+3. Double-cliquez sur ToolManager.exe.
+   La première fois, Windows peut afficher « Windows a protégé votre ordinateur »
+   (le programme n'est pas signé) : cliquez sur « Informations complémentaires »
+   puis « Exécuter quand même ».
+
+Il faut Windows 10 ou 11 (64 bits). Rien d'autre à installer.
+
+VOS DONNÉES
+- Tout est enregistré automatiquement dans  Documents\ToolManager  (data.json),
+  avec une copie de sauvegarde chaque jour (dossier Backups).
+- Les fiches PDF vont dans  Documents\ToolManager\Sheets.
+- Rien n'est envoyé sur Internet.
+- Pour reprendre les données de la version web : « Sauvegarder » dans le navigateur,
+  puis « Restaurer » dans le programme (bouton Admin → Restaurer).
+
+DÉMARRER
+- Au lancement, choisissez votre service : Préparateur méthode, Préparateur outil,
+  Production, ou « Accès admin » (en bas à droite) pour tout voir.
+- Les modèles Excel (machines, magasin outils, porte-outils, articles, fiche outils)
+  se téléchargent et s'impriment depuis l'écran de démarrage.
+- La première fois, le programme demande votre langue (français ou anglais) et
+  la garde en mémoire.
