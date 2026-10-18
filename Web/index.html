@@ -1241,6 +1241,30 @@ dl.kv dt{color:var(--mid)}dl.kv dd{margin:0;word-break:break-all}
 .logfull{white-space:pre-wrap;word-break:break-word;padding:14px 16px;border:1px solid var(--hair);border-radius:10px;background:var(--fill);font-size:15px;line-height:1.5;max-height:45vh;overflow:auto}
 .logdl{grid-template-columns:repeat(2,minmax(0,1fr))}
 .take-none{display:inline-block;width:72px}
+/* ===== demo tutorial ===== */
+.guidefoot{display:flex;justify-content:center;padding:8px 16px 40px}
+.guidebtn{display:flex;align-items:center;gap:14px;padding:14px 22px;border:1px solid var(--hair);border-radius:14px;background:var(--paper);color:var(--ink);cursor:pointer;font:inherit;text-align:left;box-shadow:var(--sh1)}
+.guidebtn:hover{border-color:var(--red);box-shadow:var(--sh2)}
+.guidebtn svg{width:28px;height:28px;color:var(--red-tx);flex:0 0 auto}
+.guidebtn span{display:flex;flex-direction:column;gap:2px}
+.guidebtn b{font-size:15px}.guidebtn i{font-style:normal;font-size:13px;color:var(--mid)}
+body.gating .guidefoot{position:fixed;left:0;right:0;bottom:0;padding:12px;pointer-events:none}
+body.gating .guidebtn{pointer-events:auto}
+.guidep .ph .lang.gl{display:inline-flex}
+.guidewrap{display:grid;grid-template-columns:240px minmax(0,1fr);gap:32px;align-items:start}
+.guidetoc{position:sticky;top:16px;display:flex;flex-direction:column;gap:2px;padding:16px;border:1px solid var(--hair);border-radius:14px;background:var(--paper)}
+.guidetoc b{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--mid);margin-bottom:6px}
+.guidetoc a{display:flex;gap:10px;align-items:baseline;padding:6px 8px;border-radius:8px;color:var(--ink);text-decoration:none;font-size:14px}
+.guidetoc a:hover{background:var(--fill)}
+.guidetoc a span{font:600 12px var(--mono);color:var(--red-tx);min-width:18px}
+.guidebody{display:flex;flex-direction:column;gap:22px}
+.gsec{background:var(--paper);border:1px solid var(--hair);border-radius:16px;padding:26px 28px;box-shadow:var(--sh1);scroll-margin-top:16px}
+.gsec h3{display:flex;align-items:center;gap:12px;margin:0 0 12px;font-family:var(--display);font-size:26px}
+.gsec h3 span{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:var(--red);color:#fff;font:700 15px var(--mono)}
+.gsec ol{margin:0 0 16px;padding-left:22px;display:flex;flex-direction:column;gap:6px;font-size:15px;line-height:1.5}
+.gsec img{display:block;width:100%;height:auto;border:1px solid var(--hair);border-radius:10px}
+@media (max-width:900px){.guidewrap{grid-template-columns:1fr}.guidetoc{position:static;flex-direction:row;flex-wrap:wrap}.guidetoc b{width:100%}}
+@media (max-width:760px){.gsec{padding:18px 16px}.gsec h3{font-size:21px}.guidep .ph .btn{width:100%;justify-content:center}}
 </style></head>
 <body>
 <header class="top">
@@ -2362,7 +2386,8 @@ function chooseLanguage(){
 function render(){
   if(edTimer){clearTimeout(edTimer);edTimer=null;flushEditor()}
   document.body.classList.remove("menu-open");
-  if(!ROLE){route={view:"gate"};pvTeardown();if(DESK&&!DEMO_ON)renderLogin();else renderGate();return}
+  if(location.hash==="#guide"&&GUIDE_ON()){route={view:"guide"};pvTeardown();document.querySelectorAll("[data-nav]").forEach(b=>b.setAttribute("aria-current","false"));renderGuide();if(render.lastHash!=="#guide"){render.lastHash="#guide";$("#view").scrollTop=0}return}
+  if(!ROLE){route={view:"gate"};pvTeardown();if(DESK&&!DEMO_ON)renderLogin();else renderGate();guideFooter();return}
   route=parseRoute();
   // a service that can't edit sees the read-only version of the same page
   if(route.view==="article"&&!can("article"))route={view:"aview",id:route.id};
@@ -2396,6 +2421,7 @@ function render(){
   cr.querySelectorAll("[data-go]").forEach(a=>a.onclick=()=>go(a.dataset.go));
   // a new page starts at the top; the same page redrawn keeps its place
   if(render.lastHash!==location.hash){render.lastHash=location.hash;const v=$("#view");if(v)v.scrollTop=0}
+  guideFooter();
 }
 
 /* ---------- progress & status ---------- */
@@ -4841,6 +4867,72 @@ function deskDemoBar(){$("#demobar")?.remove();const bar=document.createElement(
   document.querySelector(".top").after(bar);
   bar.querySelector("#b-demoreset").onclick=async()=>{if(!confirm(t("demoResetQ")))return;seedDemo(DESKDEMO);desk.pending=true;await desk.flush();ROLE=null;ACC=null;roleChrome();location.hash="";render()};
   bar.querySelector("#b-demoquit").onclick=stopDeskDemo;
+}
+
+/* =====================================================================
+   Tutorial (demo only): a footer link on every page, and a #guide page
+   in French and English with screenshots of the demo
+   ===================================================================== */
+const GUIDEIMG=/*GUIDEIMG*/null;
+const GUIDE_ON=()=>!!(DEMODATA||(typeof DEMO_ON!=="undefined"&&DEMO_ON));
+const GUIDE={
+ fr:{title:"Tutoriel", sub:"Le programme pas à pas, avec l’atelier fictif de la démo.", back:"Retour au programme", foot:"Tutoriel du programme", footP:"Comment utiliser BrocheStuff, pas à pas.", toc:"Sommaire",
+  s:[
+   ["start","Démarrer",["Choisissez votre service : Préparateur méthode, Préparateur outil ou Production. « Accès admin » (en bas) donne accès à tout.","Dans le programme Windows installé, chacun se connecte avec son nom (ou son code) et son mot de passe ; l’admin crée les comptes.","La langue (FR / EN) et le mode sombre se changent en haut à droite."]],
+   ["machines","Machines",["La page Machines montre chaque machine avec son cône (BT40, BT50…) et l’avancement de ses fiches.","Cliquez sur une machine pour voir ses articles ; « + Ajouter une machine » ou « Importer » pour en créer.","La barre de recherche trouve un article, une référence ou un code outil dans toutes les machines."]],
+   ["machine","Articles d’une machine",["Chaque ligne est un article : indice, référence, nombre d’outils et état (non commencé, en cours, terminé).","« + Nouvel article » crée une fiche ; « Programmes CN » crée un article par programme, avec sa liste d’outils.","Les boutons PDF et Copier sont au bout de chaque ligne ; « Modèle Excel » donne le modèle à remplir."]],
+   ["editor","Faire une fiche outils",["Remplissez l’article (numéro, désignation, référence, programme), puis une ligne par outil.","Tapez le code outil : type, Ø, rayon et longueurs se remplissent depuis le magasin outils.","« Lire un programme » importe les outils d’un programme CN ou d’une liste Mastercam ; l’aperçu A4 se met à jour à droite.","Imprimer ou PDF en haut à droite."]],
+   ["validated","Valider et changer d’indice",["« Valider la fiche » la verrouille : plus rien ne peut être changé, et le PDF porte VALIDÉE, la date et le nom.","Pour la modifier : « Nouvel indice » (A → B…). L’ancien indice reste dans l’historique, avec son PDF.","Seul l’admin peut taper un indice ; un indice déjà utilisé est refusé."]],
+   ["crib","Magasin outils",["Chaque code outil avec ses caractéristiques, son emplacement et son stock.","Les filtres montrent le stock bas et les ruptures ; « Liste de commande (CSV) » sort ce qu’il faut commander.","À sa connexion, le préparateur outil voit tout de suite une alerte de stock bas."]],
+   ["code","Fiche d’un outil",["Croquis ou photo de l’outil, caractéristiques, et où il est utilisé.","Les boutons − et + changent le stock ; « Corriger le stock » après un comptage. Chaque mouvement est noté avec le nom.","Les commentaires de la production apparaissent sur la fiche."]],
+   ["holders","Porte-outils",["Chaque porte-outil par cône (BT30, BT40, BT50, HSK63), avec son serrage, sa longueur et son stock.","Un porte-outil du mauvais cône pour la machine est signalé dans la fiche outils."]],
+   ["prod","Production",["Une seule recherche pour un outil, un porte-outil ou un article : l’emplacement s’affiche en grand.","« Sortir 1 » enlève un outil du stock, après confirmation et avec l’article concerné. Une erreur ? « Annuler » dans le message.","La production ne rajoute pas d’outils : pour rendre un outil, voir le préparateur outil. « Ajouter un commentaire » pour signaler un problème."]],
+   ["take","Sortir un outil",["La fenêtre rappelle le code, l’emplacement et le stock avant et après.","Indiquez pour quel article (facultatif), puis « Sortir 1 outil ». Un seul outil à la fois.","En rupture, la sortie est impossible : prévenez le préparateur outil."]],
+   ["mag","Magasins des machines",["Ce qui est chargé dans chaque machine, poche par poche, avec qui l’a changé.","« Comparer avec un article » montre les outils à charger ou à échanger, et charge tout en un clic."]],
+   ["log","Journal",["Chaque sortie, entrée et comptage : qui, quand, combien et pourquoi.","Cliquez sur une ligne pour lire un commentaire en entier ou ouvrir la fiche de l’outil.","« Exporter (CSV) » pour Excel."]],
+   ["reports","Rapports",["Outils sortis par mois, les plus sortis, par machine et par personne.","Codes jamais utilisés et outils sans mouvement depuis 90 jours. Export CSV."]],
+   ["templates","Modèles Excel et import",["Chaque page a son « Modèle Excel » : le télécharger, l’imprimer ou le remplir.","« Importer » lit un fichier Excel ou CSV ; les colonnes sont reconnues par leur titre, avec un aperçu avant d’importer."]],
+   ["backup","Sauvegardes",["Une copie de tout est gardée toutes les 5 minutes quand quelque chose change.","« Sauvegarder » écrit un fichier ; « Restaurer » reprend un fichier ou une copie automatique."]]
+  ]},
+ en:{title:"Tutorial", sub:"The program step by step, with the demo’s made-up workshop.", back:"Back to the program", foot:"Program tutorial", footP:"How to use BrocheStuff, step by step.", toc:"Contents",
+  s:[
+   ["start","Getting started",["Pick your service: Methods planner, Tool planner or Production. “Admin access” (bottom) opens everything.","In the installed Windows program, everyone signs in with their name (or code) and password; the admin creates the accounts.","Language (EN / FR) and dark mode are at the top right."]],
+   ["machines","Machines",["The Machines page shows each machine with its spindle taper (BT40, BT50…) and how far its sheets are.","Click a machine to see its articles; “+ Add machine” or “Import” to create them.","The search bar finds an article, a reference or a tool code across all machines."]],
+   ["machine","A machine’s articles",["Each row is an article: index, reference, number of tools and status (not started, in progress, done).","“+ New article” makes a sheet; “CNC programs” makes one article per program, with its tool list.","PDF and Copy are at the end of each row; “Excel model” gives the model to fill in."]],
+   ["editor","Making a tool sheet",["Fill in the article (number, designation, reference, program), then one row per tool.","Type the tool code: type, Ø, radius and lengths fill in from the tool crib.","“Read a program” imports the tools of a CNC program or a Mastercam list; the A4 preview updates on the right.","Print or PDF at the top right."]],
+   ["validated","Validating and new index",["“Validate the sheet” locks it: nothing can be changed, and the PDF shows VALIDATED, the date and the name.","To change it: “New index” (A → B…). The old index stays in the history, with its PDF.","Only the admin can type an index; an index already used is refused."]],
+   ["crib","Tool crib",["Every tool code with its details, location and stock.","Filters show low stock and out of stock; “Order list (CSV)” lists what to order.","When the tool planner signs in, a low-stock alert comes up right away."]],
+   ["code","A tool’s card",["Sketch or photo of the tool, its details, and where it is used.","− and + change the stock; “Correct the count” after counting. Every move is logged with the name.","Comments from production show on the card."]],
+   ["holders","Holders",["Every holder by taper (BT30, BT40, BT50, HSK63), with clamping, length and stock.","A holder of the wrong taper for the machine is flagged in the tool sheet."]],
+   ["prod","Production",["One search for a tool, a holder or an article: the location shows in big letters.","“Take 1” removes one tool from stock, after a confirmation and with the article. A mistake? “Undo” in the message.","Production doesn’t add tools: to give one back, see the tool planner. “Add a comment” to report a problem."]],
+   ["take","Taking a tool",["The window shows the code, the location and the stock before and after.","Say which article it is for (optional), then “Take 1 tool”. One tool at a time.","When out of stock, it can’t be taken: tell the tool planner."]],
+   ["mag","Machine magazines",["What is loaded in each machine, pocket by pocket, and who changed it.","“Compare with an article” shows the tools to load or swap, and loads them in one click."]],
+   ["log","Stock log",["Every move out, in and count: who, when, how many and why.","Click a line to read a comment in full or open the tool’s card.","“Export (CSV)” for Excel."]],
+   ["reports","Reports",["Tools taken per month, most taken, per machine and per person.","Codes never used and tools without a move for 90 days. CSV export."]],
+   ["templates","Excel models and import",["Each page has its “Excel model”: download it, print it or fill it in.","“Import” reads an Excel or CSV file; columns are found by their titles, with a preview before importing."]],
+   ["backup","Backups",["A copy of everything is kept every 5 minutes when something changes.","“Back up” writes a file; “Restore” takes back a file or an automatic copy."]]
+  ]}};
+function guideFooter(){
+  if(!GUIDE_ON()||route.view==="guide")return;const v=$("#view");if(!v||v.querySelector(".guidefoot"))return;const G=GUIDE[LANG]||GUIDE.fr;
+  const f=document.createElement("div");f.className="guidefoot";
+  f.innerHTML=`<button class="guidebtn" data-guide="1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5M8 7h7M8 11h7"/></svg><span><b>${esc(G.foot)}</b><i>${esc(G.footP)}</i></span></button>`;
+  v.appendChild(f);f.querySelector("[data-guide]").onclick=()=>{guideFooter.back=location.hash==="#guide"?"#":location.hash;go("#guide")};
+}
+const nbspFr=x=>String(x).replace(/« /g,"«\u00a0").replace(/ (»|:|;|\?|!)/g,"\u00a0$1");
+function renderGuide(){
+  const G0=GUIDE[LANG]||GUIDE.fr,L=LANG==="en"?"en":"fr",G=L==="fr"?JSON.parse(JSON.stringify(G0),(k,v)=>typeof v==="string"?nbspFr(v):v):G0,img=id=>GUIDEIMG&&(GUIDEIMG[L+"_"+id]||GUIDEIMG["fr_"+id]);
+  document.body.classList.remove("gating");
+  $("#crumbs").innerHTML="";$("#tbar").innerHTML="";
+  $("#view").innerHTML=`<div class="page guidep">
+    <div class="ph"><div><h2>${esc(G.title)}<b>.</b></h2><div class="sub">${esc(G.sub)}</div></div><span class="sp"></span>
+      <div class="lang gl">${["fr","en"].map(l=>`<button data-glang="${l}" aria-pressed="${L===l}">${l.toUpperCase()}</button>`).join("")}</div>
+      <button class="btn red" id="g-back">${esc(G.back)}</button></div>
+    <div class="guidewrap"><nav class="guidetoc"><b>${esc(G.toc)}</b>${G.s.map(([id,h],i)=>`<a href="#guide" data-gto="${id}"><span>${i+1}</span>${esc(h)}</a>`).join("")}</nav>
+    <div class="guidebody">${G.s.map(([id,h,steps],i)=>`<section class="gsec" id="g-${id}"><h3><span>${i+1}</span>${esc(h)}</h3>
+      <ol>${steps.map(x=>`<li>${esc(x)}</li>`).join("")}</ol>${img(id)?`<img src="${img(id)}" alt="${esc(h)}" loading="lazy">`:""}</section>`).join("")}</div></div></div>`;
+  $("#g-back").onclick=()=>go(guideFooter.back&&guideFooter.back!=="#guide"?guideFooter.back:(ROLE?ROLES[ROLE].home:"#"));
+  $("#view").querySelectorAll("[data-gto]").forEach(a=>a.onclick=e=>{e.preventDefault();const s=document.getElementById("g-"+a.dataset.gto);if(s)s.scrollIntoView({behavior:"smooth",block:"start"})});
+  $("#view").querySelectorAll("[data-glang]").forEach(b=>b.onclick=()=>{setLang(b.dataset.glang)});
 }
 
 /* ---------- top bar ---------- */
