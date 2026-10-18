@@ -1182,11 +1182,44 @@ input.ro,input[readonly].ro{background:var(--fill);cursor:not-allowed}
   table.cmpt td:nth-child(5)::before{content:"Poche ";color:var(--mid)}
   html[lang="en"] table.cmpt td:nth-child(5)::before{content:"Pocket "}
 }
+
+/* ===== v2.2 Windows program: sign-in, admin page ===== */
+.loginbox{width:min(460px,100%);padding:40px 38px 34px}
+.loginbox h2{margin:0}
+.loginbox .sub{color:var(--mid);margin:6px 0 20px}
+.lgform{display:flex;flex-direction:column;gap:14px}
+.lgform input{font-size:16px;padding:11px 12px}
+.lgform .btn{height:46px;font-size:15px;justify-content:center;margin-top:4px}
+.loginbox .gtpl{margin-top:26px}
+.loginbox .gact{display:flex;gap:10px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
+.adminp .admwarn{margin:0 0 14px;padding:10px 14px;border:1px solid var(--red);border-radius:8px;background:var(--paper)}
+.adminp .card{margin-bottom:14px}
+.admgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
+.admgrid .card{margin:0;display:flex;flex-direction:column;gap:10px;min-width:0}
+.admact{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:4px}
+.dirpath{margin:0;font-size:13.5px;word-break:break-all;padding:9px 11px;background:var(--fill);border:1px solid var(--hair);border-radius:8px}
+.acct tr.off td{opacity:.55}
+.rtag{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:600;background:var(--fill);border:1px solid var(--hair);white-space:nowrap}
+.rtag.r-admin{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.rtag.r-outil{border-color:#c98a0b}.rtag.r-methode{border-color:var(--done)}.rtag.r-prod{border-color:var(--red)}
+.chk{display:flex;align-items:center;gap:8px;font-weight:600;font-size:13.5px}
+.loglist li{grid-template-columns:minmax(80px,auto) 1fr auto}
+.loglist li.lg-bad b,.loglist li.lg-off b{color:var(--red-tx)}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0;font-size:13.5px}
+dl.kv dt{color:var(--mid)}dl.kv dd{margin:0;word-break:break-all}
+.demobar #b-demoquit{margin-left:6px}
+#nav-x{white-space:nowrap}
+@media (max-width:760px){.loginbox{padding:28px 20px}.admgrid{grid-template-columns:1fr}
+  table.acct thead{display:none}table.acct,table.acct tbody{display:block}
+  table.acct tr{display:grid;grid-template-columns:1fr auto;gap:4px 10px;padding:10px 12px;border-bottom:1px solid var(--hair)}
+  table.acct td{display:block;padding:0!important;border:none!important}
+  table.acct td:nth-child(6){grid-column:1/-1}}
+.dirpath .dim{font-family:var(--body);white-space:nowrap}
 </style></head>
 <body>
 <header class="top">
   <button class="brand" id="home"><i></i><h1>BrocheStuff<b>.</b></h1></button>
-  <nav class="mainnav"><button data-nav="#" id="nav-m"></button><button data-nav="#crib" id="nav-c"></button><button data-nav="#holders" id="nav-h"></button><button data-nav="#prod" id="nav-p"></button><button data-nav="#log" id="nav-l"></button><button data-nav="#mags" id="nav-g"></button><button data-nav="#reports" id="nav-r"></button></nav>
+  <nav class="mainnav"><button data-nav="#" id="nav-m"></button><button data-nav="#crib" id="nav-c"></button><button data-nav="#holders" id="nav-h"></button><button data-nav="#prod" id="nav-p"></button><button data-nav="#log" id="nav-l"></button><button data-nav="#mags" id="nav-g"></button><button data-nav="#reports" id="nav-r"></button><button data-nav="#admin" id="nav-x" hidden></button></nav>
   <nav class="crumbs" id="crumbs"></nav>
   <span class="sp"></span>
   <span id="tbar"></span>
@@ -2103,28 +2136,45 @@ function makePDF(data){
 
 /* ---------- desktop program layer (Neutralino) ---------- */
 const DESK=typeof window.NL_PORT!=="undefined"&&typeof window.Neutralino!=="undefined";
-let DIR="",SEP="\\";
+let DIR="",SEP="\\",LOCAL="";
 const stampOf=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
 const desk={
   t:null,pending:false,
   async init(){
     Neutralino.init();
     Neutralino.events.on("windowClose",async()=>{try{if(edTimer){clearTimeout(edTimer);edTimer=null}desk.pending=true;await desk.flush()}finally{Neutralino.app.exit()}});
-    const docs=await Neutralino.os.getPath("documents");SEP=docs.includes("\\")?"\\":"/";const base=docs.replace(/[\\/]+$/,"");DIR=base+SEP+"BrocheStuff";desk.OLDS=[base+SEP+"ToolManager",base+SEP+"Tool List Maker"];
-    for(const d of [DIR,DIR+SEP+"Backups",DIR+SEP+"Sheets"]){try{await Neutralino.filesystem.createDirectory(d)}catch(e){}}
+    const docs=await Neutralino.os.getPath("documents");SEP=docs.includes("\\")?"\\":"/";const base=docs.replace(/[\\/]+$/,"");LOCAL=base+SEP+"BrocheStuff";DIR=LOCAL;desk.OLDS=[base+SEP+"ToolManager",base+SEP+"Tool List Maker"];
+    for(const d of [LOCAL,LOCAL+SEP+"Sheets"]){try{await Neutralino.filesystem.createDirectory(d)}catch(e){}}
+    try{PCNAME=(await Neutralino.os.getEnv("COMPUTERNAME"))||(await Neutralino.os.getEnv("HOSTNAME"))||""}catch(e){}
+    // the data folder can be a shared network folder, chosen by the admin (saved for this PC only)
+    const st=await deskSettings();if(st.dataDir)DIR=String(st.dataDir).replace(/[\\/]+$/,"");
+    for(const d of [DIR,DIR+SEP+"Backups"]){try{await Neutralino.filesystem.createDirectory(d)}catch(e){}}
+    try{await Neutralino.filesystem.readDirectory(DIR)}catch(e){desk.unreachable=true}
   },
   async read(f){return JSON.parse(await Neutralino.filesystem.readFile(DIR+SEP+f))},
   async load(){try{return await desk.read("data.json")}catch(e){try{return await desk.read("data.previous.json")}catch(e2){
     for(const o of desk.OLDS){try{return JSON.parse(await Neutralino.filesystem.readFile(o+SEP+"data.json"))}catch(e3){}}return null}}},
   save(){desk.pending=true;clearTimeout(desk.t);desk.t=setTimeout(desk.flush,300)},
   async flush(){
-    if(!desk.pending)return;desk.pending=false;clearTimeout(desk.t);
+    if(!desk.pending)return;
+    if(desk.busy){clearTimeout(desk.t);desk.t=setTimeout(desk.flush,200);return}
+    desk.pending=false;clearTimeout(desk.t);desk.busy=true;
     const p=DIR+SEP+"data.json",prev=DIR+SEP+"data.previous.json";
+    let locked=false;
     try{
+      if(!DEMO_ON){locked=await deskLock();if(!locked)desk.nolock=(desk.nolock||0)+1}
+      // another PC saved since we last read the file: merge its changes with ours first
+      if(!DEMO_ON&&desk.stamp){let st=null;try{st=await deskStat()}catch(e){}
+        if(st&&st!==desk.stamp){try{const th=JSON.parse(await Neutralino.filesystem.readFile(p));if(th&&Array.isArray(th.machines)){deskAdopt(th);desk.adopts=(desk.adopts||0)+1}}catch(e){desk.readFail=(desk.readFail||0)+1}}}
       try{await Neutralino.filesystem.remove(prev)}catch(e){}
       try{await Neutralino.filesystem.copy(p,prev)}catch(e){}
-      await Neutralino.filesystem.writeFile(p,JSON.stringify({...db,logo,lang:LANG}));
-    }catch(e){toast(t("deskFail")+(e.message||e.code||e))}
+      // what is written is exactly what becomes the new base (changes made while saving go out with the next save)
+      const snap=JSON.stringify(db);await Neutralino.filesystem.writeFile(p,snap.slice(0,-1)+(snap.length>2?",":"")+JSON.stringify({logo,lang:LANG}).slice(1));
+      const rev=DEVID+"-"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+      if(!DEMO_ON){try{await Neutralino.filesystem.writeFile(DIR+SEP+"data.rev",rev)}catch(e){}}
+      desk.base=snap;desk.logoDirty=false;desk.stamp=DEMO_ON?null:rev;desk.gen=(desk.gen||0)+1;
+    }catch(e){desk.pending=true;toast(t("deskFail")+(e.message||e.code||e))}
+    finally{if(locked)await deskUnlock();desk.busy=false}
   },
   async dailyBackup(){
     const d=new Date(),dir=DIR+SEP+"Backups",f=dir+SEP+`backup-${stampOf(d)}.json`;
@@ -2138,7 +2188,7 @@ const desk={
     }catch(e){}
   },
   async saveAs(name,blob,kind){
-    const pdf=kind==="pdf",csv=kind==="csv",def=DIR+SEP+(pdf?"Sheets"+SEP:csv?"":"Backups"+SEP)+name;
+    const pdf=kind==="pdf",csv=kind==="csv",def=pdf?LOCAL+SEP+"Sheets"+SEP+name:csv?LOCAL+SEP+name:DIR+SEP+"Backups"+SEP+name;
     let path=await Neutralino.os.showSaveDialog(pdf?t("saveSheetT"):csv?t("orderList"):t("saveBackupT"),{defaultPath:def,filters:[pdf?{name:t("pdfFile"),extensions:["pdf"]}:csv?{name:"CSV",extensions:["csv"]}:{name:t("backupFile"),extensions:["json"]}]});
     if(!path)return null;
     if(!new RegExp("\\."+kind+"$","i").test(path))path+="."+kind;
@@ -2151,7 +2201,7 @@ const desk={
 let db={machines:[],articles:[],lastBackup:0}, logo=null, canStore=true;
 async function loadDB(){
   if(DESK){const d=await desk.load();
-    if(d&&Array.isArray(d.machines)){const {logo:lg,lang,...rest}=d;db={lastBackup:0,...rest};logo=lg||null;if(!LANG&&lang)LANG=lang}
+    if(d&&Array.isArray(d.machines)){const {logo:lg,lang,savedAt,...rest}=d;db={lastBackup:0,...rest};logo=lg||null;if(!LANG&&lang)LANG=lang;ensureDB();desk.base=JSON.stringify(db);try{desk.stamp=await deskStat()}catch(e){desk.stamp=null}}
     else{try{const d2=JSON.parse(lsGet(DBKEY)||"null");if(d2&&Array.isArray(d2.machines))db={lastBackup:0,...d2}}catch(e){}}
     db.migrated=true;saveDB();await desk.dailyBackup();return}
   try{const raw=STORE==="idb"?await IDB.get("kv","db").catch(()=>null):lsGet(DBKEY);const d=JSON.parse(raw||"null");if(d&&Array.isArray(d.machines))db={lastBackup:0,...d}}catch(e){}
@@ -2218,6 +2268,7 @@ function parseRoute(){const h=location.hash.slice(1);
   if(h==="crib")return{view:"crib"};
   if(h==="prod")return{view:"prod"};
   if(h==="log")return{view:"log"};
+  if(h==="admin"&&DESK)return{view:"admin"};
   if(h==="mags")return{view:"mags"};
   if(h==="reports")return{view:"reports"};
   if(h.startsWith("mag-")&&M(h.slice(4)))return{view:"mag",id:h.slice(4)};
@@ -2285,7 +2336,7 @@ function chooseLanguage(){
 function render(){
   if(edTimer){clearTimeout(edTimer);edTimer=null;flushEditor()}
   document.body.classList.remove("menu-open");
-  if(!ROLE){route={view:"gate"};pvTeardown();renderGate();return}
+  if(!ROLE){route={view:"gate"};pvTeardown();if(DESK&&!DEMO_ON)renderLogin();else renderGate();return}
   route=parseRoute();
   // a service that can't edit sees the read-only version of the same page
   if(route.view==="article"&&!can("article"))route={view:"aview",id:route.id};
@@ -2294,7 +2345,7 @@ function render(){
   if(!can(route.view)){const hm=ROLES[ROLE].home;if((location.hash||"#")!==hm){location.replace(hm);return}}
   const cr=$("#crumbs"), tb=$("#tbar");tb.innerHTML="";
   if(route.view!=="article")pvTeardown();
-  const sec={crib:"#crib",code:"#crib",holders:"#holders",holder:"#holders",prod:"#prod",pcode:"#prod",pholder:"#prod",aview:ROLE==="outil"?"":"#prod",log:"#log",mags:"#mags",mag:"#mags",reports:"#reports"}[route.view]??"#";
+  const sec={crib:"#crib",code:"#crib",holders:"#holders",holder:"#holders",prod:"#prod",pcode:"#prod",pholder:"#prod",aview:ROLE==="outil"?"":"#prod",log:"#log",mags:"#mags",mag:"#mags",reports:"#reports",admin:"#admin"}[route.view]??"#";
   const pcr=can("prod")?`<i>/</i><a data-go="#prod">${esc(t("prodT"))}</a>`:"";
   document.querySelectorAll("[data-nav]").forEach(b=>b.setAttribute("aria-current",String(b.dataset.nav===sec)));
   if(route.view==="home"){cr.innerHTML="";renderHome()}
@@ -2302,6 +2353,7 @@ function render(){
   else if(route.view==="log"){cr.innerHTML="";renderLog()}
   else if(route.view==="mags"){cr.innerHTML="";renderMags()}
   else if(route.view==="reports"){cr.innerHTML="";renderReports()}
+  else if(route.view==="admin"){cr.innerHTML="";renderAdminPage()}
   else if(route.view==="mag"){const m=M(route.id);cr.innerHTML=`<i>/</i><a data-go="#mags">${esc(t("navMags"))}</a><i>/</i><span>${esc(mShort(m))}</span>`;renderMag(m)}
   else if(route.view==="pcode"){const c=C_(route.code);cr.innerHTML=`${pcr}<i>/</i><span>${esc(c.code)}</span>`;renderPItem(c,false)}
   else if(route.view==="pholder"){const h=H_(route.ref);cr.innerHTML=`${pcr}<i>/</i><span>${esc(h.ref)}</span>`;renderPItem(h,true)}
@@ -3701,16 +3753,16 @@ function enterRole(r,name){
   if(!ok||(r!=="admin"&&h==="#"&&ROLES[r].home!=="#")){if(h!==ROLES[r].home){location.hash=ROLES[r].home;alert();return}}
   render();alert();
 }
-function leaveRole(){if(edTimer){clearTimeout(edTimer);flushEditor()}ROLE=null;USER="";roleChrome();render()}
+function leaveRole(){if(edTimer){clearTimeout(edTimer);flushEditor()}ROLE=null;USER="";ACC=null;roleChrome();render()}
 function roleChrome(){
   const R=ROLE?ROLES[ROLE]:null;
   document.querySelectorAll("[data-nav]").forEach(b=>b.hidden=!R||!R.nav.includes(b.dataset.nav));
   $("#b-backup").hidden=!R||!R.backup;$("#b-restore").hidden=!R||!R.restore;$("#b-logo").hidden=!R||ROLE!=="admin";
   const rc=$("#b-role");rc.hidden=!R;
   if(R){rc.innerHTML=`<span class="gi">${roleIcons[ROLE]}</span><span class="rl"><b>${esc(roleName(ROLE))}</b>${USER&&USER!==roleName(ROLE)?`<span>${esc(USER)}</span>`:""}</span>`;rc.title=t("switchRole")}
-  $("#nav-p").textContent=t("navProd");$("#nav-l").textContent=t("navLog");$("#nav-g").textContent=t("navMags");$("#nav-r").textContent=t("navReports");
+  $("#nav-p").textContent=t("navProd");$("#nav-l").textContent=t("navLog");$("#nav-g").textContent=t("navMags");$("#nav-r").textContent=t("navReports");$("#nav-x").textContent=t("navAdmin");
 }
-$("#b-role").onclick=leaveRole;
+$("#b-role").onclick=()=>{if(DESK&&!DEMO_ON&&ACC)accountMenu();else leaveRole()};
 
 /* ---------- production: one search for tools, holders and articles ---------- */
 let prodQ="",prodS="all";
@@ -4007,11 +4059,11 @@ function printTemplate(tp){const d=tplRead(tp),title=(LANG==="en"?"Model — ":"
 }
 
 /* ---------- the Windows program download, and the demo ---------- */
-Object.assign(I18N.en,{getApp:"Get the app", getAppT:"Download the Windows program (zip with a read-me)",
+Object.assign(I18N.en,{getApp:"Get the app", getAppT:"Download the Windows installer (BrocheStuff-Setup.exe)",
   demoBar:"Demo: made-up workshop with 20 machines and 500 articles. Changes stay in this browser only.", demoShort:"Made-up data", demoReset:"Reset the demo", demoResetQ:"Reset the demo data? Everything changed here is lost.", demoGo:"Real version"});
-Object.assign(I18N.fr,{getApp:"Télécharger l'app", getAppT:"Télécharger le programme Windows (zip avec un lisez-moi)",
+Object.assign(I18N.fr,{getApp:"Télécharger l'app", getAppT:"Télécharger l’installateur Windows (BrocheStuff-Setup.exe)",
   demoBar:"Démo : atelier fictif de 20 machines et 500 articles. Vos changements restent dans ce navigateur.", demoShort:"Données fictives", demoReset:"Réinitialiser la démo", demoResetQ:"Réinitialiser les données de la démo ? Tout ce qui a été changé ici sera perdu.", demoGo:"Version réelle"});
-const APP_ZIP="BrocheStuff-Windows.zip",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
+const APP_ZIP="BrocheStuff-Setup.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
 function appUrl(){
   // on the site (…/Web/ or …/Demo/) the program sits next door in …/App/; anywhere else, take it from the site
   if(/^https?:/.test(location.protocol)&&/\/(Web|Demo)\/(index\.html)?$/i.test(location.pathname))return new URL("../App/"+APP_ZIP,location.href).href;
@@ -4020,8 +4072,8 @@ function appUrl(){
 const dlSmall=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 20h14"/></svg>`;
 function drawGetApp(){const b=$("#b-getapp");if(!b)return;if(DESK||DEMODATA){b.hidden=true;return}
   b.hidden=false;b.href=appUrl();b.setAttribute("download",APP_ZIP);b.title=t("getAppT");b.innerHTML=`${dlSmall}<span class="lbl">${esc(t("getApp"))}</span>`}
-function seedDemo(){
-  const d=JSON.parse(JSON.stringify(DEMODATA));const now=Date.now(),shift=now-(d.builtAt||now);
+function seedDemo(src){
+  const d=JSON.parse(JSON.stringify(src||DEMODATA));const now=Date.now(),shift=now-(d.builtAt||now);
   // keep the demo "fresh": move every date so the newest activity is today
   const mv=o=>{if(o&&typeof o==="object"){for(const k in o){if((k==="ts"||k==="createdAt"||k==="updatedAt")&&typeof o[k]==="number")o[k]+=shift;else if(typeof o[k]==="object")mv(o[k])}}};mv(d);
   db={machines:d.machines,articles:d.articles,catalog:d.catalog,holders:d.holders,stockLog:d.stockLog||[],lastBackup:now,migrated:true};ensureDB();saveNow();
@@ -4422,6 +4474,307 @@ function drawHistory(){
   box.querySelectorAll("[data-hpdf]").forEach(b=>b.onclick=()=>{const h=H[+b.dataset.hpdf],s=h.snap;const art={...cur,article:s.article,tools:s.tools,machineId:s.machineId||cur.machineId,status:h.act==="validate"?"done":"progress",validated:h.act==="validate"?{ts:h.ts,who:h.who}:null};downloadPDF(art)});
 }
 
+/* =====================================================================
+   v2.2 Windows program only: accounts and logins, shared data folder,
+   admin page, demo switch. The web version doesn't use any of this.
+   ===================================================================== */
+const DESKDEMO=/*DESKDEMO*/null;
+const APP_VER="2.2.0";
+let DEMO_ON=false, ACC=null, USERS=null, PCNAME="", realDIR="", loginFails=0, loginWait=0, lastAct=Date.now();
+Object.assign(I18N.en,{
+  loginT:"Sign in", loginP:"Enter your name or code and your password.", loginName:"Name or code", loginPw:"Password", loginGo:"Sign in",
+  loginBad:"Wrong name or password.", loginOff:"This account is disabled. Ask the admin.", loginWait:s=>`Too many tries. Wait ${s} s.`, loginDef:"You are using the default password. Change it in Administration.",
+  loggedOut:"Signed out after inactivity.", accMenu:"My account", myPw:"Change my password", signOut:"Sign out", pwCur:"Current password", pwNew:"New password", pwNew2:"New password again",
+  pwShort:"At least 4 characters.", pwDiff:"The two passwords are different.", pwWrong:"The current password is wrong.", pwSaved:"Password changed", navAdmin:"Administration",
+  adT:"Administration", adSub:"Accounts, data folder, backups, demo and security of this program.", accT:"Accounts", accNew:"New account", accName:"Name", accCode:"Code", accCodeH:"optional, e.g. badge number",
+  accRole:"Service", accState:"Status", accLast:"Last sign-in", accOn:"Active", accOff:"Disabled", accEdit:"Edit", accPw:"Password", accDel:"Delete", accActive:"Account active",
+  accSave:"Save", accNeedName:"Enter a name.", accNameUsed:"This name is already used.", accCodeUsed:"This code is already used.", accLastAdmin:"There must always be at least one active admin account.",
+  accSelf:"You can't delete your own account.", accSaved:"Account saved", accDeleted:n=>`Account ${n} deleted`, accPwT:n=>`New password for ${n}`, accNever:"never", accAll:"All",
+  dirT:"Data folder", dirP:"Where the data, the accounts and the backups are kept. To share them between several PCs, choose the same network folder (for example \\\\server\\BrocheStuff) on each PC.",
+  dirLocal:"local folder of this PC", dirPick:"Choose a folder…", dirBack:"Back to the local folder", dirOpen:"Open the folder", dirPickT:"Data folder for BrocheStuff",
+  dirNoWrite:"BrocheStuff can't write in this folder.", dirHas:(m,a)=>`This folder already has BrocheStuff data (${m} machines, ${a} articles).`, dirUse:"Use these data", dirEmpty:"This folder has no BrocheStuff data yet.",
+  dirCopy:"Copy the current data and accounts there", dirDone:"Data folder changed. Sign in again.", dirLost:p=>`The data folder can't be reached: ${p}`, dirLostP:"Check the network or the drive, then try again.",
+  retry:"Try again", useLocal:"Use the local folder of this PC", bkT:"Backups", bkNow:"Back up now", bkRestore:"Restore…", bkLast:t=>`Last backup: ${t}`, bkAuto:n=>`${n} automatic ${pl(n,"copy","copies")} (every 5 minutes)`,
+  demoT:"Demo", demoP:"Made-up workshop (20 machines, 500 articles) to try the program or show it. Your real data are not touched.", demoOpen:"Open the demo", demoQuit:"Leave the demo", demoInT:"You are in the demo.",
+  secT:"Security", idleL:"Sign out automatically after", idleNever:"never", idleMin:n=>`${n} min without use`, secReset:"Forgotten admin password: put an empty file named reset-admin.txt in the data folder and start the program. The account admin / admin comes back.",
+  logT:"Sign-ins", logOk:"signed in", logBad:"wrong password", logOff:"disabled account", logReset:"admin password reset", infoT:"Program", infoVer:"Version", infoPc:"This PC", infoAcc:"Accounts",
+  synced:"This sheet was changed on another PC: it is now up to date.", deskDemoTxt:"Demo: made-up workshop with 20 machines and 500 articles. Your real data are not touched.", defWarn:"The admin account still has the default password (admin). Change it below."
+});
+Object.assign(I18N.fr,{
+  loginT:"Connexion", loginP:"Entrez votre nom ou votre code et votre mot de passe.", loginName:"Nom ou code", loginPw:"Mot de passe", loginGo:"Se connecter",
+  loginBad:"Nom ou mot de passe incorrect.", loginOff:"Ce compte est désactivé. Demandez à l'admin.", loginWait:s=>`Trop d'essais. Attendez ${s} s.`, loginDef:"Vous utilisez le mot de passe par défaut. Changez-le dans Administration.",
+  loggedOut:"Déconnecté après une période sans activité.", accMenu:"Mon compte", myPw:"Changer mon mot de passe", signOut:"Se déconnecter", pwCur:"Mot de passe actuel", pwNew:"Nouveau mot de passe", pwNew2:"Nouveau mot de passe (encore)",
+  pwShort:"Au moins 4 caractères.", pwDiff:"Les deux mots de passe sont différents.", pwWrong:"Le mot de passe actuel est incorrect.", pwSaved:"Mot de passe changé", navAdmin:"Administration",
+  adT:"Administration", adSub:"Comptes, dossier des données, sauvegardes, démo et sécurité du programme.", accT:"Comptes", accNew:"Nouveau compte", accName:"Nom", accCode:"Code", accCodeH:"facultatif, ex. numéro de badge",
+  accRole:"Service", accState:"État", accLast:"Dernière connexion", accOn:"Actif", accOff:"Désactivé", accEdit:"Modifier", accPw:"Mot de passe", accDel:"Supprimer", accActive:"Compte actif",
+  accSave:"Enregistrer", accNeedName:"Entrez un nom.", accNameUsed:"Ce nom est déjà utilisé.", accCodeUsed:"Ce code est déjà utilisé.", accLastAdmin:"Il faut toujours au moins un compte admin actif.",
+  accSelf:"Vous ne pouvez pas supprimer votre propre compte.", accSaved:"Compte enregistré", accDeleted:n=>`Compte ${n} supprimé`, accPwT:n=>`Nouveau mot de passe pour ${n}`, accNever:"jamais", accAll:"Tous",
+  dirT:"Dossier des données", dirP:"Là où sont gardés les données, les comptes et les sauvegardes. Pour les partager entre plusieurs PC, choisissez le même dossier réseau (par exemple \\\\serveur\\BrocheStuff) sur chaque PC.",
+  dirLocal:"dossier local de ce PC", dirPick:"Choisir un dossier…", dirBack:"Revenir au dossier local", dirOpen:"Ouvrir le dossier", dirPickT:"Dossier des données de BrocheStuff",
+  dirNoWrite:"BrocheStuff ne peut pas écrire dans ce dossier.", dirHas:(m,a)=>`Ce dossier contient déjà des données BrocheStuff (${m} machines, ${a} articles).`, dirUse:"Utiliser ces données", dirEmpty:"Ce dossier ne contient pas encore de données BrocheStuff.",
+  dirCopy:"Y copier les données et les comptes actuels", dirDone:"Dossier des données changé. Reconnectez-vous.", dirLost:p=>`Le dossier des données est inaccessible : ${p}`, dirLostP:"Vérifiez le réseau ou le disque, puis réessayez.",
+  retry:"Réessayer", useLocal:"Utiliser le dossier local de ce PC", bkT:"Sauvegardes", bkNow:"Sauvegarder maintenant", bkRestore:"Restaurer…", bkLast:t=>`Dernière sauvegarde : ${t}`, bkAuto:n=>`${n} ${pl(n,"copie automatique","copies automatiques")} (toutes les 5 minutes)`,
+  demoT:"Démo", demoP:"Atelier fictif (20 machines, 500 articles) pour essayer le programme ou le montrer. Vos vraies données ne sont pas touchées.", demoOpen:"Ouvrir la démo", demoQuit:"Quitter la démo", demoInT:"Vous êtes dans la démo.",
+  secT:"Sécurité", idleL:"Déconnexion automatique après", idleNever:"jamais", idleMin:n=>`${n} min sans utilisation`, secReset:"Mot de passe admin oublié : placez un fichier vide nommé reset-admin.txt dans le dossier des données et démarrez le programme. Le compte admin / admin revient.",
+  logT:"Connexions", logOk:"connecté", logBad:"mauvais mot de passe", logOff:"compte désactivé", logReset:"mot de passe admin réinitialisé", infoT:"Programme", infoVer:"Version", infoPc:"Ce PC", infoAcc:"Comptes",
+  synced:"Cette fiche a été modifiée sur un autre poste : elle est à jour.", deskDemoTxt:"Démo : atelier fictif de 20 machines et 500 articles. Vos vraies données ne sont pas touchées.", defWarn:"Le compte admin a encore le mot de passe par défaut (admin). Changez-le ci-dessous."
+});
+if(DESK)ROLES.admin.nav.push("#admin");
+
+/* ---------- passwords: PBKDF2-SHA256, salted, never stored in clear ---------- */
+const b64u8=u8=>btoa(String.fromCharCode(...u8)), u8b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function pwHash(pw,salt,iter){const k=await crypto.subtle.importKey("raw",new TextEncoder().encode(pw),"PBKDF2",false,["deriveBits"]);
+  return b64u8(new Uint8Array(await crypto.subtle.deriveBits({name:"PBKDF2",hash:"SHA-256",salt:u8b64(salt),iterations:iter},k,256)))}
+async function setPw(u,pw){u.salt=b64u8(crypto.getRandomValues(new Uint8Array(16)));u.iter=150000;u.hash=await pwHash(pw,u.salt,u.iter)}
+async function checkPw(u,pw){if(!u||!u.hash)return false;return await pwHash(pw,u.salt,u.iter||150000)===u.hash}
+
+/* ---------- accounts file (users.json, in the data folder, shared like the data) ---------- */
+const UFILE=()=>DIR+SEP+"users.json";
+async function usersRead(){try{const d=JSON.parse(await Neutralino.filesystem.readFile(UFILE()));if(d&&Array.isArray(d.users))return d}catch(e){}return null}
+async function usersSave(){await Neutralino.filesystem.writeFile(UFILE(),JSON.stringify(USERS,null,1))}
+async function usersLoad(){
+  USERS=await usersRead()||{users:[],log:[],settings:{idle:0}};if(!USERS.settings)USERS.settings={idle:0};if(!Array.isArray(USERS.log))USERS.log=[];
+  let reset=false;try{await Neutralino.filesystem.getStats(DIR+SEP+"reset-admin.txt");reset=true}catch(e){}
+  if(reset||!USERS.users.some(u=>u.role==="admin"&&u.active!==false)){
+    let a=USERS.users.find(u=>u.name.toLowerCase()==="admin");if(!a){a={id:uid(),name:"admin",code:"",role:"admin",createdAt:Date.now()};USERS.users.unshift(a)}
+    a.role="admin";a.active=true;a.def=1;await setPw(a,"admin");
+    if(reset){try{await Neutralino.filesystem.remove(DIR+SEP+"reset-admin.txt")}catch(e){}USERS.log.unshift({ts:Date.now(),name:"admin",pc:PCNAME,r:"reset"})}
+    try{await usersSave()}catch(e){}}
+}
+// a change always starts from the file on disk, so two admins on two PCs don't undo each other
+async function usersEdit(fn){const d=await usersRead();if(d)USERS={settings:{idle:0},log:[],...d};const r=await fn(USERS);if(r===false)return false;await usersSave();return true}
+const accLabel=u=>u.name+(u.code?` (${u.code})`:"");
+const findAcc=q=>{q=String(q||"").trim().toLowerCase();if(!q)return null;return USERS.users.find(u=>u.name.toLowerCase()===q)||USERS.users.find(u=>u.code&&String(u.code).toLowerCase()===q)||null};
+
+/* ---------- sign-in screen ---------- */
+function renderLogin(){
+  document.body.className=document.body.className.replace(/\brole-\w+/g,"").trim();document.body.classList.add("gating");
+  $("#crumbs").innerHTML="";$("#tbar").innerHTML="";
+  $("#view").innerHTML=`<div class="gate"><div class="gbox loginbox">
+    <h2>${esc(t("loginT"))}<b>.</b></h2><p class="sub">${esc(t("loginP"))}</p>
+    <form id="lg-form" autocomplete="off" class="lgform">
+      <label class="f">${esc(t("loginName"))}<input id="lg-name" autocomplete="username" spellcheck="false" value="${esc(lsGet("toolmanager.lastlogin")||"")}"></label>
+      <label class="f">${esc(t("loginPw"))}<input id="lg-pw" type="password" autocomplete="current-password"></label>
+      <p class="err" id="lg-err" hidden></p>
+      <button class="btn red" id="lg-go" type="submit">${esc(t("loginGo"))}</button></form>
+    <div class="gtpl">${`<span class="gtpl-h">${esc(t("tplT"))}</span>`}${TPLS.map(tp=>`<button class="gtplb" data-gtpl="${tp.k}">${esc(t("tplNames")[tp.k])}</button>`).join("")}</div></div></div>`;
+  const nm=$("#lg-name"),pw=$("#lg-pw"),err=$("#lg-err");(nm.value?pw:nm).focus();
+  $("#view").querySelectorAll("[data-gtpl]").forEach(b=>b.onclick=()=>templatesDialog(b.dataset.gtpl));
+  const fail=m=>{err.textContent=m;err.hidden=false;pw.value="";pw.focus()};
+  $("#lg-form").onsubmit=async e=>{e.preventDefault();
+    if(Date.now()<loginWait)return fail(t("loginWait",Math.ceil((loginWait-Date.now())/1000)));
+    const d=await usersRead();if(d)USERS={settings:{idle:0},log:[],...d};
+    const u=findAcc(nm.value),ok=u&&await checkPw(u,pw.value);
+    const log=r=>usersEdit(U=>{U.log.unshift({ts:Date.now(),name:u?u.name:nm.value.trim().slice(0,40),pc:PCNAME,r});if(U.log.length>500)U.log.length=500;
+      if(r==="ok"){const x=U.users.find(y=>y.id===u.id);if(x)x.lastLogin=Date.now()}}).catch(()=>{});
+    if(!ok){loginFails++;if(loginFails>=5){loginWait=Date.now()+30000;loginFails=0}await log("bad");return fail(t("loginBad"))}
+    if(u.active===false){await log("off");return fail(t("loginOff"))}
+    loginFails=0;await log("ok");lsSet("toolmanager.lastlogin",nm.value.trim());ACC={id:u.id,name:u.name,code:u.code||"",role:u.role};lastAct=Date.now();
+    enterRole(u.role,u.name);if(u.def)setTimeout(()=>toast(t("loginDef")),400)};
+}
+function accountMenu(){
+  dialog(esc(t("accMenu")),`<p style="margin:0"><b>${esc(ACC?accLabel(ACC):USER)}</b><br><span class="dim">${esc(roleName(ROLE))}</span></p>`,
+    `${ACC?`<button class="btn" id="am-pw">${esc(t("myPw"))}</button>`:""}<span class="sp"></span><button class="btn ghost" id="d-cancel">${esc(t("close"))}</button><button class="btn red" id="am-out">${esc(t("signOut"))}</button>`);
+  $("#d-cancel").onclick=closeDlg;$("#am-out").onclick=()=>{closeDlg();leaveRole()};if($("#am-pw"))$("#am-pw").onclick=()=>{closeDlg();myPwDialog()};
+}
+function myPwDialog(){if(!ACC)return;
+  dialog(esc(t("myPw")),`<label class="f">${esc(t("pwCur"))}<input id="pw-c" type="password"></label><label class="f">${esc(t("pwNew"))}<input id="pw-n" type="password"></label><label class="f">${esc(t("pwNew2"))}<input id="pw-n2" type="password"></label><p class="err" id="pw-err" hidden></p>`,
+    `<button class="btn ghost" id="d-cancel">${esc(t("cancel"))}</button><button class="btn red" id="d-ok">${esc(t("accSave"))}</button>`);
+  $("#d-cancel").onclick=closeDlg;$("#pw-c").focus();const er=m=>{const e=$("#pw-err");e.textContent=m;e.hidden=false};
+  $("#d-ok").onclick=async()=>{const c=$("#pw-c").value,n=$("#pw-n").value,n2=$("#pw-n2").value;if(n.length<4)return er(t("pwShort"));if(n!==n2)return er(t("pwDiff"));
+    const d=await usersRead();if(d)USERS={settings:{idle:0},log:[],...d};const u=USERS.users.find(x=>x.id===ACC.id);if(!await checkPw(u,c))return er(t("pwWrong"));
+    await usersEdit(async U=>{const x=U.users.find(y=>y.id===ACC.id);await setPw(x,n);delete x.def});closeDlg();toast(t("pwSaved"));if(route.view==="admin")render()};
+}
+// automatic sign-out after a while without use (set by the admin; off by default)
+let lastType=0;["pointerdown","keydown","wheel"].forEach(ev=>document.addEventListener(ev,e=>{lastAct=Date.now();if(e.type==="keydown")lastType=lastAct},true));
+setInterval(()=>{const m=+(USERS&&USERS.settings&&USERS.settings.idle)||0;if(!DESK||DEMO_ON||!ACC||!m)return;if(Date.now()-lastAct>m*60000){if(edTimer){clearTimeout(edTimer);flushEditor()}closeDlg();leaveRole();toast(t("loggedOut"))}},20000);
+
+/* ---------- shared folder: changes from other PCs are merged, not overwritten ---------- */
+const J_=x=>JSON.stringify(x), isObj_=x=>x&&typeof x==="object"&&!Array.isArray(x);
+function unionLog(a,b,cap){const seen=new Set(),out=[];for(const e of [...a,...b]){const s=J_(e);if(seen.has(s))continue;seen.add(s);out.push(e)}out.sort((x,y)=>(y.ts||0)-(x.ts||0));if(cap&&out.length>cap)out.length=cap;return out}
+function mergeObj(b,m,t){b=b||{};const out={};
+  for(const k of new Set([...Object.keys(t),...Object.keys(m)])){const bv=b[k],mv=m[k],tv=t[k];
+    if(!(k in m)){if(k in b&&J_(tv)===J_(bv))continue;out[k]=tv;continue}
+    if(!(k in t)){if(k in b&&J_(mv)===J_(bv))continue;out[k]=mv;continue}
+    // stock: both PCs' moves count (taken here + taken there), even when both end on the same number
+    if(k==="stock"&&[bv,mv,tv].every(v=>v!==""&&v!=null&&!isNaN(+v))){out[k]=Math.max(0,+tv+(+mv-(+bv)));continue}
+    if(J_(mv)===J_(tv)){out[k]=mv;continue}
+    if((k==="history"||k==="log")&&Array.isArray(mv)&&Array.isArray(tv)){out[k]=unionLog(mv,tv,k==="log"?80:200);continue}
+    if(isObj_(mv)&&isObj_(tv)){out[k]=mergeObj(isObj_(bv)?bv:{},mv,tv);continue}
+    out[k]=J_(mv)===J_(bv)?tv:mv}
+  return out}
+function mergeList(b,m,t,key){
+  const B=new Map(b.map(x=>[x[key],x])),Mm=new Map(m.map(x=>[x[key],x])),T=new Map(t.map(x=>[x[key],x])),seen=new Set(),out=[];
+  const one=k=>{if(seen.has(k))return;seen.add(k);const bb=B.get(k),mm=Mm.get(k),tt=T.get(k);let r;
+    if(!bb)r=mm&&tt?mergeObj({},mm,tt):mm||tt;
+    else if(!mm&&!tt)r=null;
+    else if(!mm)r=J_(tt)===J_(bb)?null:tt;
+    else if(!tt)r=J_(mm)===J_(bb)?null:mm;
+    else{const jm=J_(mm),jt=J_(tt),jb=J_(bb);r=jm===jb?tt:jt===jb?mm:mergeObj(bb,mm,tt)}
+    if(r&&mm&&r!==mm){for(const kk of Object.keys(mm))delete mm[kk];Object.assign(mm,r);r=mm}
+    if(r)out.push(r)};
+  t.forEach(x=>one(x[key]));m.forEach(x=>one(x[key]));return out}
+function merge3db(b,m,t){const out={...m,...t};
+  for(const [col,key] of [["machines","id"],["articles","id"],["catalog","code"],["holders","ref"]])out[col]=mergeList(b[col]||[],m[col]||[],t[col]||[],key);
+  out.stockLog=unionLog(m.stockLog||[],t.stockLog||[],20000);out.lastBackup=Math.max(+m.lastBackup||0,+t.lastBackup||0);return out}
+// every save writes a new random revision next to the data (data.rev): a tiny file the other PCs check
+const DEVID=Math.random().toString(36).slice(2)+Date.now().toString(36), sleep_=ms=>new Promise(r=>setTimeout(r,ms));
+async function deskStat(){try{const r=(await Neutralino.filesystem.readFile(DIR+SEP+"data.rev")).trim();if(r)return r}catch(e){}const s=await Neutralino.filesystem.getStats(DIR+SEP+"data.json");return "m"+s.modifiedAt+"|"+s.size}
+// one PC writes at a time: creating a folder is atomic (only one PC can create it), even on a network share.
+// A lock left by a crash is removed after waiting 12 s.
+async function deskLock(){const f=DIR+SEP+"data.lock";const t0=Date.now();
+  for(let i=0;i<200;i++){try{await Neutralino.filesystem.createDirectory(f);return true}catch(e){}
+    if(Date.now()-t0>12000){try{await Neutralino.filesystem.remove(f)}catch(e){}}
+    await sleep_(60+Math.random()*120)}return false}
+async function deskUnlock(){try{await Neutralino.filesystem.remove(DIR+SEP+"data.lock")}catch(e){}}
+function deskAdopt(theirs){const {logo:lg,lang,savedAt,...rest}=theirs;let base={};try{base=JSON.parse(desk.base||"{}")}catch(e){}
+  const mg=merge3db(base,db,rest);for(const k of Object.keys(db))if(!(k in mg))delete db[k];Object.assign(db,mg);if(!desk.logoDirty&&lg!==undefined)logo=lg||null;ensureDB();if(cur){const n=A(cur.id);if(n)cur=n}}
+async function deskPoll(){
+  if(!DESK||DEMO_ON||desk.busy||desk.pending||edTimer||!desk.stamp)return;
+  const busy0=()=>!$("#ov").hidden||(Date.now()-lastType<5000&&document.activeElement&&document.activeElement.closest&&document.activeElement.closest("#view input,#view textarea,#view select"));
+  if(ROLE&&route.view!=="article"&&busy0())return;const gen=desk.gen;
+  let st;try{st=await deskStat()}catch(e){return}if(st===desk.stamp)return;
+  let theirs;try{theirs=JSON.parse(await Neutralino.filesystem.readFile(DIR+SEP+"data.json"))}catch(e){return}if(!theirs||!Array.isArray(theirs.machines))return;
+  if(desk.busy||desk.pending||edTimer||desk.gen!==gen)return;
+  const before=cur?J_(cur):"";deskAdopt(theirs);desk.base=J_(db);desk.stamp=st;
+  if(!ROLE)return;
+  if(route.view==="article"){if(cur&&J_(cur)!==before&&!busy0()){render();toast(t("synced"))}return}
+  if(!busy0())render();
+}
+setInterval(()=>deskPoll(),15000);
+
+/* ---------- this PC's settings (data folder) ---------- */
+async function deskSettings(){try{return JSON.parse(await Neutralino.filesystem.readFile(LOCAL+SEP+"settings.json"))||{}}catch(e){return{}}}
+async function deskSettingsSave(s){await Neutralino.filesystem.writeFile(LOCAL+SEP+"settings.json",JSON.stringify(s,null,1))}
+async function deskReload(){
+  const d=await desk.load();db={machines:[],articles:[],lastBackup:0};logo=null;
+  if(d&&Array.isArray(d.machines)){const {logo:lg,lang,savedAt,...rest}=d;db={lastBackup:0,...rest};logo=lg||null}
+  ensureDB();desk.base=J_(db);try{desk.stamp=await deskStat()}catch(e){desk.stamp=null}desk.logoDirty=false;
+}
+async function canWrite(dir){const f=dir+SEP+".brochestuff-test";try{await Neutralino.filesystem.writeFile(f,"ok");await Neutralino.filesystem.remove(f);return true}catch(e){return false}}
+async function switchDir(p){
+  if(edTimer){clearTimeout(edTimer);flushEditor()}desk.pending=true;await desk.flush();
+  const s=await deskSettings();s.dataDir=p===LOCAL?"":p;await deskSettingsSave(s);DIR=p;
+  for(const d of [DIR,DIR+SEP+"Backups"]){try{await Neutralino.filesystem.createDirectory(d)}catch(e){}}
+  await deskReload();await usersLoad();closeDlg();ACC=null;ROLE=null;USER="";roleChrome();location.hash="";render();toast(t("dirDone"));
+}
+async function pickDataDir(target){
+  let p=target;if(!p){try{p=await Neutralino.os.showFolderDialog(t("dirPickT"),{defaultPath:DIR})}catch(e){p=""}}if(!p)return;p=p.replace(/[\\/]+$/,"");
+  if(p.toLowerCase()===DIR.toLowerCase())return;
+  if(!await canWrite(p)){toast(t("dirNoWrite"));return}
+  let there=null;try{there=JSON.parse(await Neutralino.filesystem.readFile(p+SEP+"data.json"))}catch(e){}
+  if(there&&Array.isArray(there.machines)){
+    dialog(esc(t("dirT")),`<p style="margin:0"><b class="m">${esc(p)}</b></p><p style="margin:0">${esc(t("dirHas",there.machines.length,(there.articles||[]).length))}</p>`,
+      `<button class="btn ghost" id="d-cancel">${esc(t("cancel"))}</button><button class="btn red" id="d-ok">${esc(t("dirUse"))}</button>`);
+    $("#d-cancel").onclick=closeDlg;$("#d-ok").onclick=()=>switchDir(p);return}
+  dialog(esc(t("dirT")),`<p style="margin:0"><b class="m">${esc(p)}</b></p><p style="margin:0">${esc(t("dirEmpty"))}</p>`,
+    `<button class="btn ghost" id="d-cancel">${esc(t("cancel"))}</button><button class="btn red" id="d-ok">${esc(t("dirCopy"))}</button>`);
+  $("#d-cancel").onclick=closeDlg;
+  $("#d-ok").onclick=async()=>{try{await Neutralino.filesystem.writeFile(p+SEP+"data.json",JSON.stringify({...db,logo,lang:LANG}));
+      let hasU=false;try{await Neutralino.filesystem.getStats(p+SEP+"users.json");hasU=true}catch(e){}
+      if(!hasU)await Neutralino.filesystem.writeFile(p+SEP+"users.json",JSON.stringify(USERS,null,1));}catch(e){toast(t("dirNoWrite"));return}
+    switchDir(p)};
+}
+function dirLostScreen(){
+  document.body.classList.add("gating");$("#crumbs").innerHTML="";
+  $("#view").innerHTML=`<div class="gate"><div class="gbox loginbox"><h2>${esc(t("dirT"))}<b>.</b></h2><p class="err" style="margin:0">${esc(t("dirLost",DIR))}</p><p class="sub">${esc(t("dirLostP"))}</p>
+    <div class="gact"><button class="btn" id="dl-local">${esc(t("useLocal"))}</button><button class="btn red" id="dl-retry">${esc(t("retry"))}</button></div></div></div>`;
+  $("#dl-retry").onclick=()=>location.reload();
+  $("#dl-local").onclick=async()=>{const s=await deskSettings();s.dataDir="";await deskSettingsSave(s);location.reload()};
+}
+
+/* ---------- the admin page ---------- */
+let accF="all";
+const IDLES=[0,5,10,15,30,60,120];
+async function renderAdminPage(){
+  if(DEMO_ON){$("#view").innerHTML=`<div class="page"><div class="ph"><div><h2>${esc(t("adT"))}<b>.</b></h2><div class="sub">${esc(t("demoInT"))}</div></div></div><button class="btn red" id="ad-demo">${esc(t("demoQuit"))}</button></div>`;$("#ad-demo").onclick=stopDeskDemo;return}
+  const d=await usersRead();if(d)USERS={settings:{idle:0},log:[],...d};
+  const U=USERS.users,cnt=r=>U.filter(u=>r==="all"||u.role===r).length,list=U.filter(u=>accF==="all"||u.role===accF);
+  const snaps=await listSnapshots().catch(()=>[]);const def=U.find(u=>u.def&&u.role==="admin");
+  const logLab={ok:t("logOk"),bad:t("logBad"),off:t("logOff"),reset:t("logReset")};
+  $("#view").innerHTML=`<div class="page adminp">
+    <div class="ph"><div><h2>${esc(t("adT"))}<b>.</b></h2><div class="sub">${esc(t("adSub"))}</div></div></div>
+    ${def?`<p class="warnline admwarn">${esc(t("defWarn"))}</p>`:""}
+    <div class="card"><h2>${esc(t("accT"))} <span class="hint">${U.length}</span></h2>
+      <div class="resbar"><div class="chips">${["all","methode","outil","prod","admin"].map(r=>`<button class="chip" data-af="${r}" aria-pressed="${accF===r}">${esc(r==="all"?t("accAll"):roleName(r))}<b>${cnt(r)}</b></button>`).join("")}</div><span class="sp"></span><button class="btn red" id="acc-new">${esc(t("accNew"))}</button></div>
+      <div class="list"><table class="lt acct"><thead><tr><th>${esc(t("accName"))}</th><th>${esc(t("accCode"))}</th><th>${esc(t("accRole"))}</th><th>${esc(t("accState"))}</th><th>${esc(t("accLast"))}</th><th></th></tr></thead><tbody>
+      ${list.map(u=>`<tr data-u="${u.id}" class="${u.active===false?"off":""}"><td><b>${esc(u.name)}</b>${ACC&&ACC.id===u.id?` <span class="dim small">(${esc(LANG==="en"?"you":"vous")})</span>`:""}</td><td class="m">${esc(u.code||"—")}</td><td><span class="rtag r-${u.role}">${esc(roleName(u.role))}</span></td>
+        <td>${u.active===false?`<span class="spill s-none">${esc(t("accOff"))}</span>`:`<span class="spill s-ok">${esc(t("accOn"))}</span>`}</td><td class="dim">${u.lastLogin?`${when(u.lastLogin)} ${hhmm(u.lastLogin)}`:esc(t("accNever"))}</td>
+        <td><div class="acts"><button class="btn sm" data-ue="${u.id}">${esc(t("accEdit"))}</button><button class="btn sm ghost" data-up="${u.id}">${esc(t("accPw"))}</button><button class="btn sm danger" data-ud="${u.id}">${esc(t("accDel"))}</button></div></td></tr>`).join("")}</tbody></table></div></div>
+    <div class="admgrid">
+      <div class="card"><h2>${esc(t("dirT"))}</h2><p class="dirpath m">${esc(DIR)}${DIR===LOCAL?` <span class="dim small">(${esc(t("dirLocal"))})</span>`:""}</p><p class="note" style="margin:0">${esc(t("dirP"))}</p>
+        <div class="admact"><button class="btn red" id="ad-pick">${esc(t("dirPick"))}</button>${DIR!==LOCAL?`<button class="btn" id="ad-local">${esc(t("dirBack"))}</button>`:""}<button class="btn ghost" id="ad-open">${esc(t("dirOpen"))}</button></div></div>
+      <div class="card"><h2>${esc(t("bkT"))}</h2><p style="margin:0">${esc(db.lastBackup?t("bkLast",`${when(db.lastBackup)} ${hhmm(db.lastBackup)}`):t("bkLast","—"))}</p><p class="note" style="margin:0">${esc(t("bkAuto",snaps.length))}</p>
+        <div class="admact"><button class="btn" id="ad-bk">${esc(t("bkNow"))}</button><button class="btn" id="ad-rs">${esc(t("bkRestore"))}</button></div></div>
+      <div class="card"><h2>${esc(t("secT"))}</h2><label class="f">${esc(t("idleL"))}<select id="ad-idle">${IDLES.map(n=>`<option value="${n}" ${(+USERS.settings.idle||0)===n?"selected":""}>${esc(n?t("idleMin",n):t("idleNever"))}</option>`).join("")}</select></label>
+        ${ACC?`<div class="admact"><button class="btn" id="ad-mypw">${esc(t("myPw"))}</button></div>`:""}<p class="note" style="margin:0">${esc(t("secReset"))}</p></div>
+      <div class="card"><h2>${esc(t("demoT"))}</h2><p class="note" style="margin:0">${esc(t("demoP"))}</p><div class="admact"><button class="btn red" id="ad-demo" ${DESKDEMO?"":"disabled"}>${esc(t("demoOpen"))}</button></div></div>
+      <div class="card"><h2>${esc(t("logT"))}</h2>${USERS.log.length?`<ul class="hist loglist">${USERS.log.slice(0,25).map(e=>`<li class="lg-${esc(e.r||"ok")}"><b>${esc(e.name||"?")}</b><span>${esc(logLab[e.r]||e.r||"")}${e.pc?` · ${esc(e.pc)}`:""}</span><span class="dim">${when(e.ts)} ${hhmm(e.ts)}</span></li>`).join("")}</ul>`:`<p class="note" style="margin:0">—</p>`}</div>
+      <div class="card"><h2>${esc(t("infoT"))}</h2><dl class="kv"><dt>${esc(t("infoVer"))}</dt><dd class="m">BrocheStuff ${APP_VER}</dd><dt>${esc(t("infoPc"))}</dt><dd class="m">${esc(PCNAME||"—")}</dd><dt>${esc(t("infoAcc"))}</dt><dd class="m">${U.length}</dd><dt>${esc(t("dirT"))}</dt><dd class="m">${esc(DIR)}</dd></dl></div>
+    </div></div>`;
+  const V=$("#view");
+  V.querySelectorAll("[data-af]").forEach(b=>b.onclick=()=>{accF=b.dataset.af;renderAdminPage()});
+  $("#acc-new").onclick=()=>accDialog(null);
+  V.querySelectorAll("[data-ue]").forEach(b=>b.onclick=()=>accDialog(USERS.users.find(u=>u.id===b.dataset.ue)));
+  V.querySelectorAll("[data-up]").forEach(b=>b.onclick=()=>accPwDialog(USERS.users.find(u=>u.id===b.dataset.up)));
+  V.querySelectorAll("[data-ud]").forEach(b=>b.onclick=()=>{const u=USERS.users.find(x=>x.id===b.dataset.ud);
+    if(ACC&&u.id===ACC.id){toast(t("accSelf"));return}
+    if(u.role==="admin"&&u.active!==false&&USERS.users.filter(x=>x.role==="admin"&&x.active!==false).length<=1){toast(t("accLastAdmin"));return}
+    arm(b,async()=>{await usersEdit(U2=>{U2.users=U2.users.filter(x=>x.id!==u.id)});toast(t("accDeleted",u.name));renderAdminPage()},t("confirm"))});
+  $("#ad-pick").onclick=()=>pickDataDir();if($("#ad-local"))$("#ad-local").onclick=()=>pickDataDir(LOCAL);
+  $("#ad-open").onclick=()=>Neutralino.os.open(DIR).catch(()=>Neutralino.os.open("file:///"+DIR.replace(/\\/g,"/")).catch(()=>{}));
+  $("#ad-bk").onclick=()=>$("#b-backup").click();$("#ad-rs").onclick=()=>restoreDialog();
+  $("#ad-idle").onchange=async e=>{const v=+e.target.value;await usersEdit(U2=>{U2.settings=U2.settings||{};U2.settings.idle=v});toast(t("accSaved"))};
+  if($("#ad-mypw"))$("#ad-mypw").onclick=myPwDialog;
+  $("#ad-demo").onclick=startDeskDemo;
+}
+function accDialog(u){
+  const isNew=!u;u=u||{name:"",code:"",role:"prod",active:true};
+  dialog(esc(isNew?t("accNew"):t("accEdit")+" · "+u.name),`<div class="grid">
+      <label class="f c3">${esc(t("accName"))}<input id="ac-name" value="${esc(u.name)}" autocomplete="off"></label>
+      <label class="f c3">${esc(t("accCode"))} <span class="dim small">${esc(t("accCodeH"))}</span><input id="ac-code" class="m" value="${esc(u.code||"")}" autocomplete="off"></label>
+      <label class="f c6">${esc(t("accRole"))}<select id="ac-role">${["methode","outil","prod","admin"].map(r=>`<option value="${r}" ${u.role===r?"selected":""}>${esc(roleName(r))}</option>`).join("")}</select></label>
+      ${isNew?`<label class="f c3">${esc(t("pwNew"))}<input id="ac-pw" type="password" autocomplete="new-password"></label><label class="f c3">${esc(t("pwNew2"))}<input id="ac-pw2" type="password" autocomplete="new-password"></label>`
+        :`<label class="chk c6"><input type="checkbox" id="ac-on" ${u.active!==false?"checked":""}> ${esc(t("accActive"))}</label>`}</div><p class="err" id="ac-err" hidden></p>`,
+    `<button class="btn ghost" id="d-cancel">${esc(t("cancel"))}</button><button class="btn red" id="d-ok">${esc(t("accSave"))}</button>`);
+  $("#d-cancel").onclick=closeDlg;$("#ac-name").focus();const er=m=>{const e=$("#ac-err");e.textContent=m;e.hidden=false};
+  $("#d-ok").onclick=async()=>{const name=$("#ac-name").value.trim().replace(/\s+/g," "),code=$("#ac-code").value.trim(),role=$("#ac-role").value,on=isNew?true:$("#ac-on").checked;
+    if(!name)return er(t("accNeedName"));
+    const d=await usersRead();if(d)USERS={settings:{idle:0},log:[],...d};const others=USERS.users.filter(x=>x.id!==u.id);
+    if(others.some(x=>x.name.toLowerCase()===name.toLowerCase()||(x.code&&String(x.code).toLowerCase()===name.toLowerCase())))return er(t("accNameUsed"));
+    if(code&&others.some(x=>(x.code&&String(x.code).toLowerCase()===code.toLowerCase())||x.name.toLowerCase()===code.toLowerCase()))return er(t("accCodeUsed"));
+    if(!isNew&&u.role==="admin"&&(role!=="admin"||!on)&&!others.some(x=>x.role==="admin"&&x.active!==false))return er(t("accLastAdmin"));
+    let pw="";if(isNew){pw=$("#ac-pw").value;if(pw.length<4)return er(t("pwShort"));if(pw!==$("#ac-pw2").value)return er(t("pwDiff"))}
+    await usersEdit(async U=>{if(isNew){const n={id:uid(),name,code,role,active:true,createdAt:Date.now()};await setPw(n,pw);U.users.push(n)}
+      else{const x=U.users.find(y=>y.id===u.id);if(!x)return false;Object.assign(x,{name,code,role,active:on});if(ACC&&ACC.id===x.id){ACC.name=name;ACC.code=code}}});
+    closeDlg();toast(t("accSaved"));renderAdminPage()};
+}
+function accPwDialog(u){
+  dialog(esc(t("accPwT",u.name)),`<label class="f">${esc(t("pwNew"))}<input id="ap-pw" type="password" autocomplete="new-password"></label><label class="f">${esc(t("pwNew2"))}<input id="ap-pw2" type="password" autocomplete="new-password"></label><p class="err" id="ap-err" hidden></p>`,
+    `<button class="btn ghost" id="d-cancel">${esc(t("cancel"))}</button><button class="btn red" id="d-ok">${esc(t("accSave"))}</button>`);
+  $("#d-cancel").onclick=closeDlg;$("#ap-pw").focus();const er=m=>{const e=$("#ap-err");e.textContent=m;e.hidden=false};
+  $("#d-ok").onclick=async()=>{const p=$("#ap-pw").value;if(p.length<4)return er(t("pwShort"));if(p!==$("#ap-pw2").value)return er(t("pwDiff"));
+    await usersEdit(async U=>{const x=U.users.find(y=>y.id===u.id);if(!x)return false;await setPw(x,p);delete x.def});closeDlg();toast(t("pwSaved"));renderAdminPage()};
+}
+
+/* ---------- the demo inside the program: separate folder, real data untouched ---------- */
+async function startDeskDemo(){
+  if(!DESKDEMO)return;if(edTimer){clearTimeout(edTimer);flushEditor()}desk.pending=true;await desk.flush();
+  realDIR=DIR;DEMO_ON=true;DIR=LOCAL+SEP+"Demo";for(const d of [DIR,DIR+SEP+"Backups"]){try{await Neutralino.filesystem.createDirectory(d)}catch(e){}}
+  seedDemo(DESKDEMO);desk.pending=true;await desk.flush();desk.stamp=null;
+  ACC=null;ROLE=null;USER="";roleChrome();deskDemoBar();location.hash="";render();
+}
+async function stopDeskDemo(){
+  if(edTimer){clearTimeout(edTimer);flushEditor()}desk.pending=true;await desk.flush();
+  DEMO_ON=false;DIR=realDIR||LOCAL;$("#demobar")?.remove();await deskReload();await usersLoad();ACC=null;ROLE=null;USER="";roleChrome();location.hash="";closeDlg();render();
+}
+function deskDemoBar(){$("#demobar")?.remove();const bar=document.createElement("div");bar.id="demobar";bar.className="demobar";
+  bar.innerHTML=`<b>DEMO</b><span class="dlong">${esc(t("deskDemoTxt"))}</span><span class="dshort">${esc(t("demoShort"))}</span><span class="sp"></span><button id="b-demoreset">${esc(t("demoReset"))}</button><button id="b-demoquit">${esc(t("demoQuit"))}</button>`;
+  document.querySelector(".top").after(bar);
+  bar.querySelector("#b-demoreset").onclick=async()=>{if(!confirm(t("demoResetQ")))return;seedDemo(DESKDEMO);desk.pending=true;await desk.flush();ROLE=null;ACC=null;roleChrome();location.hash="";render()};
+  bar.querySelector("#b-demoquit").onclick=stopDeskDemo;
+}
+
 /* ---------- top bar ---------- */
 $("#home").onclick=()=>go(ROLE?ROLES[ROLE].home:"#");
 // phones: the header items live in a menu
@@ -4450,11 +4803,11 @@ $("#f-restore").onchange=async e=>{const f=e.target.files[0];e.target.value="";i
   }catch(err){toast(t("notBackup"))}};
 $("#b-logo").onclick=()=>$("#f-logo").click();
 $("#f-logo").onchange=e=>{const f=e.target.files[0];e.target.value="";if(!f)return;const r=new FileReader();
-  r.onload=()=>{logo={data:r.result,type:/png/i.test(f.type)?"PNG":"JPEG"};lsSet(LOGOKEY,JSON.stringify(logo));saveDB();if(route.view==="article")schedulePreview(30);toast(t("logoSet"))};r.readAsDataURL(f)};
+  r.onload=()=>{logo={data:r.result,type:/png/i.test(f.type)?"PNG":"JPEG"};if(DESK)desk.logoDirty=true;lsSet(LOGOKEY,JSON.stringify(logo));saveDB();if(route.view==="article")schedulePreview(30);toast(t("logoSet"))};r.readAsDataURL(f)};
 window.addEventListener("beforeunload",()=>{if(edTimer){clearTimeout(edTimer);flushEditor()}if(DESK)desk.flush()});
 
 if(DESK)document.addEventListener("keydown",e=>{if(e.key==="F5"||((e.ctrlKey||e.metaKey)&&(e.key==="r"||e.key==="R")))e.preventDefault()});
-(async()=>{if(DESK){try{await desk.init()}catch(e){console.error(e)}}await loadDB();ensureDB();await loadPhotos();const askLang=!LANG&&!window.__QA_ROLE;if(!LANG)LANG="fr";if(window.__QA_ROLE&&!lsGet(LANGKEY))lsSet(LANGKEY,"fr");
+(async()=>{if(DESK){try{await desk.init()}catch(e){console.error(e)}if(desk.unreachable){if(!LANG)LANG=lsGet(LANGKEY)||"fr";chrome();dirLostScreen();return}}await loadDB();if(DESK){try{await usersLoad()}catch(e){console.error(e)}}ensureDB();await loadPhotos();const askLang=!LANG&&!window.__QA_ROLE;if(!LANG)LANG="fr";if(window.__QA_ROLE&&!lsGet(LANGKEY))lsSet(LANGKEY,"fr");
   if(DEMODATA&&!db.machines.length&&!db.catalog.length){seedDemo()}
   if(DEMODATA)demoBar();
   chrome();if(window.__QA_ROLE)enterRole(window.__QA_ROLE,window.__QA_USER||"QA");else render();if(askLang)chooseLanguage()})();

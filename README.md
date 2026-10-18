@@ -6,7 +6,7 @@ Tool lists, tool crib and holders for a CNC machining shop: every machine, its a
 |---|---|---|
 | **Web** | [achrxf.github.io/BrocheStuff/Web](https://achrxf.github.io/BrocheStuff/Web/) | The program in the browser. Starts empty; your data stays in your browser. |
 | **Demo** | [achrxf.github.io/BrocheStuff/Demo](https://achrxf.github.io/BrocheStuff/Demo/) | The same program filled with a made-up workshop: 20 machines (3, 4 and 5 axes; BT30 / BT40 / BT50 / HSK63), 500 articles, ~500 tool codes, ~130 holders and a month of stock moves. |
-| **App** | [App/BrocheStuff-Windows.zip](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Windows.zip) | The Windows program (10/11, 64-bit). Unzip, keep `BrocheStuff.exe` and `resources.neu` together, double-click. See [`App/README.txt`](App/README.txt). |
+| **App** | [App/BrocheStuff-Setup.exe](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Setup.exe) | The Windows program (10/11, 64-bit) with sign-in accounts and a shared data folder. Run the installer (no admin rights needed), then open BrocheStuff from the Start menu; first sign-in **admin / admin**. Portable version: [BrocheStuff-Windows.zip](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Windows.zip). See [`App/README.txt`](App/README.txt). |
 
 The web version has a **Download the app** button at the top right. The demo stands on its own: it has no link to the real version and no download, so it can be shared safely.
 
@@ -15,7 +15,7 @@ The web version has a **Download the app** button at the top right. The demo sta
 ```
 Web/   index.html   the web version (one file, works offline once opened)
 Demo/  index.html   the web version with demo data (kept apart from your real data)
-App/   BrocheStuff-Windows.zip + README.txt
+App/   BrocheStuff-Setup.exe (installer), BrocheStuff-Windows.zip (portable), README.txt, FOR_IT.txt, checksums
 ```
 
 ## What it does
@@ -42,9 +42,15 @@ App/   BrocheStuff-Windows.zip + README.txt
 
 **Excel models** (download, preview, print on A4: `1_Machines_Template.xlsx` … `5_Holders_Template.xlsx`) for machines, tool crib, holders, articles and a blank tool sheet to fill by hand. Imports read the columns by their titles (French or English) with a preview first. Every table can be resized like Excel (drag the column edge). French and English (asked the first time, then remembered for each person), light and dark mode.
 
+## Windows program only
+
+- **Accounts:** everyone signs in with a name (or code) and a password. The admin creates the accounts, gives each one a service (several people per service), disables or deletes them, resets passwords, and sees the sign-in log. Passwords are stored as PBKDF2 hashes. Optional automatic sign-out after inactivity.
+- **Shared data folder:** the admin chooses where the data live — on the PC, or a network folder shared by several PCs. Changes made at the same time on different PCs are merged (two people taking tools at once are both counted).
+- **Administration page:** accounts, data folder, backups, security, sign-in log, program info, and a button to open the demo (made-up data, real data untouched).
+
 ## For IT
 
-The Windows program installs nothing, needs no admin rights and makes no internet connection; its local window server listens on 127.0.0.1 only and uses a one-time token. Details in [App/FOR_IT.txt](App/FOR_IT.txt), checksums in [App/SHA256SUMS.txt](App/SHA256SUMS.txt).
+The Windows installer works per user, needs no admin rights (only the usual HKCU uninstall entry) and the program makes no internet connection; its local window server listens on 127.0.0.1 only and uses a one-time token. Details in [App/FOR_IT.txt](App/FOR_IT.txt), checksums in [App/SHA256SUMS.txt](App/SHA256SUMS.txt).
 
 ## Your data
 
@@ -68,7 +74,7 @@ BrocheStuff regroupe les machines CNC, leurs articles et leurs outils, produit u
 
 - **Web** : https://achrxf.github.io/BrocheStuff/Web/ — le programme dans le navigateur, vide au départ.
 - **Démo** : https://achrxf.github.io/BrocheStuff/Demo/ — atelier fictif de 20 machines et 500 articles.
-- **Programme Windows** : [App/BrocheStuff-Windows.zip](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Windows.zip) — décompressez, gardez `BrocheStuff.exe` et `resources.neu` ensemble, double-cliquez (voir `README.txt`).
+- **Programme Windows** : [App/BrocheStuff-Setup.exe](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Setup.exe) — installez-le (sans droits administrateur), ouvrez BrocheStuff depuis le menu Démarrer, première connexion **admin / admin**. Comptes par personne, dossier de données partagé en réseau, page Administration, démo intégrée (voir `README.txt`).
 
 Au démarrage, choisissez votre service : Préparateur méthode, Préparateur outil, Production, ou Accès admin. Les données restent sur l'ordinateur qui les utilise (navigateur, ou `Documents\BrocheStuff` pour le programme). **Sauvegarder / Restaurer** pour les déplacer ; une copie automatique est gardée toutes les 5 minutes.
 

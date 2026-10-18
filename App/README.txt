@@ -1,62 +1,83 @@
-BrocheStuff 2.1 — Windows program
+BrocheStuff 2.2 — Windows program
 
 INSTALL
-1. Unzip the "BrocheStuff" folder anywhere (Desktop, Documents, USB stick…).
-2. Keep BrocheStuff.exe and resources.neu together in the same folder.
-3. Double-click BrocheStuff.exe.
+1. Double-click BrocheStuff-Setup.exe and follow the steps (Next, Install,
+   Finish). No administrator rights are needed.
    The first time, Windows may say "Windows protected your PC" (the program is
    not signed): click "More info" then "Run anyway".
+2. Open BrocheStuff from the Start menu or the desktop shortcut.
+   To remove it: Windows Settings > Apps > BrocheStuff > Uninstall
+   (your data are kept).
+   (A portable version without installer is in BrocheStuff-Windows.zip.)
 
 Windows 10 or 11 (64-bit). Nothing else to install.
 For your IT department: see FOR_IT.txt (what the program does and doesn't do).
 
-YOUR DATA
-- Everything is saved automatically in  Documents\BrocheStuff  (data.json),
-  with a backup copy every day (Backups folder) and an automatic copy every
-  5 minutes when something changed (Backups\auto, last 24 copies).
-- PDF sheets go to  Documents\BrocheStuff\Sheets.
-- Nothing is sent over the internet.
-- To bring data over from the web version: "Back up" in the browser, then
-  "Restore" in the program (Admin access → Restore).
+FIRST START
+- Sign in with   name: admin   password: admin
+- Go to Administration (top bar):
+  1. change the admin password (Security > Change my password);
+  2. create an account for each person: name (or a code, e.g. badge number),
+     password and service (Methods planner, Tool planner, Production, Admin).
+     A service can have as many people as needed.
+  3. to share the data between several PCs, choose the same network folder
+     (e.g. \\server\BrocheStuff) in "Data folder" on each PC.
+- Forgotten admin password: put an empty file named reset-admin.txt in the data
+  folder and start the program; admin / admin works again (other accounts kept).
 
-START
-- When it opens, choose your service: Methods planner, Tool planner, Production,
-  or "Admin access" (bottom right) to see everything.
-- The Excel models (machines, tool crib, holders, articles, tool sheet) can be
-  downloaded and printed from the start screen.
-- The first time, the program asks for your language (English or French) and
-  remembers it.
+YOUR DATA
+- Saved automatically in  Documents\BrocheStuff  (or the network folder chosen
+  by the admin): data.json, users.json (accounts, passwords scrambled), a backup
+  copy every day (Backups) and an automatic copy every 5 minutes when something
+  changed (Backups\auto, last 24 copies).
+- When several PCs share a folder, their changes are combined: two people taking
+  tools at the same time are both counted.
+- PDF sheets go to  Documents\BrocheStuff\Sheets  on each PC.
+- Nothing is sent over the internet.
+- Demo: Administration > Demo > Open the demo (made-up data, your real data
+  are not touched). "Leave the demo" brings you back.
 
 -----------------------------------------------------------------------------
 FRANÇAIS
 
-BrocheStuff 2.1 — programme Windows
+BrocheStuff 2.2 — programme Windows
 ====================================
 
 INSTALLER
-1. Décompressez le dossier "BrocheStuff" où vous voulez (Bureau, Documents, clé USB…).
-2. Gardez BrocheStuff.exe et resources.neu ensemble dans le même dossier.
-3. Double-cliquez sur BrocheStuff.exe.
+1. Double-cliquez sur BrocheStuff-Setup.exe et suivez les étapes (Suivant,
+   Installer, Terminer). Aucun droit administrateur n'est nécessaire.
    La première fois, Windows peut afficher « Windows a protégé votre ordinateur »
    (le programme n'est pas signé) : cliquez sur « Informations complémentaires »
    puis « Exécuter quand même ».
+2. Ouvrez BrocheStuff depuis le menu Démarrer ou le raccourci du Bureau.
+   Pour le retirer : Paramètres Windows > Applications > BrocheStuff >
+   Désinstaller (vos données sont gardées).
+   (Une version portable sans installation est dans BrocheStuff-Windows.zip.)
 
 Il faut Windows 10 ou 11 (64 bits). Rien d'autre à installer.
 Pour le service informatique : voir FOR_IT.txt.
 
-VOS DONNÉES
-- Tout est enregistré automatiquement dans  Documents\BrocheStuff  (data.json),
-  avec une copie de sauvegarde chaque jour (dossier Backups) et une copie
-  automatique toutes les 5 minutes quand quelque chose a changé (Backups\auto).
-- Les fiches PDF vont dans  Documents\BrocheStuff\Sheets.
-- Rien n'est envoyé sur Internet.
-- Pour reprendre les données de la version web : « Sauvegarder » dans le navigateur,
-  puis « Restaurer » dans le programme (bouton Admin → Restaurer).
+PREMIER DÉMARRAGE
+- Connectez-vous avec   nom : admin   mot de passe : admin
+- Allez dans Administration (barre du haut) :
+  1. changez le mot de passe admin (Sécurité > Changer mon mot de passe) ;
+  2. créez un compte pour chaque personne : nom (ou un code, ex. numéro de
+     badge), mot de passe et service (Préparateur méthode, Préparateur outil,
+     Production, Admin). Un service peut avoir autant de personnes que voulu.
+  3. pour partager les données entre plusieurs PC, choisissez le même dossier
+     réseau (ex. \\serveur\BrocheStuff) dans « Dossier des données » sur chaque PC.
+- Mot de passe admin oublié : placez un fichier vide nommé reset-admin.txt dans
+  le dossier des données et démarrez le programme ; admin / admin refonctionne
+  (les autres comptes sont gardés).
 
-DÉMARRER
-- Au lancement, choisissez votre service : Préparateur méthode, Préparateur outil,
-  Production, ou « Accès admin » (en bas à droite) pour tout voir.
-- Les modèles Excel (machines, magasin outils, porte-outils, articles, fiche outils)
-  se téléchargent et s'impriment depuis l'écran de démarrage.
-- La première fois, le programme demande votre langue (français ou anglais) et
-  la garde en mémoire.
+VOS DONNÉES
+- Enregistrées automatiquement dans  Documents\BrocheStuff  (ou le dossier réseau
+  choisi par l'admin) : data.json, users.json (comptes, mots de passe brouillés),
+  une copie chaque jour (Backups) et une copie automatique toutes les 5 minutes
+  quand quelque chose a changé (Backups\auto, 24 dernières).
+- Quand plusieurs PC partagent un dossier, leurs changements sont combinés :
+  deux personnes qui sortent des outils en même temps sont comptées toutes les deux.
+- Les fiches PDF vont dans  Documents\BrocheStuff\Sheets  sur chaque PC.
+- Rien n'est envoyé sur Internet.
+- Démo : Administration > Démo > Ouvrir la démo (données fictives, vos vraies
+  données ne sont pas touchées). « Quitter la démo » pour revenir.

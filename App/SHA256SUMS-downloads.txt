@@ -1,0 +1,2 @@
+e216c4e49f4a30ccd2acbbe0cc5c30f6b04e73f807fe817f0690629ccb412535  BrocheStuff-Setup.exe
+ac2bb1653360e5bc07a56cf7b5ad44ec6c15a8a3f50f3a9525a7f8c7398dc7b5  BrocheStuff-Windows.zip
