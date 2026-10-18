@@ -30,6 +30,16 @@ App/   BrocheStuff-Windows.zip + README.txt
 
 **Production.** One search box for codes, holders and articles; the location in big letters, the stock, the tool list and the sheet; comments saved in the stock log.
 
+**Validated sheets and history.** *Validate the sheet* locks it (nothing can be typed) and the PDF shows a green **VALIDATED · date · name** band; unfinished sheets print **IN PROGRESS**. To change a validated sheet, make a **new index** (A → B → C…): the old index stays in the history with its PDF. Only the admin can type an index, and an index already used can't be used again. Every change is kept in the history (who, when, which fields and tools).
+
+**CNC programs and CAM.** Import CNC programs (Fanuc, Haas, Mazak, Okuma, Heidenhain `TOOL CALL`, Siemens; `.nc .tap .min .mpf .h .eia .iso .txt`…): one article per program, with the tool list read from the T numbers, the tool comments and the Mastercam tool table at the top of the program. Tool lists exported from Mastercam or other CAM software (Excel / CSV) and Fusion 360 / Inventor CAM tool libraries (`.json`) can be imported into a sheet. Mastercam's own `.tooldb` files can't be read: export the tool list to Excel/CSV first.
+
+**Machine magazines.** What is loaded in each machine now, pocket by pocket, with who changed it. Compare the magazine with an article to see what to load or swap, and load it in one click.
+
+**Reports.** Tools taken per month, most-taken tools, per machine and per person, codes used in the most sheets, unused codes, codes that didn't move for 90 days, sheets per machine; export to CSV.
+
+**Stock alert.** When the tool planner logs in, a list of tools and holders out of stock or low comes up right away, with the order list.
+
 **Excel models** (download, preview, print on A4: `1_Machines_Template.xlsx` … `5_Holders_Template.xlsx`) for machines, tool crib, holders, articles and a blank tool sheet to fill by hand. Imports read the columns by their titles (French or English) with a preview first. Every table can be resized like Excel (drag the column edge). French and English (asked the first time, then remembered for each person), light and dark mode.
 
 ## Your data
@@ -37,6 +47,7 @@ App/   BrocheStuff-Windows.zip + README.txt
 Nothing is sent anywhere.
 - **Web:** saved in the browser that uses it. **Sauvegarder / Back up** writes a file; **Restaurer / Restore** reads it on another PC.
 - **Windows program:** saved in `Documents\BrocheStuff` with a daily backup copy.
+- **Automatic copies:** every 5 minutes, when something changed, a copy is kept (last 24, in the browser or in `Documents\BrocheStuff\Backups\auto`). **Restaurer / Restore** lists them.
 - **Demo:** kept separately from the web version, with its own made-up company logo and a **Reset the demo** button.
 
 Each PC keeps its own data: to share one database between several PCs, a shared folder or a small server is the next step.
@@ -55,4 +66,6 @@ BrocheStuff regroupe les machines CNC, leurs articles et leurs outils, produit u
 - **Démo** : https://achrxf.github.io/BrocheStuff/Demo/ — atelier fictif de 20 machines et 500 articles.
 - **Programme Windows** : [App/BrocheStuff-Windows.zip](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Windows.zip) — décompressez, gardez `BrocheStuff.exe` et `resources.neu` ensemble, double-cliquez (voir `README.txt`).
 
-Au démarrage, choisissez votre service : Préparateur méthode, Préparateur outil, Production, ou Accès admin. Les données restent sur l'ordinateur qui les utilise (navigateur, ou `Documents\BrocheStuff` pour le programme). **Sauvegarder / Restaurer** pour les déplacer.
+Au démarrage, choisissez votre service : Préparateur méthode, Préparateur outil, Production, ou Accès admin. Les données restent sur l'ordinateur qui les utilise (navigateur, ou `Documents\BrocheStuff` pour le programme). **Sauvegarder / Restaurer** pour les déplacer ; une copie automatique est gardée toutes les 5 minutes.
+
+Nouveau : fiches **validées** (verrouillées, bande verte sur le PDF, nouvel indice pour modifier, historique des versions), import des **programmes CN** et des listes d'outils **Mastercam / FAO**, **magasins des machines** (poche par poche, comparaison avec un article), **rapports** de consommation, **alerte stock** pour le préparateur outil.

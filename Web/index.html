@@ -1087,11 +1087,106 @@ body.gating .getapp{padding-left:12px;padding-right:12px}
   table.tt input{padding:0 6px}
   .demobar .dshort{display:none}
 }
+
+/* ===== v2.1: automatic copies, magazines, reports, alert, validated sheets ===== */
+.snaplist{display:flex;flex-direction:column;gap:6px;max-height:46vh;overflow:auto;margin-top:4px}
+.snap{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:8px 12px;border:1px solid var(--hair);border-radius:8px;background:var(--paper)}
+.snap b{font-family:var(--mono);font-size:13px}
+.magc .mprogline{display:flex;align-items:baseline;gap:5px;margin-top:12px}
+.magc .mprogline b{font-size:22px;font-family:var(--mono)}
+.magc .mprogline span{color:var(--mid);font-size:12.5px}
+.magbar{height:6px;border-radius:4px;background:var(--fill);border:1px solid var(--hair);overflow:hidden;margin-top:8px}
+.magbar i{display:block;height:100%;background:var(--done)}
+.magsize{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--mid);font-weight:600}
+.magsize input{width:64px;padding:7px 8px;border:1px solid var(--hair);border-radius:6px;background:var(--paper);color:var(--ink);text-align:center}
+.pockets{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:8px;margin-bottom:18px}
+.pk{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:86px;padding:22px 10px 8px;border:1px dashed var(--line2,var(--hair));border-radius:10px;background:transparent;color:var(--ink);cursor:pointer;text-align:left;font:inherit}
+.pk:hover{border-color:var(--ink)}
+.pk .pn{position:absolute;top:6px;left:9px;font:700 11px var(--mono);color:var(--mid)}
+.pk.full{border:1px solid var(--hair);border-left:4px solid var(--done);background:var(--paper);box-shadow:var(--sh1)}
+.pk.full b{font-size:14px;font-family:var(--mono);word-break:break-all}
+.pk .pt{font-size:11.5px;color:var(--ink);line-height:1.25}
+.pk .ph2{font-size:11px;color:var(--mid);line-height:1.2;word-break:break-word}
+.maglog .hist li{grid-template-columns:44px 1fr auto}
+.cmpsum{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 10px}
+.cmpsum .cs{display:flex;align-items:baseline;gap:6px;padding:6px 12px;border-radius:20px;background:var(--fill);border:1px solid var(--hair);font-size:12.5px;color:var(--mid)}
+.cmpsum .cs b{font:700 16px var(--mono);color:var(--ink)}
+.cmpsum .cs-load b{color:var(--red-tx)}.cmpsum .cs-swap b{color:#b07400}.cmpsum .cs-ok b{color:var(--done)}
+.cmptag{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11.5px;font-weight:600;white-space:nowrap}
+.cmp-load .cmptag{background:var(--red);color:#fff}.cmp-swap .cmptag{background:#fdf0d6;color:#8a5a00}.cmp-ok .cmptag{background:var(--done-l);color:var(--done)}
+.repbody .tiles4{margin-bottom:16px}
+.repgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px}
+.repgrid .card{margin:0;min-width:0}
+.mchart{display:flex;align-items:flex-end;gap:6px;height:180px;padding-top:16px}
+.mcol{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0}
+.mcol .mb{width:70%;max-width:34px;min-height:2px;background:var(--red);border-radius:4px 4px 0 0}
+.mcol .mv{font:600 11px var(--mono);color:var(--mid);margin-bottom:3px}
+.mcol .ml{font-size:11px;color:var(--mid);margin-top:5px;white-space:nowrap}
+.bars{display:flex;flex-direction:column;gap:7px}
+.bars .br{display:grid;grid-template-columns:minmax(80px,40%) 1fr 44px;gap:10px;align-items:center;font-size:13px}
+.bars .br>b,.bars .br>.linkcode{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left}
+.bars .bt{height:10px;background:var(--fill);border-radius:5px;overflow:hidden}
+.bars .bt i{display:block;height:100%;background:var(--ink2,var(--ink));border-radius:5px}
+.bars .br .m{text-align:right;font-weight:600}
+.chipwrap{display:flex;flex-wrap:wrap;gap:6px 12px}
+.chipwrap .linkcode{font-size:13px}
+.alerth{color:var(--red-tx)}
+.alertdlg .alertlist{display:flex;flex-direction:column;gap:4px;max-height:48vh;overflow:auto;margin-top:6px}
+.alrow{display:grid;grid-template-columns:minmax(90px,auto) 1fr auto auto;gap:10px;align-items:center;padding:7px 10px;border:1px solid var(--hair);border-radius:8px;background:var(--paper);color:var(--ink);cursor:pointer;text-align:left;font:inherit}
+.alrow:hover{border-color:var(--ink)}
+.alrow .cl{color:var(--mid);font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.status-box .vstamp{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;background:var(--done);color:#fff;font-weight:700;font-size:13.5px}
+.status-box .vstamp b{font-family:var(--mono)}
+.status-box .lockp{flex-basis:100%;margin:6px 0 0}
+.status-box{flex-wrap:wrap}
+.ed.locked .form input:disabled,.ed.locked .form textarea:disabled,.ed.locked .form select:disabled{background:var(--fill);color:var(--ink);opacity:1;cursor:not-allowed;-webkit-text-fill-color:var(--ink)}
+input.ro,input[readonly].ro{background:var(--fill);cursor:not-allowed}
+.histlist li{grid-template-columns:minmax(110px,auto) 1fr auto}
+.histlist li b{font-family:var(--body);font-size:12.5px}
+.histlist li.h-validate b{color:var(--done)}
+.histlist li.h-newindex b{color:var(--red-tx)}
+.histlist .btn.sm{padding:2px 8px;font-size:11.5px;margin-left:6px}
+@media (max-width:760px){
+  .pockets{grid-template-columns:repeat(auto-fill,minmax(104px,1fr))}
+  .repgrid{grid-template-columns:1fr}
+  .bars .br{grid-template-columns:minmax(70px,38%) 1fr 36px}
+  .snap{grid-template-columns:1fr auto}.snap .small{grid-column:1/-1;order:3}
+  .alrow{grid-template-columns:1fr auto auto}.alrow .cl{display:none}
+  .histlist li{grid-template-columns:1fr auto}.histlist li>span:nth-child(2){grid-column:1/-1;order:3}
+  .maglog .hist li{grid-template-columns:36px 1fr}.maglog .hist li>.dim{grid-column:2}
+}
+#b-logo,#b-backup,#b-restore{display:inline-flex;align-items:center;gap:7px}
+#b-logo[hidden],#b-backup[hidden],#b-restore[hidden]{display:none}
+#b-logo svg,#b-backup svg,#b-restore svg{display:none}
+@media (max-width:1800px){body.role-admin #b-logo svg,body.role-admin #b-backup svg,body.role-admin #b-restore svg{display:block}body.role-admin #b-logo .lbl,body.role-admin #b-backup .lbl,body.role-admin #b-restore .lbl{display:none}}
+@media (max-width:1250px){body.role-outil #b-backup svg{display:block}body.role-outil #b-backup .lbl{display:none}}
+.magsize input{width:70px!important;flex:0 0 70px}
+.pk:not(.full){min-height:64px}
+@media (max-width:1100px) and (min-width:761px){#b-logo svg,#b-backup svg,#b-restore svg{display:block}#b-logo .lbl,#b-backup .lbl,#b-restore .lbl{display:none}.rolechip .rl span{display:none}}
+@media (max-width:1180px) and (min-width:761px){body.role-admin .mainnav button{padding:0 6px;font-size:12.5px}body.role-admin .mainnav{margin-left:2px}body.role-admin .top .tb{padding:6px 7px}body.role-admin .top{gap:5px}}
+@media (max-width:960px) and (min-width:761px){body.role-admin .mainnav button{padding:0 4px;font-size:12px}body.role-admin .brand h1{font-size:17px}body.role-admin .lang button{padding:0 6px}}
+@media (max-width:1100px) and (min-width:761px){.rolechip .rl{display:none}.rolechip{padding:5px}.tb.dl{padding:7px 10px}.top .tb{padding:6px 8px}.mainnav button{padding:0 8px}}
+.dlg{max-height:calc(100vh - 90px);display:flex;flex-direction:column}
+.dlg .bd{overflow:auto;flex:1 1 auto;min-height:0}
+.dlg header,.dlg .ft{flex:0 0 auto}
+@media (max-width:1480px) and (min-width:1181px){body.role-admin .mainnav button{padding:0 8px;font-size:13.5px}body.role-admin .top .tb{padding:6px 8px}body.role-admin .top{gap:6px}body.role-admin .rolechip .rl{display:none}body.role-admin .rolechip{padding:5px}}
+@media (max-width:1100px) and (min-width:761px){body.role-admin .lang{display:none}body.role-admin .brand h1{font-size:17px}}
+@media (max-width:760px){
+  table.cmpt thead{display:none}
+  table.cmpt,table.cmpt tbody{display:block}
+  table.cmpt tr{display:grid;grid-template-columns:44px 1fr auto;gap:2px 8px;padding:9px 10px;border-bottom:1px solid var(--hair);align-items:center}
+  table.cmpt td{display:block;padding:0!important;border:none!important;max-width:none!important}
+  table.cmpt td:nth-child(1){grid-row:1}table.cmpt td:nth-child(2){grid-row:1}table.cmpt td:nth-child(6){grid-row:1;grid-column:3}
+  table.cmpt td:nth-child(3),table.cmpt td:nth-child(4){grid-column:2/4;font-size:12.5px;color:var(--mid)}
+  table.cmpt td:nth-child(5){grid-column:2/4;font-size:12.5px}
+  table.cmpt td:nth-child(5)::before{content:"Poche ";color:var(--mid)}
+  html[lang="en"] table.cmpt td:nth-child(5)::before{content:"Pocket "}
+}
 </style></head>
 <body>
 <header class="top">
   <button class="brand" id="home"><i></i><h1>BrocheStuff<b>.</b></h1></button>
-  <nav class="mainnav"><button data-nav="#" id="nav-m"></button><button data-nav="#crib" id="nav-c"></button><button data-nav="#holders" id="nav-h"></button><button data-nav="#prod" id="nav-p"></button><button data-nav="#log" id="nav-l"></button></nav>
+  <nav class="mainnav"><button data-nav="#" id="nav-m"></button><button data-nav="#crib" id="nav-c"></button><button data-nav="#holders" id="nav-h"></button><button data-nav="#prod" id="nav-p"></button><button data-nav="#log" id="nav-l"></button><button data-nav="#mags" id="nav-g"></button><button data-nav="#reports" id="nav-r"></button></nav>
   <nav class="crumbs" id="crumbs"></nav>
   <span class="sp"></span>
   <span id="tbar"></span>
@@ -1770,15 +1865,15 @@ function normRA(v){v=clean(v);if(!v)return{kind:"",val:""};
 const realTools=ts=>(ts||[]).filter(x=>COLS.some(k=>k!=="t"&&clean(x[k])));
 
 /* ---------- PDF drawing (A4, mm) ---------- */
-const C={ink:[22,22,22],red:[158,15,18],mid:[91,91,91],soft:[154,154,154],hair:[226,226,226],fill:[246,246,246],head:[241,241,241],white:[255,255,255]};
+const C={ink:[22,22,22],red:[158,15,18],green:[22,122,62],mid:[91,91,91],soft:[154,154,154],hair:[226,226,226],fill:[246,246,246],head:[241,241,241],white:[255,255,255]};
 const PT=0.3528;
 const SHEETL={
   en:{spine:"TOOL LIST",title:"Tool List",sub:"Fiche outils",article:"Article",des:"Designation",ref:"Reference",prog:"Program",mach:"Machine",mat:"Material",index:"Index",
       type:"Type",head:["Tool","Type  ·  Ø  ·  R / °","LS","LT","Z","Holder","Code"],page:"Page",allmm:"All dimensions in",ls:"length out of the holder (stick-out)",ra:"corner radius or point angle",z:"flutes / inserts",
-      notes:"Notes",prep:"Prepared by",appr:"Approved by",date:"Date",doc:"Tool list"},
+      notes:"Notes",prep:"Prepared by",appr:"Approved by",date:"Date",doc:"Tool list",valid:"VALIDATED",wip:"IN PROGRESS · NOT VALIDATED"},
   fr:{spine:"FICHE OUTILS",title:"Fiche Outils",sub:"Tool list",article:"Article",des:"Désignation",ref:"Référence",prog:"Programme",mach:"Machine",mat:"Matière",index:"Indice",
       type:"Type",head:["Outil","Type  ·  Ø  ·  R / °","LS","LT","Z","Porte-outil","Code"],page:"Page",allmm:"Toutes les cotes en",ls:"longueur de sortie (hors porte-outil)",ra:"rayon de bec ou angle de pointe",z:"nombre de dents / plaquettes",
-      notes:"Remarques",prep:"Établi par",appr:"Approuvé par",date:"Date",doc:"Fiche outils"}};
+      notes:"Remarques",prep:"Établi par",appr:"Approuvé par",date:"Date",doc:"Fiche outils",valid:"VALIDÉE",wip:"EN COURS · NON VALIDÉE"}};
 function makePDF(data){
   const L=SHEETL[(typeof LANG!=="undefined"&&LANG)||"en"]||SHEETL.en;
   const {jsPDF}=window.jspdf;
@@ -1793,6 +1888,7 @@ function makePDF(data){
   const line=(x1,y1,x2,y2,c,w)=>{stroke(c);doc.setLineWidth(w);doc.line(x1,y1,x2,y2)};
   const angleSym=(x,y,h,c,w=0.25)=>{stroke(c);doc.setLineWidth(w);doc.line(x,y,x+h*0.95,y);doc.line(x,y,x+h*0.8,y-h*0.85);return h*0.95+0.4};
   const X0=17, W=183, X1=X0+W;
+  const dstr=ts=>{const d=new Date(ts);return `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}/${d.getFullYear()}`};
 
   function spine(){
     fill(C.fill);doc.rect(0,0,11,297,"F");line(11,0,11,297,C.hair,0.3);
@@ -1824,7 +1920,12 @@ function makePDF(data){
     // article plate (light grey, red band on top)
     const ax=151,aw=X1-151,ah=18.8;
     fill(C.head);doc.roundedRect(ax,Y,aw,ah,2.4,2.4,"F");
-    fill(C.red);doc.roundedRect(ax,Y,aw,5,2.4,2.4,"F");fill(C.head);doc.rect(ax,Y+1.3,aw,4,"F");
+    const ST=!BLANK&&data.stamp;
+    if(ST){const ok=!!ST.done;fill(ok?C.green:C.red);doc.roundedRect(ax,Y,aw,8,2.4,2.4,"F");fill(C.head);doc.rect(ax,Y+4.3,aw,4.2,"F");
+      color(C.white);font("BarlowSB",5.8);const lab=ok?`✓ ${L.valid}${ST.ts?"  "+dstr(ST.ts):""}${ST.who?"  ·  "+ST.who:""}`:L.wip;
+      doc.setFont("BarlowSB","normal");txt(fit(ok?lab.replace("✓ ",""):lab,aw-8-(ok?3:0),0.12),ax+4+(ok?3.2:0),Y+3.2,{cs:0.12});
+      if(ok){stroke(C.white);doc.setLineWidth(0.45);doc.setLineJoin("round");doc.lines([[0.8,0.8],[1.6,-1.8]],ax+4,Y+2.2,[1,1],"S",false)}}
+    else{fill(C.red);doc.roundedRect(ax,Y,aw,5,2.4,2.4,"F");fill(C.head);doc.rect(ax,Y+1.3,aw,4,"F")}
     color(C.mid);font("Plex5",6.6);txt(L.article,ax+4,Y+6.2);
     if(BLANK){stroke(C.soft);doc.setLineWidth(0.25);doc.setLineDashPattern([0.4,0.7],0);doc.line(ax+4,Y+15.6,ax+aw-4,Y+15.6);doc.setLineDashPattern([],0);return}
     let size=18;font("MonoB",size);const num=a.number||"—";while(size>10&&tw(num,-0.1)>aw-8){size-=1;font("MonoB",size)}
@@ -2070,13 +2171,13 @@ function ensureDB(){if(!Array.isArray(db.stockLog))db.stockLog=[];if(!Array.isAr
     db.articles.forEach(a=>{if(!db.machines.some(m=>m.id===a.machineId))a.machineId=nm.id})}
   db.articles.forEach(a=>{if(!a.article)a.article={};if(!Array.isArray(a.tools))a.tools=[]});db.catalog.forEach(c=>{if("label" in c){if(!clean(c.type)&&clean(c.label))c.type=c.label.toUpperCase();delete c.label}})}
 /* ---------- storage: saves are grouped (no work on every keystroke); photos live in IndexedDB ---------- */
-const STOREKEY="toolmanager.store";let STORE=lsGet(STOREKEY)==="idb"?"idb":"ls",saveT=null;
-const IDB={p:null,open(){return this.p||(this.p=new Promise((res,rej)=>{let r;try{r=indexedDB.open(NS?"toolmanager-demo":"toolmanager",1)}catch(e){return rej(e)}
-    r.onupgradeneeded=()=>{const d=r.result;["kv","photos"].forEach(n=>{if(!d.objectStoreNames.contains(n))d.createObjectStore(n)})};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}))},
+const STOREKEY="toolmanager.store";let STORE=lsGet(STOREKEY)==="idb"?"idb":"ls",saveT=null,DIRTY=false;
+const IDB={p:null,open(){return this.p||(this.p=new Promise((res,rej)=>{let r;try{r=indexedDB.open(NS?"toolmanager-demo":"toolmanager",2)}catch(e){return rej(e)}
+    r.onupgradeneeded=()=>{const d=r.result;["kv","photos","snaps"].forEach(n=>{if(!d.objectStoreNames.contains(n))d.createObjectStore(n)})};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}))},
   async tx(store,mode,fn){const d=await this.open();return new Promise((res,rej)=>{const x=d.transaction(store,mode),st=x.objectStore(store);let out;const rq=fn(st);if(rq)rq.onsuccess=()=>{out=rq.result};x.oncomplete=()=>res(out);x.onerror=()=>rej(x.error);x.onabort=()=>rej(x.error)})},
   get(st,k){return this.tx(st,"readonly",o=>o.get(k))},put(st,k,v){return this.tx(st,"readwrite",o=>o.put(v,k))},del(st,k){return this.tx(st,"readwrite",o=>o.delete(k))},
   async all(st){const d=await this.open();return new Promise((res,rej)=>{const x=d.transaction(st,"readonly"),m=new Map(),rq=x.objectStore(st).openCursor();rq.onsuccess=()=>{const c=rq.result;if(c){m.set(c.key,c.value);c.continue()}};x.oncomplete=()=>res(m);x.onerror=()=>rej(x.error)})}};
-function saveDB(){ensureDB();if(DESK){desk.save();return}clearTimeout(saveT);saveT=setTimeout(saveNow,250)}
+function saveDB(){ensureDB();DIRTY=true;if(DESK){desk.save();return}clearTimeout(saveT);saveT=setTimeout(saveNow,250)}
 function saveNow(){clearTimeout(saveT);saveT=null;if(DESK){desk.save();return}const str=JSON.stringify(db);
   if(STORE==="ls"){canStore=lsSet(DBKEY,str);if(canStore)return}
   // too big for browser storage (or already moved): keep everything in IndexedDB instead
@@ -2100,7 +2201,7 @@ const natCmp=(a,b)=>String(a).localeCompare(String(b),undefined,{numeric:true,se
 const machinesSorted=()=>db.machines.slice().sort((a,b)=>natCmp(a.abbr||a.name,b.abbr||b.name));
 const A=id=>db.articles.find(a=>a.id===id);
 const artsOf=mid=>db.articles.filter(a=>a.machineId===mid);
-const sheetData=art=>{const m=M(art.machineId);return{article:{...art.article,machine:m?(normCone(m.cone)&&m.abbr?`${m.abbr} · ${normCone(m.cone)} · ${m.name}`:mLabel(m)):""},tools:art.tools}};
+const sheetData=art=>{const m=M(art.machineId);return{article:{...art.article,machine:m?(normCone(m.cone)&&m.abbr?`${m.abbr} · ${normCone(m.cone)} · ${m.name}`:mLabel(m)):""},tools:art.tools,stamp:art.status==="done"?{done:1,ts:(art.validated&&art.validated.ts)||art.updatedAt,who:(art.validated&&art.validated.who)||""}:{done:0}}};
 function fileName(art,ext){const s=x=>String(x||"").trim().replace(/[\\/:*?"<>|]+/g,"-").replace(/\s+/g,"_");const a=art.article||{};return `${t("filePrefix")}_${s(a.number)||"sheet"}${a.index?"_"+s(a.index):""}.${ext}`}
 async function download(name,blob,kind){if(DESK)return desk.saveAs(name,blob,kind);const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500);return "downloads"}
 async function downloadPDF(art){try{const name=fileName(art,"pdf");const p=await download(name,makePDF(sheetData(art)).output("blob"),"pdf");if(!p)return;
@@ -2117,6 +2218,9 @@ function parseRoute(){const h=location.hash.slice(1);
   if(h==="crib")return{view:"crib"};
   if(h==="prod")return{view:"prod"};
   if(h==="log")return{view:"log"};
+  if(h==="mags")return{view:"mags"};
+  if(h==="reports")return{view:"reports"};
+  if(h.startsWith("mag-")&&M(h.slice(4)))return{view:"mag",id:h.slice(4)};
   if(h.startsWith("v-")&&A(h.slice(2)))return{view:"aview",id:h.slice(2)};
   if(h.startsWith("pc-")){const k=decodeURIComponent(h.slice(3));if(C_(k))return{view:"pcode",code:normCode(k)};return{view:"prod"}}
   if(h.startsWith("ph-")){const k=decodeURIComponent(h.slice(3));if(H_(k))return{view:"pholder",ref:normH_(k)};return{view:"prod"}}
@@ -2135,10 +2239,13 @@ const dlIcon=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-
 const eyeIcon=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>`;
 
 /* ---------- chrome (top bar, lists) in the chosen language ---------- */
+const TBI={"#b-logo":`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/></svg>`,
+ "#b-backup":`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h11l3 3v15H5z"/><path d="M8 3v5h7V3M8 21v-7h8v7"/></svg>`,
+ "#b-restore":`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/></svg>`};
 function chrome(){
   document.documentElement.lang=LANG||"en";
   $("#home").title=t("allMachines");
-  const s=(id,txt,title)=>{const b=$(id);b.textContent=txt;b.title=title};
+  const s=(id,txt,title)=>{const b=$(id);b.innerHTML=(TBI[id]||"")+`<span class="lbl">${esc(txt)}</span>`;b.title=title};
   s("#b-logo",t("logo"),t("logoT"));s("#b-backup",t("backup"),t("backupT"));s("#b-restore",t("restore"),t("restoreT"));
   document.querySelectorAll("[data-lang]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lang===LANG));
   drawThemeBtn();
@@ -2187,12 +2294,15 @@ function render(){
   if(!can(route.view)){const hm=ROLES[ROLE].home;if((location.hash||"#")!==hm){location.replace(hm);return}}
   const cr=$("#crumbs"), tb=$("#tbar");tb.innerHTML="";
   if(route.view!=="article")pvTeardown();
-  const sec={crib:"#crib",code:"#crib",holders:"#holders",holder:"#holders",prod:"#prod",pcode:"#prod",pholder:"#prod",aview:ROLE==="outil"?"":"#prod",log:"#log"}[route.view]??"#";
+  const sec={crib:"#crib",code:"#crib",holders:"#holders",holder:"#holders",prod:"#prod",pcode:"#prod",pholder:"#prod",aview:ROLE==="outil"?"":"#prod",log:"#log",mags:"#mags",mag:"#mags",reports:"#reports"}[route.view]??"#";
   const pcr=can("prod")?`<i>/</i><a data-go="#prod">${esc(t("prodT"))}</a>`:"";
   document.querySelectorAll("[data-nav]").forEach(b=>b.setAttribute("aria-current",String(b.dataset.nav===sec)));
   if(route.view==="home"){cr.innerHTML="";renderHome()}
   else if(route.view==="prod"){cr.innerHTML="";renderProd()}
   else if(route.view==="log"){cr.innerHTML="";renderLog()}
+  else if(route.view==="mags"){cr.innerHTML="";renderMags()}
+  else if(route.view==="reports"){cr.innerHTML="";renderReports()}
+  else if(route.view==="mag"){const m=M(route.id);cr.innerHTML=`<i>/</i><a data-go="#mags">${esc(t("navMags"))}</a><i>/</i><span>${esc(mShort(m))}</span>`;renderMag(m)}
   else if(route.view==="pcode"){const c=C_(route.code);cr.innerHTML=`${pcr}<i>/</i><span>${esc(c.code)}</span>`;renderPItem(c,false)}
   else if(route.view==="pholder"){const h=H_(route.ref);cr.innerHTML=`${pcr}<i>/</i><span>${esc(h.ref)}</span>`;renderPItem(h,true)}
   else if(route.view==="aview"){const art=A(route.id);cr.innerHTML=`${pcr}<i>/</i><span>${esc(art.article.number||t("noNumber"))}</span>`;
@@ -2298,12 +2408,12 @@ function renderMachine(m){
   $("#view").innerHTML=`<div class="page">
     <div class="ph"><div class="mhead">${m.abbr?`<span class="abbig">${esc(m.abbr)}</span>`:""}<div><h2>${esc(m.name)}<b>.</b></h2><div class="sub">${coneTag(m.cone,1)?coneTag(m.cone,1)+" ":""}${esc(mInfo(m))}${mInfo(m)?" · ":""}<span id="mcount"></span></div></div></div><span class="sp"></span>
       <div class="search">${searchIcon}<input id="q" type="search" placeholder="${esc(t("machSearch"))}" value="${esc(machQ)}" autocomplete="off"></div>
-      <button class="btn" id="b-impa" title="${esc(t("impT"))}">${esc(t("imp"))}</button>
+      <button class="btn" id="b-impa" title="${esc(t("impT"))}">${esc(t("imp"))}</button><button class="btn" id="b-impnc" title="${esc(t("impNCP"))}">${esc(t("impNC"))}</button><button class="btn ghost" id="b-mag">${esc(t("navMags"))}</button>
       ${db.articles.some(a=>a.machineId===m.id)?`<button class="btn danger" id="b-wipe">${esc(t("wipeAll"))}</button>`:""}
       <button class="btn red" id="newa">${esc(t("newArticle"))}</button></div>
     <div id="mres"></div>
   </div>`;
-  $("#newa").onclick=()=>newArticle(m);$("#b-impa").onclick=()=>startImport("articles",{machineId:m.id});if($("#b-wipe"))$("#b-wipe").onclick=()=>wipeDialog("machine",m);
+  $("#newa").onclick=()=>newArticle(m);$("#b-impa").onclick=()=>startImport("articles",{machineId:m.id});$("#b-impnc").onclick=()=>importPrograms(m);$("#b-mag").onclick=()=>go("#mag-"+m.id);if($("#b-wipe"))$("#b-wipe").onclick=()=>wipeDialog("machine",m);
   const q=$("#q");q.oninput=()=>{machQ=q.value;drawMachine(m)};drawMachine(m);
 }
 function drawMachine(m){
@@ -2337,8 +2447,8 @@ function wireArticleTable(box){fadeClips(box);
   box.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>arm(b,()=>{const a=A(b.dataset.del);db.articles=db.articles.filter(x=>x!==a);saveDB();toast(t("deleted",a.article.number||t("articleWord")));render()},t("confirm")));
 }
 function newArticle(m){
-  const art={id:uid(),machineId:m.id,article:{date:today()},tools:[{t:"T01"}],status:"progress",createdAt:Date.now(),updatedAt:Date.now(),fresh:true};
-  db.articles.push(art);saveDB();go("#a-"+art.id);
+  const art={id:uid(),machineId:m.id,article:{index:"A",date:today()},tools:[{t:"T01"}],status:"progress",createdAt:Date.now(),updatedAt:Date.now(),fresh:true,history:[]};
+  addHist(art,"create");db.articles.push(art);saveDB();go("#a-"+art.id);
 }
 
 /* ---------- dialogs ---------- */
@@ -2420,13 +2530,13 @@ function copyDialog(src){
   dialog(esc(t("copyTitle")),`
     <p class="note" style="margin:0">${esc(t("copyP"))}</p>
     <label class="f">${esc(t("copyOn"))}<select id="d-m">${machinesSorted().map(m=>`<option value="${m.id}" ${m.id===src.machineId?"selected":""}>${esc(mLabel(m))}</option>`).join("")}</select></label>
-    <div class="grid"><label class="f c4">${esc(t("articleNumber"))}<input id="d-num" class="big" value="${esc(src.article.number||"")}"></label><label class="f c2">${esc(t("index"))}<input id="d-ix" class="big" value="${esc(nextIndex(src.article.index))}"></label></div><p class="err" id="d-err" hidden></p>`,
+    <div class="grid"><label class="f c4">${esc(t("articleNumber"))}<input id="d-num" class="big" value="${esc(src.article.number||"")}"></label><label class="f c2">${esc(t("index"))}<input id="d-ix" class="big${ROLE==="admin"?"":" ro"}" ${ROLE==="admin"?"":"readonly"} value="${esc(nextIndex(src.article.index)||"A")}"></label></div><p class="err" id="d-err" hidden></p>`,
     `<button class="btn ghost" id="d-cancel">${esc(t("cancel"))}</button><button class="btn red" id="d-ok">${esc(t("makeCopy"))}</button>`);
   $("#d-cancel").onclick=closeDlg;
   $("#d-ok").onclick=()=>{const mid=$("#d-m").value,num=$("#d-num").value.trim(),ix=$("#d-ix").value.trim();
     if(db.articles.some(a=>a.machineId===mid&&clean(a.article.number).toLowerCase()===num.toLowerCase()&&clean(a.article.index).toLowerCase()===ix.toLowerCase())){const e=$("#d-err");e.textContent=t("copyDup");e.hidden=false;return}
-    const art={id:uid(),machineId:mid,article:{...src.article,number:num,index:ix,date:today()},tools:JSON.parse(JSON.stringify(src.tools)),status:"progress",createdAt:Date.now(),updatedAt:Date.now()};
-    db.articles.push(art);saveDB();closeDlg();go("#a-"+art.id);toast(t("copyMade"))};
+    const art={id:uid(),machineId:mid,article:{...src.article,number:num,index:ix,date:today(),approvedBy:""},tools:JSON.parse(JSON.stringify(src.tools)),status:"progress",createdAt:Date.now(),updatedAt:Date.now(),history:[]};
+    addHist(art,"create",{src:(src.article.number||"")+(src.article.index?" · "+src.article.index:"")});db.articles.push(art);saveDB();closeDlg();go("#a-"+art.id);toast(t("copyMade"))};
 }
 
 /* ---------- editor (the tool list maker) ---------- */
@@ -2470,7 +2580,7 @@ function renderEditor(art){fillHolderList(M(art.machineId)?.cone);
       <div class="tw"><table class="tt">
         <thead><tr><th style="width:48px">${esc(t("colTool"))}</th><th>${esc(t("colType"))}</th><th style="width:54px">Ø</th><th style="width:58px">R / ∠</th><th style="width:46px">LS</th><th style="width:54px" title="${esc(t("oal"))}">LT</th><th style="width:36px">Z</th><th style="width:156px">${esc(t("colHolder"))}${coneTag(M(cur.machineId)?.cone)?" "+coneTag(M(cur.machineId)?.cone):""}</th><th style="width:90px">${esc(t("colCode"))}</th><th></th></tr></thead>
         <tbody id="rows"></tbody></table></div>
-      <div class="rowbar"><button class="btn" id="b-add">${esc(t("addTool"))}</button><button class="btn ghost" id="b-impt" title="${esc(t("impT"))}">${esc(t("imp"))}</button><button class="btn ghost" id="b-prep" title="${esc(t("prepT"))}">${esc(t("prep"))}</button><span class="note">${t("excelNote")}</span></div>
+      <div class="rowbar"><button class="btn" id="b-add">${esc(t("addTool"))}</button><button class="btn ghost" id="b-impt" title="${esc(t("impT"))}">${esc(t("imp"))}</button><button class="btn ghost" id="b-ncimp" title="${esc(t("impNCP"))}">${esc(t("ncFromProg"))}</button><button class="btn ghost" id="b-prep" title="${esc(t("prepT"))}">${esc(t("prep"))}</button><button class="btn ghost" id="b-magcmp">${esc(t("magCmpBtn"))}</button><span class="note">${t("excelNote")}</span></div>
     </div>
     <div class="card">
       <h2>${esc(t("notesSign"))}</h2>
@@ -2482,6 +2592,7 @@ function renderEditor(art){fillHolderList(M(art.machineId)?.cone);
       </div>
       <span class="note">${esc(t("signNote"))}</span>
     </div>
+    <div class="card"><h2>${esc(t("histT"))}</h2><div id="histbox"></div></div>
   </section>
   <section class="pv" id="pvsec"><div class="pvbar"><span>${esc(t("preview"))}</span><span id="pvinfo">A4</span></div><div class="pvpages" id="pvpages"></div></section></div>`;
   AFIELDS.forEach(k=>{const el=$("#a-"+k);el.value=a[k]??"";el.addEventListener("input",()=>{cur.article[k]=el.value;edited();if(REQ_ART.includes(k))drawStatus();if(k==="number"||k==="index"){checkDup();$("#crumbs span:last-child").textContent=cur.article.number||t("newArticleCrumb")}})});
@@ -2512,7 +2623,13 @@ function renderEditor(art){fillHolderList(M(art.machineId)?.cone);
     renderRows();edited();toast(t("pasted",lines.length))});
   $("#b-add").onclick=()=>addRow();
   $("#b-prep").onclick=()=>{flushEditor();prepDialog(cur)};if(!canStock())$("#b-prep").hidden=true;
-  $("#b-impt").onclick=()=>startImport("tools",{});
+  $("#b-impt").onclick=()=>startImport("tools",{});$("#b-ncimp").onclick=()=>startImport("tools",{});
+  $("#b-magcmp").onclick=()=>{flushEditor();compareDialog(M(cur.machineId),cur)};
+  $("#a-index").addEventListener("change",e=>{const v=clean(e.target.value).toUpperCase(),prev=(cur.history||[]).filter(h=>h.ix).map(h=>h.ix);
+    if(ROLE!=="admin"){return}
+    if(v&&prev.includes(v)&&v!==clean(edIndex0)){toast(t("indexUsed",v));e.target.value=edIndex0;cur.article.index=edIndex0;edited();return}
+    e.target.value=v;cur.article.index=v});
+  edIndex0=cur.article.index||"";edBaseline();applyLock();drawHistory();
   $("#codes").innerHTML=(db.catalog||[]).map(c=>`<option value="${esc(c.code)}">${esc([c.type,c.diameter?"Ø"+c.diameter:""].filter(Boolean).join(" "))}</option>`).join("");
   pvSetup();
   if(art.fresh){delete art.fresh;$("#a-number").focus()}
@@ -2523,12 +2640,14 @@ function markRow(tr){const x=cur.tools[+tr.dataset.i];const real=x&&COLS.some(k=
 let scT=0;function softCount(){if(scT)return;scT=requestAnimationFrame(()=>{scT=0;if(!cur||!$("#count"))return;$("#count").textContent=t("nTools",realTools(cur.tools).length);drawStatus()})}
 function markMissing(){document.querySelectorAll("#rows tr").forEach(tr=>{const x=cur.tools[+tr.dataset.i];const real=x&&COLS.some(k=>k!=="t"&&clean(x[k]));
   REQ_TOOL.forEach(k=>tr.querySelector(`[data-k="${k}"]`)?.classList.toggle("miss",!!real&&!clean(x[k])));coneMark(tr)})}
-function drawStatus(){const box=$("#stbox");if(!box)return;const done=cur.status==="done",miss=missing(cur);const sig=[done,miss,cur.status,LANG,realTools(cur.tools).length].join("|");if(box.dataset.sig===sig)return;box.dataset.sig=sig;
+function drawStatus(){const box=$("#stbox");if(!box)return;const done=cur.status==="done",miss=missing(cur);const sig=[done,miss,cur.status,LANG,realTools(cur.tools).length,ROLE].join("|");if(box.dataset.sig===sig)return;box.dataset.sig=sig;
   box.classList.toggle("is-done",done);
-  box.innerHTML=`<div class="seg" role="group"><button data-s="progress" aria-pressed="${!done}">${esc(t("inProgress"))}</button><button class="done" data-s="done" aria-pressed="${done}">${esc(t("markDone"))}</button></div>
-    ${statusCell({...cur,status:done?"done":cur.status})}<span class="miss-n">${esc(miss?t("stillEmpty",miss):t("allFilled"))}</span>`;
-  box.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>{const was=cur.status;cur.status=b.dataset.s;if(was!==cur.status){edited();drawStatus();
-    if(cur.status==="done")toast(miss?t("markedDoneMiss",miss):t("markedDone"))}})}
+  if(done){const v=cur.validated||{ts:cur.updatedAt,who:""};
+    box.innerHTML=`<div class="vstamp">✓ ${esc(t("validatedBy",when(v.ts),v.who))}${cur.article.index?` · ${esc(t("index"))} <b>${esc(cur.article.index)}</b>`:""}</div><span class="sp"></span>
+      ${can("article")?`<button class="btn red" id="b-newix">${esc(t("newIndex"))}</button>`:""}${ROLE==="admin"?`<button class="btn ghost" id="b-reopen">${esc(t("reopen"))}</button>`:""}<p class="note lockp">${esc(t("lockedP"))}</p>`;
+    $("#b-newix")&&($("#b-newix").onclick=newIndexArticle);$("#b-reopen")&&($("#b-reopen").onclick=reopenArticle);return}
+  box.innerHTML=`<button class="btn red" id="b-validate">✓ ${esc(t("validate"))}</button>${statusCell({...cur,status:cur.status})}<span class="miss-n">${esc(miss?t("stillEmpty",miss):t("allFilled"))}</span>`;
+  $("#b-validate").onclick=()=>{flushEditor();validateArticle()}}
 function renderRows(focus){$("#rows").innerHTML=cur.tools.map(rowHTML).join("");countTools();
   if(focus){const el=$(`#rows tr[data-i="${focus[0]}"] input[data-k="${focus[1]}"]`);el?.focus()}}
 function nextT(){const nums=cur.tools.map(x=>parseInt(String(x.t).replace(/\D/g,""))).filter(Boolean);return "T"+String((nums.length?Math.max(...nums):0)+1).padStart(2,"0")}
@@ -2537,7 +2656,8 @@ function checkDup(){const n=clean(cur.article.number).toLowerCase(),ix=clean(cur
   const d=n&&db.articles.find(x=>x!==cur&&x.machineId===cur.machineId&&clean(x.article.number).toLowerCase()===n&&clean(x.article.index).toLowerCase()===ix);
   w.hidden=!d;if(d)w.textContent=t("dup",cur.article.number,cur.article.index,mLabel(M(cur.machineId)))}
 function edited(){cur.updatedAt=Date.now();clearTimeout(edTimer);edTimer=setTimeout(flushEditor,400);schedulePreview()}
-function flushEditor(){edTimer=null;saveDB()}
+function flushEditor(){edTimer=null;recordEdit();saveDB();if($("#histbox"))drawHistory()}
+let edIndex0="";
 
 /* ---------- live preview: drawn off-screen, swapped in when ready (no flicker) ---------- */
 let pvGen=0, pvBusy=false, pvAgain=false, pvRO=null, pvLastKey="", pvLastW=0;
@@ -3208,14 +3328,14 @@ const SYN={
   program:["program","programme","prog","nc program","programme cn","n programme","numero programme","program number"],
   material:["material","matiere","materiau","matiere premiere"],
   machine:["machine","abreviation","machine abbreviation","poste de charge","centre","moyen"],
-  t:["t number","t","tool","outil","n outil","no outil","numero outil","t no","pocket","poche","tool number","num outil"],
-  type:["type","tool type","type outil","type d outil","designation outil"],
-  diameter:["diameter","diametre","dia","d","diameter dia","diametre dia","diameter mm","diametre mm","dia mm"],
-  ra:["radius degree","radius","rayon","r","angle","r angle","rayon angle","radius angle","rayon degre","radius deg","r deg"],
-  ls:["ls","stick out","stickout","longueur de sortie","sortie","l","ls mm"],
-  z:["z","flutes","flutes inserts","dents","nb dents","nombre de dents","inserts","plaquettes","teeth","dents plaquettes"],
-  holder:["holder","porte outil","porte outils","attachement","cone","mandrin","pince","tool holder"],
-  code:["reference","code","code outil","ref","f code","ref outil","code f","tool code","codes","standard","code standard","n standard"],
+  t:["t number","t","tool","outil","n outil","no outil","numero outil","t no","pocket","poche","tool number","num outil","tool no","tool num","tool position","pocket number","station","tool #"],
+  type:["type","tool type","type outil","type d outil","designation outil","tool name","tool description","tool comment","comment"],
+  diameter:["diameter","diametre","dia","d","diameter dia","diametre dia","diameter mm","diametre mm","dia mm","tool diameter","cutter diameter","dc"],
+  ra:["radius degree","radius","rayon","r","angle","r angle","rayon angle","radius angle","rayon degre","radius deg","r deg","corner radius","corner rad","tip angle","point angle","re"],
+  ls:["ls","stick out","stickout","longueur de sortie","sortie","l","ls mm","projection","overhang"],
+  z:["z","flutes","flutes inserts","dents","nb dents","nombre de dents","inserts","plaquettes","teeth","dents plaquettes","number of flutes","flute count","nof"],
+  holder:["holder","porte outil","porte outils","attachement","cone","mandrin","pince","tool holder","holder name","holder description"],
+  code:["reference","code","code outil","ref","f code","ref outil","code f","tool code","codes","standard","code standard","n standard","product id","order number","item number","manufacturer code"],
   label:["libelle","designation","description","label","intitule","nom","libelle article"],
   family:["famille","famille de consommables","family","categorie","category"],
   subfamily:["sous famille","sous familles","sous familles de consommable","sous famille de consommable","sub family","subfamily","sous categorie"],
@@ -3280,13 +3400,17 @@ function parseCSV(text){
 }
 async function readTable(file){
   const ext=(file.name.split(".").pop()||"").toLowerCase();
+  if(!/^(xlsx|xls|xlsm|xlsb|ods|csv)$/.test(ext)){const txt=await file.text();
+    if(ext==="json"||/^\s*[\[{]/.test(txt)){try{const r=parseCAMJson(JSON.parse(txt));if(r&&r.length)return [{name:file.name,rows:ncRows(r)}]}catch(e){}}
+    if(looksNC(txt)){const r=parseNC(txt,file.name);if(r.tools.length)return [{name:file.name,rows:ncRows(r.tools),nc:r}]}
+    if(ext!=="txt")return [{name:file.name,rows:parseCSV(txt)}]}
   if(ext==="csv"||ext==="txt"){let txt=await file.text();if(txt.includes("�")){try{txt=new TextDecoder("windows-1252").decode(await file.arrayBuffer())}catch(e){}}
     return [{name:file.name,rows:parseCSV(txt)}]}
   const wb=XLSX.read(new Uint8Array(await file.arrayBuffer()),{type:"array"});
   return wb.SheetNames.map(n=>({name:n,rows:XLSX.utils.sheet_to_json(wb.Sheets[n],{header:1,raw:false,defval:"",blankrows:false})
     .map(r=>r.map(x=>String(x??"").trim())).filter(r=>r.some(x=>x))})).filter(s=>s.rows.length);
 }
-const XLS_ACCEPT=".xlsx,.xls,.xlsm,.xlsb,.ods,.csv,.txt,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.oasis.opendocument.spreadsheet,text/csv";
+const XLS_ACCEPT=".xlsx,.xls,.xlsm,.xlsb,.ods,.csv,.txt,.json,.nc,.tap,.min,.mpf,.spf,.h,.eia,.ngc,.cnc,.iso,.ptp,.prg,.gcode,.anc,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.oasis.opendocument.spreadsheet,text/csv";
 function pickFile(){return new Promise(res=>{const i=document.createElement("input");i.type="file";i.accept=XLS_ACCEPT;i.onchange=()=>res(i.files[0]||null);i.click()})}
 
 /* entry points */
@@ -3483,10 +3607,10 @@ Object.assign(I18N.fr,{
   cmCard:"Commentaires", cmNone:"Pas encore de commentaire.", cmAbout:"à propos de", cmTag:"Commentaire", kNote:"Commentaires"
 });
 const ROLES={
-  admin:{views:"*",nav:["#","#crib","#holders","#prod","#log"],home:"#",stock:1,backup:1,restore:1},
-  methode:{views:["home","machine","article"],nav:["#"],home:"#",stock:0,backup:1},
-  outil:{views:["crib","code","holders","holder","log","aview"],nav:["#crib","#holders","#log"],home:"#crib",stock:1,backup:1},
-  prod:{views:["prod","pcode","pholder","aview"],nav:["#prod"],home:"#prod",stock:1}
+  admin:{views:"*",nav:["#","#crib","#holders","#prod","#mags","#log","#reports"],home:"#",stock:1,backup:1,restore:1},
+  methode:{views:["home","machine","article","mags","mag","reports"],nav:["#","#mags","#reports"],home:"#",stock:0,backup:1},
+  outil:{views:["crib","code","holders","holder","log","aview","mags","mag","reports"],nav:["#crib","#holders","#mags","#log","#reports"],home:"#crib",stock:1,backup:1},
+  prod:{views:["prod","pcode","pholder","aview","mags","mag"],nav:["#prod","#mags"],home:"#prod",stock:1}
 };
 let ROLE=null,USER="";
 const can=v=>!!ROLE&&(ROLES[ROLE].views==="*"||ROLES[ROLE].views.includes(v));
@@ -3573,8 +3697,9 @@ function enterRole(r,name){
   roleChrome();
   const h=location.hash||"#";const want=parseRoute().view;
   const ok=can(want)||(want==="article"&&can("aview"))||(want==="code"&&can("pcode"))||(want==="holder"&&can("pholder"));
-  if(!ok||(r!=="admin"&&h==="#"&&ROLES[r].home!=="#")){if(h!==ROLES[r].home){location.hash=ROLES[r].home;return}}
-  render();
+  const alert=()=>{if(r==="outil")setTimeout(stockAlert,60)};
+  if(!ok||(r!=="admin"&&h==="#"&&ROLES[r].home!=="#")){if(h!==ROLES[r].home){location.hash=ROLES[r].home;alert();return}}
+  render();alert();
 }
 function leaveRole(){if(edTimer){clearTimeout(edTimer);flushEditor()}ROLE=null;USER="";roleChrome();render()}
 function roleChrome(){
@@ -3583,7 +3708,7 @@ function roleChrome(){
   $("#b-backup").hidden=!R||!R.backup;$("#b-restore").hidden=!R||!R.restore;$("#b-logo").hidden=!R||ROLE!=="admin";
   const rc=$("#b-role");rc.hidden=!R;
   if(R){rc.innerHTML=`<span class="gi">${roleIcons[ROLE]}</span><span class="rl"><b>${esc(roleName(ROLE))}</b>${USER&&USER!==roleName(ROLE)?`<span>${esc(USER)}</span>`:""}</span>`;rc.title=t("switchRole")}
-  $("#nav-p").textContent=t("navProd");$("#nav-l").textContent=t("navLog");
+  $("#nav-p").textContent=t("navProd");$("#nav-l").textContent=t("navLog");$("#nav-g").textContent=t("navMags");$("#nav-r").textContent=t("navReports");
 }
 $("#b-role").onclick=leaveRole;
 
@@ -3907,6 +4032,396 @@ function demoBar(){if($("#demobar"))return;const bar=document.createElement("div
     bar.querySelector("#b-demoreset").onclick=async()=>{if(!confirm(t("demoResetQ")))return;clearTimeout(saveT);saveT=null;saveDB=saveNow=()=>{};try{Object.keys(localStorage).filter(k=>k.startsWith(NS)).forEach(k=>localStorage.removeItem(k))}catch(e){}
       try{await new Promise(r=>{const q=indexedDB.deleteDatabase("toolmanager-demo");q.onsuccess=q.onerror=q.onblocked=()=>r()})}catch(e){}location.hash="";location.reload()}};
   draw();document.querySelector(".top").after(bar);demoBar.draw=draw}
+/* =====================================================================
+   v2.1 features: automatic backups · CNC / CAM import · machine magazines
+   · reports · low-stock alert · validated sheets, index rules, history
+   ===================================================================== */
+Object.assign(I18N.en,{
+  /* backups */
+  autoBk:"Automatic copies", autoBkP:"A copy of everything is kept every 5 minutes when something changed (last 24 copies).", autoBkNone:"No automatic copy yet: the first one is made 5 minutes after a change.",
+  fromFile:"From a file…", restoreThis:"Restore", restoreSnapQ:t=>`Replace everything with the copy from ${t}?`, snapRestored:"Automatic copy restored", lastAuto:t=>`Last automatic copy: ${t}`,
+  /* NC / CAM */
+  impNC:"CNC programs", impNCP:"One article per program: the tool list is read from the program (T numbers, tool comments, Mastercam tool table).",
+  ncTitle:"Import CNC programs", ncFiles:n=>`${n} ${pl(n,"program","programs")}`, ncTools:n=>`${n} ${pl(n,"tool","tools")}`, ncNone:"No tool found", ncExists:"already exists: skipped",
+  ncCreate:n=>`Create ${n} ${pl(n,"article","articles")}`, ncDone:(a,s)=>`${a} ${pl(a,"article","articles")} created${s?` · ${s} skipped`:""}`, ncNum:"Article", ncProg:"Program", ncFromProg:"Read from a program",
+  /* magazines */
+  navMags:"Magazines", magsT:"Machine magazines", magsSub:"What is loaded in each machine right now, pocket by pocket.", magFilled:(n,s)=>`${n} / ${s} pockets filled`,
+  magSize:"Pockets", magEmpty:"Empty", magPocket:p=>`Pocket ${p}`, magSave:"Save", magClear:"Empty the pocket", magClearAll:"Empty the magazine", magClearAllQ:"Empty every pocket of this magazine?",
+  magCompare:"Compare with an article", magCmpT:"Compare the magazine with an article", magPick:"Article", magOk:"Already in place", magLoad:"To load", magSwap:"To swap", magKeep:"Not used by this article",
+  magApply:n=>`Load the article (${n} ${pl(n,"pocket","pockets")})`, magApplied:n=>`${n} ${pl(n,"pocket","pockets")} updated`, magLast:"Last changes", magNoArt:"This machine has no article yet.", magCmpBtn:"Compare with the magazine",
+  magNoChange:"Everything is already in place.",
+  /* reports */
+  navReports:"Reports", repT:"Reports", repSub:"Tool consumption, stock and tool sheets at a glance.", repMonths:"Tools taken per month", repTop:"Most taken tools", repByMachine:"Tools taken per machine",
+  repByWho:"Tools taken per person", repMostUsed:"Codes used in the most tool sheets", repDormant:"Codes not used in any tool sheet", repStill:"No stock move for 90 days", repMach:"Tool sheets per machine",
+  repTaken:"taken", repAdded:"added", repValidated:"sheets validated", repLowOut:"low / out of stock", repArticles:"articles", repCsv:"Export (CSV)", repNoData:"Nothing yet for this period.", repSheets:"sheets",
+  repPrefix:"Reports",
+  /* alert */
+  alertT:"Stock alert", alertP:(o,l)=>`${o} out of stock · ${l} low stock`, alertSee:"See out of stock", alertOrder:"Order list (CSV)", alertMore:n=>`+ ${n} more`,
+  /* validation and history */
+  validate:"Validate the sheet", validated:"Validated", validatedBy:(d,w)=>`Validated on ${d}${w?` by ${w}`:""}`, validateQ:"Validate this tool sheet? It can no longer be changed, except by making a new index.",
+  validateMiss:n=>`${n} ${pl(n,"box is","boxes are")} still empty.`, lockedP:"This sheet is validated: it can't be changed. To change it, make a new index.", newIndex:"New index", newIndexQ:(a,b)=>`Make index ${b}? Index ${a} stays in the history.`,
+  reopen:"Reopen (admin)", reopenQ:"Reopen this validated sheet without changing the index?", indexAdmin:"Only the admin can change the index. Use “New index”.", indexUsed:i=>`Index ${i} was already used for this article.`,
+  histT:"History", histNone:"No change recorded yet.", hCreate:"Created", hEdit:"Changed", hValidate:"Validated", hNewIndex:i=>`New index ${i}`, hReopen:"Reopened", hImport:"Tools imported",
+  hTools:"tools", hFields:"fields", hPdf:"PDF", lockedImport:"This sheet is validated: make a new index first.", wip:"IN PROGRESS"
+});
+Object.assign(I18N.fr,{
+  autoBk:"Copies automatiques", autoBkP:"Une copie de tout est gardée toutes les 5 minutes quand quelque chose a changé (24 dernières copies).", autoBkNone:"Pas encore de copie automatique : la première est faite 5 minutes après un changement.",
+  fromFile:"Depuis un fichier…", restoreThis:"Restaurer", restoreSnapQ:t=>`Tout remplacer par la copie de ${t} ?`, snapRestored:"Copie automatique restaurée", lastAuto:t=>`Dernière copie automatique : ${t}`,
+  impNC:"Programmes CN", impNCP:"Un article par programme : la liste d'outils est lue dans le programme (numéros T, commentaires d'outils, tableau d'outils Mastercam).",
+  ncTitle:"Importer des programmes CN", ncFiles:n=>`${n} ${pl(n,"programme","programmes")}`, ncTools:n=>`${n} ${pl(n,"outil","outils")}`, ncNone:"Aucun outil trouvé", ncExists:"existe déjà : ignoré",
+  ncCreate:n=>`Créer ${n} ${pl(n,"article","articles")}`, ncDone:(a,s)=>`${a} ${pl(a,"article créé","articles créés")}${s?` · ${s} ${pl(s,"ignoré","ignorés")}`:""}`, ncNum:"Article", ncProg:"Programme", ncFromProg:"Lire un programme",
+  navMags:"Magasins", magsT:"Magasins des machines", magsSub:"Ce qui est chargé dans chaque machine en ce moment, poche par poche.", magFilled:(n,s)=>`${n} / ${s} poches remplies`,
+  magSize:"Poches", magEmpty:"Vide", magPocket:p=>`Poche ${p}`, magSave:"Enregistrer", magClear:"Vider la poche", magClearAll:"Vider le magasin", magClearAllQ:"Vider toutes les poches de ce magasin ?",
+  magCompare:"Comparer avec un article", magCmpT:"Comparer le magasin avec un article", magPick:"Article", magOk:"Déjà en place", magLoad:"À charger", magSwap:"À échanger", magKeep:"Pas utilisé par cet article",
+  magApply:n=>`Charger l'article (${n} ${pl(n,"poche","poches")})`, magApplied:n=>`${n} ${pl(n,"poche mise","poches mises")} à jour`, magLast:"Derniers changements", magNoArt:"Cette machine n'a pas encore d'article.", magCmpBtn:"Comparer au magasin",
+  magNoChange:"Tout est déjà en place.",
+  navReports:"Rapports", repT:"Rapports", repSub:"Consommation d'outils, stock et fiches outils en un coup d'œil.", repMonths:"Outils sortis par mois", repTop:"Outils les plus sortis", repByMachine:"Outils sortis par machine",
+  repByWho:"Outils sortis par personne", repMostUsed:"Codes présents dans le plus de fiches", repDormant:"Codes utilisés dans aucune fiche", repStill:"Aucun mouvement de stock depuis 90 jours", repMach:"Fiches outils par machine",
+  repTaken:"sortis", repAdded:"rentrés", repValidated:"fiches validées", repLowOut:"stock bas / rupture", repArticles:"articles", repCsv:"Exporter (CSV)", repNoData:"Rien pour cette période.", repSheets:"fiches",
+  repPrefix:"Rapports",
+  alertT:"Alerte stock", alertP:(o,l)=>`${o} en rupture · ${l} en stock bas`, alertSee:"Voir les ruptures", alertOrder:"Liste de commande (CSV)", alertMore:n=>`+ ${n} autres`,
+  validate:"Valider la fiche", validated:"Validée", validatedBy:(d,w)=>`Validée le ${d}${w?` par ${w}`:""}`, validateQ:"Valider cette fiche outils ? Elle ne pourra plus être modifiée, sauf en créant un nouvel indice.",
+  validateMiss:n=>`${n} ${pl(n,"case est encore vide","cases sont encore vides")}.`, lockedP:"Cette fiche est validée : elle ne peut plus être modifiée. Pour la changer, créez un nouvel indice.", newIndex:"Nouvel indice", newIndexQ:(a,b)=>`Passer à l'indice ${b} ? L'indice ${a} reste dans l'historique.`,
+  reopen:"Rouvrir (admin)", reopenQ:"Rouvrir cette fiche validée sans changer d'indice ?", indexAdmin:"Seul l'admin peut changer l'indice. Utilisez « Nouvel indice ».", indexUsed:i=>`L'indice ${i} a déjà été utilisé pour cet article.`,
+  histT:"Historique", histNone:"Aucun changement enregistré pour l'instant.", hCreate:"Créée", hEdit:"Modifiée", hValidate:"Validée", hNewIndex:i=>`Nouvel indice ${i}`, hReopen:"Rouverte", hImport:"Outils importés",
+  hTools:"outils", hFields:"champs", hPdf:"PDF", lockedImport:"Cette fiche est validée : créez d'abord un nouvel indice.", wip:"EN COURS"
+});
+
+/* ---------- 1. automatic copies every 5 minutes ---------- */
+let lastSnapTs=0;const SNAP_EVERY=5*60000,SNAP_KEEP=24;
+const snapCounts=()=>({m:db.machines.length,a:db.articles.length,c:(db.catalog||[]).length,h:(db.holders||[]).length});
+async function takeSnapshot(force){
+  if(!DIRTY&&!force)return;DIRTY=false;const ts=Date.now();
+  try{
+    if(DESK){const dir=DIR+SEP+"Backups"+SEP+"auto";try{await Neutralino.filesystem.createDirectory(dir)}catch(e){}
+      await desk.flush();const d=new Date(ts),p2=n=>String(n).padStart(2,"0");
+      const name=`auto-${d.getFullYear()}${p2(d.getMonth()+1)}${p2(d.getDate())}-${p2(d.getHours())}${p2(d.getMinutes())}.json`;
+      await Neutralino.filesystem.writeFile(dir+SEP+name,JSON.stringify({...db,logo,lang:LANG,savedAt:ts}));
+      const ls=(await Neutralino.filesystem.readDirectory(dir)).map(e=>e.entry).filter(n=>/^auto-\d{8}-\d{4}\.json$/.test(n)).sort();
+      for(const old of ls.slice(0,Math.max(0,ls.length-SNAP_KEEP))){try{await Neutralino.filesystem.remove(dir+SEP+old)}catch(e){}}
+    }else{
+      await IDB.put("snaps",ts,{ts,n:snapCounts(),json:JSON.stringify(db)});
+      const all=[...(await IDB.all("snaps")).keys()].sort((a,b)=>a-b);
+      for(const k of all.slice(0,Math.max(0,all.length-SNAP_KEEP)))await IDB.del("snaps",k);
+    }
+    lastSnapTs=ts;lsSet("toolmanager.lastsnap",String(ts));
+  }catch(e){console.error("auto copy",e);DIRTY=true}
+}
+setInterval(()=>takeSnapshot(),SNAP_EVERY);
+async function listSnapshots(){
+  if(DESK){const dir=DIR+SEP+"Backups"+SEP+"auto";try{const ls=(await Neutralino.filesystem.readDirectory(dir)).map(e=>e.entry).filter(n=>/^auto-\d{8}-\d{4}\.json$/.test(n)).sort().reverse();
+      return ls.map(n=>{const m=n.match(/auto-(\d{4})(\d\d)(\d\d)-(\d\d)(\d\d)/);return{id:n,ts:new Date(+m[1],m[2]-1,+m[3],+m[4],+m[5]).getTime()}})}catch(e){return[]}}
+  try{const m=await IDB.all("snaps");return [...m.values()].sort((a,b)=>b.ts-a.ts).map(s=>({id:s.ts,ts:s.ts,n:s.n}))}catch(e){return[]}
+}
+async function loadSnapshot(id){
+  if(DESK)return JSON.parse(await Neutralino.filesystem.readFile(DIR+SEP+"Backups"+SEP+"auto"+SEP+id));
+  const s=await IDB.get("snaps",id);return s?JSON.parse(s.json):null;
+}
+async function restoreDialog(){
+  const snaps=await listSnapshots();
+  const ov=dialog(esc(t("restore")),`<button class="btn" id="rs-file">${esc(t("fromFile"))}</button>
+    <h3 class="psec" style="margin-top:6px">${esc(t("autoBk"))}</h3><p class="note" style="margin:0">${esc(t("autoBkP"))}</p>
+    ${snaps.length?`<div class="snaplist">${snaps.map(s=>`<div class="snap"><b>${when(s.ts)} ${hhmm(s.ts)}</b><span class="dim small">${s.n?esc(`${s.n.m} machines · ${s.n.a} articles · ${s.n.c} codes · ${s.n.h} porte-outils`):""}</span><button class="btn sm" data-snap="${esc(String(s.id))}">${esc(t("restoreThis"))}</button></div>`).join("")}</div>`
+      :`<p class="note">${esc(t("autoBkNone"))}</p>`}`,`<button class="btn ghost" id="d-cancel">${esc(t("close"))}</button>`);
+  ov.querySelector(".dlg").classList.add("wide2");
+  $("#d-cancel").onclick=closeDlg;$("#rs-file").onclick=()=>{closeDlg();$("#f-restore").click()};
+  ov.querySelectorAll("[data-snap]").forEach(b=>b.onclick=async()=>{const id=DESK?b.dataset.snap:+b.dataset.snap,s=snaps.find(x=>String(x.id)===String(b.dataset.snap));
+    if(!confirm(t("restoreSnapQ",`${when(s.ts)} ${hhmm(s.ts)}`)))return;
+    await takeSnapshot(true);const d=await loadSnapshot(id);if(!d||!Array.isArray(d.machines)){toast(t("notBackup"));return}
+    const {logo:lg,lang,savedAt,...rest}=d;db={lastBackup:0,...rest};ensureDB();saveNow();closeDlg();go("#");toast(t("snapRestored"))});
+}
+
+/* ---------- 2. CNC programs and CAM tool lists ---------- */
+const NC_EXT=/\.(nc|tap|min|mpf|spf|h|eia|ngc|cnc|iso|ptp|prg|pgm|gcode|g|001|002|003|ncc|anc|txt)$/i;
+const TYPEWORDS=[
+  [/LOLLIPOP|SPHERI/,"FRAISE SPHÉRIQUE","LOLLIPOP CUTTER"],[/\bBALL|BOULE|HEMIS/,"FRAISE BOULE","BALL NOSE"],[/BARREL|TONNEAU/,"FRAISE TONNEAU","BARREL CUTTER"],
+  [/THREAD ?MILL|FILETER/,"FRAISE À FILETER","THREAD MILL"],[/CHAMF|CHANFR/,"FRAISE À CHANFREINER","CHAMFER MILL"],[/SPOT|POINTEUR/,"POINTEUR","SPOT DRILL"],
+  [/CENTER ?DRILL|CENTRER/,"FORET À CENTRER","CENTER DRILL"],[/\bTAP\b|TARAUD/,"TARAUD","TAP"],[/REAM|ALESOIR|ALÉSOIR/,"ALÉSOIR","REAMER"],
+  [/BOR(E|ING)|ALESAGE|ALÉSAGE|TETE A ALESER|TÊTE À ALÉSER/,"TÊTE À ALÉSER","BORING HEAD"],[/DRILL|FORET/,"FORET","DRILL"],
+  [/FACE ?MILL|SURFAC|PLAQUETTE|INSERT/,"FRAISE À SURFACER","FACE MILL"],[/T-?SLOT|SLOT ?MILL|3 ?TAILLES|DISQUE/,"FRAISE 3 TAILLES","SIDE MILL"],
+  [/BULL|TORIQUE|END ?MILL|FLAT|FRAISE/,"FRAISE 2T","END MILL"]];
+const num_=s=>{if(s==null)return"";s=String(s).replace(",",".");const f=s.match(/^(\d+)\/(\d+)$/);if(f)return String(Math.round(+f[1]/+f[2]*25.4*100)/100);const v=parseFloat(s);return isNaN(v)?"":String(+v.toFixed(3))};
+function describeTool(txt){
+  const T=" "+String(txt||"").toUpperCase().replace(/\s+/g," ")+" ",o={};
+  const tw=TYPEWORDS.find(([re])=>re.test(T));if(tw)o.type=LANG==="en"?tw[2]:tw[1];
+  let m=T.match(/[ØФ⌀]\s*(\d+(?:[.,]\d+)?)/)||T.match(/\bDIA(?:M|METER|METRE|\.)?\s*[-=:]?\s*(\d*[.,]?\d+)/)||T.match(/\b(\d+(?:[.,]\d*)?|\d+\/\d+)\s*(?:MM\s*)?(?:FLAT|BALL|BULL|END ?MILL|DRILL|FORET|FRAISE|CHAMF|SPOT|REAM|TAP|FACE|BORE|LOLLI|BARREL|THREAD)/)||T.match(/\bM(\d+(?:[.,]\d+)?)\s*(?:X\s*[\d.]+\s*)?(?:TAP|TARAUD|THREAD|RH|LH)/);
+  if(!m&&!/\bH\d+\b/.test(T))m=T.match(/\bD\s*=?\s*(\d+(?:[.,]\d+)?)(?=[\s,R|)]|$)/);
+  if(m)o.diameter=num_(m[1]);
+  const r=T.match(/\bC?R\s*=?\s*(\d*[.,]?\d+)(?!\s*PM)\b/)||T.match(/(\d*[.,]?\d+)\s*(?:RAD|RAYON)\b/)||T.match(/\bRAD(?:IUS)?\.?\s*[-=:]?\s*(\d*[.,]?\d+)/);
+  if(r&&!/RPM/.test(T.slice(Math.max(0,T.indexOf(r[0])-1),T.indexOf(r[0])+r[0].length+3)))o.ra="R"+num_(r[1]);
+  const ang=T.match(/(\d{2,3}(?:[.,]\d)?)\s*(?:°|DEG)/);if(!o.ra&&ang)o.ra=num_(ang[1])+"°";
+  if(!o.ra&&o.type&&/BOULE|BALL/.test(o.type)&&o.diameter)o.ra="R"+(+o.diameter/2);
+  const z=T.match(/\b([1-9])\s*(?:FL\b|FLUTES?|DENTS?|TEETH|Z\b)/)||T.match(/\bZ\s*=?\s*([1-9])\b/);if(z)o.z=z[1];
+  const ls=T.match(/(?:STICK ?OUT|SORTIE|\bLS)\s*[-=:]?\s*(\d+(?:[.,]\d+)?)/);if(ls)o.ls=num_(ls[1]);
+  const lt=T.match(/(?:\bOAL|\bLT|OVERALL(?: LENGTH)?|LONGUEUR TOTALE)\s*[-=:]?\s*(\d+(?:[.,]\d+)?)/);if(lt)o.oal=num_(lt[1]);
+  // a code or a holder that exists in the app wins over guessing
+  const words=T.split(/[\s|(),;:=]+/).filter(Boolean);
+  const code=words.find(w=>w.length>=2&&C_(normCode(w)));if(code)o.code=normCode(code);
+  const hl=(db.holders||[]).find(h=>h.ref.length>=6&&T.includes(" "+h.ref+" ")||T.includes(h.ref));if(hl)o.holder=hl.ref;
+  else{const hm=T.match(/(?:HOLDER|PORTE[- ]OUTIL|ATTACHEMENT)\s*[-=:]\s*([A-Z0-9][A-Z0-9 .\-\/]{2,30}?)(?=\s*[|)]|\s{2}|$)/);if(hm)o.holder=hm[1].trim()}
+  if(!o.type){const clean0=String(txt||"").replace(/^\s*T\s*\d+\s*[-|:]?\s*/i,"").replace(/\|.*$/,"").trim();if(clean0&&clean0.length<=40)o.type=clean0.toUpperCase()}
+  return o;
+}
+function parseNC(text,fname){
+  const lines=String(text||"").replace(/\r/g,"").split("\n");
+  let program="",pendingT=null;const order=[],info=new Map(),calls=new Map();
+  const tkey=n=>"T"+String(parseInt(n,10)).padStart(2,"0");
+  const note=(k,txt)=>{if(!txt)return;if(!info.has(k))info.set(k,[]);info.get(k).push(txt)};
+  const seen=k=>{if(!order.includes(k))order.push(k);calls.set(k,(calls.get(k)||0)+1)};
+  let lastComment="",lastTool=null,afterCall=0;
+  for(const raw of lines){
+    const line=raw.trim();if(!line)continue;
+    const comments=[...line.matchAll(/\(([^)]*)\)/g)].map(m=>m[1].trim());const semi=line.match(/;(.*)$/);if(semi&&!/^\s*;/.test(line)||/^\s*;/.test(line))comments.push(semi[1].trim());
+    const code=line.replace(/\([^)]*\)/g," ").replace(/;.*$/,"").toUpperCase();
+    if(!program){const o=code.match(/^\s*[O:](\d{1,8})\b/)||line.match(/^<([^>]+)>/)||code.match(/BEGIN PGM\s+(\S+)/);if(o)program=(code.match(/^\s*[O:]\d/)?"O":"")+o[1]}
+    // a tool table in the header: (T12 | 12. FLAT ENDMILL | H12 ...) / (T12 FRAISE D12 R0.5) / (TOOL - 12 DIA. OFF. - 12 LEN. - 12 DIA. - 12.)
+    for(const c of comments){
+      let m=c.match(/^\s*T\s*(\d{1,4})\b\s*[-|:=]?\s*(.*)$/i);
+      if(m&&m[2]){note(tkey(m[1]),m[2]);if(!order.includes(tkey(m[1])))order.push(tkey(m[1]));continue}
+      m=c.match(/^\s*TOOL\s*[-#:]?\s*(\d{1,4})\b(.*)$/i);if(m){note(tkey(m[1]),m[2]);if(!order.includes(tkey(m[1])))order.push(tkey(m[1]));continue}
+    }
+    // tool calls: T12 M6 · M6 T12 · T12 (then M6) · TOOL CALL 12 · T="NAME"
+    let call=null;const hc=code.match(/TOOL CALL\s+(\d+)/);if(hc)call=tkey(hc[1]);
+    else{const tm=code.match(/\bT\s*(\d{1,4})\b/);const m6=/\bM0?6\b/.test(code);
+      if(tm&&m6)call=tkey(tm[1]);else if(tm&&!m6)pendingT=tkey(tm[1]);else if(m6&&pendingT){call=pendingT;pendingT=null}}
+    if(call){seen(call);lastTool=call;afterCall=2;
+      comments.forEach(c=>{if(!/^\s*T\s*\d/i.test(c))note(call,c)});
+      if(lastComment&&!info.has(call))note(call,lastComment);
+      lastComment="";continue}
+    if(comments.length){const c=comments.join(" ");
+      if(afterCall>0&&lastTool&&!/^\s*T\s*\d/i.test(c)&&!/OPERATION|PROGRAM|DATE|TIME|MCX|NC FILE|MATERIAL|POST/i.test(c)){note(lastTool,c);afterCall=0}
+      else lastComment=c}
+    else if(afterCall>0)afterCall--;
+  }
+  const tools=order.map(k=>{const d={};for(const txt of (info.get(k)||[])){const o=describeTool(txt);for(const f in o)if(!d[f])d[f]=o[f]}
+    const x={t:k,type:d.type||"",diameter:d.diameter||"",ra:d.ra||"",ls:d.ls||"",oal:d.oal||"",z:d.z||"",holder:d.holder||"",code:d.code||""};
+    const c=x.code&&C_(x.code);if(c){[["type","type"],["diameter","diameter"],["ra","ra"],["z","z"],["oal","oal"]].forEach(([a,b])=>{if(!x[a]&&c[b])x[a]=c[b]})}
+    return x}).sort((a,b)=>parseInt(a.t.slice(1))-parseInt(b.t.slice(1)));
+  const base=String(fname||"").replace(/\.[^.]+$/,"");
+  return{program:program||base,name:base,tools,calls:Object.fromEntries(calls)};
+}
+const looksNC=txt=>/\bM0?6\b|TOOL CALL|\bG0?[0123]\b[\s\S]{0,400}\bG0?[0123]\b/i.test(txt.slice(0,200000))&&/\n/.test(txt);
+// Fusion 360 / HSM / Inventor CAM tool library (.json): {data:[{type, description, geometry:{DC,NOF,OAL,RE,LCF,SIG}, "post-process":{number}}]}
+function parseCAMJson(obj){
+  const list=Array.isArray(obj)?obj:Array.isArray(obj.data)?obj.data:[];if(!list.length)return null;
+  return list.map((x,i)=>{const g=x.geometry||{},pp=x["post-process"]||{},ty=String(x.type||"")+" "+String(x.description||"");const d=describeTool(ty);
+    const n=pp.number||x.number||i+1;
+    return{t:"T"+String(n).padStart(2,"0"),type:d.type||String(x.description||x.type||"").toUpperCase(),diameter:g.DC!=null?num_(g.DC):d.diameter||"",ra:g.RE?"R"+num_(g.RE):g.SIG?num_(g.SIG)+"°":d.ra||"",
+      ls:"",oal:g.OAL!=null?num_(g.OAL):"",z:g.NOF!=null?String(g.NOF):"",holder:x.holder&&x.holder.description?String(x.holder.description):"",code:String(x["product-id"]||x.productId||"").toUpperCase(),cutLength:g.LCF!=null?num_(g.LCF):""}});
+}
+const NC_HEAD=["T number","Type","Diameter","Radius / angle","LS","LT","Z","Holder","Code"];
+const ncRows=tools=>[NC_HEAD,...tools.map(x=>[x.t,x.type,x.diameter,x.ra,x.ls,x.oal,x.z,x.holder,x.code])];
+// many programs at once: one article each, on this machine
+function pickFiles(accept){return new Promise(res=>{const i=document.createElement("input");i.type="file";i.multiple=true;i.accept=accept;i.onchange=()=>res([...i.files]);i.click()})}
+async function importPrograms(m){
+  const files=await pickFiles("*");if(!files.length)return;
+  const items=[];for(const f of files){try{const txt=await f.text();const r=parseNC(txt,f.name);items.push({f,r})}catch(e){items.push({f,r:null})}}
+  const exists=it=>db.articles.some(a=>a.machineId===m.id&&clean(a.article.number).toLowerCase()===clean(it.r.name).toLowerCase());
+  const ok=items.filter(it=>it.r&&it.r.tools.length&&!exists(it));
+  dialog(esc(t("ncTitle")),`<p class="note" style="margin:0">${esc(t("ncFiles",items.length))} → <b>${esc(mLabel(m))}</b></p>
+    <div class="list"><table class="lt"><thead><tr><th>${esc(t("ncNum"))}</th><th>${esc(t("ncProg"))}</th><th>${esc(t("sTools"))}</th><th></th></tr></thead><tbody>
+    ${items.map(it=>`<tr><td><b class="an">${esc(it.r?it.r.name:it.f.name)}</b></td><td class="m">${esc(it.r?it.r.program:"")}</td><td>${it.r&&it.r.tools.length?esc(it.r.tools.map(x=>x.t).join(" ")):`<span class="dim">${esc(t("ncNone"))}</span>`}</td>
+      <td>${it.r&&it.r.tools.length&&exists(it)?`<span class="dim small">${esc(t("ncExists"))}</span>`:""}</td></tr>`).join("")}</tbody></table></div>`,
+    `<button class="btn ghost" id="d-cancel">${esc(t("cancel"))}</button><button class="btn red" id="d-ok" ${ok.length?"":"disabled"}>${esc(t("ncCreate",ok.length))}</button>`);
+  $(".dlg").classList.add("wide");$("#d-cancel").onclick=closeDlg;
+  $("#d-ok").onclick=()=>{const now=Date.now();ok.forEach(it=>{const art={id:uid(),machineId:m.id,article:{number:it.r.name,index:"A",program:it.r.program,date:today()},tools:it.r.tools,status:"progress",createdAt:now,updatedAt:now,history:[]};
+      addHist(art,"create",{src:it.f.name});db.articles.push(art)});saveDB();closeDlg();render();toast(t("ncDone",ok.length,items.length-ok.length))};
+}
+
+/* ---------- 3. machine magazines ---------- */
+const magOf=m=>{if(!m.mag)m.mag={size:Math.max(20,Math.ceil(Math.max(0,...db.articles.filter(a=>a.machineId===m.id).flatMap(a=>a.tools.map(x=>parseInt(String(x.t).replace(/\D/g,""))||0)))/10)*10),p:{},log:[]};if(!m.mag.p)m.mag.p={};if(!m.mag.log)m.mag.log=[];return m.mag};
+const magCount=m=>Object.values((m.mag&&m.mag.p)||{}).filter(x=>x&&(x.code||x.holder)).length;
+function magSet(m,p,val,why){const g=magOf(m),old=g.p[p]||null;if(val&&(val.code||val.holder))g.p[p]={...val,ts:Date.now(),who:USER||""};else delete g.p[p];
+  g.log.unshift({ts:Date.now(),who:USER||"",p:+p,from:old&&old.code||"",to:val&&val.code||"",why:why||""});if(g.log.length>80)g.log.length=80}
+function renderMags(){
+  const list=machinesSorted().filter(m=>m.id!=="nomachine");
+  $("#view").innerHTML=`<div class="page"><div class="ph"><div><h2>${esc(t("magsT"))}<b>.</b></h2><div class="sub">${esc(t("magsSub"))}</div></div></div>
+    <div class="mgrid">${list.map(m=>{const g=magOf(m),n=magCount(m);return `<div class="mc magc" role="button" tabindex="0" data-mag="${m.id}">
+      ${m.abbr?`<span class="ab">${esc(m.abbr)}</span>`:""}<span class="nm${m.abbr?" sm":""}">${esc(m.name)}</span><span class="md">${esc(mInfo(m))}${coneTag(m.cone)?" "+coneTag(m.cone):""}</span>
+      <div class="mprogline"><b>${n}</b><span>/ ${g.size}</span><span class="sp"></span><span class="dim small">${esc(t("magSize"))}</span></div><div class="magbar"><i style="width:${Math.min(100,n/g.size*100)}%"></i></div></div>`}).join("")}</div></div>`;
+  $("#view").querySelectorAll("[data-mag]").forEach(c=>{c.onclick=()=>go("#mag-"+c.dataset.mag);c.onkeydown=e=>{if(e.key==="Enter")go("#mag-"+c.dataset.mag)}});
+}
+function renderMag(m){
+  const g=magOf(m),canEdit=!!ROLE;
+  $("#view").innerHTML=`<div class="page magp">
+    <div class="ph"><div class="mhead">${m.abbr?`<span class="abbig">${esc(m.abbr)}</span>`:""}<div><h2>${esc(m.name)}<b>.</b></h2><div class="sub">${coneTag(m.cone,1)?coneTag(m.cone,1)+" ":""}<span id="magcount"></span></div></div></div><span class="sp"></span>
+      <label class="f inl magsize">${esc(t("magSize"))}<input id="mag-size" class="m" inputmode="numeric" value="${g.size}"></label>
+      <button class="btn" id="mag-cmp">${esc(t("magCompare"))}</button><button class="btn danger" id="mag-clear">${esc(t("magClearAll"))}</button></div>
+    <div class="pockets" id="pockets"></div>
+    <div class="card maglog"><h2>${esc(t("magLast"))}</h2><div id="maglog"></div></div></div>`;
+  const draw=()=>{const n=magCount(m);$("#magcount").textContent=t("magFilled",n,g.size);
+    $("#pockets").innerHTML=Array.from({length:g.size},(_,i)=>{const p=i+1,x=g.p[p],c=x&&x.code?C_(x.code):null;
+      return x&&(x.code||x.holder)?`<button class="pk full" data-p="${p}"><span class="pn">${p}</span><b class="an">${esc(x.code||"—")}</b><span class="pt">${esc(c?[c.type,c.diameter?"Ø"+c.diameter:"",raLabel(c.ra)].filter(Boolean).join(" "):"")}</span><span class="ph2">${esc(x.holder||"")}</span></button>`
+        :`<button class="pk" data-p="${p}"><span class="pn">${p}</span><span class="dim small">${esc(t("magEmpty"))}</span></button>`}).join("");
+    $("#maglog").innerHTML=g.log.length?`<ul class="hist">${g.log.slice(0,12).map(e=>`<li><b>${e.p}</b><span>${esc(e.from||"—")} → ${esc(e.to||t("magEmpty"))}${e.why?` · ${esc(e.why)}`:""}${e.who?` · <i>${esc(e.who)}</i>`:""}</span><span class="dim">${when(e.ts)} ${hhmm(e.ts)}</span></li>`).join("")}</ul>`:`<p class="note" style="margin:0">—</p>`;
+    $("#pockets").querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>pocketDialog(m,+b.dataset.p,draw));};
+  draw();
+  $("#mag-size").onchange=e=>{const v=Math.max(1,Math.min(400,parseInt(e.target.value)||g.size));g.size=v;e.target.value=v;saveDB();draw()};
+  $("#mag-cmp").onclick=()=>compareDialog(m,null,draw);
+  $("#mag-clear").onclick=e=>arm(e.currentTarget,()=>{Object.keys(g.p).forEach(p=>magSet(m,p,null,t("magClearAll")));saveDB();draw()});
+}
+function pocketDialog(m,p,after){
+  const g=magOf(m),x=g.p[p]||{};fillHolderList(m.cone);
+  $("#codes").innerHTML=(db.catalog||[]).map(c=>`<option value="${esc(c.code)}">${esc([c.type,c.diameter?"Ø"+c.diameter:""].filter(Boolean).join(" "))}</option>`).join("");
+  dialog(esc(t("magPocket",p))+" · "+esc(mShort(m)),`<div class="grid"><label class="f c3">${esc(t("cCode"))}<input id="pk-code" class="up big" list="codes" value="${esc(x.code||"")}" autocomplete="off"></label>
+      <label class="f c3">${esc(t("colHolder"))}<input id="pk-holder" class="up" list="holders" value="${esc(x.holder||"")}" autocomplete="off"></label>
+      <label class="f c6">${esc(t("notes"))}<input id="pk-note" value="${esc(x.note||"")}"></label></div><p class="note" id="pk-info" style="margin:0"></p>`,
+    `<button class="btn danger" id="pk-clear">${esc(t("magClear"))}</button><span class="sp"></span><button class="btn ghost" id="d-cancel">${esc(t("cancel"))}</button><button class="btn red" id="d-ok">${esc(t("magSave"))}</button>`);
+  const info=()=>{const c=C_(normCode($("#pk-code").value));$("#pk-info").textContent=c?[c.type,c.diameter?"Ø"+c.diameter:"",raLabel(c.ra),c.location?"· "+c.location:"",`· ${t("cStock")} ${+c.stock||0}`].filter(Boolean).join(" "):""};info();
+  $("#pk-code").oninput=info;$("#d-cancel").onclick=closeDlg;
+  $("#pk-clear").onclick=()=>{magSet(m,p,null,"");saveDB();closeDlg();after&&after()};
+  const ok=()=>{magSet(m,p,{code:normCode($("#pk-code").value),holder:normH_($("#pk-holder").value),note:$("#pk-note").value.trim()},"");saveDB();closeDlg();after&&after()};
+  $("#d-ok").onclick=ok;$("#pk-code").focus();
+}
+function magPlan(m,art){
+  const g=magOf(m),out=[];
+  realTools(art.tools).forEach(x=>{const p=parseInt(String(x.t).replace(/\D/g,""));const code=normCode(x.code);if(!p||(!code&&!clean(x.holder)))return;
+    const cur0=g.p[p];const curCode=cur0&&cur0.code||"";
+    out.push({p,t:normT(x.t),code,holder:splitHolders(x.holder).join(" + "),type:clean(x.type),cur:curCode,st:!curCode&&!(cur0&&cur0.holder)?"load":curCode===code?"ok":"swap"})});
+  const used=new Set(out.map(o=>o.p));const keep=Object.keys(g.p).map(Number).filter(p=>!used.has(p)&&g.p[p]&&(g.p[p].code||g.p[p].holder)).sort((a,b)=>a-b);
+  return{rows:out.sort((a,b)=>a.p-b.p),keep};
+}
+function compareDialog(m,art,after){
+  const arts=db.articles.filter(a=>a.machineId===m.id&&realTools(a.tools).length).sort((a,b)=>natCmp(a.article.number||"",b.article.number||""));
+  if(!arts.length){toast(t("magNoArt"));return}
+  let a=art||arts[0];
+  const ov=dialog(esc(t("magCmpT"))+" · "+esc(mShort(m)),`<label class="f">${esc(t("magPick"))}<select id="cmp-art">${arts.map(x=>`<option value="${x.id}" ${x===a?"selected":""}>${esc((x.article.number||t("noNumber"))+(x.article.index?" · "+x.article.index:"")+(x.article.designation?" — "+x.article.designation:""))}</option>`).join("")}</select></label><div id="cmp-body"></div>`,
+    `<button class="btn ghost" id="d-cancel">${esc(t("close"))}</button><button class="btn red" id="d-ok"></button>`);
+  ov.querySelector(".dlg").classList.add("wide");$("#d-cancel").onclick=closeDlg;
+  const draw=()=>{const pl0=magPlan(m,a),n={ok:0,load:0,swap:0};pl0.rows.forEach(r=>n[r.st]++);
+    const lab={ok:t("magOk"),load:t("magLoad"),swap:t("magSwap")};
+    $("#cmp-body").innerHTML=`<div class="cmpsum"><span class="cs cs-load"><b>${n.load}</b>${esc(lab.load)}</span><span class="cs cs-swap"><b>${n.swap}</b>${esc(lab.swap)}</span><span class="cs cs-ok"><b>${n.ok}</b>${esc(lab.ok)}</span><span class="cs"><b>${pl0.keep.length}</b>${esc(t("magKeep"))}</span></div>
+      <div class="list"><table class="lt cmpt"><thead><tr><th>${esc(t("colTool"))}</th><th>${esc(t("cCode"))}</th><th>${esc(t("cType"))}</th><th>${esc(t("colHolder"))}</th><th>${esc(t("magPocket",""))}</th><th></th></tr></thead><tbody>
+      ${pl0.rows.map(r=>`<tr class="cmp-${r.st}"><td class="m"><b>${esc(r.t)}</b></td><td><b class="an">${esc(r.code||"—")}</b></td><td class="cl"><span class="clip">${esc(r.type)}</span></td><td class="cl"><span class="clip">${esc(r.holder)}</span></td>
+        <td class="m">${r.p}${r.st==="swap"?` <span class="dim small">(${esc(r.cur)})</span>`:""}</td><td><span class="cmptag">${esc(lab[r.st])}</span></td></tr>`).join("")}</tbody></table></div>`;
+    const todo=pl0.rows.filter(r=>r.st!=="ok");const b=$("#d-ok");b.textContent=todo.length?t("magApply",todo.length):t("magNoChange");b.disabled=!todo.length;
+    b.onclick=()=>{todo.forEach(r=>magSet(m,r.p,{code:r.code,holder:splitHolders(r.holder)[0]?r.holder:""},a.article.number||""));saveDB();toast(t("magApplied",todo.length));draw();after&&after()};
+    fadeClips($("#cmp-body"))};
+  $("#cmp-art").onchange=e=>{a=A(e.target.value);draw()};draw();
+}
+
+/* ---------- 4. reports ---------- */
+let repP="90";
+function renderReports(){
+  $("#view").innerHTML=`<div class="page"><div class="ph"><div><h2>${esc(t("repT"))}<b>.</b></h2><div class="sub">${esc(t("repSub"))}</div></div><span class="sp"></span>
+    <div class="chips">${[["30",t("p30")],["90","90 "+(LANG==="en"?"days":"jours")],["365","12 "+(LANG==="en"?"months":"mois")],["all",t("pAll")]].map(([k,l])=>`<button class="chip" data-rp="${k}" aria-pressed="${repP===k}">${esc(l)}</button>`).join("")}</div>
+    <button class="btn" id="rep-csv">${esc(t("repCsv"))}</button></div><div id="repbody" class="repbody"></div></div>`;
+  $("#view").querySelectorAll("[data-rp]").forEach(b=>b.onclick=()=>{repP=b.dataset.rp;$("#view").querySelectorAll("[data-rp]").forEach(x=>x.setAttribute("aria-pressed",x===b));drawReports()});
+  $("#rep-csv").onclick=reportsCSV;drawReports();
+}
+function repData(){
+  const from=repP==="all"?0:Date.now()-(+repP)*864e5,L=(db.stockLog||[]).filter(e=>e.ts>=from&&e.k!=="n"&&!e.set);
+  const out=L.filter(e=>e.d<0),inn=L.filter(e=>e.d>0),sum=a=>a.reduce((s,e)=>s+Math.abs(e.d),0);
+  const byKey=(arr,f)=>{const m=new Map();arr.forEach(e=>{const k=f(e);if(k==null||k==="")return;m.set(k,(m.get(k)||0)+Math.abs(e.d))});return[...m.entries()].sort((a,b)=>b[1]-a[1])};
+  const months=[];const now=new Date();for(let i=11;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);months.push({k:d.getFullYear()+"-"+d.getMonth(),label:d.toLocaleDateString(LANG==="en"?"en-GB":"fr-FR",{month:"short"}),v:0})}
+  (db.stockLog||[]).filter(e=>e.k!=="n"&&!e.set&&e.d<0).forEach(e=>{const d=new Date(e.ts),k=d.getFullYear()+"-"+d.getMonth(),mo=months.find(x=>x.k===k);if(mo)mo.v+=-e.d});
+  const machOf=e=>{if(e.art){const a=A(e.art);if(a)return mShort(M(a.machineId))}const mm=String(e.note||"").match(/\b(\d{3,}[-\w]*)\b/);if(mm){const a=db.articles.find(x=>x.article.number===mm[1]);if(a)return mShort(M(a.machineId))}return null};
+  const use=new Map();db.articles.forEach(a=>new Set(a.tools.map(x=>normCode(x.code)).filter(Boolean)).forEach(c=>use.set(c,(use.get(c)||0)+1)));
+  const moved=new Set((db.stockLog||[]).filter(e=>e.ts>=Date.now()-90*864e5&&e.k==="c").map(e=>e.key));
+  const validatedIn=db.articles.filter(a=>a.status==="done"&&((a.validated&&a.validated.ts)||a.updatedAt||0)>=from).length;
+  const low=(db.catalog||[]).filter(c=>stockState(c)==="low").length,outS=(db.catalog||[]).filter(c=>stockState(c)==="out").length;
+  return{taken:sum(out),added:sum(inn),validatedIn,low,outS,months,top:byKey(out.filter(e=>e.k==="c"),e=>e.key).slice(0,15),byMachine:byKey(out,machOf).slice(0,20),byWho:byKey(out,e=>e.who||roleName(e.role)).slice(0,12),
+    mostUsed:[...use.entries()].sort((a,b)=>b[1]-a[1]).slice(0,15),dormant:(db.catalog||[]).filter(c=>!use.has(c.code)),still:(db.catalog||[]).filter(c=>!moved.has(c.code)&&(+c.stock||0)>0),
+    mach:machinesSorted().filter(m=>m.id!=="nomachine").map(m=>{const c=counts(artsOf(m.id));return{m,c}})};
+}
+function barList(rows,fmt,link){const max=Math.max(1,...rows.map(r=>r[1]));
+  return rows.length?`<div class="bars">${rows.map(([k,v])=>`<div class="br">${link?`<button class="linkcode" data-go="${link(k)}">${esc(k)}</button>`:`<b>${esc(fmt?fmt(k):k)}</b>`}<div class="bt"><i style="width:${v/max*100}%"></i></div><span class="m">${v}</span></div>`).join("")}</div>`:`<p class="note" style="margin:0">${esc(t("repNoData"))}</p>`}
+function drawReports(){
+  const box=$("#repbody");if(!box)return;const d=repData();
+  const maxM=Math.max(1,...d.months.map(x=>x.v));
+  const months=`<div class="mchart">${d.months.map(x=>`<div class="mcol"><span class="mv">${x.v||""}</span><div class="mb" style="height:${x.v/maxM*100}%"></div><span class="ml">${esc(x.label)}</span></div>`).join("")}</div>`;
+  const C=c=>{const x=C_(c);return x?`${c} · ${[x.type,x.diameter?"Ø"+x.diameter:""].filter(Boolean).join(" ")}`:c};
+  box.innerHTML=`<section class="tiles4"><div class="tile4 t-out"><b>${d.taken}</b><span>${esc(t("repTaken"))}</span></div><div class="tile4 t-ok"><b>${d.added}</b><span>${esc(t("repAdded"))}</span></div>
+      <div class="tile4"><b>${d.validatedIn}</b><span>${esc(t("repValidated"))}</span></div><div class="tile4 t-low"><b>${d.low} / ${d.outS}</b><span>${esc(t("repLowOut"))}</span></div></section>
+    <div class="repgrid">
+      <div class="card"><h2>${esc(t("repMonths"))}</h2>${months}</div>
+      <div class="card"><h2>${esc(t("repTop"))}</h2>${barList(d.top,null,k=>codeHref(k))}</div>
+      <div class="card"><h2>${esc(t("repByMachine"))}</h2>${barList(d.byMachine)}</div>
+      <div class="card"><h2>${esc(t("repByWho"))}</h2>${barList(d.byWho)}</div>
+      <div class="card"><h2>${esc(t("repMostUsed"))}</h2>${barList(d.mostUsed,null,k=>codeHref(k))}</div>
+      <div class="card"><h2>${esc(t("repMach"))}</h2><div class="list"><table class="lt"><thead><tr><th>Machine</th><th>${esc(t("repArticles"))}</th><th>${esc(t("validated"))}</th><th></th></tr></thead><tbody>
+        ${d.mach.map(({m,c})=>`<tr><td><span class="mtag">${esc(mShort(m))}</span> ${esc(m.name)}</td><td class="m">${c.all}</td><td class="m">${c.done}</td><td style="min-width:120px">${stackBar(c)}</td></tr>`).join("")}</tbody></table></div></div>
+      <div class="card"><h2>${esc(t("repDormant"))} <span class="hint">${d.dormant.length}</span></h2>${d.dormant.length?`<div class="chipwrap">${d.dormant.slice(0,60).map(c=>`<button class="linkcode" data-go="${codeHref(c.code)}">${esc(c.code)}</button>`).join("")}${d.dormant.length>60?`<span class="dim small">${esc(t("alertMore",d.dormant.length-60))}</span>`:""}</div>`:`<p class="note" style="margin:0">—</p>`}</div>
+      <div class="card"><h2>${esc(t("repStill"))} <span class="hint">${d.still.length}</span></h2>${d.still.length?`<div class="chipwrap">${d.still.slice(0,60).map(c=>`<button class="linkcode" data-go="${codeHref(c.code)}">${esc(c.code)}</button>`).join("")}${d.still.length>60?`<span class="dim small">${esc(t("alertMore",d.still.length-60))}</span>`:""}</div>`:`<p class="note" style="margin:0">—</p>`}</div>
+    </div>`;
+  box.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
+}
+async function reportsCSV(){
+  const d=repData(),q=v=>`"${String(v??"").replace(/"/g,'""')}"`,rows=[];
+  const sec=(title,head,list)=>{rows.push([title]);rows.push(head);list.forEach(r=>rows.push(r));rows.push([])};
+  sec(t("repMonths"),["Mois / Month",t("repTaken")],d.months.map(x=>[x.label,x.v]));
+  sec(t("repTop"),[t("cCode"),t("repTaken")],d.top);sec(t("repByMachine"),["Machine",t("repTaken")],d.byMachine);sec(t("repByWho"),[t("lWho"),t("repTaken")],d.byWho);
+  sec(t("repMostUsed"),[t("cCode"),t("repSheets")],d.mostUsed);sec(t("repMach"),["Machine",t("repArticles"),t("validated")],d.mach.map(({m,c})=>[mLabel(m),c.all,c.done]));
+  sec(t("repDormant"),[t("cCode"),t("cType")],d.dormant.map(c=>[c.code,c.type]));sec(t("repStill"),[t("cCode"),t("cType"),t("cStock")],d.still.map(c=>[c.code,c.type,+c.stock||0]));
+  const name=`${t("repPrefix")}_${stampOf(new Date())}.csv`;
+  try{const p=await download(name,new Blob(["﻿"+rows.map(r=>r.map(q).join(";")).join("\r\n")],{type:"text/csv"}),"csv");if(p)toast(DESK?t("saved",name):t("savedTo",name))}catch(e){toast(String(e.message||e))}
+}
+
+/* ---------- 5. low-stock alert for the tool planner ---------- */
+function stockAlert(){
+  const items=[...(db.catalog||[]).map(c=>({k:"c",id:c.code,it:c})),...(db.holders||[]).map(h=>({k:"h",id:h.ref,it:h}))].map(x=>({...x,s:stockState(x.it)})).filter(x=>x.s==="out"||x.s==="low");
+  if(!items.length)return;
+  items.sort((a,b)=>(a.s==="out"?0:1)-(b.s==="out"?0:1)||natCmp(a.id,b.id));
+  const nOut=items.filter(x=>x.s==="out").length,nLow=items.length-nOut,show=items.slice(0,14);
+  dialog(`<span class="alerth">${esc(t("alertT"))}</span>`,`<p style="margin:0;font-weight:600">${esc(t("alertP",nOut,nLow))}</p>
+    <div class="alertlist">${show.map(x=>`<button class="alrow" data-go="${x.k==="h"?holderHref(x.id):codeHref(x.id)}"><b class="an">${esc(x.id)}</b><span class="cl">${esc(x.it.type||"")}</span><span class="m">${+x.it.stock||0} / ${+x.it.min||0}</span><span class="spill s-${x.s}">${esc(SSL(x.s))}</span></button>`).join("")}
+    ${items.length>show.length?`<p class="note" style="margin:4px 0 0">${esc(t("alertMore",items.length-show.length))}</p>`:""}</div>`,
+    `<button class="btn" id="al-csv">${esc(t("alertOrder"))}</button><span class="sp"></span><button class="btn ghost" id="d-cancel">${esc(t("close"))}</button><button class="btn red" id="al-see">${esc(t("alertSee"))}</button>`);
+  $(".dlg").classList.add("wide2","alertdlg");
+  $("#d-cancel").onclick=closeDlg;$("#al-csv").onclick=()=>orderCSV();
+  $("#al-see").onclick=()=>{closeDlg();cribF="out";go("#crib")};
+  $("#ov").querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>{closeDlg();go(b.dataset.go)});
+}
+
+/* ---------- 6. validated sheets, index rules, history ---------- */
+const isLocked=a=>a&&a.status==="done";
+function addHist(a,act,extra){if(!Array.isArray(a.history))a.history=[];a.history.unshift({ts:Date.now(),who:USER||"",role:ROLE||"",act,...(extra||{})});if(a.history.length>200)a.history.length=200}
+const snapOf=a=>JSON.parse(JSON.stringify({article:a.article,tools:realTools(a.tools),machineId:a.machineId}));
+let edBase=null;
+function edBaseline(){edBase=cur?JSON.stringify({article:cur.article,tools:cur.tools,machineId:cur.machineId}):null}
+function recordEdit(){
+  if(!cur||!edBase)return;const now=JSON.stringify({article:cur.article,tools:cur.tools,machineId:cur.machineId});if(now===edBase)return;
+  const a0=JSON.parse(edBase),f=[],tt=new Set();
+  AFIELDS.forEach(k=>{if(clean(a0.article[k])!==clean(cur.article[k]))f.push(k)});if(a0.machineId!==cur.machineId)f.push("machine");
+  const key=x=>normT(x.t)||"",b=new Map(a0.tools.filter(x=>COLS.some(k=>clean(x[k]))).map(x=>[key(x),JSON.stringify(x)])),n=new Map(cur.tools.filter(x=>COLS.some(k=>clean(x[k]))).map(x=>[key(x),JSON.stringify(x)]));
+  n.forEach((v,k)=>{if(b.get(k)!==v)tt.add(k)});b.forEach((v,k)=>{if(!n.has(k))tt.add(k)});
+  edBase=now;if(!f.length&&!tt.size)return;
+  const h=cur.history&&cur.history[0];
+  if(h&&h.act==="edit"&&h.who===(USER||"")&&Date.now()-h.ts<15*60000){h.ts=Date.now();h.f=[...new Set([...(h.f||[]),...f])];h.t=[...new Set([...(h.t||[]),...tt])].sort()}
+  else addHist(cur,"edit",{f,t:[...tt].sort()});
+}
+function validateArticle(){
+  const miss=missing(cur);
+  dialog(esc(t("validate")),`<p style="margin:0">${esc(t("validateQ"))}</p>${miss?`<p class="warnline" style="margin:0">${esc(t("validateMiss",miss))}</p>`:""}`,
+    `<button class="btn ghost" id="d-cancel">${esc(t("cancel"))}</button><button class="btn red" id="d-ok">✓ ${esc(t("validate"))}</button>`);
+  $("#d-cancel").onclick=closeDlg;
+  $("#d-ok").onclick=()=>{recordEdit();cur.status="done";cur.validated={ts:Date.now(),who:USER||roleName(ROLE)};if(!clean(cur.article.approvedBy)&&USER)cur.article.approvedBy=USER;
+    addHist(cur,"validate",{ix:cur.article.index||"",snap:snapOf(cur)});cur.updatedAt=Date.now();saveDB();closeDlg();render();toast(t("markedDone"))};
+}
+function newIndexArticle(){
+  const a=cur.article,old=a.index||"",used=new Set([old,...(cur.history||[]).map(h=>h.ix).filter(Boolean)]);
+  let nx=nextIndex(old||"@");if(!old)nx="A";while(used.has(nx)&&nx!==nextIndex(nx))nx=nextIndex(nx);
+  dialog(esc(t("newIndex")),`<p style="margin:0">${esc(t("newIndexQ",old||"—",nx))}</p>`,`<button class="btn ghost" id="d-cancel">${esc(t("cancel"))}</button><button class="btn red" id="d-ok">${esc(t("newIndex"))} ${esc(nx)}</button>`);
+  $("#d-cancel").onclick=closeDlg;
+  $("#d-ok").onclick=()=>{if(!(cur.history||[]).some(h=>h.act==="validate"&&h.ix===old))addHist(cur,"archive",{ix:old,snap:snapOf(cur)});
+    a.index=nx;a.date=today();cur.status="progress";cur.validated=null;addHist(cur,"newindex",{ix:nx,from:old});cur.updatedAt=Date.now();saveDB();closeDlg();render();toast(t("hNewIndex",nx))};
+}
+function reopenArticle(){if(!confirm(t("reopenQ")))return;cur.status="progress";cur.validated=null;addHist(cur,"reopen",{ix:cur.article.index||""});cur.updatedAt=Date.now();saveDB();render()}
+function applyLock(){
+  const ed=$("#ed");if(!ed||!cur)return;const locked=isLocked(cur);ed.classList.toggle("locked",locked);
+  ed.querySelectorAll(".form input,.form textarea,.form select").forEach(el=>{if(el.id==="a-index")return;el.disabled=locked});
+  ["#b-add","#b-impt","#b-ncimp"].forEach(s=>{const b=$(s);if(b)b.hidden=locked});
+  ed.querySelectorAll("#rows .act").forEach(td=>td.style.visibility=locked?"hidden":"");
+  const ix=$("#a-index");if(ix){const admin=ROLE==="admin";ix.readOnly=locked||!admin;ix.title=admin?"":t("indexAdmin");ix.classList.toggle("ro",ix.readOnly)}
+}
+function drawHistory(){
+  const box=$("#histbox");if(!box||!cur)return;const H=cur.history||[];
+  const lab=h=>h.act==="create"?t("hCreate"):h.act==="validate"?t("hValidate")+(h.ix?" · "+t("index")+" "+h.ix:""):h.act==="newindex"?t("hNewIndex",h.ix):h.act==="reopen"?t("hReopen"):h.act==="import"?t("hImport"):h.act==="archive"?t("index")+" "+h.ix:t("hEdit");
+  const det=h=>h.act==="edit"?[(h.f||[]).map(k=>t(k)||k).join(", "),(h.t||[]).length?`${t("hTools")} ${(h.t||[]).slice(0,12).join(" ")}${h.t.length>12?"…":""}`:""].filter(Boolean).join(" · "):h.act==="newindex"&&h.from?`${h.from} → ${h.ix}`:h.src||"";
+  box.innerHTML=H.length?`<ul class="hist histlist">${H.slice(0,40).map((h,i)=>`<li class="h-${esc(h.act)}"><b>${esc(lab(h))}</b><span>${esc(det(h))}${h.who?`${det(h)?" · ":""}<i>${esc(h.who)}</i>`:""}</span><span class="dim">${when(h.ts)} ${hhmm(h.ts)}${h.snap?` <button class="btn sm" data-hpdf="${i}">${esc(t("hPdf"))}</button>`:""}</span></li>`).join("")}</ul>`:`<p class="note" style="margin:0">${esc(t("histNone"))}</p>`;
+  box.querySelectorAll("[data-hpdf]").forEach(b=>b.onclick=()=>{const h=H[+b.dataset.hpdf],s=h.snap;const art={...cur,article:s.article,tools:s.tools,machineId:s.machineId||cur.machineId,status:h.act==="validate"?"done":"progress",validated:h.act==="validate"?{ts:h.ts,who:h.who}:null};downloadPDF(art)});
+}
+
 /* ---------- top bar ---------- */
 $("#home").onclick=()=>go(ROLE?ROLES[ROLE].home:"#");
 // phones: the header items live in a menu
@@ -3919,7 +4434,7 @@ $("#b-backup").onclick=()=>{if(edTimer){clearTimeout(edTimer);flushEditor()}
   download(`${t("backupPrefix")}_${stampOf(d)}.json`,new Blob([JSON.stringify({app:"tool-list-maker",version:3,savedAt:d.toISOString(),machines:db.machines,articles:db.articles,catalog:(db.catalog||[]).map(c=>{const ph=photoOf(c);return ph?{...c,photo:ph}:c}),holders:(db.holders||[]).map(h=>{const ph=photoOf(h);return ph?{...h,photo:ph}:h}),stockLog:db.stockLog||[],logo},null,1)],{type:"application/json"}),"json")
     .then(p=>{if(!p)return;db.lastBackup=Date.now();saveDB();toast(DESK?t("backupDesk"):t("backupWeb"));if(route.view==="home")render()})
     .catch(e=>toast(t("backupFail")+(e.message||e)))};
-$("#b-restore").onclick=()=>$("#f-restore").click();
+$("#b-restore").onclick=()=>restoreDialog();
 $("#f-restore").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;
   try{const d=JSON.parse(await f.text());
     if(Array.isArray(d.machines)&&Array.isArray(d.articles)){
