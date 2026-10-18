@@ -9,7 +9,7 @@ https://neutralino.js.org) which shows the program in a window using the
 Microsoft Edge WebView2 component already part of Windows 10/11.
 
 DOWNLOADS
-  BrocheStuff-Setup.exe     installer (NSIS 3, 64-bit, per-user, not code-signed)
+  BrocheStuff-Setup-x.x.x.exe     installer (NSIS 3, 64-bit, per-user, not code-signed)
   BrocheStuff-Windows.zip   the same program without installer (portable)
 Installed files: BrocheStuff.exe (the Neutralinojs 5.4.0 runtime, unchanged
 except for the icon and version information), resources.neu (the program
@@ -25,7 +25,7 @@ INSTALLATION
   usual uninstall entry for the current user
   (HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\BrocheStuff and
   HKCU\Software\BrocheStuff\InstallDir). Nothing in HKLM.
-- Silent install: BrocheStuff-Setup.exe /S   (optional /D=C:\path as the last
+- Silent install: BrocheStuff-Setup-x.x.x.exe /S   (optional /D=C:\path as the last
   argument). Silent uninstall: "%LOCALAPPDATA%\Programs\BrocheStuff\Uninstall.exe" /S
 - Uninstalling removes the program, shortcuts and registry entries; the data
   folder is kept.

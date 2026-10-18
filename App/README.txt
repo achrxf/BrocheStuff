@@ -1,7 +1,7 @@
 BrocheStuff 2.2 — Windows program
 
 INSTALL
-1. Double-click BrocheStuff-Setup.exe and follow the steps (Next, Install,
+1. Double-click BrocheStuff-Setup-x.x.x.exe and follow the steps (Next, Install,
    Finish). No administrator rights are needed.
    The first time, Windows may say "Windows protected your PC" (the program is
    not signed): click "More info" then "Run anyway".
@@ -44,7 +44,7 @@ BrocheStuff 2.2 — programme Windows
 ====================================
 
 INSTALLER
-1. Double-cliquez sur BrocheStuff-Setup.exe et suivez les étapes (Suivant,
+1. Double-cliquez sur BrocheStuff-Setup-x.x.x.exe et suivez les étapes (Suivant,
    Installer, Terminer). Aucun droit administrateur n'est nécessaire.
    La première fois, Windows peut afficher « Windows a protégé votre ordinateur »
    (le programme n'est pas signé) : cliquez sur « Informations complémentaires »
