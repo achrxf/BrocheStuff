@@ -5,8 +5,8 @@ Tool lists, tool crib and holders for a CNC machining shop: every machine, its a
 | | Open | What it is |
 |---|---|---|
 | **Web** | [achrxf.github.io/BrocheStuff/Web](https://achrxf.github.io/BrocheStuff/Web/) | The program in the browser. Starts empty; your data stays in your browser. |
-| **Demo** | [achrxf.github.io/BrocheStuff/Demo](https://achrxf.github.io/BrocheStuff/Demo/) | The same program filled with a made-up workshop: 20 machines (3, 4 and 5 axes; BT30 / BT40 / BT50 / HSK63), 500 articles, ~500 tool codes, ~130 holders and a month of stock moves. |
-| **App** | [App/BrocheStuff-Setup-2.2.1.exe](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Setup-2.2.1.exe) | The Windows program (10/11, 64-bit) with sign-in accounts and a shared data folder. Run the installer (no admin rights needed), then open BrocheStuff from the Start menu; first sign-in **admin / admin**. Portable version: [BrocheStuff-Windows.zip](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Windows.zip). See [`App/README.txt`](App/README.txt). |
+| **Demo** | [achrxf.github.io/BrocheStuff/Demo](https://achrxf.github.io/BrocheStuff/Demo/) | The same program filled with a made-up workshop, with a step-by-step tutorial (French / English) linked at the bottom of every page: 20 machines (3, 4 and 5 axes; BT30 / BT40 / BT50 / HSK63), 500 articles, ~500 tool codes, ~130 holders and a month of stock moves. |
+| **App** | [App/BrocheStuff-Setup-2.2.2.exe](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Setup-2.2.2.exe) | The Windows program (10/11, 64-bit) with sign-in accounts and a shared data folder. Run the installer (no admin rights needed), then open BrocheStuff from the Start menu; first sign-in **admin / admin**. Portable version: [BrocheStuff-Windows.zip](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Windows.zip). See [`App/README.txt`](App/README.txt). |
 
 The web version has a **Download the app** button at the top right. The demo stands on its own: it has no link to the real version and no download, so it can be shared safely.
 
@@ -15,7 +15,7 @@ The web version has a **Download the app** button at the top right. The demo sta
 ```
 Web/   index.html   the web version (one file, works offline once opened)
 Demo/  index.html   the web version with demo data (kept apart from your real data)
-App/   BrocheStuff-Setup-2.2.1.exe (installer), BrocheStuff-Windows.zip (portable), README.txt, FOR_IT.txt, checksums
+App/   BrocheStuff-Setup-2.2.2.exe (installer), BrocheStuff-Windows.zip (portable), README.txt, FOR_IT.txt, checksums
 ```
 
 ## What it does
@@ -28,7 +28,7 @@ App/   BrocheStuff-Setup-2.2.1.exe (installer), BrocheStuff-Windows.zip (portabl
 
 **Holders.** Every holder by taper (BT40 blue, BT50 amber), type, clamping, nose Ø, length, stock and where it is used. References like `PER-50-25-42-130` are read automatically.
 
-**Production.** One search box for codes, holders and articles; the location in big letters, the stock, the tool list and the sheet; comments saved in the stock log.
+**Production.** One search box for codes, holders and articles; the location in big letters, the stock, the tool list and the sheet. Production takes tools out one at a time ("Sortir 1", with a confirmation and the article, undo right after); putting tools back is the tool planner's job. Comments are saved in the stock log, and every log line opens in full.
 
 **Validated sheets and history.** *Validate the sheet* locks it (nothing can be typed) and the PDF shows a green **VALIDATED · date · name** band; unfinished sheets print **IN PROGRESS**. To change a validated sheet, make a **new index** (A → B → C…): the old index stays in the history with its PDF. Only the admin can type an index, and an index already used can't be used again. Every change is kept in the history (who, when, which fields and tools).
 
@@ -40,7 +40,7 @@ App/   BrocheStuff-Setup-2.2.1.exe (installer), BrocheStuff-Windows.zip (portabl
 
 **Stock alert.** When the tool planner logs in, a list of tools and holders out of stock or low comes up right away, with the order list.
 
-**Excel models** (download, preview, print on A4: `1_Machines_Template.xlsx` … `5_Holders_Template.xlsx`) for machines, tool crib, holders, articles and a blank tool sheet to fill by hand. Imports read the columns by their titles (French or English) with a preview first. Every table can be resized like Excel (drag the column edge). French and English (asked the first time, then remembered for each person), light and dark mode.
+**Excel models** — each page has its own (download, preview, print on A4: `1_Machines_Template.xlsx` … `5_Holders_Template.xlsx`) for machines, tool crib, holders, articles and a blank tool sheet to fill by hand. Imports read the columns by their titles (French or English) with a preview first. Every table can be resized like Excel (drag the column edge). French and English (asked the first time, then remembered for each person), light and dark mode.
 
 ## Windows program only
 
@@ -74,7 +74,7 @@ BrocheStuff regroupe les machines CNC, leurs articles et leurs outils, produit u
 
 - **Web** : https://achrxf.github.io/BrocheStuff/Web/ — le programme dans le navigateur, vide au départ.
 - **Démo** : https://achrxf.github.io/BrocheStuff/Demo/ — atelier fictif de 20 machines et 500 articles.
-- **Programme Windows** : [App/BrocheStuff-Setup-2.2.1.exe](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Setup-2.2.1.exe) — installez-le (sans droits administrateur), ouvrez BrocheStuff depuis le menu Démarrer, première connexion **admin / admin**. Comptes par personne, dossier de données partagé en réseau, page Administration, démo intégrée (voir `README.txt`).
+- **Programme Windows** : [App/BrocheStuff-Setup-2.2.2.exe](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Setup-2.2.2.exe) — installez-le (sans droits administrateur), ouvrez BrocheStuff depuis le menu Démarrer, première connexion **admin / admin**. Comptes par personne, dossier de données partagé en réseau, page Administration, démo intégrée (voir `README.txt`).
 
 Au démarrage, choisissez votre service : Préparateur méthode, Préparateur outil, Production, ou Accès admin. Les données restent sur l'ordinateur qui les utilise (navigateur, ou `Documents\BrocheStuff` pour le programme). **Sauvegarder / Restaurer** pour les déplacer ; une copie automatique est gardée toutes les 5 minutes.
 

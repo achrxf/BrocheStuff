@@ -1265,6 +1265,7 @@ body.gating .guidebtn{pointer-events:auto}
 .gsec img{display:block;width:100%;height:auto;border:1px solid var(--hair);border-radius:10px}
 @media (max-width:900px){.guidewrap{grid-template-columns:1fr}.guidetoc{position:static;flex-direction:row;flex-wrap:wrap}.guidetoc b{width:100%}}
 @media (max-width:760px){.gsec{padding:18px 16px}.gsec h3{font-size:21px}.guidep .ph .btn{width:100%;justify-content:center}}
+@media (min-width:761px){.ph>div:first-child:not(.mhead):not(.codehead){flex:1 1 320px;min-width:0}.ph>div:first-child:not(.mhead):not(.codehead) .sub{max-width:560px}}
 </style></head>
 <body>
 <header class="top">
@@ -3862,7 +3863,7 @@ function takeDialog(it0,art,redraw){
     const note=t("pTake")+(num?" · "+num:"");moveStock(cur,-1,note);const e=db.stockLog[0];if(e&&a)e.art=a.id;saveDB();closeDlg();
     const ts=e&&e.ts;redraw&&redraw();
     toast(t("taken",key,+cur.stock||0),{label:t("undo"),fn:()=>{const c2=fresh();const last=(db.stockLog||[]).find(x=>x.k!=="n"&&x.key===key&&(x.who||"")===(USER||""));
-      if(!c2||!last||last.ts!==ts){toast(t("undoLate"));return}moveStock(c2,1,t("pUndo"));saveDB();redraw&&redraw();toast(t("undone",key,+c2.stock||0))}})};
+      if(!c2||!last||last.ts!==ts){toast(t("undoLate"));return}last.undone=1;moveStock(c2,1,t("pUndo"));if(db.stockLog[0])db.stockLog[0].undo=1;saveDB();redraw&&redraw();toast(t("undone",key,+c2.stock||0))}})};
   $("#tk-art").onkeydown=e=>{if(e.key==="Enter")ok.click()};
 }
 function prodMatch(){
@@ -4158,7 +4159,7 @@ Object.assign(I18N.en,{getApp:"Get the app", getAppT:"Download the Windows insta
   demoBar:"Demo: made-up workshop with 20 machines and 500 articles. Changes stay in this browser only.", demoShort:"Made-up data", demoReset:"Reset the demo", demoResetQ:"Reset the demo data? Everything changed here is lost.", demoGo:"Real version"});
 Object.assign(I18N.fr,{getApp:"Télécharger l'app", getAppT:"Télécharger l’installateur Windows",
   demoBar:"Démo : atelier fictif de 20 machines et 500 articles. Vos changements restent dans ce navigateur.", demoShort:"Données fictives", demoReset:"Réinitialiser la démo", demoResetQ:"Réinitialiser les données de la démo ? Tout ce qui a été changé ici sera perdu.", demoGo:"Version réelle"});
-const APP_ZIP="BrocheStuff-Setup-2.2.1.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
+const APP_ZIP="BrocheStuff-Setup-2.2.2.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
 function appUrl(){
   // on the site (…/Web/ or …/Demo/) the program sits next door in …/App/; anywhere else, take it from the site
   if(/^https?:/.test(location.protocol)&&/\/(Web|Demo)\/(index\.html)?$/i.test(location.pathname))return new URL("../App/"+APP_ZIP,location.href).href;
@@ -4196,7 +4197,7 @@ Object.assign(I18N.en,{
   magSize:"Pockets", magEmpty:"Empty", magPocket:p=>`Pocket ${p}`, magSave:"Save", magClear:"Empty the pocket", magClearAll:"Empty the magazine", magClearAllQ:"Empty every pocket of this magazine?",
   magCompare:"Compare with an article", magCmpT:"Compare the magazine with an article", magPick:"Article", magOk:"Already in place", magLoad:"To load", magSwap:"To swap", magKeep:"Not used by this article",
   magApply:n=>`Load the article (${n} ${pl(n,"pocket","pockets")})`, magApplied:n=>`${n} ${pl(n,"pocket","pockets")} updated`, magLast:"Last changes", magNoArt:"This machine has no article yet.", magCmpBtn:"Compare with the magazine",
-  magNoChange:"Everything is already in place.",
+  magNoChange:"Everything is already in place.", magsEmpty:"No machine yet", magsEmptyP:"Add the machines first (Machines page); each one then gets its magazine here.",
   /* reports */
   navReports:"Reports", repT:"Reports", repSub:"Tool consumption, stock and tool sheets at a glance.", repMonths:"Tools taken per month", repTop:"Most taken tools", repByMachine:"Tools taken per machine",
   repByWho:"Tools taken per person", repMostUsed:"Codes used in the most tool sheets", repDormant:"Codes not used in any tool sheet", repStill:"No stock move for 90 days", repMach:"Tool sheets per machine",
@@ -4221,7 +4222,7 @@ Object.assign(I18N.fr,{
   magSize:"Poches", magEmpty:"Vide", magPocket:p=>`Poche ${p}`, magSave:"Enregistrer", magClear:"Vider la poche", magClearAll:"Vider le magasin", magClearAllQ:"Vider toutes les poches de ce magasin ?",
   magCompare:"Comparer avec un article", magCmpT:"Comparer le magasin avec un article", magPick:"Article", magOk:"Déjà en place", magLoad:"À charger", magSwap:"À échanger", magKeep:"Pas utilisé par cet article",
   magApply:n=>`Charger l'article (${n} ${pl(n,"poche","poches")})`, magApplied:n=>`${n} ${pl(n,"poche mise","poches mises")} à jour`, magLast:"Derniers changements", magNoArt:"Cette machine n'a pas encore d'article.", magCmpBtn:"Comparer au magasin",
-  magNoChange:"Tout est déjà en place.",
+  magNoChange:"Tout est déjà en place.", magsEmpty:"Pas encore de machine", magsEmptyP:"Ajoutez d’abord les machines (page Machines) ; chacune aura ensuite son magasin ici.",
   navReports:"Rapports", repT:"Rapports", repSub:"Consommation d'outils, stock et fiches outils en un coup d'œil.", repMonths:"Outils sortis par mois", repTop:"Outils les plus sortis", repByMachine:"Outils sortis par machine",
   repByWho:"Outils sortis par personne", repMostUsed:"Codes présents dans le plus de fiches", repDormant:"Codes utilisés dans aucune fiche", repStill:"Aucun mouvement de stock depuis 90 jours", repMach:"Fiches outils par machine",
   repTaken:"sortis", repAdded:"rentrés", repValidated:"fiches validées", repLowOut:"stock bas / rupture", repArticles:"articles", repCsv:"Exporter (CSV)", repNoData:"Rien pour cette période.", repSheets:"fiches",
@@ -4382,6 +4383,7 @@ function magSet(m,p,val,why){const g=magOf(m),old=g.p[p]||null;if(val&&(val.code
   g.log.unshift({ts:Date.now(),who:USER||"",p:+p,from:old&&old.code||"",to:val&&val.code||"",why:why||""});if(g.log.length>80)g.log.length=80}
 function renderMags(){
   const list=machinesSorted().filter(m=>m.id!=="nomachine");
+  if(!list.length){$("#view").innerHTML=`<div class="page"><div class="ph"><div><h2>${esc(t("magsT"))}<b>.</b></h2><div class="sub">${esc(t("magsSub"))}</div></div></div><div class="empty"><h3>${esc(t("magsEmpty"))}</h3><p>${esc(t("magsEmptyP"))}</p>${can("home")?`<button class="btn red" data-go="#">${esc(t("navMachines"))}</button>`:""}</div></div>`;$("#view").querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));return}
   $("#view").innerHTML=`<div class="page"><div class="ph"><div><h2>${esc(t("magsT"))}<b>.</b></h2><div class="sub">${esc(t("magsSub"))}</div></div></div>
     <div class="mgrid">${list.map(m=>{const g=magOf(m),n=magCount(m);return `<div class="mc magc" role="button" tabindex="0" data-mag="${m.id}">
       ${m.abbr?`<span class="ab">${esc(m.abbr)}</span>`:""}<span class="nm${m.abbr?" sm":""}">${esc(m.name)}</span><span class="md">${esc(mInfo(m))}${coneTag(m.cone)?" "+coneTag(m.cone):""}</span>
@@ -4457,11 +4459,11 @@ function renderReports(){
   $("#rep-csv").onclick=reportsCSV;drawReports();
 }
 function repData(){
-  const from=repP==="all"?0:Date.now()-(+repP)*864e5,L=(db.stockLog||[]).filter(e=>e.ts>=from&&e.k!=="n"&&!e.set);
+  const from=repP==="all"?0:Date.now()-(+repP)*864e5,L=(db.stockLog||[]).filter(e=>e.ts>=from&&e.k!=="n"&&!e.set&&!e.undo&&!e.undone);
   const out=L.filter(e=>e.d<0),inn=L.filter(e=>e.d>0),sum=a=>a.reduce((s,e)=>s+Math.abs(e.d),0);
   const byKey=(arr,f)=>{const m=new Map();arr.forEach(e=>{const k=f(e);if(k==null||k==="")return;m.set(k,(m.get(k)||0)+Math.abs(e.d))});return[...m.entries()].sort((a,b)=>b[1]-a[1])};
   const months=[];const now=new Date();for(let i=11;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);months.push({k:d.getFullYear()+"-"+d.getMonth(),label:d.toLocaleDateString(LANG==="en"?"en-GB":"fr-FR",{month:"short"}),v:0})}
-  (db.stockLog||[]).filter(e=>e.k!=="n"&&!e.set&&e.d<0).forEach(e=>{const d=new Date(e.ts),k=d.getFullYear()+"-"+d.getMonth(),mo=months.find(x=>x.k===k);if(mo)mo.v+=-e.d});
+  (db.stockLog||[]).filter(e=>e.k!=="n"&&!e.set&&!e.undone&&e.d<0).forEach(e=>{const d=new Date(e.ts),k=d.getFullYear()+"-"+d.getMonth(),mo=months.find(x=>x.k===k);if(mo)mo.v+=-e.d});
   const machOf=e=>{if(e.art){const a=A(e.art);if(a)return mShort(M(a.machineId))}const mm=String(e.note||"").match(/\b(\d{3,}[-\w]*)\b/);if(mm){const a=db.articles.find(x=>x.article.number===mm[1]);if(a)return mShort(M(a.machineId))}return null};
   const use=new Map();db.articles.forEach(a=>new Set(a.tools.map(x=>normCode(x.code)).filter(Boolean)).forEach(c=>use.set(c,(use.get(c)||0)+1)));
   const moved=new Set((db.stockLog||[]).filter(e=>e.ts>=Date.now()-90*864e5&&e.k==="c").map(e=>e.key));
@@ -4574,7 +4576,7 @@ function drawHistory(){
    admin page, demo switch. The web version doesn't use any of this.
    ===================================================================== */
 const DESKDEMO=/*DESKDEMO*/null;
-const APP_VER="2.2.1";
+const APP_VER="2.2.2";
 let DEMO_ON=false, ACC=null, USERS=null, PCNAME="", realDIR="", loginFails=0, loginWait=0, lastAct=Date.now();
 Object.assign(I18N.en,{
   loginT:"Sign in", loginP:"Enter your name or code and your password.", loginName:"Name or code", loginPw:"Password", loginGo:"Sign in",
