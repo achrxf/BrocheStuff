@@ -1,12 +1,12 @@
-# ToolManager
+# BrocheStuff
 
 Tool lists, tool crib and holders for a CNC machining shop: every machine, its articles and their tools in one place, a clean A4 **Fiche outils** for each article, and the stock of every tool code and holder.
 
 | | Open | What it is |
 |---|---|---|
-| **Web** | [achrxf.github.io/ToolManager/Web](https://achrxf.github.io/ToolManager/Web/) | The program in the browser. Starts empty; your data stays in your browser. |
-| **Demo** | [achrxf.github.io/ToolManager/Demo](https://achrxf.github.io/ToolManager/Demo/) | The same program filled with a made-up workshop: 20 machines (3, 4 and 5 axes; BT30 / BT40 / BT50 / HSK63), 500 articles, ~500 tool codes, ~130 holders and a month of stock moves. |
-| **App** | [App/ToolManager-Windows.zip](https://github.com/achrxf/ToolManager/raw/main/App/ToolManager-Windows.zip) | The Windows program (10/11, 64-bit). Unzip, keep `ToolManager.exe` and `resources.neu` together, double-click. See [`App/README.txt`](App/README.txt). |
+| **Web** | [achrxf.github.io/BrocheStuff/Web](https://achrxf.github.io/BrocheStuff/Web/) | The program in the browser. Starts empty; your data stays in your browser. |
+| **Demo** | [achrxf.github.io/BrocheStuff/Demo](https://achrxf.github.io/BrocheStuff/Demo/) | The same program filled with a made-up workshop: 20 machines (3, 4 and 5 axes; BT30 / BT40 / BT50 / HSK63), 500 articles, ~500 tool codes, ~130 holders and a month of stock moves. |
+| **App** | [App/BrocheStuff-Windows.zip](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Windows.zip) | The Windows program (10/11, 64-bit). Unzip, keep `BrocheStuff.exe` and `resources.neu` together, double-click. See [`App/README.txt`](App/README.txt). |
 
 The web version has a **Download the app** button at the top right. The demo stands on its own: it has no link to the real version and no download, so it can be shared safely.
 
@@ -15,7 +15,7 @@ The web version has a **Download the app** button at the top right. The demo sta
 ```
 Web/   index.html   the web version (one file, works offline once opened)
 Demo/  index.html   the web version with demo data (kept apart from your real data)
-App/   ToolManager-Windows.zip + README.txt
+App/   BrocheStuff-Windows.zip + README.txt
 ```
 
 ## What it does
@@ -36,7 +36,7 @@ App/   ToolManager-Windows.zip + README.txt
 
 Nothing is sent anywhere.
 - **Web:** saved in the browser that uses it. **Sauvegarder / Back up** writes a file; **Restaurer / Restore** reads it on another PC.
-- **Windows program:** saved in `Documents\ToolManager` with a daily backup copy.
+- **Windows program:** saved in `Documents\BrocheStuff` with a daily backup copy.
 - **Demo:** kept separately from the web version, with its own made-up company logo and a **Reset the demo** button.
 
 Each PC keeps its own data: to share one database between several PCs, a shared folder or a small server is the next step.
@@ -49,10 +49,10 @@ Each PC keeps its own data: to share one database between several PCs, a shared 
 
 ## En français
 
-ToolManager regroupe les machines CNC, leurs articles et leurs outils, produit une **fiche outils** A4 pour chaque article, et suit le stock des codes outils et des porte-outils.
+BrocheStuff regroupe les machines CNC, leurs articles et leurs outils, produit une **fiche outils** A4 pour chaque article, et suit le stock des codes outils et des porte-outils.
 
-- **Web** : https://achrxf.github.io/ToolManager/Web/ — le programme dans le navigateur, vide au départ.
-- **Démo** : https://achrxf.github.io/ToolManager/Demo/ — atelier fictif de 20 machines et 500 articles.
-- **Programme Windows** : [App/ToolManager-Windows.zip](https://github.com/achrxf/ToolManager/raw/main/App/ToolManager-Windows.zip) — décompressez, gardez `ToolManager.exe` et `resources.neu` ensemble, double-cliquez (voir `README.txt`).
+- **Web** : https://achrxf.github.io/BrocheStuff/Web/ — le programme dans le navigateur, vide au départ.
+- **Démo** : https://achrxf.github.io/BrocheStuff/Demo/ — atelier fictif de 20 machines et 500 articles.
+- **Programme Windows** : [App/BrocheStuff-Windows.zip](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Windows.zip) — décompressez, gardez `BrocheStuff.exe` et `resources.neu` ensemble, double-cliquez (voir `README.txt`).
 
-Au démarrage, choisissez votre service : Préparateur méthode, Préparateur outil, Production, ou Accès admin. Les données restent sur l'ordinateur qui les utilise (navigateur, ou `Documents\ToolManager` pour le programme). **Sauvegarder / Restaurer** pour les déplacer.
+Au démarrage, choisissez votre service : Préparateur méthode, Préparateur outil, Production, ou Accès admin. Les données restent sur l'ordinateur qui les utilise (navigateur, ou `Documents\BrocheStuff` pour le programme). **Sauvegarder / Restaurer** pour les déplacer.
