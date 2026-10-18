@@ -1768,7 +1768,7 @@ en:{
   ofDone:n=>`of ${n} ${pl(n,"article","articles")} done`, done:"Done", inProgress:"In progress", notStarted:"Not started", all:"All",
   machine:"Machine", slashDone:n=>`/ ${n} done`, nInProgress:n=>`${n} in progress`, edit:"Edit", editT:"Rename or delete",
   footWeb:(m,n)=>`${m} ${pl(m,"machine","machines")} · ${n} ${pl(n,"article","articles")} · saved in this browser on this PC`,
-  footDesk:(m,n)=>`${m} ${pl(m,"machine","machines")} · ${n} ${pl(n,"article","articles")} · saved automatically in Documents\\BrocheStuff`,
+  footDesk:(m,n)=>`${m} ${pl(m,"machine","machines")} · ${n} ${pl(n,"article","articles")} · saved automatically in ${DIR||"Documents\\BrocheStuff"}`,
   footDaily:"A backup copy is made every day (last 30 kept).",
   notBacked:"Not backed up yet. Click “Back up” in the top bar to save everything to a file.", backedDays:d=>`Last backup ${d} days ago.`, backedOn:d=>`Last backup ${d}`,
   codeUsed:(c,n)=>`Tool code ${c} is used in ${n} ${pl(n,"article","articles")}`, codeStarts:c=>`No article uses exactly ${c} · showing codes starting with ${c}`, nFound:n=>`${n} ${pl(n,"article","articles")} found`,
@@ -1796,7 +1796,7 @@ en:{
   backupDesk:"Backup saved. Keep a copy on a USB stick or the network too.", backupWeb:"Backup saved to your Downloads. Keep it somewhere safe.", backupFail:"Could not save the backup: ",
   restoreTitle:"Restore backup", restoreHas:(m,n)=>`This file has <b>${m} ${pl(m,"machine","machines")}</b> and <b>${n} ${pl(n,"article","articles")}</b>.`, restoreQ:"Replace everything in the program with it, or add it to what's already here?",
   addCurrent:"Add to current", replaceAll:"Replace all", restored:"Backup restored", added:"Backup added", opened:f=>`Opened ${f}`, notBackup:"That file isn't a BrocheStuff backup.",
-  logoSet:"Logo set. It will be on every sheet.", storeFail:"Could not save: browser storage is full or blocked. Use Back up now.", deskFail:"Could not save to Documents\\BrocheStuff: ",
+  logoSet:"Logo set. It will be on every sheet.", storeFail:"Could not save: browser storage is full or blocked. Use Back up now.", deskFail:"Could not save to the data folder: ",
   saveSheetT:"Save tool list", saveBackupT:"Save backup", pdfFile:"PDF file", backupFile:"Backup file", filePrefix:"ToolList", backupPrefix:"BrocheStuff_backup", unassigned:"Unassigned",
   stackT:(d,p,n)=>`${d} done · ${p} in progress · ${n} not started`,
   types:["FACE MILL","END MILL","BULL NOSE","BALL NOSE","SHOULDER MILL","DRILL","SPOT DRILL","CENTER DRILL","CHAMFER MILL","TAP","THREAD MILL","REAMER","BORING BAR","T-SLOT","INSERT DRILL","PROBE"],
@@ -1845,7 +1845,7 @@ fr:{
   ofDone:n=>`${pl(n,"article terminé","articles terminés")} sur ${n}`, done:"Terminé", inProgress:"En cours", notStarted:"Non commencé", all:"Tous",
   machine:"Machine", slashDone:n=>`/ ${n} ${pl(n,"terminé","terminés")}`, nInProgress:n=>`${n} en cours`, edit:"Modifier", editT:"Renommer ou supprimer",
   footWeb:(m,n)=>`${m} ${pl(m,"machine","machines")} · ${n} ${pl(n,"article","articles")} · enregistré dans ce navigateur sur ce PC`,
-  footDesk:(m,n)=>`${m} ${pl(m,"machine","machines")} · ${n} ${pl(n,"article","articles")} · enregistré automatiquement dans Documents\\BrocheStuff`,
+  footDesk:(m,n)=>`${m} ${pl(m,"machine","machines")} · ${n} ${pl(n,"article","articles")} · enregistré automatiquement dans ${DIR||"Documents\\BrocheStuff"}`,
   footDaily:"Une copie de sauvegarde est faite chaque jour (les 30 dernières sont gardées).",
   notBacked:"Pas encore sauvegardé. Cliquez sur « Sauvegarder » en haut pour tout enregistrer dans un fichier.", backedDays:d=>`Dernière sauvegarde il y a ${d} jours.`, backedOn:d=>`Dernière sauvegarde le ${d}`,
   codeUsed:(c,n)=>`Le code outil ${c} est utilisé dans ${n} ${pl(n,"article","articles")}`, codeStarts:c=>`Aucun article n'utilise exactement ${c} · codes commençant par ${c}`, nFound:n=>`${n} ${pl(n,"article trouvé","articles trouvés")}`,
@@ -1873,7 +1873,7 @@ fr:{
   backupDesk:"Sauvegarde enregistrée. Gardez aussi une copie sur clé USB ou sur le réseau.", backupWeb:"Sauvegarde enregistrée dans Téléchargements. Gardez-la en lieu sûr.", backupFail:"Impossible d'enregistrer la sauvegarde : ",
   restoreTitle:"Restaurer une sauvegarde", restoreHas:(m,n)=>`Ce fichier contient <b>${m} ${pl(m,"machine","machines")}</b> et <b>${n} ${pl(n,"article","articles")}</b>.`, restoreQ:"Remplacer tout le contenu du programme, ou l'ajouter à ce qui existe déjà ?",
   addCurrent:"Ajouter", replaceAll:"Tout remplacer", restored:"Sauvegarde restaurée", added:"Sauvegarde ajoutée", opened:f=>`${f} ouvert`, notBackup:"Ce fichier n'est pas une sauvegarde BrocheStuff.",
-  logoSet:"Logo enregistré. Il sera sur toutes les fiches.", storeFail:"Enregistrement impossible : le stockage du navigateur est plein ou bloqué. Faites une sauvegarde maintenant.", deskFail:"Impossible d'enregistrer dans Documents\\BrocheStuff : ",
+  logoSet:"Logo enregistré. Il sera sur toutes les fiches.", storeFail:"Enregistrement impossible : le stockage du navigateur est plein ou bloqué. Faites une sauvegarde maintenant.", deskFail:"Impossible d'enregistrer dans le dossier des données : ",
   saveSheetT:"Enregistrer la fiche outils", saveBackupT:"Enregistrer la sauvegarde", pdfFile:"Fichier PDF", backupFile:"Fichier de sauvegarde", filePrefix:"FicheOutils", backupPrefix:"BrocheStuff_sauvegarde", unassigned:"Non affecté",
   stackT:(d,p,n)=>`${d} ${pl(d,"terminé","terminés")} · ${p} en cours · ${n} non ${pl(n,"commencé","commencés")}`,
   types:["FRAISE À SURFACER","FRAISE 2T","FRAISE TORIQUE","FRAISE BOULE","FRAISE À ÉPAULER","FORET","FORET À CENTRER","FORET À POINTER","FRAISE À CHANFREINER","TARAUD","FRAISE À FILETER","ALÉSOIR","BARRE D'ALÉSAGE","FRAISE À RAINURER EN T","FORET À PLAQUETTES","PALPEUR"],
@@ -2368,6 +2368,8 @@ function render(){
     tb.innerHTML=`<button class="tb pvtog" id="b-pv" title="${esc(t("previewT"))}" aria-pressed="${pvOn}">${eyeIcon}<span class="lbl">${esc(t("preview"))}</span><span class="sw"><i></i></span></button><button class="tb" id="b-print" title="${esc(t("printT"))}">${printIcon}<span class="lbl">${esc(t("print"))}</span></button><button class="tb dl" id="b-dl" title="${esc(t("download"))}">${dlIcon}<span class="lbl">${esc(t("download"))}</span><span class="lbl2">PDF</span></button>`;
     $("#b-dl").onclick=()=>{flushEditor();downloadPDF(A(route.id))};$("#b-print").onclick=()=>{flushEditor();printArticle(A(route.id))};$("#b-pv").onclick=togglePreview;renderEditor(art)}
   cr.querySelectorAll("[data-go]").forEach(a=>a.onclick=()=>go(a.dataset.go));
+  // a new page starts at the top; the same page redrawn keeps its place
+  if(render.lastHash!==location.hash){render.lastHash=location.hash;const v=$("#view");if(v)v.scrollTop=0}
 }
 
 /* ---------- progress & status ---------- */
@@ -4113,7 +4115,7 @@ Object.assign(I18N.en,{
   validate:"Validate the sheet", validated:"Validated", validatedBy:(d,w)=>`Validated on ${d}${w?` by ${w}`:""}`, validateQ:"Validate this tool sheet? It can no longer be changed, except by making a new index.",
   validateMiss:n=>`${n} ${pl(n,"box is","boxes are")} still empty.`, lockedP:"This sheet is validated: it can't be changed. To change it, make a new index.", newIndex:"New index", newIndexQ:(a,b)=>`Make index ${b}? Index ${a} stays in the history.`,
   reopen:"Reopen (admin)", reopenQ:"Reopen this validated sheet without changing the index?", indexAdmin:"Only the admin can change the index. Use “New index”.", indexUsed:i=>`Index ${i} was already used for this article.`,
-  histT:"History", histNone:"No change recorded yet.", hCreate:"Created", hEdit:"Changed", hValidate:"Validated", hNewIndex:i=>`New index ${i}`, hReopen:"Reopened", hImport:"Tools imported",
+  histT:"History", histNone:"No change recorded yet.", hCreate:"Created", hEdit:"Changed", hValidate:"Validated", hNewIndex:i=>`New index ${i}`, hReopen:"Reopened", hToolImp:"Tools imported",
   hTools:"tools", hFields:"fields", hPdf:"PDF", lockedImport:"This sheet is validated: make a new index first.", wip:"IN PROGRESS"
 });
 Object.assign(I18N.fr,{
@@ -4135,7 +4137,7 @@ Object.assign(I18N.fr,{
   validate:"Valider la fiche", validated:"Validée", validatedBy:(d,w)=>`Validée le ${d}${w?` par ${w}`:""}`, validateQ:"Valider cette fiche outils ? Elle ne pourra plus être modifiée, sauf en créant un nouvel indice.",
   validateMiss:n=>`${n} ${pl(n,"case est encore vide","cases sont encore vides")}.`, lockedP:"Cette fiche est validée : elle ne peut plus être modifiée. Pour la changer, créez un nouvel indice.", newIndex:"Nouvel indice", newIndexQ:(a,b)=>`Passer à l'indice ${b} ? L'indice ${a} reste dans l'historique.`,
   reopen:"Rouvrir (admin)", reopenQ:"Rouvrir cette fiche validée sans changer d'indice ?", indexAdmin:"Seul l'admin peut changer l'indice. Utilisez « Nouvel indice ».", indexUsed:i=>`L'indice ${i} a déjà été utilisé pour cet article.`,
-  histT:"Historique", histNone:"Aucun changement enregistré pour l'instant.", hCreate:"Créée", hEdit:"Modifiée", hValidate:"Validée", hNewIndex:i=>`Nouvel indice ${i}`, hReopen:"Rouverte", hImport:"Outils importés",
+  histT:"Historique", histNone:"Aucun changement enregistré pour l'instant.", hCreate:"Créée", hEdit:"Modifiée", hValidate:"Validée", hNewIndex:i=>`Nouvel indice ${i}`, hReopen:"Rouverte", hToolImp:"Outils importés",
   hTools:"outils", hFields:"champs", hPdf:"PDF", lockedImport:"Cette fiche est validée : créez d'abord un nouvel indice.", wip:"EN COURS"
 });
 
@@ -4468,7 +4470,7 @@ function applyLock(){
 }
 function drawHistory(){
   const box=$("#histbox");if(!box||!cur)return;const H=cur.history||[];
-  const lab=h=>h.act==="create"?t("hCreate"):h.act==="validate"?t("hValidate")+(h.ix?" · "+t("index")+" "+h.ix:""):h.act==="newindex"?t("hNewIndex",h.ix):h.act==="reopen"?t("hReopen"):h.act==="import"?t("hImport"):h.act==="archive"?t("index")+" "+h.ix:t("hEdit");
+  const lab=h=>h.act==="create"?t("hCreate"):h.act==="validate"?t("hValidate")+(h.ix?" · "+t("index")+" "+h.ix:""):h.act==="newindex"?t("hNewIndex",h.ix):h.act==="reopen"?t("hReopen"):h.act==="import"?t("hToolImp"):h.act==="archive"?t("index")+" "+h.ix:t("hEdit");
   const det=h=>h.act==="edit"?[(h.f||[]).map(k=>t(k)||k).join(", "),(h.t||[]).length?`${t("hTools")} ${(h.t||[]).slice(0,12).join(" ")}${h.t.length>12?"…":""}`:""].filter(Boolean).join(" · "):h.act==="newindex"&&h.from?`${h.from} → ${h.ix}`:h.src||"";
   box.innerHTML=H.length?`<ul class="hist histlist">${H.slice(0,40).map((h,i)=>`<li class="h-${esc(h.act)}"><b>${esc(lab(h))}</b><span>${esc(det(h))}${h.who?`${det(h)?" · ":""}<i>${esc(h.who)}</i>`:""}</span><span class="dim">${when(h.ts)} ${hhmm(h.ts)}${h.snap?` <button class="btn sm" data-hpdf="${i}">${esc(t("hPdf"))}</button>`:""}</span></li>`).join("")}</ul>`:`<p class="note" style="margin:0">${esc(t("histNone"))}</p>`;
   box.querySelectorAll("[data-hpdf]").forEach(b=>b.onclick=()=>{const h=H[+b.dataset.hpdf],s=h.snap;const art={...cur,article:s.article,tools:s.tools,machineId:s.machineId||cur.machineId,status:h.act==="validate"?"done":"progress",validated:h.act==="validate"?{ts:h.ts,who:h.who}:null};downloadPDF(art)});
@@ -4479,7 +4481,7 @@ function drawHistory(){
    admin page, demo switch. The web version doesn't use any of this.
    ===================================================================== */
 const DESKDEMO=/*DESKDEMO*/null;
-const APP_VER="2.2.0";
+const APP_VER="2.2.1";
 let DEMO_ON=false, ACC=null, USERS=null, PCNAME="", realDIR="", loginFails=0, loginWait=0, lastAct=Date.now();
 Object.assign(I18N.en,{
   loginT:"Sign in", loginP:"Enter your name or code and your password.", loginName:"Name or code", loginPw:"Password", loginGo:"Sign in",
@@ -4497,7 +4499,7 @@ Object.assign(I18N.en,{
   retry:"Try again", useLocal:"Use the local folder of this PC", bkT:"Backups", bkNow:"Back up now", bkRestore:"Restore…", bkLast:t=>`Last backup: ${t}`, bkAuto:n=>`${n} automatic ${pl(n,"copy","copies")} (every 5 minutes)`,
   demoT:"Demo", demoP:"Made-up workshop (20 machines, 500 articles) to try the program or show it. Your real data are not touched.", demoOpen:"Open the demo", demoQuit:"Leave the demo", demoInT:"You are in the demo.",
   secT:"Security", idleL:"Sign out automatically after", idleNever:"never", idleMin:n=>`${n} min without use`, secReset:"Forgotten admin password: put an empty file named reset-admin.txt in the data folder and start the program. The account admin / admin comes back.",
-  logT:"Sign-ins", logOk:"signed in", logBad:"wrong password", logOff:"disabled account", logReset:"admin password reset", infoT:"Program", infoVer:"Version", infoPc:"This PC", infoAcc:"Accounts",
+  loginLogT:"Sign-ins", logOk:"signed in", logBad:"wrong password", logOff:"disabled account", logReset:"admin password reset", infoT:"Program", infoVer:"Version", infoPc:"This PC", infoAcc:"Accounts",
   synced:"This sheet was changed on another PC: it is now up to date.", deskDemoTxt:"Demo: made-up workshop with 20 machines and 500 articles. Your real data are not touched.", defWarn:"The admin account still has the default password (admin). Change it below."
 });
 Object.assign(I18N.fr,{
@@ -4516,7 +4518,7 @@ Object.assign(I18N.fr,{
   retry:"Réessayer", useLocal:"Utiliser le dossier local de ce PC", bkT:"Sauvegardes", bkNow:"Sauvegarder maintenant", bkRestore:"Restaurer…", bkLast:t=>`Dernière sauvegarde : ${t}`, bkAuto:n=>`${n} ${pl(n,"copie automatique","copies automatiques")} (toutes les 5 minutes)`,
   demoT:"Démo", demoP:"Atelier fictif (20 machines, 500 articles) pour essayer le programme ou le montrer. Vos vraies données ne sont pas touchées.", demoOpen:"Ouvrir la démo", demoQuit:"Quitter la démo", demoInT:"Vous êtes dans la démo.",
   secT:"Sécurité", idleL:"Déconnexion automatique après", idleNever:"jamais", idleMin:n=>`${n} min sans utilisation`, secReset:"Mot de passe admin oublié : placez un fichier vide nommé reset-admin.txt dans le dossier des données et démarrez le programme. Le compte admin / admin revient.",
-  logT:"Connexions", logOk:"connecté", logBad:"mauvais mot de passe", logOff:"compte désactivé", logReset:"mot de passe admin réinitialisé", infoT:"Programme", infoVer:"Version", infoPc:"Ce PC", infoAcc:"Comptes",
+  loginLogT:"Connexions", logOk:"connecté", logBad:"mauvais mot de passe", logOff:"compte désactivé", logReset:"mot de passe admin réinitialisé", infoT:"Programme", infoVer:"Version", infoPc:"Ce PC", infoAcc:"Comptes",
   synced:"Cette fiche a été modifiée sur un autre poste : elle est à jour.", deskDemoTxt:"Démo : atelier fictif de 20 machines et 500 articles. Vos vraies données ne sont pas touchées.", defWarn:"Le compte admin a encore le mot de passe par défaut (admin). Changez-le ci-dessous."
 });
 if(DESK)ROLES.admin.nav.push("#admin");
@@ -4709,7 +4711,7 @@ async function renderAdminPage(){
       <div class="card"><h2>${esc(t("secT"))}</h2><label class="f">${esc(t("idleL"))}<select id="ad-idle">${IDLES.map(n=>`<option value="${n}" ${(+USERS.settings.idle||0)===n?"selected":""}>${esc(n?t("idleMin",n):t("idleNever"))}</option>`).join("")}</select></label>
         ${ACC?`<div class="admact"><button class="btn" id="ad-mypw">${esc(t("myPw"))}</button></div>`:""}<p class="note" style="margin:0">${esc(t("secReset"))}</p></div>
       <div class="card"><h2>${esc(t("demoT"))}</h2><p class="note" style="margin:0">${esc(t("demoP"))}</p><div class="admact"><button class="btn red" id="ad-demo" ${DESKDEMO?"":"disabled"}>${esc(t("demoOpen"))}</button></div></div>
-      <div class="card"><h2>${esc(t("logT"))}</h2>${USERS.log.length?`<ul class="hist loglist">${USERS.log.slice(0,25).map(e=>`<li class="lg-${esc(e.r||"ok")}"><b>${esc(e.name||"?")}</b><span>${esc(logLab[e.r]||e.r||"")}${e.pc?` · ${esc(e.pc)}`:""}</span><span class="dim">${when(e.ts)} ${hhmm(e.ts)}</span></li>`).join("")}</ul>`:`<p class="note" style="margin:0">—</p>`}</div>
+      <div class="card"><h2>${esc(t("loginLogT"))}</h2>${USERS.log.length?`<ul class="hist loglist">${USERS.log.slice(0,25).map(e=>`<li class="lg-${esc(e.r||"ok")}"><b>${esc(e.name||"?")}</b><span>${esc(logLab[e.r]||e.r||"")}${e.pc?` · ${esc(e.pc)}`:""}</span><span class="dim">${when(e.ts)} ${hhmm(e.ts)}</span></li>`).join("")}</ul>`:`<p class="note" style="margin:0">—</p>`}</div>
       <div class="card"><h2>${esc(t("infoT"))}</h2><dl class="kv"><dt>${esc(t("infoVer"))}</dt><dd class="m">BrocheStuff ${APP_VER}</dd><dt>${esc(t("infoPc"))}</dt><dd class="m">${esc(PCNAME||"—")}</dd><dt>${esc(t("infoAcc"))}</dt><dd class="m">${U.length}</dd><dt>${esc(t("dirT"))}</dt><dd class="m">${esc(DIR)}</dd></dl></div>
     </div></div>`;
   const V=$("#view");
