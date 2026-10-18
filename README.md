@@ -34,13 +34,17 @@ App/   BrocheStuff-Windows.zip + README.txt
 
 **CNC programs and CAM.** Import CNC programs (Fanuc, Haas, Mazak, Okuma, Heidenhain `TOOL CALL`, Siemens; `.nc .tap .min .mpf .h .eia .iso .txt`…): one article per program, with the tool list read from the T numbers, the tool comments and the Mastercam tool table at the top of the program. Tool lists exported from Mastercam or other CAM software (Excel / CSV) and Fusion 360 / Inventor CAM tool libraries (`.json`) can be imported into a sheet. Mastercam's own `.tooldb` files can't be read: export the tool list to Excel/CSV first.
 
-**Machine magazines.** What is loaded in each machine now, pocket by pocket, with who changed it. Compare the magazine with an article to see what to load or swap, and load it in one click.
+**Machine magazines** (methods and tool planners). What is loaded in each machine now, pocket by pocket, with who changed it. Compare the magazine with an article to see what to load or swap, and load it in one click.
 
-**Reports.** Tools taken per month, most-taken tools, per machine and per person, codes used in the most sheets, unused codes, codes that didn't move for 90 days, sheets per machine; export to CSV.
+**Reports** (tool planner). Tools taken per month, most-taken tools, per machine and per person, codes used in the most sheets, unused codes, codes that didn't move for 90 days, sheets per machine; export to CSV.
 
 **Stock alert.** When the tool planner logs in, a list of tools and holders out of stock or low comes up right away, with the order list.
 
 **Excel models** (download, preview, print on A4: `1_Machines_Template.xlsx` … `5_Holders_Template.xlsx`) for machines, tool crib, holders, articles and a blank tool sheet to fill by hand. Imports read the columns by their titles (French or English) with a preview first. Every table can be resized like Excel (drag the column edge). French and English (asked the first time, then remembered for each person), light and dark mode.
+
+## For IT
+
+The Windows program installs nothing, needs no admin rights and makes no internet connection; its local window server listens on 127.0.0.1 only and uses a one-time token. Details in [App/FOR_IT.txt](App/FOR_IT.txt), checksums in [App/SHA256SUMS.txt](App/SHA256SUMS.txt).
 
 ## Your data
 

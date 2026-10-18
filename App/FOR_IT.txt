@@ -1,0 +1,75 @@
+BrocheStuff 2.1 - information for the IT department
+=====================================================
+
+WHAT IT IS
+A tool-sheet and tool-crib program for the CNC workshop (machines, articles,
+tool lists printed on A4, tool and holder stock). Written by Achraf El
+Ghaffouli. Built with Neutralinojs 5.4 (open source, MIT licence:
+https://neutralino.js.org) which shows the program in a window using the
+Microsoft Edge WebView2 component already part of Windows 10/11.
+
+FILES IN THE ZIP
+  BrocheStuff.exe   the Neutralinojs 5.4.0 runtime, unchanged except for the
+                    program icon and version information (not code-signed)
+  resources.neu     the program itself (HTML / JavaScript, readable)
+  README.txt        user instructions
+  FOR_IT.txt        this file
+  SHA256SUMS.txt    SHA-256 checksums of the files above
+
+INSTALLATION
+- No installer, no administrator rights, no Windows service, no registry
+  entries, no startup entry, no scheduled task, no driver.
+- It runs from the folder where it is unzipped. To remove it, delete the folder
+  (and Documents\BrocheStuff if the data is no longer needed).
+
+NETWORK
+- The program makes NO internet connection: no update check, no telemetry, no
+  analytics, no account, no licence server, no external fonts or scripts
+  (everything is inside resources.neu).
+- The page enforces a Content-Security-Policy that only allows the program's own
+  local origin ("connect-src 'self'"), so it cannot reach any other address.
+- To show its window, the runtime opens a local web server bound to
+  127.0.0.1 only (loopback, random free port). It is not reachable from the
+  network. Access to its file functions needs a one-time secret token that only
+  the program's own window receives ("tokenSecurity": "one-time").
+- The Windows firewall should not ask anything, because nothing listens on the
+  network.
+
+FILES IT READS AND WRITES
+- Documents\BrocheStuff\data.json (+ data.previous.json)  the data
+- Documents\BrocheStuff\Backups\  daily copy (last 30) and Backups\auto\
+  copy every 5 minutes when data changed (last 24)
+- Documents\BrocheStuff\Sheets\  PDF tool sheets the user saves
+- Files the user picks himself in a normal Open / Save dialog (Excel imports,
+  CNC programs to read, backups, PDF, CSV)
+- Microsoft WebView2 keeps its usual browser cache for the window in the
+  user's AppData folder.
+No other place on the disk is used.
+
+WHAT THE PROGRAM IS ALLOWED TO DO
+The runtime only allows these native functions (nativeAllowList in the
+configuration inside resources.neu): exit the app, get the Documents path,
+show the Save dialog, open a saved file with its default program (e.g. a PDF),
+and read / write / copy / delete / list files (used only for the folders above).
+It can NOT run commands or other programs, read the clipboard, change Windows
+settings, or install anything. Logging is off; developer tools are off.
+
+CNC PROGRAMS
+CNC program files (.nc, .tap, .h, .mpf ...) are only READ as text to list the
+tool numbers. The program never writes, changes or sends anything to a CNC
+machine.
+
+CHECKING
+- The SHA-256 of each file is in SHA256SUMS.txt; the files can be uploaded to
+  VirusTotal or scanned with your antivirus.
+- Unsigned programs make Windows SmartScreen show "Windows protected your PC";
+  this is expected for software without a paid code-signing certificate.
+- The source is public: https://github.com/achrxf/BrocheStuff
+
+-----------------------------------------------------------------------------
+EN BREF (FRANÇAIS)
+Programme hors ligne : aucune connexion Internet, aucune installation, aucun
+droit administrateur, aucune modification du registre. Données dans
+Documents\BrocheStuff. Serveur local limité à 127.0.0.1 avec jeton à usage
+unique. Les programmes CN sont seulement lus, jamais envoyés à une machine.
+Pour le désinstaller : supprimer le dossier.

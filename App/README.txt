@@ -1,4 +1,4 @@
-BrocheStuff 2.0 — Windows program
+BrocheStuff 2.1 — Windows program
 
 INSTALL
 1. Unzip the "BrocheStuff" folder anywhere (Desktop, Documents, USB stick…).
@@ -8,10 +8,12 @@ INSTALL
    not signed): click "More info" then "Run anyway".
 
 Windows 10 or 11 (64-bit). Nothing else to install.
+For your IT department: see FOR_IT.txt (what the program does and doesn't do).
 
 YOUR DATA
 - Everything is saved automatically in  Documents\BrocheStuff  (data.json),
-  with a backup copy every day (Backups folder).
+  with a backup copy every day (Backups folder) and an automatic copy every
+  5 minutes when something changed (Backups\auto, last 24 copies).
 - PDF sheets go to  Documents\BrocheStuff\Sheets.
 - Nothing is sent over the internet.
 - To bring data over from the web version: "Back up" in the browser, then
@@ -28,7 +30,7 @@ START
 -----------------------------------------------------------------------------
 FRANÇAIS
 
-BrocheStuff 2.0 — programme Windows
+BrocheStuff 2.1 — programme Windows
 ====================================
 
 INSTALLER
@@ -40,10 +42,12 @@ INSTALLER
    puis « Exécuter quand même ».
 
 Il faut Windows 10 ou 11 (64 bits). Rien d'autre à installer.
+Pour le service informatique : voir FOR_IT.txt.
 
 VOS DONNÉES
 - Tout est enregistré automatiquement dans  Documents\BrocheStuff  (data.json),
-  avec une copie de sauvegarde chaque jour (dossier Backups).
+  avec une copie de sauvegarde chaque jour (dossier Backups) et une copie
+  automatique toutes les 5 minutes quand quelque chose a changé (Backups\auto).
 - Les fiches PDF vont dans  Documents\BrocheStuff\Sheets.
 - Rien n'est envoyé sur Internet.
 - Pour reprendre les données de la version web : « Sauvegarder » dans le navigateur,
