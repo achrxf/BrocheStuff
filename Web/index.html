@@ -1222,6 +1222,25 @@ dl.kv dt{color:var(--mid)}dl.kv dd{margin:0;word-break:break-all}
 .tpldlg.tplone .tplwrap{grid-template-columns:1fr}
 .tplpdf{align-items:flex-start;overflow:auto}
 .tplpdf canvas{width:min(100%,460px)!important;height:auto!important;flex:0 0 auto}
+/* production: take one tool at a time */
+.takebox{display:inline-flex;align-items:center;gap:10px}
+.takebox b{min-width:28px;text-align:right;font-size:15px}
+.btn.take{padding:5px 12px;font-size:13px;border-color:var(--red);color:var(--red-tx)}
+.btn.take:hover:not(:disabled){background:var(--red);color:#fff}
+.btn.take:disabled,.takebig:disabled{opacity:.5;cursor:not-allowed;border-color:var(--hair);color:var(--mid)}
+.takebig{width:100%;justify-content:center;height:48px;font-size:16px;margin-top:4px}
+.takehead{display:flex;align-items:center;gap:16px}
+.takehead .bigcode{font-size:30px;padding:6px 14px}
+.takestock{display:flex;align-items:baseline;gap:12px;padding:12px 16px;border:1px solid var(--hair);border-radius:10px;background:var(--fill)}
+.takestock b{font:700 30px var(--mono)}
+.takestock.s-low b{color:#b07400}.takestock.s-out b{color:var(--red-tx)}
+/* log: every line opens its details */
+.logt tr.logrow{cursor:pointer}
+.logt tr.logrow:hover td{background:var(--rowhover)}
+.logt .ntext{display:block;max-width:420px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.logfull{white-space:pre-wrap;word-break:break-word;padding:14px 16px;border:1px solid var(--hair);border-radius:10px;background:var(--fill);font-size:15px;line-height:1.5;max-height:45vh;overflow:auto}
+.logdl{grid-template-columns:repeat(2,minmax(0,1fr))}
+.take-none{display:inline-block;width:72px}
 </style></head>
 <body>
 <header class="top">
@@ -3627,7 +3646,9 @@ Object.assign(I18N.en,{
   pHint1T:"A tool", pHint1:"Type its code, or a type and a diameter: END MILL 12.", pHint2T:"A holder", pHint2:"Type its reference: PER-50-25, BT40…",
   pHint3T:"An article", pHint3:"Type its number or reference to open its tool list and PDF.", recentT:"Recently updated tool sheets",
   pMore:n=>`+ ${n} more: refine the search`, pNone:"Nothing found.", pNoneP:"Check the spelling, or type fewer letters.",
-  pTake:"Taken (production)", pReturn:"Returned (production)", movedTo:(k,n)=>`${k}: ${n} in stock`,
+  pTake:"Taken (production)", pReturn:"Returned (production)", pUndo:"Cancelled (entry mistake)", takeOne:"Take 1", takeOneBig:"Take 1 tool", takeT:"Take one tool out of the cabinet", takeNone:"Out of stock",
+  takeTitle:"Take a tool", takeFor:"For which article?", takeForPh:"Article number (optional)", takeNote:"One tool at a time. To give a tool back, see the tool planner.", takeEmpty:"Out of stock: tell the tool planner.",
+  taken:(k,n)=>`${k}: 1 taken · ${n} left`, undo:"Undo", undone:(k,n)=>`${k}: cancelled · ${n} in stock`, undoLate:"Too late to undo: another move came after.", ldOpen:"Open the card", movedTo:(k,n)=>`${k}: ${n} in stock`,
   where:"Location", noLoc:"No location yet", details2:"Characteristics", visual2:"What it looks like", lastMoves:"Last moves",
   listTab:"Tool list", sheetTab:"Tool sheet (PDF)", noCard:"No card", toolsN:n=>`${n} ${pl(n,"tool","tools")}`, statusL:"Status",
   sheetLoading:"Drawing the sheet…", viewOnly:"View only",
@@ -3654,7 +3675,9 @@ Object.assign(I18N.fr,{
   pHint1T:"Un outil", pHint1:"Tapez son code, ou un type et un diamètre : FRAISE 12.", pHint2T:"Un porte-outil", pHint2:"Tapez sa référence : PER-50-25, BT40…",
   pHint3T:"Un article", pHint3:"Tapez son numéro ou sa référence pour ouvrir sa liste d'outils et le PDF.", recentT:"Fiches outils modifiées récemment",
   pMore:n=>`+ ${n} autres : affinez la recherche`, pNone:"Rien trouvé.", pNoneP:"Vérifiez l'orthographe, ou tapez moins de lettres.",
-  pTake:"Sorti (production)", pReturn:"Rentré (production)", movedTo:(k,n)=>`${k} : ${n} en stock`,
+  pTake:"Sorti (production)", pReturn:"Rentré (production)", pUndo:"Annulé (erreur de saisie)", takeOne:"Sortir 1", takeOneBig:"Sortir 1 outil", takeT:"Sortir un outil de l'armoire", takeNone:"Rupture",
+  takeTitle:"Sortir un outil", takeFor:"Pour quel article ?", takeForPh:"Numéro d'article (facultatif)", takeNote:"Un outil à la fois. Pour rendre un outil, voir le préparateur outil.", takeEmpty:"Rupture : prévenez le préparateur outil.",
+  taken:(k,n)=>`${k} : 1 sorti · il en reste ${n}`, undo:"Annuler", undone:(k,n)=>`${k} : annulé · ${n} en stock`, undoLate:"Trop tard pour annuler : un autre mouvement a suivi.", ldOpen:"Ouvrir la fiche", movedTo:(k,n)=>`${k} : ${n} en stock`,
   where:"Emplacement", noLoc:"Pas encore d'emplacement", details2:"Caractéristiques", visual2:"À quoi il ressemble", lastMoves:"Derniers mouvements",
   listTab:"Liste des outils", sheetTab:"Fiche outils (PDF)", noCard:"Sans fiche", toolsN:n=>`${n} ${pl(n,"outil","outils")}`, statusL:"Statut",
   sheetLoading:"Dessin de la fiche…", viewOnly:"Consultation",
@@ -3785,12 +3808,36 @@ function renderProd(){
   $("#b-pcm").onclick=()=>commentDialog({});
   drawProd();q.focus();q.setSelectionRange(q.value.length,q.value.length);
 }
-const pstep=(k,n)=>canStock()?`<div class="stepper"><button data-pmv="-1" data-pk="${esc(k)}" aria-label="−1">−</button><span>${n}</span><button data-pmv="1" data-pk="${esc(k)}" aria-label="+1">+</button></div>`:`<b class="m">${n}</b>`;
+const pstep=(k,n)=>ROLE==="prod"?`<div class="takebox"><b class="m">${n}</b>${n>0?`<button class="btn sm take" data-ptake="${esc(k)}" title="${esc(t("takeT"))}">${esc(t("takeOne"))}</button>`:`<span class="take-none"></span>`}</div>`:canStock()?`<div class="stepper"><button data-pmv="-1" data-pk="${esc(k)}" aria-label="−1">−</button><span>${n}</span><button data-pmv="1" data-pk="${esc(k)}" aria-label="+1">+</button></div>`:`<b class="m">${n}</b>`;
 const itemOf=k=>k.startsWith("h:")?H_(k.slice(2)):C_(k.slice(2));
-function stockHandler(root,redraw){
-  root.addEventListener("click",e=>{const b=e.target.closest("[data-pmv]");if(!b)return;e.stopPropagation();const it=itemOf(b.dataset.pk);if(!it||!canStock())return;
+function stockHandler(root,redraw,art){
+  root.addEventListener("click",e=>{const tk=e.target.closest("[data-ptake]");if(tk){e.stopPropagation();const it=itemOf(tk.dataset.ptake);if(it)takeDialog(it,art,redraw);return}
+    const b=e.target.closest("[data-pmv]");if(!b)return;e.stopPropagation();if(ROLE==="prod")return;const it=itemOf(b.dataset.pk);if(!it||!canStock())return;
     const d=+b.dataset.pmv,isH=it.code==null,k=isH?it.ref:it.code;moveStock(it,d,t(d>0?"pReturn":"pTake"));saveDB();
     toast(t("movedTo",k,+it.stock||0),{label:t("cmShort"),fn:()=>commentDialog({k:isH?"h":"c",key:k,label:k},redraw)});redraw()},true);
+}
+/* production takes tools out one at a time, with a confirmation; returns go through the tool crib */
+function takeDialog(it0,art,redraw){
+  const isH=it0.code==null,key=isH?it0.ref:it0.code,fresh=()=>isH?H_(key):C_(key),it=fresh()||it0,n=+it.stock||0;
+  const arts=db.articles.filter(a=>a.tools.some(x=>isH?splitHolders(x.holder).some(h=>normH_(h)===key):normCode(x.code)===key));
+  dialog(esc(t("takeTitle")),`<div class="takehead"><span class="bigcode${isH?" hcode":""}">${esc(key)}</span><div><p style="margin:0;font-weight:600">${esc([it.type,!isH&&it.diameter?"Ø"+it.diameter:""].filter(Boolean).join(" · "))}</p>
+      <p class="dim" style="margin:2px 0 0">${esc(t("where"))} : <b>${esc(it.location||t("noLoc"))}</b></p></div></div>
+    <div class="takestock ${n<=0?"s-out":n<=(+it.min||0)?"s-low":""}"><span>${esc(t("inStock"))}</span><b>${n}</b>${n>0?`<span class="dim">→ ${n-1}</span>`:""}</div>
+    ${n<=0?`<p class="warnline" style="margin:0">${esc(t("takeEmpty"))}</p>`:`<label class="f">${esc(t("takeFor"))}<input id="tk-art" list="tk-arts" autocomplete="off" placeholder="${esc(t("takeForPh"))}" value="${esc(art?art.article.number||"":"")}"></label>
+    <datalist id="tk-arts">${arts.slice(0,200).map(a=>`<option value="${esc(a.article.number||"")}">${esc(mShort(M(a.machineId)))}</option>`).join("")}</datalist>
+    <p class="note" style="margin:0">${esc(t("takeNote"))}</p>`}`,
+    `<button class="btn" id="tk-cm">${esc(t("cmShort"))}</button><span class="sp"></span><button class="btn ghost" id="d-cancel">${esc(t("cancel"))}</button>${n>0?`<button class="btn red" id="d-ok">${esc(t("takeOneBig"))}</button>`:""}`);
+  $("#d-cancel").onclick=closeDlg;
+  $("#tk-cm").onclick=()=>{closeDlg();commentDialog({k:isH?"h":"c",key,label:key},redraw)};
+  const ok=$("#d-ok");if(!ok)return;$("#tk-art").focus();
+  ok.onclick=()=>{if(ok.disabled)return;ok.disabled=true;
+    const cur=fresh();if(!cur||(+cur.stock||0)<=0){closeDlg();toast(t("takeEmpty"));redraw&&redraw();return}
+    const num=$("#tk-art").value.trim(),a=num?(art&&clean(art.article.number).toLowerCase()===num.toLowerCase()?art:db.articles.find(x=>clean(x.article.number).toLowerCase()===num.toLowerCase())):null;
+    const note=t("pTake")+(num?" · "+num:"");moveStock(cur,-1,note);const e=db.stockLog[0];if(e&&a)e.art=a.id;saveDB();closeDlg();
+    const ts=e&&e.ts;redraw&&redraw();
+    toast(t("taken",key,+cur.stock||0),{label:t("undo"),fn:()=>{const c2=fresh();const last=(db.stockLog||[]).find(x=>x.k!=="n"&&x.key===key&&(x.who||"")===(USER||""));
+      if(!c2||!last||last.ts!==ts){toast(t("undoLate"));return}moveStock(c2,1,t("pUndo"));saveDB();redraw&&redraw();toast(t("undone",key,+c2.stock||0))}})};
+  $("#tk-art").onkeydown=e=>{if(e.key==="Enter")ok.click()};
 }
 function prodMatch(){
   const raw=prodQ.trim(),terms=raw.toLowerCase().replace(/ø/g,"").split(/\s+/).filter(Boolean),qc=normCode(raw),qh=normH_(raw);
@@ -3856,7 +3903,7 @@ function renderPItem(it,isH){
           ${arts.length?`<div class="uselist">${uses.map(u=>`<button class="useitem" data-go="${artHref(u.a)}"><span class="an">${esc(u.a.article.number||t("noNumber"))}</span><span class="mtag">${esc(mShort(M(u.a.machineId)))}</span><span class="use"><b>${esc(normT(u.x.t))}</b></span></button>`).join("")}</div>`:`<p class="note" style="margin:0">${esc(t(isH?"notUsedH":"notUsed"))}</p>`}</div></div></div></div>`;
   const draw=()=>{const s=stockState(it),box=$("#pstock");box.className=`card stockcard s-${s}`;
     box.innerHTML=`<h2>${esc(t("inStock"))} <span class="spill s-${s}">${esc(SSL(s))}</span></h2>
-      <div class="bigstock">${canStock()?`<button class="bs" data-pmv="-1" data-pk="${esc(key)}" aria-label="−1">−</button>`:""}<b>${+it.stock||0}</b>${canStock()?`<button class="bs" data-pmv="1" data-pk="${esc(key)}" aria-label="+1">+</button>`:""}</div>
+      ${ROLE==="prod"?`<div class="bigstock"><b>${+it.stock||0}</b></div><button class="btn red takebig" data-ptake="${esc(key)}" ${(+it.stock||0)<=0?"disabled":""}>${esc((+it.stock||0)<=0?t("takeNone"):t("takeOneBig"))}</button>`:`<div class="bigstock">${canStock()?`<button class="bs" data-pmv="-1" data-pk="${esc(key)}" aria-label="−1">−</button>`:""}<b>${+it.stock||0}</b>${canStock()?`<button class="bs" data-pmv="1" data-pk="${esc(key)}" aria-label="+1">+</button>`:""}</div>`}
       ${+it.min?`<p class="note" style="margin:0;text-align:center">${esc(t("minimum"))} : ${+it.min}</p>`:""}
       <h2 style="margin-top:4px">${esc(t("lastMoves"))}</h2>
       ${(it.history||[]).length?`<ul class="hist">${it.history.slice(0,8).map(h=>`<li><b class="${h.d>0?"pos":h.d<0?"neg":""}">${h.d>0?"+"+h.d:h.d<0?"−"+(-h.d):"="+(h.set??"")}</b><span>${esc(h.note||"")}${h.who?` · <i>${esc(h.who)}</i>`:""}</span><span class="dim">${when(h.ts)} ${hhmm(h.ts)}</span></li>`).join("")}</ul>`:`<p class="note" style="margin:0">${esc(t("noMoves"))}</p>`}`};
@@ -3895,7 +3942,7 @@ function drawAV(art){
         <td>${c?`<div class="stk">${pstep("c:"+k,+c.stock||0)}<span class="spill s-${s}">${esc(SSL(s))}</span></div>`:k?`<span class="dim small">${esc(t("noCard"))}</span>`:""}</td></tr>`}).join("")}</tbody></table></div>`
     :`<div class="empty"><h3>${esc(t("pNone"))}</h3></div>`;
   box.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
-  if(!box.dataset.sh){box.dataset.sh=1;stockHandler(box,()=>drawAV(art))}
+  if(!box.dataset.sh){box.dataset.sh=1;stockHandler(box,()=>drawAV(art),art)}
   fadeClips(box);
 }
 async function pdfInto(host,art){
@@ -3938,7 +3985,7 @@ function drawLog(){
     <div class="resbar"><div class="chips">${chip("lp","today",t("pToday"),logP)}${chip("lp","7",t("p7"),logP)}${chip("lp","30",t("p30"),logP)}${chip("lp","all",t("pAll"),logP)}</div><span class="sp"></span>
       <div class="chips">${chip("lk","all",t("fAll"),logK)}${chip("lk","out",t("kOut"),logK)}${chip("lk","in",t("kIn"),logK)}${chip("lk","set",t("kSet"),logK)}${chip("lk","note",t("kNote"),logK)}</div></div>
     ${list.length?`<div class="list"><table class="lt logt"><thead><tr><th>${esc(t("lDate"))}</th><th>${esc(t("lTime"))}</th><th>${esc(t("lWho"))}</th><th>${esc(t("lRole"))}</th><th>${esc(t("lItem"))}</th><th>${esc(t("lMove"))}</th><th>${esc(t("lAfter"))}</th><th>${esc(t("lNote"))}</th></tr></thead><tbody>
-      ${list.slice(0,logN).map(e=>{if(e.k==="n")return noteRow(e);const it=e.k==="h"?H_(e.key):C_(e.key);return `<tr><td class="m">${when(e.ts)}</td><td class="m">${hhmm(e.ts)}</td><td><b>${esc(e.who||"—")}</b></td><td><span class="rtag r-${esc(e.role)}">${esc(e.role?roleName(e.role):"—")}</span></td>
+      ${list.slice(0,logN).map((e,li)=>{if(e.k==="n")return noteRow(e,li);const it=e.k==="h"?H_(e.key):C_(e.key);return `<tr data-li="${li}" class="logrow"><td class="m">${when(e.ts)}</td><td class="m">${hhmm(e.ts)}</td><td><b>${esc(e.who||"—")}</b></td><td><span class="rtag r-${esc(e.role)}">${esc(e.role?roleName(e.role):"—")}</span></td>
         <td>${it?`<button class="linkcode" data-go="${e.k==="h"?holderHref(e.key):codeHref(e.key)}">${esc(e.key)}</button>`:`<span class="m">${esc(e.key)}</span>`}${e.k==="h"?` <span class="dim small">${esc(t("kindH"))}</span>`:""}</td>
         <td class="m"><b class="${e.set?"":e.d>0?"pos":"neg"}">${e.set?"= "+e.a:e.d>0?"+"+e.d:"−"+(-e.d)}</b></td><td class="m">${e.b} → <b>${e.a}</b></td><td class="cl"><span class="clip">${esc(e.note||"")}</span></td></tr>`}).join("")}</tbody></table></div>
       ${list.length>logN?`<div class="actions2"><button class="btn" id="b-logmore">${esc(t("logMore",Math.min(300,list.length-logN)))}</button></div>`:""}`
@@ -3946,14 +3993,26 @@ function drawLog(){
   box.querySelectorAll("[data-lp]").forEach(b=>b.onclick=()=>{logP=b.dataset.lp;logN=300;drawLog()});
   box.querySelectorAll("[data-lk]").forEach(b=>b.onclick=()=>{logK=b.dataset.lk;logN=300;drawLog()});
   box.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
+  box.querySelectorAll("tr[data-li]").forEach(tr=>tr.onclick=ev=>{if(ev.target.closest("button,a"))return;logDetail(list[+tr.dataset.li])});
   const mb=$("#b-logmore");if(mb)mb.onclick=()=>{logN+=300;drawLog()};
   fadeClips(box);
 }
-function noteRow(e){
+function noteRow(e,li){
   const it=e.ck==="h"?H_(e.key):e.ck==="c"?C_(e.key):null,art=e.ck==="a"?A(e.key):null;
   const link=it?`<button class="linkcode" data-go="${e.ck==="h"?holderHref(e.key):codeHref(e.key)}">${esc(e.key)}</button>`:art?`<button class="linkcode" data-go="#${can("article")&&ROLE!=="prod"?"a":"v"}-${art.id}">${esc(art.article.number||e.label)}</button> <span class="dim small">${esc(t("article"))}</span>`:e.label?`<span class="m">${esc(e.label)}</span>`:`<span class="dim">—</span>`;
-  return `<tr class="noterow"><td class="m">${when(e.ts)}</td><td class="m">${hhmm(e.ts)}</td><td><b>${esc(e.who||"—")}</b></td><td><span class="rtag r-${esc(e.role)}">${esc(e.role?roleName(e.role):"—")}</span></td>
+  return `<tr class="noterow logrow" ${li!=null?`data-li="${li}"`:""}><td class="m">${when(e.ts)}</td><td class="m">${hhmm(e.ts)}</td><td><b>${esc(e.who||"—")}</b></td><td><span class="rtag r-${esc(e.role)}">${esc(e.role?roleName(e.role):"—")}</span></td>
     <td>${link}</td><td><span class="ntag">${esc(t("cmTag"))}</span></td><td class="m">${e.re?`<span class="dim small">${esc(t("cmAbout"))}</span> <b class="${e.re.set?"":e.re.d>0?"pos":"neg"}">${e.re.set?"= "+e.re.a:e.re.d>0?"+"+e.re.d:"−"+(-e.re.d)}</b>`:`<span class="dim">—</span>`}</td><td class="cl"><span class="ntext">${esc(e.note)}</span></td></tr>`;
+}
+function logDetail(e){if(!e)return;
+  const isN=e.k==="n",ck=isN?e.ck:e.k,it=ck==="h"?H_(e.key):ck==="c"?C_(e.key):null,art=ck==="a"?A(e.key):null;
+  const href=it?(ck==="h"?holderHref(e.key):codeHref(e.key)):art?`#${can("article")&&ROLE!=="prod"?"a":"v"}-${art.id}`:"";
+  const label=it?e.key:art?(art.article.number||e.label):(e.label||e.key||"—");
+  dialog(esc(isN?t("cmTag"):t("lMove")),`<dl class="rodl logdl"><div><dt>${esc(t("lDate"))}</dt><dd>${when(e.ts)} ${hhmm(e.ts)}</dd></div><div><dt>${esc(t("lWho"))}</dt><dd>${esc(e.who||"—")}${e.role?` · ${esc(roleName(e.role))}`:""}</dd></div>
+      <div><dt>${esc(t("lItem"))}</dt><dd><b class="m">${esc(label)}</b></dd></div>
+      ${!isN?`<div><dt>${esc(t("lMove"))}</dt><dd class="m"><b>${e.set?"= "+e.a:e.d>0?"+"+e.d:"−"+(-e.d)}</b> (${e.b} → ${e.a})</dd></div>`:e.re?`<div><dt>${esc(t("cmAbout"))}</dt><dd class="m">${e.re.set?"= "+e.re.a:e.re.d>0?"+"+e.re.d:"−"+(-e.re.d)}</dd></div>`:""}</dl>
+    <div class="logfull">${esc(e.note||"—")}</div>`,
+    `${href?`<button class="btn" id="ld-open">${esc(t("ldOpen"))}</button>`:""}<span class="sp"></span><button class="btn red" id="d-cancel">${esc(t("close"))}</button>`);
+  $("#d-cancel").onclick=closeDlg;if(href)$("#ld-open").onclick=()=>{closeDlg();go(href)};
 }
 async function logCSV(){
   const list=logList();if(!list.length){toast(t("logEmpty"));return}
