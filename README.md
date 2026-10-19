@@ -22,7 +22,7 @@ App/   BrocheStuff-Setup-2.2.3.exe (installer), BrocheStuff-Windows.zip (portabl
 
 **Services.** On opening, each person picks a service: *Préparateur méthode* (machines, articles, tool sheets), *Préparateur outil* (tool crib, holders, stock log), *Production* (find a tool, a holder or an article, read the sheet, take a tool out of stock one at a time, leave a comment) or *Admin* (everything). Stock moves are logged with the person's name and time.
 
-**Machines and articles.** Machine cards with spindle taper (BT40 / BT50 / …) and progress; articles with number, index, designation, reference, program, material; the tool list (T, type, Ø, R / ∠, insert reference, LS, LT, Z, H and D offsets, holder, code) with a drawing that explains each box, Excel paste, live PDF preview, **print** and **PDF**. A holder of the wrong taper for the machine is flagged.
+**Machines and articles.** Machine cards with spindle taper (BT40 / BT50 / …) and progress; articles with number, index, designation, reference, program, material; the tool list (T, H / D offsets, type, Ø, R / ∠, insert reference, LS, LT, Z, holder, code) with a drawing that explains each box, Excel paste, live PDF preview, **print** and **PDF**. A holder of the wrong taper for the machine is flagged.
 
 **Tool crib.** Every tool code (your own coding, whatever it is) with its details, sketch or photo, stock with − / +, minimum, history, where it is used, order list (CSV). Coded references (`FR-2T-ALU-D16,00-CAR-R2,000-Z03-LU32-LT100`) fill the card by themselves.
 
