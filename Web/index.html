@@ -1302,6 +1302,7 @@ table.avt.noins .insc{display:none!important}
 .tt td.holdcell input.h2::placeholder{color:var(--mid);opacity:.6;font-style:italic}
 @media (max-width:760px){table.tt td.holdcell input{height:42px!important}table.tt td.holdcell input.h2{margin-top:2px}}
 .tt td.holdcell input[hidden]{display:none!important}
+.tt td input[data-k="t"],.tt td input[data-k="code"]{font-size:12.5px}
 </style></head>
 <body>
 <header class="top">
@@ -2142,7 +2143,7 @@ function makePDF(data){
     return y+h;
   }
 
-  const COLW=BLANK?[13,13,31,11,11,22,11,11,8,30,22]:[15,12,56,13,13,9,39,26];
+  const COLW=BLANK?[10,13,33,11,11,23,11,11,8,33,19]:[11,12,62,13,13,9,42,21];
   const HEAD=BLANK?[L.head[0],L.head[1],L.type||"Type","Ø","R / °",L.ins,"LS","LT","Z",L.head[6],L.head[7]]:L.head;
   function tableHead(y){
     fill(C.head);doc.roundedRect(X0,y,W,8.2,1.8,1.8,"F");doc.rect(X0,y+4,W,4.2,"F");
@@ -2155,7 +2156,7 @@ function makePDF(data){
     const mid=y+rh/2, base=s=>mid+s*PT*0.36;
     let x=X0;const cx=[];COLW.forEach(w=>{cx.push(x);x+=w});
     color(C.ink);
-    font("MonoB",12);txt(normT(t.t),cx[0]+2.2,base(12),{cs:-0.15});
+    font("MonoB",9.5);txt(normT(t.t),cx[0]+1.8,base(9.5),{cs:-0.1});
     // correctors: H on top, D below (the number only)
     {const x0=cx[1],w0=COLW[1];line(x0+1.2,mid,x0+w0-1.2,mid,C.hair,0.2);
      [["H",t.corrH,mid-1.05],["D",t.corrD,mid+3.35]].forEach(([lab,v,yb])=>{font("Plex5",6.2);color(C.mid);txt(lab,x0+1.4,yb);
@@ -2185,7 +2186,7 @@ function makePDF(data){
       if(parts.length===1){const l=doc.splitTextToSize(hol,HW);if(l.length===1||tw(hol)<=HW*1.25)fitLine(hol,base(8.6));else{font("Plex5",7.6);txt(fit(l[0],HW),cx[6]+1.8,mid-0.6);txt(fit(l.slice(1).join(" "),HW),cx[6]+1.8,mid+3)}}
       else{fitLine(parts[0],mid-0.7);fitLine("+ "+parts[1],mid+3)}}
     else dash(cx[6]+1.8);
-    const code=clean(t.code).toUpperCase();if(code){let s=12.5;font("MonoB",s);while(s>7.5&&tw(code,-0.15)>COLW[7]-3){s-=0.5;font("MonoB",s)}txt(code,cx[7]+1.8,base(12.5),{cs:-0.15})}
+    const code=clean(t.code).toUpperCase();if(code){let s=9.5;font("MonoB",s);while(s>6.5&&tw(code,-0.1)>COLW[7]-3){s-=0.5;font("MonoB",s)}txt(code,cx[7]+1.8,base(9.5),{cs:-0.1})}
     else{font("Mono5",10);txt("___",cx[7]+1.8,base(10))}
     if(last)line(X0,y+rh-0.3,X1,y+rh-0.3,C.ink,0.45);else line(X0,y+rh,X1,y+rh,C.hair,0.25);
   }
@@ -2742,7 +2743,7 @@ function renderEditor(art){fillHolderList(M(art.machineId)?.cone);
       <h2>${esc(t("tools"))} <span class="hint" id="count"></span></h2>
       ${toolDiagram("wide")}
       <div class="tw"><table class="tt">
-        <thead><tr><th style="width:48px">${esc(t("colTool"))}</th><th style="width:62px" title="${esc(t("colHT"))} · ${esc(t("colDT"))}">${esc(t("colCorr"))}</th><th>${esc(t("colType"))}</th><th style="width:54px">Ø</th><th style="width:58px">R / ∠</th><th class="insth" style="width:112px" title="${esc(t("colInsT"))}">${esc(t("colIns"))}</th><th style="width:46px">LS</th><th style="width:54px" title="${esc(t("oal"))}">LT</th><th style="width:36px">Z</th><th style="width:140px">${esc(t("colHolder"))}${coneTag(M(cur.machineId)?.cone)?" "+coneTag(M(cur.machineId)?.cone):""}</th><th style="width:90px">${esc(t("colCode"))}</th><th></th></tr></thead>
+        <thead><tr><th style="width:44px">${esc(t("colTool"))}</th><th style="width:62px" title="${esc(t("colHT"))} · ${esc(t("colDT"))}">${esc(t("colCorr"))}</th><th>${esc(t("colType"))}</th><th style="width:54px">Ø</th><th style="width:58px">R / ∠</th><th class="insth" style="width:112px" title="${esc(t("colInsT"))}">${esc(t("colIns"))}</th><th style="width:46px">LS</th><th style="width:54px" title="${esc(t("oal"))}">LT</th><th style="width:36px">Z</th><th style="width:140px">${esc(t("colHolder"))}${coneTag(M(cur.machineId)?.cone)?" "+coneTag(M(cur.machineId)?.cone):""}</th><th style="width:80px">${esc(t("colCode"))}</th><th></th></tr></thead>
         <tbody id="rows"></tbody></table></div>
       <div class="rowbar"><button class="btn" id="b-add">${esc(t("addTool"))}</button><button class="btn ghost" id="b-impt" title="${esc(t("impT"))}">${esc(t("imp"))}</button><button class="btn ghost" id="b-ncimp" title="${esc(t("impNCP"))}">${esc(t("ncFromProg"))}</button><button class="btn ghost" id="b-prep" title="${esc(t("prepT"))}">${esc(t("prep"))}</button><button class="btn ghost" id="b-magcmp">${esc(t("magCmpBtn"))}</button>${tplBtn("tools")}<span class="note">${t("excelNote")}</span></div>
     </div>
