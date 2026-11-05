@@ -2374,32 +2374,67 @@ function sheetXLSX(art){
   const ent=n=>C.find(cfb,n)||C.find(cfb,"/"+n);
   const get=n=>new TextDecoder().decode(ent(n).content),put=(n,x)=>{const e=ent(n);e.content=new TextEncoder().encode(x);e.size=e.content.length};
   const X=v=>String(v??"").replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-  const a=art.article||{},m=M(art.machineId),tools=realTools(art.tools);
-  // a wrapped copy of the table cell style, for the holder on two lines
-  let st=get("xl/styles.xml");const xfs=st.match(/<cellXfs count="(\d+)">([\s\S]*?)<\/cellXfs>/);
-  const list=xfs[2].match(/<xf [^>]*?(?:\/>|>[\s\S]*?<\/xf>)/g),base=list[15]||list[list.length-1],WRAP=list.length;
-  const wrapXf=base.replace(/<alignment[^>]*\/>/,'<alignment vertical="center" wrapText="1"/>');
-  st=st.replace(xfs[0],`<cellXfs count="${list.length+1}">${xfs[2]}${wrapXf}</cellXfs>`);put("xl/styles.xml",st);
+  const a=art.article||{},m=M(art.machineId),tools=realTools(art.tools),EN=LANG==="en";
+  /* ---- styles: added to the model's own ---- */
+  let st=get("xl/styles.xml");
+  const add=(tag,item)=>{const re=new RegExp(`<${tag} count="(\\d+)">([\\s\\S]*?)</${tag}>`),mm=st.match(re),n=+mm[1];st=st.replace(mm[0],`<${tag} count="${n+1}">${mm[2]}${item}</${tag}>`);return n};
+  const INK="FF10171E",MID="FF5F6A75",RED="FF9E0F12",HAIR="FFD9DEE3",PAPER="FFF4F5F2",ZEBRA="FFF8F9F7",WHITE="FFFFFFFF";
+  const font=(o={})=>add("fonts",`<font>${o.b?"<b/>":""}<sz val="${o.sz||10}"/><color rgb="${o.c||INK}"/><name val="${o.n||"Calibri"}"/><family val="2"/></font>`);
+  const fill=c=>add("fills",`<fill><patternFill patternType="solid"><fgColor rgb="${c}"/><bgColor indexed="64"/></patternFill></fill>`);
+  const side=(s,c)=>s?` style="${s}"><color rgb="${c}"/></`:"/><";
+  const border=(l,r,t,b)=>add("borders",`<border><left${l?side(...l)+"left>":"/>"}<right${r?side(...r)+"right>":"/>"}<top${t?side(...t)+"top>":"/>"}<bottom${b?side(...b)+"bottom>":"/>"}<diagonal/></border>`);
+  const xf=(fo,fi,bo,h,v,wrap,ind)=>add("cellXfs",`<xf numFmtId="49" fontId="${fo}" fillId="${fi}" borderId="${bo}" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1" applyNumberFormat="1"><alignment${h?` horizontal="${h}"`:""} vertical="${v||"center"}"${wrap?' wrapText="1"':""}${ind?` indent="${ind}"`:""}/></xf>`);
+  const fTitle=font({b:1,sz:20}),fNum=font({b:1,sz:18,n:"Consolas"}),fSub=font({sz:9,c:MID}),fHead=font({b:1,sz:9.5,c:WHITE}),
+        fBody=font({sz:10}),fBold=font({b:1,sz:10.5}),fMono=font({sz:10,n:"Consolas"}),fMonoB=font({b:1,sz:10.5,n:"Consolas"}),fCorr=font({sz:10,c:MID,n:"Consolas"});
+  const nofill=0,fPaper=fill(PAPER),fZebra=fill(ZEBRA),fInk=fill(INK),fRedF=fill(RED);
+  const hair=["thin",HAIR],bNone=border(),bTitle=border(null,null,null,["medium",RED]),bBox=border(hair,hair,hair,hair),
+        bHead=border(["thin","FF2A3540"],["thin","FF2A3540"],null,["medium",RED]),bCell=border(hair,hair,null,hair);
+  const S={title:xf(fTitle,nofill,bTitle,"left","bottom"),num:xf(fNum,nofill,bTitle,"right","bottom"),sub:xf(fSub,nofill,bNone,"left","top"),
+    box:xf(fBody,fPaper,bBox,"left","top",1,1),head:xf(fHead,fInk,bHead,"center","center",1)};
+  const body=(fo,h,wrap)=>[xf(fo,nofill,bCell,h,"center",wrap,h==="left"?1:0),xf(fo,fZebra,bCell,h,"center",wrap,h==="left"?1:0)];
+  const COL=[["t",body(fMonoB,"center")],["corrH",body(fCorr,"center")],["corrD",body(fCorr,"center")],["type",body(fBold,"left",1)],["diameter",body(fMono,"center")],["ra",body(fMono,"center")],
+    ["insert",body(fMono,"left",1)],["ls",body(fMonoB,"center")],["oal",body(fMono,"center")],["z",body(fMono,"center")],["holder",body(fBody,"left",1)],["code",body(fMonoB,"center")]];
+  put("xl/styles.xml",st);
+  /* ---- the sheet ---- */
+  const L="ABCDEFGHIJKL",cell=(ref,s,v)=>v===""||v==null?`<c r="${ref}" s="${s}"/>`:`<c r="${ref}" s="${s}" t="inlineStr"><is><t xml:space="preserve">${X(v)}</t></is></c>`;
+  const rich=(ref,s,label,val)=>`<c r="${ref}" s="${s}" t="inlineStr"><is><r><rPr><sz val="8"/><color rgb="${MID}"/><rFont val="Calibri"/></rPr><t xml:space="preserve">${X(label.toUpperCase())}</t></r><r><rPr><b/><sz val="11"/><color rgb="${INK}"/><rFont val="Calibri"/></rPr><t xml:space="preserve">${X("\n"+(val||" "))}</t></r></is></c>`;
+  const rows=[],merges=[];let r=1;
+  const span=(r0,c0,c1)=>{if(c1>c0)merges.push(`${L[c0]}${r0}:${L[c1]}${r0}`)};
+  // 1: title + article number
+  const num=[clean(a.number),clean(a.index)?(EN?"Index ":"Indice ")+clean(a.index):""].filter(Boolean).join("  ·  ");
+  rows.push(`<row r="1" ht="34" customHeight="1">${L.split("").map((c,i)=>i===0?cell("A1",S.title,EN?"Tool list":"Fiche outils"):i===6?cell("G1",S.num,num):cell(c+"1",i<6?S.title:S.num,"")).join("")}</row>`);span(1,0,5);span(1,6,11);
+  rows.push(`<row r="2" ht="8" customHeight="1"/>`);
+  // 3-5: article boxes
+  const boxes=[[["designation",EN?"Designation":"Désignation",0,5],["reference",EN?"Reference":"Référence",6,11]],
+    [["program",EN?"Program":"Programme",0,3],["machine","Machine",4,7],["material",EN?"Material":"Matière",8,11]],
+    [["preparedBy",EN?"Prepared by":"Établi par",0,3],["approvedBy",EN?"Approved by":"Approuvé par",4,7],["date","Date",8,11]]];
+  boxes.forEach((line,k)=>{const rr=3+k;let cs="";line.forEach(([key,lab,c0,c1])=>{const v=key==="machine"?(m?mLabel(m):""):clean(a[key]);
+      for(let c=c0;c<=c1;c++)cs+=c===c0?rich(L[c]+rr,S.box,lab,v):cell(L[c]+rr,S.box,"");span(rr,c0,c1)});
+    rows.push(`<row r="${rr}" ht="32" customHeight="1">${cs}</row>`)});
+  let rr=6;
+  if(clean(a.notes)){let cs=rich("A6",S.box,EN?"Notes":"Remarques",clean(a.notes).replace(/\s*\n\s*/g," · "));for(let c=1;c<12;c++)cs+=cell(L[c]+"6",S.box,"");span(6,0,11);rows.push(`<row r="6" ht="32" customHeight="1">${cs}</row>`);rr=7}
+  rows.push(`<row r="${rr}" ht="8" customHeight="1"/>`);rr++;
+  // header: same titles as the model, so the file imports back
+  const HR=rr,HEAD=["Outil","Corr. H","Corr. D","Type","Ø","R / °","Réf. plaquette","LS","LT","Z","Porte-outil","Code outil"];
+  rows.push(`<row r="${HR}" ht="30" customHeight="1">${HEAD.map((h,i)=>cell(L[i]+HR,S.head,h)).join("")}</row>`);rr++;
+  const n=Math.max(tools.length+5,20);
+  for(let i=0;i<n;i++,rr++){const tl=tools[i]||{},z=i%2,hol=String(tl.holder??"").trim(),hl=hol?hol.split("\n"):[""];
+    const lines=hl.length+hl.filter(l=>l.length>44).length+(String(tl.type||"").length>34?1:0);
+    const val={t:tl.t?normT(tl.t)||clean(tl.t):"",corrH:corrV(tl.corrH),corrD:corrV(tl.corrD),type:clean(tl.type),diameter:clean(tl.diameter),ra:clean(tl.ra),insert:clean(tl.insert),ls:clean(tl.ls),oal:clean(tl.oal),z:clean(tl.z),holder:hol,code:clean(tl.code)};
+    rows.push(`<row r="${rr}" ht="${lines>2?44:lines>1?32:22}" customHeight="1">${COL.map(([k,s],ci)=>cell(L[ci]+rr,s[z],val[k])).join("")}</row>`)}
+  const last=rr-1;
   let x=get("xl/worksheets/sheet1.xml");
-  // article block: "Label : value" in each box
-  const lab=(ref,label,val)=>{x=x.replace(new RegExp('(<c r="'+ref+'"[^>]*><is><t)[^>]*>[^<]*(</t>)'),`$1 xml:space="preserve">${X(val?label+" : "+val:label)}$2`)};
-  lab("A1","",clean(a.number)?`Fiche outils ${clean(a.number)}${clean(a.index)?" · Indice "+clean(a.index):""}`:"Fiche outils");x=x.replace(/(<c r="A1"[^>]*><is><t[^>]*>) : /,"$1");
-  lab("A2","Article",[clean(a.number),clean(a.index)?"Indice "+clean(a.index):""].filter(Boolean).join(" · "));
-  lab("H2","Machine",m?mLabel(m):"");lab("A3","Désignation",clean(a.designation));lab("H3","Référence",clean(a.reference));
-  lab("A4","Programme",clean(a.program));lab("E4","Établi par",clean(a.preparedBy));lab("J4","Date",clean(a.date));
-  // tool rows from row 7
-  const n=tools.length,last=Math.max(35,6+n),L="ABCDEFGHIJKL";
-  const rowXml=(r,vals,two)=>{const hl=String(vals[10]||"").split("\n"),extra=hl.filter(l=>l.length>46).length,nl=hl.length+extra;return `<row r="${r}" ht="${nl>2?42:nl>1?30:20}" customHeight="1" s="5">${vals.map((v,i)=>{const s0=i===10?WRAP:15;return v===""?`<c r="${L[i]}${r}" s="${s0}"/>`:`<c r="${L[i]}${r}" s="${s0}" t="inlineStr"><is><t xml:space="preserve">${X(v)}</t></is></c>`}).join("")}</row>`};
-  const rows=[];for(let i=0;i<last-6;i++){const tl=tools[i];
-    if(!tl){rows.push(rowXml(7+i,Array(12).fill(""),false));continue}
-    const hol=String(tl.holder??"").trim();
-    rows.push(rowXml(7+i,[normT(tl.t)||clean(tl.t),corrV(tl.corrH),corrV(tl.corrD),clean(tl.type),clean(tl.diameter),clean(tl.ra),clean(tl.insert),clean(tl.ls),clean(tl.oal),clean(tl.z),hol,clean(tl.code)],hol.includes("\n")))}
-  x=x.replace(/<row r="(\d+)"[^>]*?(?:\/>|>[\s\S]*?<\/row>)/g,(w,r)=>+r>=7&&+r<=last?(+r===7?"\u0001":""):w).replace("\u0001",rows.join(""));
-  x=x.replace(/(<oddHeader>&amp;L&amp;11 &amp;B)[\s\S]*?(&amp;R)/,`$1${X("Fiche outils "+clean(a.number)).replace(/&amp;/g,"&amp;&amp;")}$2`);
-  // wider columns for real data: type, insert, LS, holder
-  const W={4:30,7:26,8:8,11:44};x=x.replace(/<col ([^>]*?)min="(\d+)" max="(\d+)"\/>/g,(w,at,mn,mx)=>W[mn]&&mn===mx?`<col ${at.replace(/width="[\d.]+"/,'width="'+W[mn]+'"')}min="${mn}" max="${mx}"/>`:w);
+  x=x.replace(/<sheetData>[\s\S]*?<\/sheetData>/,`<sheetData>${rows.join("")}</sheetData>`);
+  x=x.replace(/<sheetData\/>/,`<sheetData>${rows.join("")}</sheetData>`);
+  x=x.replace(/<mergeCells[\s\S]*?<\/mergeCells>/,merges.length?`<mergeCells count="${merges.length}">${merges.map(q=>`<mergeCell ref="${q}"/>`).join("")}</mergeCells>`:"");
+  x=x.replace(/<dimension ref="[^"]*"\/>/,`<dimension ref="A1:L${last}"/>`);
+  x=x.replace(/<pane [^>]*\/>/,`<pane ySplit="${HR}" topLeftCell="A${HR+1}" activePane="bottomLeft" state="frozen"/>`).replace(/<selection [^>]*\/>/,`<selection pane="bottomLeft" activeCell="A${HR+1}" sqref="A${HR+1}"/>`);
+  x=x.replace(/<sheetView /,'<sheetView showGridLines="0" ');
+  const W=[7,6,6,30,7,7,28,9,7,5,40,13];x=x.replace(/<cols>[\s\S]*?<\/cols>/,`<cols>${W.map((w,i)=>`<col min="${i+1}" max="${i+1}" width="${w}" customWidth="1"/>`).join("")}</cols>`);
+  x=x.replace(/<oddHeader>[\s\S]*?<\/oddHeader>/,`<oddHeader>&amp;R&amp;8 BrocheStuff</oddHeader>`);
+  x=x.replace(/<oddFooter>[\s\S]*?<\/oddFooter>/,`<oddFooter>&amp;L&amp;8 ${X((EN?"Tool list ":"Fiche outils ")+clean(a.number)).replace(/&amp;/g,"&amp;&amp;")}&amp;R&amp;8 Page &amp;P / &amp;N</oddFooter>`);
   put("xl/worksheets/sheet1.xml",x);
-  put("xl/workbook.xml",get("xl/workbook.xml").replace(/(Print_Area" localSheetId="0">[^<]*\$L\$)\d+/,"$1"+last));
+  put("xl/workbook.xml",get("xl/workbook.xml").replace(/(Print_Area" localSheetId="0">[^<]*!)\$A\$1:\$L\$\d+/,(w,p1)=>p1+"$A$1:$L$"+last).replace(/(Print_Titles" localSheetId="0">[^<]*!)\$\d+:\$\d+/,(w,p1)=>p1+"$"+HR+":$"+HR));
   return new Blob([C.write(cfb,{fileType:"zip",type:"array"})],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
 }
 async function downloadXLSX(art){try{const name=fileName(art,"xlsx");const p=await download(name,sheetXLSX(art),"xlsx");if(!p)return;
