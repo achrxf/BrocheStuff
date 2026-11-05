@@ -1303,6 +1303,13 @@ table.avt.noins .insc{display:none!important}
 @media (max-width:760px){table.tt td.holdcell input{height:42px!important}table.tt td.holdcell input.h2{margin-top:2px}}
 .tt td.holdcell input[hidden]{display:none!important}
 .tt td input[data-k="t"],.tt td input[data-k="code"]{font-size:12.5px}
+/* Excel download of the tool sheet */
+.tb.xl{color:#1d6f42;border-color:#9fc9b0}
+.tb.xl .lbl2{display:inline}
+.tb.xl:hover{background:#eef6f1}
+:root[data-theme="dark"] .tb.xl{color:#7fd1a2;border-color:#2f5d44}
+:root[data-theme="dark"] .tb.xl:hover{background:#18281f}
+@media (max-width:760px){.tb.xl .lbl2{display:none}}
 </style></head>
 <body>
 <header class="top">
@@ -1876,7 +1883,7 @@ en:{
   delWith:n=>`Delete with its ${n} ${pl(n,"article","articles")}?`, clickDel:"Click again to delete", machineDeleted:n=>`${n} deleted`, clickConfirm:"Click again to confirm",
   copyTitle:"Copy article", copyP:"Makes a new article with the same tools. Use it for a new index, or when the same article runs on another machine.", copyOn:"Put the copy on", articleNumber:"Article number", index:"Index", makeCopy:"Make copy", copyMade:"Copy made. You're now editing the copy.",
   article:"Article", autoSaved:"Saved automatically", designation:"Designation", desPh:"Support bracket", reference:"Reference", refPh:"Part / drawing reference", program:"Program", material:"Material",
-  tools:"Tools", nTools:n=>`${n} ${pl(n,"tool","tools")}`, colTool:"Tool", colType:"Type", colHolder:"Holder", holder2Ph:"+ 2nd line", holder2T:"Second line (Shift+Enter in the holder box)", colCorr:"Offsets", colIns:"Insert", colInsT:"Insert reference", colHT:"Length offset (H)", colDT:"Radius offset (D)", colFinish:"Finish", colCode:"Code", typePh:"END MILL", addTool:"+ Add tool",
+  tools:"Tools", nTools:n=>`${n} ${pl(n,"tool","tools")}`, colTool:"Tool", colType:"Type", colHolder:"Holder", dlXlsT:"Download the tool sheet as an Excel file you can edit (and import back)", saveXlsT:"Save the tool sheet (Excel)", openFile:"Open", xlsFail:"Excel file not made: ", holder2Ph:"+ 2nd line", holder2T:"Second line (Shift+Enter in the holder box)", colCorr:"Offsets", colIns:"Insert", colInsT:"Insert reference", colHT:"Length offset (H)", colDT:"Radius offset (D)", colFinish:"Finish", colCode:"Code", typePh:"END MILL", addTool:"+ Add tool",
   excelNote:"<b>From Excel:</b> copy the rows (Tool, Type, Ø, R/°, LS, LT, Z, Holder, Code) and paste into any cell. <b>Enter</b> in the last row adds a new one.",
   notesSign:"Notes & sign-off", notes:"Notes", notesPh:"Printed on the sheet. Leave empty for blank lines to write on.", preparedBy:"Prepared by", approvedBy:"Approved by", date:"Date", datePh:"dd/mm/yyyy",
   signNote:"Leave Prepared by / Approved by empty to sign by hand on paper.", pages:n=>`A4 · ${n} ${pl(n,"page","pages")}`, pvError:"Preview error: ",
@@ -1956,7 +1963,7 @@ fr:{
   delWith:n=>`Supprimer avec ${pl(n,"son article","ses "+n+" articles")} ?`, clickDel:"Cliquez encore pour supprimer", machineDeleted:n=>`${n} supprimée`, clickConfirm:"Cliquez encore pour confirmer",
   copyTitle:"Copier l'article", copyP:"Crée un nouvel article avec les mêmes outils. Pour un nouvel indice, ou quand le même article passe sur une autre machine.", copyOn:"Mettre la copie sur", articleNumber:"Numéro d'article", index:"Indice", makeCopy:"Créer la copie", copyMade:"Copie créée. Vous modifiez maintenant la copie.",
   article:"Article", autoSaved:"Enregistré automatiquement", designation:"Désignation", desPh:"Support", reference:"Référence", refPh:"Référence pièce / plan", program:"Programme", material:"Matière",
-  tools:"Outils", nTools:n=>`${n} ${pl(n,"outil","outils")}`, colTool:"Outil", colType:"Type", colHolder:"Porte-outil", holder2Ph:"+ 2e ligne", holder2T:"Deuxième ligne (Maj+Entrée dans la case porte-outil)", colCorr:"N° corr.", colIns:"Plaquette", colInsT:"Référence plaquette", colHT:"Correcteur de longueur (H)", colDT:"Correcteur de rayon (D)", colFinish:"Rugosité", colCode:"Code", typePh:"FRAISE 2T", addTool:"+ Ajouter un outil",
+  tools:"Outils", nTools:n=>`${n} ${pl(n,"outil","outils")}`, colTool:"Outil", colType:"Type", colHolder:"Porte-outil", dlXlsT:"Télécharger la fiche outils en fichier Excel modifiable (et réimportable)", saveXlsT:"Enregistrer la fiche outils (Excel)", openFile:"Ouvrir", xlsFail:"Fichier Excel non créé : ", holder2Ph:"+ 2e ligne", holder2T:"Deuxième ligne (Maj+Entrée dans la case porte-outil)", colCorr:"N° corr.", colIns:"Plaquette", colInsT:"Référence plaquette", colHT:"Correcteur de longueur (H)", colDT:"Correcteur de rayon (D)", colFinish:"Rugosité", colCode:"Code", typePh:"FRAISE 2T", addTool:"+ Ajouter un outil",
   excelNote:"<b>Depuis Excel :</b> copiez les lignes (Outil, Type, Ø, R/°, LS, LT, Z, Porte-outil, Code) et collez-les dans n'importe quelle case. <b>Entrée</b> sur la dernière ligne ajoute une ligne.",
   notesSign:"Remarques et visa", notes:"Remarques", notesPh:"Imprimé sur la fiche. Laissez vide pour avoir des lignes à remplir à la main.", preparedBy:"Établi par", approvedBy:"Approuvé par", date:"Date", datePh:"jj/mm/aaaa",
   signNote:"Laissez Établi par / Approuvé par vides pour signer à la main sur papier.", pages:n=>`A4 · ${n} page${n>1?"s":""}`, pvError:"Erreur d'aperçu : ",
@@ -2294,8 +2301,9 @@ const desk={
     }catch(e){}
   },
   async saveAs(name,blob,kind){
-    const pdf=kind==="pdf",csv=kind==="csv",def=pdf?LOCAL+SEP+"Sheets"+SEP+name:csv?LOCAL+SEP+name:DIR+SEP+"Backups"+SEP+name;
-    let path=await Neutralino.os.showSaveDialog(pdf?t("saveSheetT"):csv?t("orderList"):t("saveBackupT"),{defaultPath:def,filters:[pdf?{name:t("pdfFile"),extensions:["pdf"]}:csv?{name:"CSV",extensions:["csv"]}:{name:t("backupFile"),extensions:["json"]}]});
+    const pdf=kind==="pdf",csv=kind==="csv",xl=kind==="xlsx",def=pdf||xl?LOCAL+SEP+"Sheets"+SEP+name:csv?LOCAL+SEP+name:DIR+SEP+"Backups"+SEP+name;
+    if(pdf||xl){try{await Neutralino.filesystem.createDirectory(LOCAL+SEP+"Sheets")}catch(e){}}
+    let path=await Neutralino.os.showSaveDialog(pdf?t("saveSheetT"):xl?t("saveXlsT"):csv?t("orderList"):t("saveBackupT"),{defaultPath:def,filters:[pdf?{name:t("pdfFile"),extensions:["pdf"]}:xl?{name:"Excel",extensions:["xlsx"]}:csv?{name:"CSV",extensions:["csv"]}:{name:t("backupFile"),extensions:["json"]}]});
     if(!path)return null;
     if(!new RegExp("\\."+kind+"$","i").test(path))path+="."+kind;
     await Neutralino.filesystem.writeBinaryFile(path,await blob.arrayBuffer());
@@ -2360,6 +2368,43 @@ const artsOf=mid=>db.articles.filter(a=>a.machineId===mid);
 const sheetData=art=>{const m=M(art.machineId);return{article:{...art.article,machine:m?(normCone(m.cone)&&m.abbr?`${m.abbr} · ${normCone(m.cone)} · ${m.name}`:mLabel(m)):""},tools:art.tools,stamp:art.status==="done"?{done:1,ts:(art.validated&&art.validated.ts)||art.updatedAt,who:(art.validated&&art.validated.who)||""}:{done:0}}};
 function fileName(art,ext){const s=x=>String(x||"").trim().replace(/[\\/:*?"<>|]+/g,"-").replace(/\s+/g,"_");const a=art.article||{};return `${t("filePrefix")}_${s(a.number)||"sheet"}${a.index?"_"+s(a.index):""}.${ext}`}
 async function download(name,blob,kind){if(DESK)return desk.saveAs(name,blob,kind);const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500);return "downloads"}
+// the tool sheet as an Excel file: the "Fiche outils" model filled in, so it can be edited and imported back
+function sheetXLSX(art){
+  const C=XLSX.CFB,f="4_Tool_Sheet_Template.xlsx",cfb=C.read(tplBytes(f),{type:"array"});
+  const ent=n=>C.find(cfb,n)||C.find(cfb,"/"+n);
+  const get=n=>new TextDecoder().decode(ent(n).content),put=(n,x)=>{const e=ent(n);e.content=new TextEncoder().encode(x);e.size=e.content.length};
+  const X=v=>String(v??"").replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  const a=art.article||{},m=M(art.machineId),tools=realTools(art.tools);
+  // a wrapped copy of the table cell style, for the holder on two lines
+  let st=get("xl/styles.xml");const xfs=st.match(/<cellXfs count="(\d+)">([\s\S]*?)<\/cellXfs>/);
+  const list=xfs[2].match(/<xf [^>]*?(?:\/>|>[\s\S]*?<\/xf>)/g),base=list[15]||list[list.length-1],WRAP=list.length;
+  const wrapXf=base.replace(/<alignment[^>]*\/>/,'<alignment vertical="center" wrapText="1"/>');
+  st=st.replace(xfs[0],`<cellXfs count="${list.length+1}">${xfs[2]}${wrapXf}</cellXfs>`);put("xl/styles.xml",st);
+  let x=get("xl/worksheets/sheet1.xml");
+  // article block: "Label : value" in each box
+  const lab=(ref,label,val)=>{x=x.replace(new RegExp('(<c r="'+ref+'"[^>]*><is><t)[^>]*>[^<]*(</t>)'),`$1 xml:space="preserve">${X(val?label+" : "+val:label)}$2`)};
+  lab("A1","",clean(a.number)?`Fiche outils ${clean(a.number)}${clean(a.index)?" · Indice "+clean(a.index):""}`:"Fiche outils");x=x.replace(/(<c r="A1"[^>]*><is><t[^>]*>) : /,"$1");
+  lab("A2","Article",[clean(a.number),clean(a.index)?"Indice "+clean(a.index):""].filter(Boolean).join(" · "));
+  lab("H2","Machine",m?mLabel(m):"");lab("A3","Désignation",clean(a.designation));lab("H3","Référence",clean(a.reference));
+  lab("A4","Programme",clean(a.program));lab("E4","Établi par",clean(a.preparedBy));lab("J4","Date",clean(a.date));
+  // tool rows from row 7
+  const n=tools.length,last=Math.max(35,6+n),L="ABCDEFGHIJKL";
+  const rowXml=(r,vals,two)=>{const hl=String(vals[10]||"").split("\n"),extra=hl.filter(l=>l.length>46).length,nl=hl.length+extra;return `<row r="${r}" ht="${nl>2?42:nl>1?30:20}" customHeight="1" s="5">${vals.map((v,i)=>{const s0=i===10?WRAP:15;return v===""?`<c r="${L[i]}${r}" s="${s0}"/>`:`<c r="${L[i]}${r}" s="${s0}" t="inlineStr"><is><t xml:space="preserve">${X(v)}</t></is></c>`}).join("")}</row>`};
+  const rows=[];for(let i=0;i<last-6;i++){const tl=tools[i];
+    if(!tl){rows.push(rowXml(7+i,Array(12).fill(""),false));continue}
+    const hol=String(tl.holder??"").trim();
+    rows.push(rowXml(7+i,[normT(tl.t)||clean(tl.t),corrV(tl.corrH),corrV(tl.corrD),clean(tl.type),clean(tl.diameter),clean(tl.ra),clean(tl.insert),clean(tl.ls),clean(tl.oal),clean(tl.z),hol,clean(tl.code)],hol.includes("\n")))}
+  x=x.replace(/<row r="(\d+)"[^>]*?(?:\/>|>[\s\S]*?<\/row>)/g,(w,r)=>+r>=7&&+r<=last?(+r===7?"\u0001":""):w).replace("\u0001",rows.join(""));
+  x=x.replace(/(<oddHeader>&amp;L&amp;11 &amp;B)[\s\S]*?(&amp;R)/,`$1${X("Fiche outils "+clean(a.number)).replace(/&amp;/g,"&amp;&amp;")}$2`);
+  // wider columns for real data: type, insert, LS, holder
+  const W={4:30,7:26,8:8,11:44};x=x.replace(/<col ([^>]*?)min="(\d+)" max="(\d+)"\/>/g,(w,at,mn,mx)=>W[mn]&&mn===mx?`<col ${at.replace(/width="[\d.]+"/,'width="'+W[mn]+'"')}min="${mn}" max="${mx}"/>`:w);
+  put("xl/worksheets/sheet1.xml",x);
+  put("xl/workbook.xml",get("xl/workbook.xml").replace(/(Print_Area" localSheetId="0">[^<]*\$L\$)\d+/,"$1"+last));
+  return new Blob([C.write(cfb,{fileType:"zip",type:"array"})],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+}
+async function downloadXLSX(art){try{const name=fileName(art,"xlsx");const p=await download(name,sheetXLSX(art),"xlsx");if(!p)return;
+  if(DESK)toast(t("saved",name),{label:t("openFile"),fn:()=>Neutralino.os.open(p).catch(()=>Neutralino.os.open("file:///"+p.replace(/\\/g,"/")))});else toast(t("savedTo",name))}
+  catch(e){toast(t("xlsFail")+(e.message||e))}}
 async function downloadPDF(art){try{const name=fileName(art,"pdf");const p=await download(name,makePDF(sheetData(art)).output("blob"),"pdf");if(!p)return;
   if(DESK)toast(t("saved",name),{label:t("openPdf"),fn:()=>Neutralino.os.open(p).catch(()=>Neutralino.os.open("file:///"+p.replace(/\\/g,"/")))});else toast(t("savedTo",name))}
   catch(e){toast(t("pdfFail")+(e.message||e))}}
@@ -2472,8 +2517,8 @@ function render(){
   else if(route.view==="code"){const c=C_(route.code);cr.innerHTML=`<i>/</i><a data-go="#crib">${esc(t("crib"))}</a><i>/</i><span>${esc(c.code)}</span>`;renderCode(c)}
   else if(route.view==="machine"){const m=M(route.id);cr.innerHTML=`<i>/</i><span>${esc(mLabel(m))}</span>`;renderMachine(m)}
   else{const art=A(route.id),m=M(art.machineId);cr.innerHTML=`<i>/</i><a data-go="#m-${m.id}">${esc(mShort(m))}</a><i>/</i><span>${esc(art.article.number||t("newArticleCrumb"))}</span>`;
-    tb.innerHTML=`<button class="tb pvtog" id="b-pv" title="${esc(t("previewT"))}" aria-pressed="${pvOn}">${eyeIcon}<span class="lbl">${esc(t("preview"))}</span><span class="sw"><i></i></span></button><button class="tb" id="b-print" title="${esc(t("printT"))}">${printIcon}<span class="lbl">${esc(t("print"))}</span></button><button class="tb dl" id="b-dl" title="${esc(t("download"))}">${dlIcon}<span class="lbl">${esc(t("download"))}</span><span class="lbl2">PDF</span></button>`;
-    $("#b-dl").onclick=()=>{flushEditor();downloadPDF(A(route.id))};$("#b-print").onclick=()=>{flushEditor();printArticle(A(route.id))};$("#b-pv").onclick=togglePreview;renderEditor(art)}
+    tb.innerHTML=`<button class="tb pvtog" id="b-pv" title="${esc(t("previewT"))}" aria-pressed="${pvOn}">${eyeIcon}<span class="lbl">${esc(t("preview"))}</span><span class="sw"><i></i></span></button><button class="tb" id="b-print" title="${esc(t("printT"))}">${printIcon}<span class="lbl">${esc(t("print"))}</span></button><button class="tb dl" id="b-dl" title="${esc(t("download"))}">${dlIcon}<span class="lbl">${esc(t("download"))}</span><span class="lbl2">PDF</span></button><button class="tb xl" id="b-xl" title="${esc(t("dlXlsT"))}">${xlIcon}<span class="lbl2">Excel</span></button>`;
+    $("#b-dl").onclick=()=>{flushEditor();downloadPDF(A(route.id))};if($("#b-xl"))$("#b-xl").onclick=()=>{flushEditor();downloadXLSX(A(route.id))};$("#b-print").onclick=()=>{flushEditor();printArticle(A(route.id))};$("#b-pv").onclick=togglePreview;renderEditor(art)}
   cr.querySelectorAll("[data-go]").forEach(a=>a.onclick=()=>go(a.dataset.go));
   // a new page starts at the top; the same page redrawn keeps its place
   if(render.lastHash!==location.hash){render.lastHash=location.hash;const v=$("#view");if(v)v.scrollTop=0}
@@ -4191,6 +4236,7 @@ function tplTable(tp,blank){const d=tplRead(tp);
   const tot=d.cols.reduce((a,b)=>a+b,0);
   return `<table class="tplt"><colgroup>${d.cols.map(w=>`<col style="width:${(w/tot*100).toFixed(2)}%">`).join("")}</colgroup><thead><tr>${d.head.map(h=>`<th class="${tp.req.includes(h)?"req":""}">${esc(h)}</th>`).join("")}</tr></thead><tbody>
 ${Array.from({length:blank},()=>`<tr>${d.head.map(()=>"<td></td>").join("")}</tr>`).join("")}</tbody></table>`}
+const xlIcon=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M9 12l5 6M14 12l-5 6"/></svg>`;
 const tplIcon=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M9 13l2 3 2-3M9 18h6"/></svg>`;
 const tplBtn=k=>`<button class="btn ghost tplbtn" data-tplk="${k}" title="${esc(t("tplOneT"))}">${tplIcon}<span>${esc(t("tplOne"))}</span></button>`;
 document.addEventListener("click",e=>{const b=e.target.closest("[data-tplk]");if(b){e.preventDefault();templatesDialog(b.dataset.tplk,true)}});
@@ -4953,7 +4999,7 @@ const GUIDE={
    ["start","Démarrer",["Choisissez votre service : Préparateur méthode, Préparateur outil ou Production. « Accès admin » (en bas) donne accès à tout.","Dans le programme Windows installé, chacun se connecte avec son nom (ou son code) et son mot de passe ; l’admin crée les comptes.","La langue (FR / EN) et le mode sombre se changent en haut à droite."]],
    ["machines","Machines",["La page Machines montre chaque machine avec son cône (BT40, BT50…) et l’avancement de ses fiches.","Cliquez sur une machine pour voir ses articles ; « + Ajouter une machine » ou « Importer » pour en créer.","La barre de recherche trouve un article, une référence ou un code outil dans toutes les machines."]],
    ["machine","Articles d’une machine",["Chaque ligne est un article : indice, référence, nombre d’outils et état (non commencé, en cours, terminé).","« + Nouvel article » crée une fiche ; « Programmes CN » crée un article par programme, avec sa liste d’outils.","Les boutons PDF et Copier sont au bout de chaque ligne ; « Modèle Excel » donne le modèle à remplir."]],
-   ["editor","Faire une fiche outils",["Remplissez l’article (numéro, désignation, référence, programme), puis une ligne par outil.","Pour un outil à plaquettes, notez la référence de la plaquette. H et D sont les numéros des correcteurs de longueur et de rayon ; « Lire un programme » les reprend des G43 H et G41 / G42 D. Dans la case porte-outil, Maj+Entrée passe à une deuxième ligne.","Tapez le code outil : type, Ø, rayon et longueurs se remplissent depuis le magasin outils.","« Lire un programme » importe les outils d’un programme CN ou d’une liste Mastercam ; l’aperçu A4 se met à jour à droite.","Imprimer ou PDF en haut à droite."]],
+   ["editor","Faire une fiche outils",["Remplissez l’article (numéro, désignation, référence, programme), puis une ligne par outil.","Pour un outil à plaquettes, notez la référence de la plaquette. H et D sont les numéros des correcteurs de longueur et de rayon ; « Lire un programme » les reprend des G43 H et G41 / G42 D. Dans la case porte-outil, Maj+Entrée passe à une deuxième ligne.","Tapez le code outil : type, Ø, rayon et longueurs se remplissent depuis le magasin outils.","« Lire un programme » importe les outils d’un programme CN ou d’une liste Mastercam ; l’aperçu A4 se met à jour à droite.","Imprimer, PDF ou Excel en haut à droite. Le fichier Excel se modifie et se réimporte avec « Importer »."]],
    ["validated","Valider et changer d’indice",["« Valider la fiche » la verrouille : plus rien ne peut être changé, et le PDF porte VALIDÉE, la date et le nom.","Pour la modifier : « Nouvel indice » (A → B…). L’ancien indice reste dans l’historique, avec son PDF.","Seul l’admin peut taper un indice ; un indice déjà utilisé est refusé."]],
    ["crib","Magasin outils",["Chaque code outil avec ses caractéristiques, son emplacement et son stock.","Les filtres montrent le stock bas et les ruptures ; « Liste de commande (CSV) » sort ce qu’il faut commander.","À sa connexion, le préparateur outil voit tout de suite une alerte de stock bas."]],
    ["code","Fiche d’un outil",["Croquis ou photo de l’outil, caractéristiques, et où il est utilisé.","Les boutons − et + changent le stock ; « Corriger le stock » après un comptage. Chaque mouvement est noté avec le nom.","Les commentaires de la production apparaissent sur la fiche."]],
@@ -4971,7 +5017,7 @@ const GUIDE={
    ["start","Getting started",["Pick your service: Methods planner, Tool planner or Production. “Admin access” (bottom) opens everything.","In the installed Windows program, everyone signs in with their name (or code) and password; the admin creates the accounts.","Language (EN / FR) and dark mode are at the top right."]],
    ["machines","Machines",["The Machines page shows each machine with its spindle taper (BT40, BT50…) and how far its sheets are.","Click a machine to see its articles; “+ Add machine” or “Import” to create them.","The search bar finds an article, a reference or a tool code across all machines."]],
    ["machine","A machine’s articles",["Each row is an article: index, reference, number of tools and status (not started, in progress, done).","“+ New article” makes a sheet; “CNC programs” makes one article per program, with its tool list.","PDF and Copy are at the end of each row; “Excel model” gives the model to fill in."]],
-   ["editor","Making a tool sheet",["Fill in the article (number, designation, reference, program), then one row per tool.","For an insert tool, write the insert reference. H and D are the length and radius offset numbers; “Read a program” takes them from G43 H and G41 / G42 D. In the holder box, Shift+Enter starts a second line.","Type the tool code: type, Ø, radius and lengths fill in from the tool crib.","“Read a program” imports the tools of a CNC program or a Mastercam list; the A4 preview updates on the right.","Print or PDF at the top right."]],
+   ["editor","Making a tool sheet",["Fill in the article (number, designation, reference, program), then one row per tool.","For an insert tool, write the insert reference. H and D are the length and radius offset numbers; “Read a program” takes them from G43 H and G41 / G42 D. In the holder box, Shift+Enter starts a second line.","Type the tool code: type, Ø, radius and lengths fill in from the tool crib.","“Read a program” imports the tools of a CNC program or a Mastercam list; the A4 preview updates on the right.","Print, PDF or Excel at the top right. The Excel file can be edited and imported back with “Import”."]],
    ["validated","Validating and new index",["“Validate the sheet” locks it: nothing can be changed, and the PDF shows VALIDATED, the date and the name.","To change it: “New index” (A → B…). The old index stays in the history, with its PDF.","Only the admin can type an index; an index already used is refused."]],
    ["crib","Tool crib",["Every tool code with its details, location and stock.","Filters show low stock and out of stock; “Order list (CSV)” lists what to order.","When the tool planner signs in, a low-stock alert comes up right away."]],
    ["code","A tool’s card",["Sketch or photo of the tool, its details, and where it is used.","− and + change the stock; “Correct the count” after counting. Every move is logged with the name.","Comments from production show on the card."]],
