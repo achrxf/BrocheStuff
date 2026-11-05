@@ -2173,7 +2173,7 @@ function makePDF(data){
     if(hasN){if(ins){font("Plex5",7);color(C.mid);const lw=txt(L.insS+" ",cx[2]+1.8,mid+3.2);font("Mono5",7.6);color(C.ink);const rest=sub2.slice((L.insS+" ").length);txt(fit(rest,COLW[2]-3.6-lw),cx[2]+1.8+lw,mid+3.2)}
       else{font("Plex4",7);color(C.mid);txt(fit(sub2,COLW[2]-3.6),cx[2]+1.8,mid+3.2)}color(C.ink)}
     const dash=(xx,c)=>{font("Mono5",10);txt("—",c?xx-tw("—")/2:xx,base(10))};
-    const ls=clean(t.ls).replace(",",".");if(ls){font("MonoB",11);txt(ls,cx[3]+1.8,base(11))}
+    const ls=clean(t.ls).replace(",",".").replace(/\s*\+\s*/g,"+");if(ls){let f=11;font("MonoB",f);while(f>6&&tw(ls)>COLW[3]-2.4){f-=0.5;font("MonoB",f)}txt(ls,cx[3]+1.2,base(f))}
     else{stroke(C.soft);doc.setLineWidth(0.25);doc.setLineDashPattern([0.8,0.6],0);doc.roundedRect(cx[3]+1.4,mid-3.1,COLW[3]-3.4,6.2,1,1,"S");doc.setLineDashPattern([],0)}
     const lt=clean(t.oal).replace(",",".");if(lt){font("Mono5",10);txt(lt,cx[4]+1.8,base(10))}else dash(cx[4]+1.8);
     const z=clean(t.z);font("Mono5",10);txt(z||"—",cx[5]+COLW[5]/2,base(10),{align:"center"});
