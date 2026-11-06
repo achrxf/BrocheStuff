@@ -1,2 +1,2 @@
-acda3b0339bcda48f7d1daa49954005731cd5156538e734cd68006a94338e9b0  BrocheStuff-Setup-2.3.3.exe
-697b80495ea92a5967e34211e3dc4f4b8bc6c37f40492eecf51f6d7ad9dd0700  BrocheStuff-Windows.zip
+49db2beddd3ea9c84981e5604d519f2402d5b9c381aad176efeab2ecfc79c571  BrocheStuff-Setup-2.3.4.exe
+dd8355dcef49ad3672458fbf076b6f13d9b3f849d48101118c6b92e17a55b7b4  BrocheStuff-Windows.zip
