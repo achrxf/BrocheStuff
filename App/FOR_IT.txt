@@ -61,8 +61,9 @@ ACCOUNTS
 - Every person signs in with a name (or code) and a password; the admin creates
   the accounts and gives each one a service. First sign-in: admin / admin, to
   be changed by the admin.
-- The admin also gives each account its rights (for now: validate tool sheets).
-  The admin always has every right.
+- The admin also gives each account its rights: validate tool sheets, reopen
+  a validated sheet, go back to an earlier index, change machine magazines,
+  delete articles and machines. The admin always has every right.
 - Passwords are never stored in clear: PBKDF2-SHA256, 150,000 iterations,
   random salt per account (Web Crypto API). 5 wrong tries = 30 s wait.
   Sign-ins are logged (name, PC name, result) in users.json.
