@@ -1357,6 +1357,21 @@ body.resizing,body.resizing *{cursor:ew-resize!important;user-select:none!import
 .tt tbody td{vertical-align:top}
 .tt tbody td.act{vertical-align:middle}
 @media (max-width:760px){table.tt td.mlc[data-lab]::before{content:attr(data-lab)!important}}
+/* layouts */
+.laysel{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--mid);border:1px solid var(--hair);border-radius:8px;padding:0 4px 0 10px;background:var(--paper)}
+.laysel select{border:0;background:transparent;font:600 13.5px var(--body);color:var(--ink);padding:8px 4px;max-width:220px}
+.laysel select:disabled{opacity:.6}
+.layhead{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px 16px;align-items:end;padding:12px;border:1px solid var(--hair);border-radius:10px;background:var(--fill,rgba(0,0,0,.02))}
+.layhead .note{margin:0;grid-column:1/-1}
+.layhead .chk{display:flex;gap:8px;align-items:center;font-size:13.5px;grid-column:1/-1}
+.laysave{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-top:12px;padding:12px;border:1px dashed var(--red,#9E0F12);border-radius:10px}
+.laysave .f{flex:1;min-width:220px}
+.laydlg footer{flex-wrap:wrap}
+.colgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px 12px}
+.colx{display:flex;flex-direction:column;gap:6px}
+.colxr{display:flex;gap:6px;align-items:center}.colxr input{flex:1}
+.colxadd{display:flex;gap:8px;margin-top:10px}.colxadd input{flex:1}
+.colxr input,.colxadd input{height:38px;border:1px solid var(--hair);border-radius:8px;padding:0 10px;background:var(--paper);color:var(--ink);font:inherit}
 </style></head>
 <body>
 <header class="top">
@@ -1930,7 +1945,7 @@ en:{
   delWith:n=>`Delete with its ${n} ${pl(n,"article","articles")}?`, clickDel:"Click again to delete", machineDeleted:n=>`${n} deleted`, clickConfirm:"Click again to confirm",
   copyTitle:"Copy article", copyP:"Makes a new article with the same tools. Use it for a new index, or when the same article runs on another machine.", copyOn:"Put the copy on", articleNumber:"Article number", index:"Index", makeCopy:"Make copy", copyMade:"Copy made. You're now editing the copy.",
   article:"Article", autoSaved:"Saved automatically", designation:"Designation", desPh:"Support bracket", reference:"Reference", refPh:"Part / drawing reference", program:"Program", material:"Material",
-  tools:"Tools", nTools:n=>`${n} ${pl(n,"tool","tools")}`, colTool:"Tool", colType:"Type", colHolder:"Holder", colsBtn:"Columns", colsBtnT:"Rename the column titles or add columns", colsT:"Tool sheet columns", colsP:"Change a title (leave it empty to keep the usual one). This applies to every tool sheet, the PDF and the Excel file.", colsExtra:"Your own columns", colsNone:"No extra column yet.", colsNamePh:"Column title, e.g. Lg coupe", colsAdd:"+ Add a column", colsReset:"Usual titles", colsSaved:"Columns saved", colsDelQ:(l,n)=>`Remove the column “${l}”? It is filled in ${n} ${pl(n,"article","articles")}; that data will no longer show.`, colWT:"Drag to widen or narrow · double-click to reset", widthT:"Drag to widen or narrow the page · double-click to reset", splitT:"Drag to resize the preview · double-click to reset", convT:"Turn an Excel tool sheet into a PDF, or a PDF made by BrocheStuff into an Excel file", convTitle:"PDF ⇄ Excel", convP:"Choose an Excel tool sheet (from the model or exported here) or a PDF made by BrocheStuff. You get it back in the other format, or keep it as an article.", convDrop:"Choose a file", convDropP:"or drop it here · Excel, CSV or PDF", convReading:"Reading the file…", convNoTools:"No tool list found in this file: the table needs titles like Outil, Type, Ø, LS, Porte-outil.", pdfNoData:"This PDF was not made by BrocheStuff, so its table can’t be read back. Use the Excel file, or a PDF downloaded from the app.", convGetPdf:"Download the PDF", convGetXls:"Download the Excel", convSaveIn:"Keep it as an article in", convSave:"Save the article", convOther:"Another file", convPickMachine:"Choose a machine first", convSaved:n=>`Article ${n} saved`, pvPdf:"PDF", pvXls:"Excel", pvXlsInfo:n=>`Excel · ${n} ${pl(n,"tool","tools")}`, dlXlsT:"Download the tool sheet as an Excel file you can edit (and import back)", saveXlsT:"Save the tool sheet (Excel)", openFile:"Open", xlsFail:"Excel file not made: ", holder2Ph:"+ 2nd line", holder2T:"Second line (Shift+Enter in the holder box)", colCorr:"Offsets", colIns:"Insert", colInsT:"Insert reference", colHT:"Length offset (H)", colDT:"Radius offset (D)", colFinish:"Finish", colCode:"Code", typePh:"END MILL", addTool:"+ Add tool",
+  tools:"Tools", nTools:n=>`${n} ${pl(n,"tool","tools")}`, colTool:"Tool", colType:"Type", colHolder:"Holder", colsBtn:"Columns", colsBtnT:"Rename the column titles, add columns, save them as a layout", layT:"Tool sheet layout", layShort:"Layout", laySelT:"The layout of this tool sheet (★ = default for new sheets)", layStd:"Standard", layFirst:"My layout", layThis:"Layout of this sheet", layStdP:"BrocheStuff’s own layout. Change titles or add columns, then save them as a new layout.", layName:"Layout name", layDefault:"Default layout (new tool sheets start with it)", layShared:n=>`Used by ${n} tool sheets: saving changes them all.`, colsTitles:"Column titles", layNewName:"Name of the new layout", layNamePh:"e.g. Toyoda with cut length", layCreate:"Create the layout", laySaveAs:"Save as new layout…", layApply:"Apply", layDel:"Delete layout", layNeedName:"Give the layout a name.", layNameTaken:"A layout already has this name.", laySaved:n=>`Layout “${n}” saved`, layApplied:n=>`Layout: ${n}`, layDeleted:n=>`Layout “${n}” deleted`, layStdEdit:"Standard can’t be changed: give your layout a name to save it.", layDelQ:(n,k)=>`Delete the layout “${n}”? ${k} tool ${k>1?"sheets use":"sheet uses"} it; they go back to the default layout.`, colsExtra:"Your own columns", colsNone:"No extra column yet.", colsNamePh:"Column title, e.g. Lg coupe", colsAdd:"+ Add a column", colsReset:"Usual titles", colsSaved:"Columns saved", colsDelQ:(l,n)=>`Remove the column “${l}”? It is filled in ${n} ${pl(n,"article","articles")}; that data will no longer show.`, colWT:"Drag to widen or narrow · double-click to reset", widthT:"Drag to widen or narrow the page · double-click to reset", splitT:"Drag to resize the preview · double-click to reset", convT:"Turn an Excel tool sheet into a PDF, or a PDF made by BrocheStuff into an Excel file", convTitle:"PDF ⇄ Excel", convP:"Choose an Excel tool sheet (from the model or exported here) or a PDF made by BrocheStuff. You get it back in the other format, or keep it as an article.", convDrop:"Choose a file", convDropP:"or drop it here · Excel, CSV or PDF", convReading:"Reading the file…", convNoTools:"No tool list found in this file: the table needs titles like Outil, Type, Ø, LS, Porte-outil.", pdfNoData:"This PDF was not made by BrocheStuff, so its table can’t be read back. Use the Excel file, or a PDF downloaded from the app.", convGetPdf:"Download the PDF", convGetXls:"Download the Excel", convSaveIn:"Keep it as an article in", convSave:"Save the article", convOther:"Another file", convPickMachine:"Choose a machine first", convSaved:n=>`Article ${n} saved`, pvPdf:"PDF", pvXls:"Excel", pvXlsInfo:n=>`Excel · ${n} ${pl(n,"tool","tools")}`, dlXlsT:"Download the tool sheet as an Excel file you can edit (and import back)", saveXlsT:"Save the tool sheet (Excel)", openFile:"Open", xlsFail:"Excel file not made: ", holder2Ph:"+ 2nd line", holder2T:"Second line (Shift+Enter in the holder box)", colCorr:"Offsets", colIns:"Insert", colInsT:"Insert reference", colHT:"Length offset (H)", colDT:"Radius offset (D)", colFinish:"Finish", colCode:"Code", typePh:"END MILL", addTool:"+ Add tool",
   excelNote:"<b>From Excel:</b> copy the rows (Tool, Type, Ø, R/°, LS, LT, Z, Holder, Code) and paste into any cell. <b>Enter</b> in the last row adds a new one.",
   notesSign:"Notes & sign-off", notes:"Notes", notesPh:"Printed on the sheet. Leave empty for blank lines to write on.", preparedBy:"Prepared by", approvedBy:"Approved by", date:"Date", datePh:"dd/mm/yyyy",
   signNote:"Leave Prepared by / Approved by empty to sign by hand on paper.", pages:n=>`A4 · ${n} ${pl(n,"page","pages")}`, pvError:"Preview error: ",
@@ -2010,7 +2025,7 @@ fr:{
   delWith:n=>`Supprimer avec ${pl(n,"son article","ses "+n+" articles")} ?`, clickDel:"Cliquez encore pour supprimer", machineDeleted:n=>`${n} supprimée`, clickConfirm:"Cliquez encore pour confirmer",
   copyTitle:"Copier l'article", copyP:"Crée un nouvel article avec les mêmes outils. Pour un nouvel indice, ou quand le même article passe sur une autre machine.", copyOn:"Mettre la copie sur", articleNumber:"Numéro d'article", index:"Indice", makeCopy:"Créer la copie", copyMade:"Copie créée. Vous modifiez maintenant la copie.",
   article:"Article", autoSaved:"Enregistré automatiquement", designation:"Désignation", desPh:"Support", reference:"Référence", refPh:"Référence pièce / plan", program:"Programme", material:"Matière",
-  tools:"Outils", nTools:n=>`${n} ${pl(n,"outil","outils")}`, colTool:"Outil", colType:"Type", colHolder:"Porte-outil", colsBtn:"Colonnes", colsBtnT:"Renommer les titres des colonnes ou ajouter des colonnes", colsT:"Colonnes de la fiche outils", colsP:"Changez un titre (laissez vide pour garder le titre habituel). Cela s’applique à toutes les fiches outils, au PDF et au fichier Excel.", colsExtra:"Vos colonnes", colsNone:"Aucune colonne ajoutée.", colsNamePh:"Titre de la colonne, ex. Lg coupe", colsAdd:"+ Ajouter une colonne", colsReset:"Titres habituels", colsSaved:"Colonnes enregistrées", colsDelQ:(l,n)=>`Retirer la colonne « ${l} » ? Elle est remplie dans ${n} ${n>1?"articles":"article"} ; ces données ne s’afficheront plus.`, colWT:"Glisser pour élargir ou rétrécir · double-clic pour revenir", widthT:"Glisser pour élargir ou rétrécir la page · double-clic pour revenir", splitT:"Glisser pour redimensionner l’aperçu · double-clic pour revenir", convT:"Transformer une fiche outils Excel en PDF, ou un PDF fait par BrocheStuff en fichier Excel", convTitle:"PDF ⇄ Excel", convP:"Choisissez une fiche outils Excel (le modèle ou un fichier exporté ici) ou un PDF fait par BrocheStuff. Vous la récupérez dans l’autre format, ou vous la gardez comme article.", convDrop:"Choisir un fichier", convDropP:"ou le déposer ici · Excel, CSV ou PDF", convReading:"Lecture du fichier…", convNoTools:"Aucune liste d’outils dans ce fichier : le tableau doit avoir des titres comme Outil, Type, Ø, LS, Porte-outil.", pdfNoData:"Ce PDF n’a pas été fait par BrocheStuff : son tableau ne peut pas être relu. Utilisez le fichier Excel, ou un PDF téléchargé depuis l’application.", convGetPdf:"Télécharger le PDF", convGetXls:"Télécharger l’Excel", convSaveIn:"Garder comme article dans", convSave:"Enregistrer l’article", convOther:"Un autre fichier", convPickMachine:"Choisissez d’abord une machine", convSaved:n=>`Article ${n} enregistré`, pvPdf:"PDF", pvXls:"Excel", pvXlsInfo:n=>`Excel · ${n} ${n>1?"outils":"outil"}`, dlXlsT:"Télécharger la fiche outils en fichier Excel modifiable (et réimportable)", saveXlsT:"Enregistrer la fiche outils (Excel)", openFile:"Ouvrir", xlsFail:"Fichier Excel non créé : ", holder2Ph:"+ 2e ligne", holder2T:"Deuxième ligne (Maj+Entrée dans la case porte-outil)", colCorr:"N° corr.", colIns:"Plaquette", colInsT:"Référence plaquette", colHT:"Correcteur de longueur (H)", colDT:"Correcteur de rayon (D)", colFinish:"Rugosité", colCode:"Code", typePh:"FRAISE 2T", addTool:"+ Ajouter un outil",
+  tools:"Outils", nTools:n=>`${n} ${pl(n,"outil","outils")}`, colTool:"Outil", colType:"Type", colHolder:"Porte-outil", colsBtn:"Colonnes", colsBtnT:"Renommer les titres, ajouter des colonnes, les enregistrer comme mise en page", layT:"Mise en page de la fiche outils", layShort:"Mise en page", laySelT:"La mise en page de cette fiche (★ = par défaut pour les nouvelles fiches)", layStd:"Standard", layFirst:"Ma mise en page", layThis:"Mise en page de cette fiche", layStdP:"La mise en page de BrocheStuff. Changez des titres ou ajoutez des colonnes, puis enregistrez-les comme nouvelle mise en page.", layName:"Nom de la mise en page", layDefault:"Mise en page par défaut (les nouvelles fiches commencent avec)", layShared:n=>`Utilisée par ${n} fiches : l’enregistrer les modifie toutes.`, colsTitles:"Titres des colonnes", layNewName:"Nom de la nouvelle mise en page", layNamePh:"ex. Toyoda avec Lg coupe", layCreate:"Créer la mise en page", laySaveAs:"Enregistrer comme nouvelle…", layApply:"Appliquer", layDel:"Supprimer la mise en page", layNeedName:"Donnez un nom à la mise en page.", layNameTaken:"Une mise en page porte déjà ce nom.", laySaved:n=>`Mise en page « ${n} » enregistrée`, layApplied:n=>`Mise en page : ${n}`, layDeleted:n=>`Mise en page « ${n} » supprimée`, layStdEdit:"Standard ne se modifie pas : donnez un nom à votre mise en page pour l’enregistrer.", layDelQ:(n,k)=>`Supprimer la mise en page « ${n} » ? ${k} ${k>1?"fiches l’utilisent":"fiche l’utilise"} ; elles reprennent la mise en page par défaut.`, colsExtra:"Vos colonnes", colsNone:"Aucune colonne ajoutée.", colsNamePh:"Titre de la colonne, ex. Lg coupe", colsAdd:"+ Ajouter une colonne", colsReset:"Titres habituels", colsSaved:"Colonnes enregistrées", colsDelQ:(l,n)=>`Retirer la colonne « ${l} » ? Elle est remplie dans ${n} ${n>1?"articles":"article"} ; ces données ne s’afficheront plus.`, colWT:"Glisser pour élargir ou rétrécir · double-clic pour revenir", widthT:"Glisser pour élargir ou rétrécir la page · double-clic pour revenir", splitT:"Glisser pour redimensionner l’aperçu · double-clic pour revenir", convT:"Transformer une fiche outils Excel en PDF, ou un PDF fait par BrocheStuff en fichier Excel", convTitle:"PDF ⇄ Excel", convP:"Choisissez une fiche outils Excel (le modèle ou un fichier exporté ici) ou un PDF fait par BrocheStuff. Vous la récupérez dans l’autre format, ou vous la gardez comme article.", convDrop:"Choisir un fichier", convDropP:"ou le déposer ici · Excel, CSV ou PDF", convReading:"Lecture du fichier…", convNoTools:"Aucune liste d’outils dans ce fichier : le tableau doit avoir des titres comme Outil, Type, Ø, LS, Porte-outil.", pdfNoData:"Ce PDF n’a pas été fait par BrocheStuff : son tableau ne peut pas être relu. Utilisez le fichier Excel, ou un PDF téléchargé depuis l’application.", convGetPdf:"Télécharger le PDF", convGetXls:"Télécharger l’Excel", convSaveIn:"Garder comme article dans", convSave:"Enregistrer l’article", convOther:"Un autre fichier", convPickMachine:"Choisissez d’abord une machine", convSaved:n=>`Article ${n} enregistré`, pvPdf:"PDF", pvXls:"Excel", pvXlsInfo:n=>`Excel · ${n} ${n>1?"outils":"outil"}`, dlXlsT:"Télécharger la fiche outils en fichier Excel modifiable (et réimportable)", saveXlsT:"Enregistrer la fiche outils (Excel)", openFile:"Ouvrir", xlsFail:"Fichier Excel non créé : ", holder2Ph:"+ 2e ligne", holder2T:"Deuxième ligne (Maj+Entrée dans la case porte-outil)", colCorr:"N° corr.", colIns:"Plaquette", colInsT:"Référence plaquette", colHT:"Correcteur de longueur (H)", colDT:"Correcteur de rayon (D)", colFinish:"Rugosité", colCode:"Code", typePh:"FRAISE 2T", addTool:"+ Ajouter un outil",
   excelNote:"<b>Depuis Excel :</b> copiez les lignes (Outil, Type, Ø, R/°, LS, LT, Z, Porte-outil, Code) et collez-les dans n'importe quelle case. <b>Entrée</b> sur la dernière ligne ajoute une ligne.",
   notesSign:"Remarques et visa", notes:"Remarques", notesPh:"Imprimé sur la fiche. Laissez vide pour avoir des lignes à remplir à la main.", preparedBy:"Établi par", approvedBy:"Approuvé par", date:"Date", datePh:"jj/mm/aaaa",
   signNote:"Laissez Établi par / Approuvé par vides pour signer à la main sur papier.", pages:n=>`A4 · ${n} page${n>1?"s":""}`, pvError:"Erreur d'aperçu : ",
@@ -2437,7 +2452,7 @@ const natCmp=(a,b)=>String(a).localeCompare(String(b),undefined,{numeric:true,se
 const machinesSorted=()=>db.machines.slice().sort((a,b)=>natCmp(a.abbr||a.name,b.abbr||b.name));
 const A=id=>db.articles.find(a=>a.id===id);
 const artsOf=mid=>db.articles.filter(a=>a.machineId===mid);
-const sheetData=art=>{const m=M(art.machineId);return{article:{...art.article,machine:m?(normCone(m.cone)&&m.abbr?`${m.abbr} · ${normCone(m.cone)} · ${m.name}`:mLabel(m)):clean(art.article?.machine)},tools:art.tools,cols:sheetCfg(),stamp:art.status==="done"?{done:1,ts:(art.validated&&art.validated.ts)||art.updatedAt,who:(art.validated&&art.validated.who)||""}:{done:0}}};
+const sheetData=art=>{const m=M(art.machineId),cfg=sheetCfg(art);return{article:{...art.article,machine:m?(normCone(m.cone)&&m.abbr?`${m.abbr} · ${normCone(m.cone)} · ${m.name}`:mLabel(m)):clean(art.article?.machine)},tools:art.tools,cols:cfg,stamp:art.status==="done"?{done:1,ts:(art.validated&&art.validated.ts)||art.updatedAt,who:(art.validated&&art.validated.who)||""}:{done:0}}};
 function fileName(art,ext){const s=x=>String(x||"").trim().replace(/[\\/:*?"<>|]+/g,"-").replace(/\s+/g,"_");const a=art.article||{};return `${t("filePrefix")}_${s(a.number)||"sheet"}${a.index?"_"+s(a.index):""}.${ext}`}
 async function download(name,blob,kind){if(DESK)return desk.saveAs(name,blob,kind);const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500);return "downloads"}
 // the Excel tool sheet, described once (cells, styles, sizes) and drawn two ways:
@@ -2460,7 +2475,7 @@ function sheetModel(art){
   const BODY=[["t",fnt({b:1,sz:11}),"left"],["corrH",fnt({b:1,sz:10.5,n:MONO}),"center"],["corrD",fnt({b:1,sz:10.5,n:MONO}),"center"],["type",fnt({b:1,sz:11,n:COND}),"left",1],
     ["diameter",fnt({sz:11,n:MONO}),"center"],["ra",fnt({sz:11,n:MONO}),"center"],["insert",fnt({sz:9,c:MID,n:MONO}),"left",1],["ls",fnt({b:1,sz:12.5,n:MONO}),"center"],
     ["oal",fnt({sz:10.5,n:MONO}),"center"],["z",fnt({sz:10.5,n:MONO}),"center"],["holder",fnt({sz:9.5}),"left",1],["code",fnt({b:1,sz:11,n:MONO}),"left"]];
-  const EX=sheetCfg().extra;EX.forEach(e=>BODY.push([xKey(e.id),fnt({sz:10}),"left",1]));
+  const CFG=sheetCfg(art),EX=CFG.extra;EX.forEach(e=>BODY.push([xKey(e.id),fnt({sz:10}),"left",1]));
   BODY.forEach(([k,f,h])=>{S["b_"+k]={f,bd:{b:hair},h,v:"center",wrap:1,ind:h==="left"?1:0};S["e_"+k]={...S["b_"+k],bd:{b:black}}});
   const NC=BODY.length,LC=NC-1,L="ABCDEFGHIJKLMNOPQRSTUVWXYZ",rows=[],merges=[];
   const span=(r0,c0,c1,r1)=>merges.push([r0,c0,r1||r0,c1]);
@@ -2487,7 +2502,7 @@ function sheetModel(art){
   row(9,12,[]);
   // same column titles as the model, so the file imports back
   // renamed titles go in the file too (the import knows them); H and D keep their usual titles
-  const lb=(k,d)=>isRenamed(k)?colLabel(k):d;
+  const lb=(k,d)=>isRenamed(k,CFG)?colLabel(k,CFG):d;
   const HR=10,HEAD=[lb("t","Outil"),"Corr. H","Corr. D",lb("type","Type"),lb("diameter","Ø"),lb("ra","R / °"),lb("insert","Réf. plaquette"),lb("ls","LS"),lb("oal","LT"),lb("z","Z"),lb("holder","Porte-outil"),lb("code","Code outil"),...EX.map(e=>e.label)],
     HC=[0,1,1,0,1,1,0,1,1,1,0,0,...EX.map(()=>0)];
   row(HR,26,HEAD.map((h,i)=>C(i,HC[i]?"headC":"head",h)));
@@ -2561,7 +2576,8 @@ function sheetPDF(art){
   const doc=makePDF(sheetData(art)),a=art.article||{};
   const keep=["number","index","designation","reference","program","material","preparedBy","approvedBy","date","notes"];
   const pack={v:1,article:Object.fromEntries(keep.filter(k=>clean(a[k])).map(k=>[k,a[k]])),machine:clean(sheetData(art).article.machine),
-    tools:realTools(art.tools).map(x=>Object.fromEntries(COLS.filter(k=>clean(x[k])).map(k=>[k,x[k]]))),status:art.status==="done"?"done":"progress",validated:art.validated||null};
+    tools:realTools(art.tools).map(x=>Object.fromEntries([...BASEK,...sheetCfg(art).extra.map(e=>xKey(e.id))].filter(k=>clean(x[k])).map(k=>[k,x[k]]))),
+    layout:(()=>{const id=layoutIdOf(art),c=sheetCfg(art);return id==="std"&&!art.layoutData?null:{id,name:layoutName(id),...c}})(),status:art.status==="done"?"done":"progress",validated:art.validated||null};
   try{(doc.setDocumentProperties||doc.setProperties).call(doc,{title:(LANG==="en"?"Tool list ":"Fiche outils ")+clean(a.number),subject:"BrocheStuff",creator:"BrocheStuff",keywords:PDFTAG+b64u(JSON.stringify(pack))})}catch(e){console.warn(e)}
   return doc;
 }
@@ -2569,7 +2585,7 @@ async function readSheetPDF(bytes){
   const pdf=await pdfjsLib.getDocument({data:bytes,isEvalSupported:false}).promise;
   try{const md=await pdf.getMetadata(),k=String(md?.info?.Keywords||"");
     if(!k.startsWith(PDFTAG))return null;const p=JSON.parse(u64b(k.slice(PDFTAG.length)));
-    return {article:{...(p.article||{}),machine:p.machine||""},tools:(p.tools||[]).map(x=>({...x})),status:p.status,validated:p.validated}}
+    return {article:{...(p.article||{}),machine:p.machine||""},tools:(p.tools||[]).map(x=>({...x})),status:p.status,validated:p.validated,layout:p.layout||null}}
   finally{pdf.destroy()}
 }
 /* the article block above the table of an Excel tool sheet: "Label : value", "Label↵value", or the article card */
@@ -2681,7 +2697,7 @@ function chooseLanguage(){
 
 function render(){
   if(edTimer){clearTimeout(edTimer);edTimer=null;flushEditor()}
-  refreshCols();applyWidths();
+  migrateLayouts();{const r0=parseRoute();refreshCols((r0.view==="article"||r0.view==="aview")&&r0.id?A(r0.id):null)}applyWidths();
   document.body.classList.remove("menu-open");
   if(location.hash==="#guide"&&GUIDE_ON()){route={view:"guide"};pvTeardown();document.querySelectorAll("[data-nav]").forEach(b=>b.setAttribute("aria-current","false"));renderGuide();if(render.lastHash!=="#guide"){render.lastHash="#guide";$("#view").scrollTop=0}return}
   if(!ROLE){route={view:"gate"};pvTeardown();if(DESK&&!DEMO_ON)renderLogin();else renderGate();guideFooter();return}
@@ -2850,7 +2866,7 @@ function wireArticleTable(box){fadeClips(box);
   box.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>arm(b,()=>{const a=A(b.dataset.del);db.articles=db.articles.filter(x=>x!==a);saveDB();toast(t("deleted",a.article.number||t("articleWord")));render()},t("confirm")));
 }
 function newArticle(m){
-  const art={id:uid(),machineId:m.id,article:{index:"A",date:today()},tools:[{t:"T01"}],status:"progress",createdAt:Date.now(),updatedAt:Date.now(),fresh:true,history:[]};
+  const art={id:uid(),machineId:m.id,layout:defaultLayoutId(),article:{index:"A",date:today()},tools:[{t:"T01"}],status:"progress",createdAt:Date.now(),updatedAt:Date.now(),fresh:true,history:[]};
   addHist(art,"create");db.articles.push(art);saveDB();go("#a-"+art.id);
 }
 
@@ -2938,47 +2954,94 @@ function copyDialog(src){
   $("#d-cancel").onclick=closeDlg;
   $("#d-ok").onclick=()=>{const mid=$("#d-m").value,num=$("#d-num").value.trim(),ix=$("#d-ix").value.trim();
     if(db.articles.some(a=>a.machineId===mid&&clean(a.article.number).toLowerCase()===num.toLowerCase()&&clean(a.article.index).toLowerCase()===ix.toLowerCase())){const e=$("#d-err");e.textContent=t("copyDup");e.hidden=false;return}
-    const art={id:uid(),machineId:mid,article:{...src.article,number:num,index:ix,date:today(),approvedBy:""},tools:JSON.parse(JSON.stringify(src.tools)),status:"progress",createdAt:Date.now(),updatedAt:Date.now(),history:[]};
+    const art={id:uid(),machineId:mid,...(src.layout?{layout:src.layout}:{}),article:{...src.article,number:num,index:ix,date:today(),approvedBy:""},tools:JSON.parse(JSON.stringify(src.tools)),status:"progress",createdAt:Date.now(),updatedAt:Date.now(),history:[]};
     addHist(art,"create",{src:(src.article.number||"")+(src.article.index?" · "+src.article.index:"")});db.articles.push(art);saveDB();closeDlg();go("#a-"+art.id);toast(t("copyMade"))};
 }
 
 /* ---------- editor (the tool list maker) ---------- */
 let cur=null, edTimer=null, pvTimer=null;
 let pvOn=lsGet(PVKEY)!=="off",pvMode=lsGet(PVKEY+".mode")==="xlsx"?"xlsx":"pdf";
-/* ---------- tool sheet columns: titles can be renamed and columns added (shared by everyone, in db.sheetCfg) ---------- */
+/* ---------- tool sheet layouts: renamed titles + your own columns, saved under a name ----------
+   "std" is BrocheStuff's own layout. One layout is the default (new sheets start with it); each sheet can pick any layout. */
 const BASEK=["t","corrH","corrD","type","diameter","ra","insert","ls","oal","z","holder","code"];
 const LABK=["t","corr","type","diameter","ra","insert","ls","oal","z","holder","code"];   // what a title can be renamed for (H and D share one title)
 const xKey=id=>"x_"+id;
-function sheetCfg(){const c=(typeof db!=="undefined"&&db&&db.sheetCfg)||{};return {labels:c.labels||{},extra:(c.extra||[]).filter(x=>x&&x.id&&clean(x.label))}}
-function refreshCols(){const ex=sheetCfg().extra;COLS=[...BASEK,...ex.map(x=>xKey(x.id))];TOOLF=[...TOOLF0,...ex.map(x=>[xKey(x.id),"__"+x.label])]}
+const normCfg=c=>({labels:(c&&c.labels)||{},extra:((c&&c.extra)||[]).filter(x=>x&&x.id&&clean(x.label))});
+const layoutsAll=()=>(typeof db!=="undefined"&&db&&db.layouts)||[];
+const layoutById=id=>id&&id!=="std"?layoutsAll().find(l=>l.id===id)||null:null;
+const defaultLayoutId=()=>{const d=typeof db!=="undefined"&&db&&db.layoutDefault;return d&&layoutById(d)?d:"std"};
+const layoutIdOf=art=>{const id=art&&art.layout;return id&&(id==="std"||layoutById(id))?id:defaultLayoutId()};
+const layoutName=id=>id==="std"?t("layStd"):(layoutById(id)?.name||t("layStd"));
+function cfgOf(art){if(art&&art.layoutData)return normCfg(art.layoutData);return normCfg(layoutById(layoutIdOf(art)))}
+let LAYCFG=normCfg(null);
+// the layout in use on the page being shown (an open sheet, or the default elsewhere)
+function sheetCfg(art){return art?cfgOf(art):LAYCFG}
+function refreshCols(art){LAYCFG=cfgOf(art||null);const ex=LAYCFG.extra;COLS=[...BASEK,...ex.map(x=>xKey(x.id))];TOOLF=[...TOOLF0,...ex.map(x=>[xKey(x.id),"__"+x.label])]}
+// 2.3.0 kept one shared column setup: it becomes the first saved layout, and the default
+function migrateLayouts(){if(!db||!db.sheetCfg)return;const c=normCfg(db.sheetCfg);delete db.sheetCfg;
+  if(Object.keys(c.labels).length||c.extra.length){db.layouts=db.layouts||[];const l={id:"l"+uid().slice(0,7),name:t("layFirst"),...c};db.layouts.push(l);if(!db.layoutDefault)db.layoutDefault=l.id}saveDB()}
 const defLabel=k=>({t:t("colTool"),corr:t("colCorr"),type:t("colType"),diameter:"Ø",ra:"R / ∠",insert:t("colIns"),ls:"LS",oal:"LT",z:"Z",holder:t("colHolder"),code:t("colCode")})[k]||k;
-function colLabel(k){const c=sheetCfg();if(k.startsWith("x_")){const e=c.extra.find(x=>xKey(x.id)===k);return e?e.label:k}if(k==="corrH"||k==="corrD")k="corr";return clean(c.labels[k])||defLabel(k)}
-const isRenamed=k=>!!clean(sheetCfg().labels[k]);
+function colLabel(k,cfg){const c=cfg||LAYCFG;if(k.startsWith("x_")){const e=c.extra.find(x=>xKey(x.id)===k);return e?e.label:k}if(k==="corrH"||k==="corrD")k="corr";return clean(c.labels[k])||defLabel(k)}
+const isRenamed=(k,cfg)=>!!clean((cfg||LAYCFG).labels[k]);
 // import: a renamed or added column is found by its own title too
 function synFor(f){const base=SYN[f]||(f.startsWith("x_")?[]:[f]);const extra=[];
   if(f.startsWith("x_"))extra.push(normH(colLabel(f)));else{const lk=(f==="corrH"||f==="corrD")?null:f;if(lk&&isRenamed(lk))extra.push(normH(colLabel(lk)))}
   return [...base,...extra.filter(Boolean)]}
-/* the "Columns" dialog */
-function columnsDialog(){
-  const cfg=JSON.parse(JSON.stringify(db.sheetCfg||{labels:{},extra:[]}));cfg.labels=cfg.labels||{};cfg.extra=cfg.extra||[];
-  const draw=()=>{$("#colbody").innerHTML=`<p class="note" style="margin-top:0">${esc(t("colsP"))}</p>
-    <div class="colgrid">${LABK.map(k=>`<label class="f">${esc(defLabel(k))}<input data-lab="${k}" value="${esc(cfg.labels[k]||"")}" placeholder="${esc(defLabel(k))}"></label>`).join("")}</div>
+const layUse=id=>db.articles.filter(a=>layoutIdOf(a)===id).length;
+function layoutOptions(sel){return [`<option value="std" ${sel==="std"?"selected":""}>${esc(t("layStd"))}${defaultLayoutId()==="std"?" ★":""}</option>`,
+  ...layoutsAll().map(l=>`<option value="${l.id}" ${sel===l.id?"selected":""}>${esc(l.name)}${defaultLayoutId()===l.id?" ★":""}</option>`)].join("")}
+/* the "Layout" dialog: choose, edit, save, save as, make default, delete */
+function columnsDialog(art){
+  let selId=layoutIdOf(art),buf,name,isDef;
+  const load=id=>{selId=id;const l=layoutById(id);buf=JSON.parse(JSON.stringify(normCfg(l)));name=l?l.name:"";isDef=defaultLayoutId()===id};
+  load(selId);
+  const draw=()=>{const std=selId==="std",n=std?0:layUse(selId);
+    $("#colbody").innerHTML=`
+    <div class="layhead"><label class="f">${esc(t("layThis"))}<select id="lay-sel">${layoutOptions(selId)}</select></label>
+      ${std?`<p class="note">${esc(t("layStdP"))}</p>`:`<label class="f">${esc(t("layName"))}<input id="lay-name" value="${esc(name)}"></label>`}
+      <label class="chk"><input type="checkbox" id="lay-def" ${isDef?"checked":""}> ${esc(t("layDefault"))}</label>
+      ${!std&&n>1?`<p class="note">${esc(t("layShared",n))}</p>`:""}</div>
+    <h4 class="imph">${esc(t("colsTitles"))}</h4>
+    <div class="colgrid">${LABK.map(k=>`<label class="f">${esc(defLabel(k))}<input data-lab="${k}" value="${esc(buf.labels[k]||"")}" placeholder="${esc(defLabel(k))}"></label>`).join("")}</div>
     <h4 class="imph">${esc(t("colsExtra"))}</h4>
-    ${cfg.extra.length?`<div class="colx">${cfg.extra.map((x,i)=>`<div class="colxr"><input data-xi="${i}" value="${esc(x.label)}" placeholder="${esc(t("colsNamePh"))}"><button class="ib" data-xm="${i}" data-d="-1" title="${esc(t("up"))}">↑</button><button class="ib" data-xm="${i}" data-d="1" title="${esc(t("down"))}">↓</button><button class="ib x" data-xdel="${i}" title="${esc(t("remove"))}">✕</button></div>`).join("")}</div>`:`<p class="note">${esc(t("colsNone"))}</p>`}
-    <div class="colxadd"><input id="col-new" placeholder="${esc(t("colsNamePh"))}"><button class="btn" id="col-add">${esc(t("colsAdd"))}</button></div>`;
-    $("#colbody").querySelectorAll("[data-lab]").forEach(i=>i.oninput=()=>{const v=i.value.trim();if(v)cfg.labels[i.dataset.lab]=v;else delete cfg.labels[i.dataset.lab]});
-    $("#colbody").querySelectorAll("[data-xi]").forEach(i=>i.oninput=()=>{cfg.extra[+i.dataset.xi].label=i.value});
-    $("#colbody").querySelectorAll("[data-xm]").forEach(b=>b.onclick=()=>{const i=+b.dataset.xm,j=i+ +b.dataset.d;if(j<0||j>=cfg.extra.length)return;[cfg.extra[i],cfg.extra[j]]=[cfg.extra[j],cfg.extra[i]];draw()});
-    $("#colbody").querySelectorAll("[data-xdel]").forEach(b=>b.onclick=()=>{const x=cfg.extra[+b.dataset.xdel],k=xKey(x.id),used=db.articles.filter(a=>(a.tools||[]).some(tl=>clean(tl[k]))).length;
-      if(used&&!confirm(t("colsDelQ",x.label,used)))return;cfg.extra.splice(+b.dataset.xdel,1);draw()});
-    const add=()=>{const v=$("#col-new").value.trim();if(!v){$("#col-new").focus();return}cfg.extra.push({id:uid().slice(0,8),label:v});draw();$("#col-new").focus()};
+    ${buf.extra.length?`<div class="colx">${buf.extra.map((x,i)=>`<div class="colxr"><input data-xi="${i}" value="${esc(x.label)}" placeholder="${esc(t("colsNamePh"))}"><button class="ib" data-xm="${i}" data-d="-1" title="${esc(t("up"))}">↑</button><button class="ib" data-xm="${i}" data-d="1" title="${esc(t("down"))}">↓</button><button class="ib x" data-xdel="${i}" title="${esc(t("remove"))}">✕</button></div>`).join("")}</div>`:`<p class="note">${esc(t("colsNone"))}</p>`}
+    <div class="colxadd"><input id="col-new" placeholder="${esc(t("colsNamePh"))}"><button class="btn" id="col-add">${esc(t("colsAdd"))}</button></div>
+    <div class="laysave" id="lay-asbox" hidden><label class="f">${esc(t("layNewName"))}<input id="lay-asname" placeholder="${esc(t("layNamePh"))}"></label><button class="btn red" id="lay-asok">${esc(t("layCreate"))}</button></div>
+    <p class="err" id="lay-err" hidden></p>`;
+    const B=$("#colbody");
+    B.querySelector("#lay-sel").onchange=e=>{load(e.target.value);draw()};
+    B.querySelector("#lay-name")&&(B.querySelector("#lay-name").oninput=e=>name=e.target.value);
+    B.querySelector("#lay-def").onchange=e=>isDef=e.target.checked;
+    B.querySelectorAll("[data-lab]").forEach(i=>i.oninput=()=>{const v=i.value.trim();if(v)buf.labels[i.dataset.lab]=v;else delete buf.labels[i.dataset.lab]});
+    B.querySelectorAll("[data-xi]").forEach(i=>i.oninput=()=>{buf.extra[+i.dataset.xi].label=i.value});
+    B.querySelectorAll("[data-xm]").forEach(b=>b.onclick=()=>{const i=+b.dataset.xm,j=i+ +b.dataset.d;if(j<0||j>=buf.extra.length)return;[buf.extra[i],buf.extra[j]]=[buf.extra[j],buf.extra[i]];draw()});
+    B.querySelectorAll("[data-xdel]").forEach(b=>b.onclick=()=>{const x=buf.extra[+b.dataset.xdel],k=xKey(x.id),used=db.articles.filter(a=>layoutIdOf(a)===selId&&(a.tools||[]).some(tl=>clean(tl[k]))).length;
+      if(used&&!confirm(t("colsDelQ",x.label,used)))return;buf.extra.splice(+b.dataset.xdel,1);draw()});
+    const add=()=>{const v=$("#col-new").value.trim();if(!v){$("#col-new").focus();return}buf.extra.push({id:uid().slice(0,8),label:v});draw();$("#col-new").focus()};
     $("#col-add").onclick=add;$("#col-new").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();add()}};
+    $("#lay-asok").onclick=saveAs;$("#lay-asname").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();saveAs()}};
+    // footer: Standard can only be saved as a new layout; a saved layout can be updated, copied or deleted
+    $("#col-ok").textContent=std?t("layApply"):t("save");$("#lay-as").hidden=false;$("#lay-del").hidden=std;
   };
-  dialog(esc(t("colsT")),`<div id="colbody"></div>`,`<button class="btn ghost" id="col-reset">${esc(t("colsReset"))}</button><span class="sp"></span><button class="btn ghost" id="d-cancel">${esc(t("cancel"))}</button><button class="btn red" id="col-ok">${esc(t("save"))}</button>`);
-  $(".dlg").classList.add("wide");draw();$("#d-cancel").onclick=closeDlg;
-  $("#col-reset").onclick=()=>{cfg.labels={};draw()};
-  $("#col-ok").onclick=()=>{cfg.extra=cfg.extra.filter(x=>clean(x.label)).map(x=>({id:x.id,label:clean(x.label)}));
-    db.sheetCfg=cfg;refreshCols();saveDB();closeDlg();render();toast(t("colsSaved"))};
+  const clean2=()=>({labels:Object.fromEntries(Object.entries(buf.labels).filter(([,v])=>clean(v))),extra:buf.extra.filter(x=>clean(x.label)).map(x=>({id:x.id,label:clean(x.label)}))});
+  const err=m=>{const e=$("#lay-err");e.textContent=m;e.hidden=false};
+  const finish=(id,msg)=>{if(art){art.layout=id;art.updatedAt=Date.now()}if(isDef)db.layoutDefault=id==="std"?"":id;else if(defaultLayoutId()===id)db.layoutDefault="";
+    refreshCols(art||null);saveDB();closeDlg();render();toast(msg)};
+  function saveAs(){const nm=clean($("#lay-asname").value);if(!nm){$("#lay-asname").focus();err(t("layNeedName"));return}
+    if(layoutsAll().some(l=>l.name.toLowerCase()===nm.toLowerCase())){err(t("layNameTaken"));return}
+    const c=clean2(),l={id:"l"+uid().slice(0,7),name:nm,labels:c.labels,extra:c.extra.map(x=>({...x}))};db.layouts=[...layoutsAll(),l];finish(l.id,t("laySaved",nm))}
+  dialog(esc(t("layT")),`<div id="colbody"></div>`,`<button class="btn ghost danger" id="lay-del">${esc(t("layDel"))}</button><span class="sp"></span><button class="btn ghost" id="d-cancel">${esc(t("cancel"))}</button><button class="btn ghost" id="lay-as">${esc(t("laySaveAs"))}</button><button class="btn red" id="col-ok">${esc(t("save"))}</button>`);
+  $(".dlg").classList.add("wide","laydlg");draw();$("#d-cancel").onclick=closeDlg;
+  $("#lay-as").onclick=()=>{$("#lay-asbox").hidden=false;$("#lay-asname").focus()};
+  $("#lay-del").onclick=()=>{const l=layoutById(selId);if(!l)return;const n=layUse(selId);if(!confirm(t("layDelQ",l.name,n)))return;
+    db.layouts=layoutsAll().filter(x=>x.id!==selId);if(db.layoutDefault===selId)db.layoutDefault="";db.articles.forEach(a=>{if(a.layout===selId)delete a.layout});
+    if(art)delete art.layout;refreshCols(art||null);saveDB();closeDlg();render();toast(t("layDeleted",l.name))};
+  $("#col-ok").onclick=()=>{
+    if(selId==="std"){const c=clean2();if(Object.keys(c.labels).length||c.extra.length){$("#lay-asbox").hidden=false;$("#lay-asname").focus();err(t("layStdEdit"));return}
+      finish("std",t("layApplied",t("layStd")));return}
+    const l=layoutById(selId),nm=clean(name);if(!nm){err(t("layNeedName"));return}
+    if(layoutsAll().some(x=>x.id!==selId&&x.name.toLowerCase()===nm.toLowerCase())){err(t("layNameTaken"));return}
+    const c=clean2();Object.assign(l,{name:nm,labels:c.labels,extra:c.extra});finish(selId,t("laySaved",nm))};
 }
 /* tool table: each column can be widened or narrowed by dragging its title's edge (remembered on this PC) */
 const CWKEY="toollistmaker.colw";
@@ -3057,7 +3120,7 @@ function renderEditor(art){fillHolderList(M(art.machineId)?.cone);
         <thead><tr>${[...LABK,...sheetCfg().extra.map(e=>xKey(e.id))].map(k=>{const w=thW(k),ttl=k==="corr"?t("colHT")+" · "+t("colDT"):k==="insert"?t("colInsT"):k==="oal"?t("oal"):"";
           return `<th data-ck="${k}"${w?` style="width:${w}px"`:""}${ttl?` title="${esc(ttl)}"`:""}${k.startsWith("x_")?' class="xth"':""}>${esc(colLabel(k))}${k==="holder"&&coneTag(M(cur.machineId)?.cone)?" "+coneTag(M(cur.machineId)?.cone):""}<span class="colrs" title="${esc(t("colWT"))}"></span></th>`}).join("")}<th class="actth"></th></tr></thead>
         <tbody id="rows"></tbody></table></div>
-      <div class="rowbar"><button class="btn" id="b-add">${esc(t("addTool"))}</button><button class="btn ghost" id="b-impt" title="${esc(t("impT"))}">${esc(t("imp"))}</button><button class="btn ghost" id="b-ncimp" title="${esc(t("impNCP"))}">${esc(t("ncFromProg"))}</button><button class="btn ghost" id="b-cols" title="${esc(t("colsBtnT"))}">${esc(t("colsBtn"))}</button><button class="btn ghost" id="b-prep" title="${esc(t("prepT"))}">${esc(t("prep"))}</button><button class="btn ghost" id="b-magcmp">${esc(t("magCmpBtn"))}</button>${tplBtn("tools")}<span class="note">${t("excelNote")}</span></div>
+      <div class="rowbar"><button class="btn" id="b-add">${esc(t("addTool"))}</button><button class="btn ghost" id="b-impt" title="${esc(t("impT"))}">${esc(t("imp"))}</button><button class="btn ghost" id="b-ncimp" title="${esc(t("impNCP"))}">${esc(t("ncFromProg"))}</button><label class="laysel" title="${esc(t("laySelT"))}"><span>${esc(t("layShort"))}</span><select id="a-layout">${layoutOptions(layoutIdOf(art))}</select></label><button class="btn ghost" id="b-cols" title="${esc(t("colsBtnT"))}">${esc(t("colsBtn"))}</button><button class="btn ghost" id="b-prep" title="${esc(t("prepT"))}">${esc(t("prep"))}</button><button class="btn ghost" id="b-magcmp">${esc(t("magCmpBtn"))}</button>${tplBtn("tools")}<span class="note">${t("excelNote")}</span></div>
     </div>
     <div class="card">
       <h2>${esc(t("notesSign"))}</h2>
@@ -3112,7 +3175,8 @@ function renderEditor(art){fillHolderList(M(art.machineId)?.cone);
     else if(c0===0&&lines.every(l=>l.length===9))keyOf=ci=>["t","type","diameter","ra","ls","oal","z","holder","code"][ci];
     lines.forEach((cells,ri)=>{const idx=r0+ri;if(!cur.tools[idx])cur.tools[idx]={};cells.forEach((v,ci)=>{const k=keyOf(ci);if(k)cur.tools[idx][k]=v.trim()})});
     renderRows();edited();toast(t("pasted",lines.length))});
-  $("#b-add").onclick=()=>addRow();$("#b-cols").onclick=()=>{flushEditor();columnsDialog()};
+  $("#b-add").onclick=()=>addRow();$("#b-cols").onclick=()=>{flushEditor();columnsDialog(cur)};
+  $("#a-layout").onchange=e=>{cur.layout=e.target.value;cur.updatedAt=Date.now();flushEditor();refreshCols(cur);render();toast(t("layApplied",layoutName(cur.layout)))};
   $("#b-prep").onclick=()=>{flushEditor();prepDialog(cur)};if(!canStock())$("#b-prep").hidden=true;
   $("#b-impt").onclick=()=>startImport("tools",{});$("#b-ncimp").onclick=()=>startImport("tools",{});
   $("#b-magcmp").onclick=()=>{flushEditor();compareDialog(M(cur.machineId),cur)};
@@ -4357,15 +4421,15 @@ function renderAView(art){
 function drawAV(art){
   const box=$("#avbody");if(!box)return;
   if(avTab==="pdf"){box.innerHTML=`<div class="avpdf"><p class="note" id="avinfo">${esc(t("sheetLoading"))}</p><div id="avpages"></div></div>`;pdfInto($("#avpages"),art).then(n=>{const i=$("#avinfo");if(i)i.textContent=t("pages",n)}).catch(e=>{const i=$("#avinfo");if(i)i.textContent=t("pvError")+(e.message||e)});return}
-  const rows=realTools(art.tools);
-  box.innerHTML=rows.length?`<div class="list"><table class="lt avt${rows.some(x=>clean(x.insert))?"":" noins"}"><thead><tr>${["t","corr","type","diameter","ra"].map(k=>`<th>${esc(colLabel(k))}</th>`).join("")}<th class="insc">${esc(colLabel("insert"))}</th>${["ls","oal","z","holder","code"].map(k=>`<th>${esc(colLabel(k))}</th>`).join("")}<th>${esc(t("where"))}</th><th>${esc(t("cStock"))}</th>${sheetCfg().extra.map(e=>`<th class="xc">${esc(e.label)}</th>`).join("")}</tr></thead><tbody>
+  const rows=realTools(art.tools),AC=sheetCfg(art);
+  box.innerHTML=rows.length?`<div class="list"><table class="lt avt${rows.some(x=>clean(x.insert))?"":" noins"}"><thead><tr>${["t","corr","type","diameter","ra"].map(k=>`<th>${esc(colLabel(k,AC))}</th>`).join("")}<th class="insc">${esc(colLabel("insert",AC))}</th>${["ls","oal","z","holder","code"].map(k=>`<th>${esc(colLabel(k,AC))}</th>`).join("")}<th>${esc(t("where"))}</th><th>${esc(t("cStock"))}</th>${AC.extra.map(e=>`<th class="xc">${esc(e.label)}</th>`).join("")}</tr></thead><tbody>
     ${rows.map(x=>{const k=normCode(x.code),c=k?C_(k):null,s=stockState(c);
       const hold=String(x.holder||"").split("\n").map(l=>splitHolders(l).map(p=>H_(p)?`<button class="linkcode sm" data-go="${holderHref(p)}">${esc(p)}</button>`:`<span>${esc(p)}</span>`).join(`<i class="plus">+</i>`)).filter(Boolean).join("<br>");
       return `<tr><td class="m"><b>${esc(normT(x.t))}</b></td><td class="m corrv"><span><i>H</i>${esc(corrV(x.corrH))||"—"}</span><span><i>D</i>${esc(corrV(x.corrD))||"—"}</span></td><td class="cl pl"><span class="clip">${esc(mlv(x.type).toUpperCase())}</span></td><td class="m pl">${esc(mlv(x.diameter))}</td><td class="m pl">${esc(/\n/.test(x.ra||"")?mlv(x.ra):raLabel(x.ra)||clean(x.ra))}</td><td class="m insc pl">${esc(mlv(x.insert).toUpperCase())}</td><td class="m pl"><b>${esc(mlv(x.ls))}</b></td><td class="m pl">${esc(mlv(x.oal)||(c&&c.oal)||"")}</td><td class="m pl">${esc(mlv(x.z))}</td>
         <td class="cl hcell">${hold||`<span class="dim">—</span>`}</td>
         <td>${k?(c?`<button class="linkcode" data-go="${codeHref(k)}">${esc(k)}</button>`:`<span class="m">${esc(k)}</span>`):`<span class="dim">—</span>`}</td>
         <td class="cl"><span class="clip ploc">${esc(c&&c.location||"")}</span></td>
-        <td>${c?`<div class="stk">${pstep("c:"+k,+c.stock||0)}<span class="spill s-${s}">${esc(SSL(s))}</span></div>`:k?`<span class="dim small">${esc(t("noCard"))}</span>`:""}</td>${sheetCfg().extra.map(e=>`<td class="xc pl">${esc(mlv(x[xKey(e.id)]))}</td>`).join("")}</tr>`}).join("")}</tbody></table></div>`
+        <td>${c?`<div class="stk">${pstep("c:"+k,+c.stock||0)}<span class="spill s-${s}">${esc(SSL(s))}</span></div>`:k?`<span class="dim small">${esc(t("noCard"))}</span>`:""}</td>${AC.extra.map(e=>`<td class="xc pl">${esc(mlv(x[xKey(e.id)]))}</td>`).join("")}</tr>`}).join("")}</tbody></table></div>`
     :`<div class="empty"><h3>${esc(t("pNone"))}</h3></div>`;
   box.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
   if(!box.dataset.sh){box.dataset.sh=1;stockHandler(box,()=>drawAV(art),art)}
@@ -4531,7 +4595,7 @@ function convertDialog(){
   let got=null,fname="";
   dialog(esc(t("convTitle")),`<div id="cvbody"></div>`,`<button class="btn ghost" id="d-cancel">${esc(t("close"))}</button><span class="sp"></span><span id="cvacts"></span>`);
   $(".dlg").classList.add("wide","cvdlg");$("#d-cancel").onclick=closeDlg;
-  const tmp=()=>({id:"conv",machineId:null,article:{...got.article},tools:got.tools,status:got.status==="done"?"done":"progress",validated:got.validated||null,createdAt:Date.now(),updatedAt:Date.now()});
+  const tmp=()=>({id:"conv",machineId:null,article:{...got.article},tools:got.tools,...(got.layout?(layoutById(got.layout.id)?{layout:got.layout.id}:{layoutData:got.layout}):{}),status:got.status==="done"?"done":"progress",validated:got.validated||null,createdAt:Date.now(),updatedAt:Date.now()});
   const pick=async()=>{const f=await new Promise(res=>{const i=document.createElement("input");i.type="file";i.accept=".xlsx,.xls,.xlsm,.ods,.csv,.pdf,application/pdf";i.onchange=()=>res(i.files[0]||null);i.click()});if(f)load(f)};
   const load=async f=>{fname=f.name;$("#cvbody").innerHTML=`<p class="note">${esc(t("convReading"))}</p>`;
     try{got=await readSheetFile(f)}catch(e){console.error(e);got=null;draw(e.message==="nodata"?t("pdfNoData"):e.message==="notools"?t("convNoTools"):t("impFail"));return}draw()};
@@ -4555,7 +4619,9 @@ function convertDialog(){
     acts.innerHTML=`<button class="btn ${isPdf?"":"red"}" id="cv-pdf">${esc(t("convGetPdf"))}</button><button class="btn ${isPdf?"red":""}" id="cv-xls">${esc(t("convGetXls"))}</button>`;
     $("#cv-pdf").onclick=()=>downloadPDF(tmp());$("#cv-xls").onclick=()=>downloadXLSX(tmp());$("#cv-other").onclick=()=>{got=null;draw()};
     $("#cv-save").onclick=()=>{const mid=$("#cv-m").value;if(!mid){$("#cv-m").focus();toast(t("convPickMachine"));return}
-      const art=tmp();delete art.article.machine;art.id=uid();art.machineId=mid;art.status="progress";art.validated=null;art.history=[];if(!clean(art.article.date))art.article.date=today();
+      const art=tmp();delete art.article.machine;art.id=uid();
+      if(art.layoutData){const ld=art.layoutData;delete art.layoutData;let l=layoutsAll().find(x=>x.name.toLowerCase()===String(ld.name||"").toLowerCase()&&JSON.stringify(normCfg(x))===JSON.stringify(normCfg(ld)));
+        if(!l){l={id:"l"+uid().slice(0,7),name:layoutsAll().some(x=>x.name===ld.name)?ld.name+" (2)":(ld.name||t("layFirst")),...normCfg(ld)};db.layouts=[...layoutsAll(),l]}art.layout=l.id}art.machineId=mid;art.status="progress";art.validated=null;art.history=[];if(!clean(art.article.date))art.article.date=today();
       if(!art.tools.length)art.tools=[{t:"T01"}];db.articles.push(art);saveDB();closeDlg();toast(t("convSaved",clean(art.article.number)||"—"));go("#a-"+art.id)};
   };
   draw();
@@ -4595,7 +4661,7 @@ Object.assign(I18N.en,{getApp:"Get the app", getAppT:"Download the Windows insta
   demoBar:"Demo: made-up workshop with 20 machines and 500 articles. Changes stay in this browser only.", demoShort:"Made-up data", demoReset:"Reset the demo", demoResetQ:"Reset the demo data? Everything changed here is lost.", demoGo:"Real version"});
 Object.assign(I18N.fr,{getApp:"Télécharger l'app", getAppT:"Télécharger l’installateur Windows",
   demoBar:"Démo : atelier fictif de 20 machines et 500 articles. Vos changements restent dans ce navigateur.", demoShort:"Données fictives", demoReset:"Réinitialiser la démo", demoResetQ:"Réinitialiser les données de la démo ? Tout ce qui a été changé ici sera perdu.", demoGo:"Version réelle"});
-const APP_ZIP="BrocheStuff-Setup-2.3.0.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
+const APP_ZIP="BrocheStuff-Setup-2.3.1.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
 function appUrl(){
   // on the site (…/Web/ or …/Demo/) the program sits next door in …/App/; anywhere else, take it from the site
   if(/^https?:/.test(location.protocol)&&/\/(Web|Demo)\/(index\.html)?$/i.test(location.pathname))return new URL("../App/"+APP_ZIP,location.href).href;
@@ -4997,7 +5063,7 @@ function reopenArticle(){if(!confirm(t("reopenQ")))return;cur.status="progress";
 function applyLock(){
   const ed=$("#ed");if(!ed||!cur)return;const locked=isLocked(cur);ed.classList.toggle("locked",locked);
   ed.querySelectorAll(".form input,.form textarea,.form select").forEach(el=>{if(el.id==="a-index")return;el.disabled=locked});
-  ["#b-add","#b-impt","#b-ncimp","#b-cols"].forEach(s=>{const b=$(s);if(b)b.hidden=locked});
+  ["#b-add","#b-impt","#b-ncimp","#b-cols"].forEach(s=>{const b=$(s);if(b)b.hidden=locked});{const ls=$("#a-layout");if(ls)ls.disabled=locked}
   ed.querySelectorAll("#rows .act").forEach(td=>td.style.visibility=locked?"hidden":"");
   const ix=$("#a-index");if(ix){const admin=ROLE==="admin";ix.readOnly=locked||!admin;ix.title=admin?"":t("indexAdmin");ix.classList.toggle("ro",ix.readOnly)}
 }
@@ -5014,7 +5080,7 @@ function drawHistory(){
    admin page, demo switch. The web version doesn't use any of this.
    ===================================================================== */
 const DESKDEMO=/*DESKDEMO*/null;
-const APP_VER="2.3.0";
+const APP_VER="2.3.1";
 let DEMO_ON=false, ACC=null, USERS=null, PCNAME="", realDIR="", loginFails=0, loginWait=0, lastAct=Date.now();
 Object.assign(I18N.en,{
   loginT:"Sign in", loginP:"Enter your name or code and your password.", loginName:"Name or code", loginPw:"Password", loginGo:"Sign in",
@@ -5150,7 +5216,8 @@ function mergeList(b,m,t,key){
   t.forEach(x=>one(x[key]));m.forEach(x=>one(x[key]));return out}
 function merge3db(b,m,t){const out={...m,...t};
   for(const [col,key] of [["machines","id"],["articles","id"],["catalog","code"],["holders","ref"]])out[col]=mergeList(b[col]||[],m[col]||[],t[col]||[],key);
-  out.sheetCfg=JSON.stringify(m.sheetCfg||null)!==JSON.stringify(b.sheetCfg||null)?m.sheetCfg:t.sheetCfg;if(out.sheetCfg==null)delete out.sheetCfg;
+  out.layouts=mergeList(b.layouts||[],m.layouts||[],t.layouts||[],"id");if(!out.layouts.length)delete out.layouts;
+  out.layoutDefault=(m.layoutDefault||"")!==(b.layoutDefault||"")?m.layoutDefault:t.layoutDefault;if(!out.layoutDefault)delete out.layoutDefault;delete out.sheetCfg;
   out.stockLog=unionLog(m.stockLog||[],t.stockLog||[],20000);out.lastBackup=Math.max(+m.lastBackup||0,+t.lastBackup||0);return out}
 // every save writes a new random revision next to the data (data.rev): a tiny file the other PCs check
 const DEVID=Math.random().toString(36).slice(2)+Date.now().toString(36), sleep_=ms=>new Promise(r=>setTimeout(r,ms));
@@ -5322,7 +5389,7 @@ const GUIDE={
    ["start","Démarrer",["Choisissez votre service : Préparateur méthode, Préparateur outil ou Production. « Accès admin » (en bas) donne accès à tout.","Dans le programme Windows installé, chacun se connecte avec son nom (ou son code) et son mot de passe ; l’admin crée les comptes.","La langue (FR / EN) et le mode sombre se changent en haut à droite."]],
    ["machines","Machines",["La page Machines montre chaque machine avec son cône (BT40, BT50…) et l’avancement de ses fiches.","Cliquez sur une machine pour voir ses articles ; « + Ajouter une machine » ou « Importer » pour en créer.","La barre de recherche trouve un article, une référence ou un code outil dans toutes les machines."]],
    ["machine","Articles d’une machine",["Chaque ligne est un article : indice, référence, nombre d’outils et état (non commencé, en cours, terminé).","« + Nouvel article » crée une fiche ; « Programmes CN » crée un article par programme, avec sa liste d’outils.","Les boutons PDF et Copier sont au bout de chaque ligne ; « Modèle Excel » donne le modèle à remplir."]],
-   ["editor","Faire une fiche outils",["Remplissez l’article (numéro, désignation, référence, programme), puis une ligne par outil.","Pour un outil à plaquettes, notez la référence de la plaquette. H et D sont les numéros des correcteurs de longueur et de rayon ; « Lire un programme » les reprend des G43 H et G41 / G42 D. Dans n’importe quelle case, Maj+Entrée ajoute une ligne. « Colonnes » renomme les titres ou ajoute vos colonnes ; tirez le bord d’un titre pour l’élargir.","Tapez le code outil : type, Ø, rayon et longueurs se remplissent depuis le magasin outils.","« Lire un programme » importe les outils d’un programme CN ou d’une liste Mastercam ; l’aperçu A4 se met à jour à droite.","Imprimer, PDF ou Excel en haut à droite. L’aperçu passe de PDF à Excel ; « PDF ⇄ Excel » (page Machines) transforme un fichier dans l’autre format."]],
+   ["editor","Faire une fiche outils",["Remplissez l’article (numéro, désignation, référence, programme), puis une ligne par outil.","Pour un outil à plaquettes, notez la référence de la plaquette. H et D sont les numéros des correcteurs de longueur et de rayon ; « Lire un programme » les reprend des G43 H et G41 / G42 D. Dans n’importe quelle case, Maj+Entrée ajoute une ligne. « Colonnes » renomme les titres ou ajoute vos colonnes, à enregistrer comme mise en page ; la mise en page par défaut sert aux nouvelles fiches, et chaque fiche peut en choisir une autre. Tirez le bord d’un titre pour l’élargir.","Tapez le code outil : type, Ø, rayon et longueurs se remplissent depuis le magasin outils.","« Lire un programme » importe les outils d’un programme CN ou d’une liste Mastercam ; l’aperçu A4 se met à jour à droite.","Imprimer, PDF ou Excel en haut à droite. L’aperçu passe de PDF à Excel ; « PDF ⇄ Excel » (page Machines) transforme un fichier dans l’autre format."]],
    ["validated","Valider et changer d’indice",["« Valider la fiche » la verrouille : plus rien ne peut être changé, et le PDF porte VALIDÉE, la date et le nom.","Pour la modifier : « Nouvel indice » (A → B…). L’ancien indice reste dans l’historique, avec son PDF.","Seul l’admin peut taper un indice ; un indice déjà utilisé est refusé."]],
    ["crib","Magasin outils",["Chaque code outil avec ses caractéristiques, son emplacement et son stock.","Les filtres montrent le stock bas et les ruptures ; « Liste de commande (CSV) » sort ce qu’il faut commander.","À sa connexion, le préparateur outil voit tout de suite une alerte de stock bas."]],
    ["code","Fiche d’un outil",["Croquis ou photo de l’outil, caractéristiques, et où il est utilisé.","Les boutons − et + changent le stock ; « Corriger le stock » après un comptage. Chaque mouvement est noté avec le nom.","Les commentaires de la production apparaissent sur la fiche."]],
@@ -5340,7 +5407,7 @@ const GUIDE={
    ["start","Getting started",["Pick your service: Methods planner, Tool planner or Production. “Admin access” (bottom) opens everything.","In the installed Windows program, everyone signs in with their name (or code) and password; the admin creates the accounts.","Language (EN / FR) and dark mode are at the top right."]],
    ["machines","Machines",["The Machines page shows each machine with its spindle taper (BT40, BT50…) and how far its sheets are.","Click a machine to see its articles; “+ Add machine” or “Import” to create them.","The search bar finds an article, a reference or a tool code across all machines."]],
    ["machine","A machine’s articles",["Each row is an article: index, reference, number of tools and status (not started, in progress, done).","“+ New article” makes a sheet; “CNC programs” makes one article per program, with its tool list.","PDF and Copy are at the end of each row; “Excel model” gives the model to fill in."]],
-   ["editor","Making a tool sheet",["Fill in the article (number, designation, reference, program), then one row per tool.","For an insert tool, write the insert reference. H and D are the length and radius offset numbers; “Read a program” takes them from G43 H and G41 / G42 D. In any box, Shift+Enter adds a line. “Columns” renames the titles or adds your own columns; drag a title’s edge to widen it.","Type the tool code: type, Ø, radius and lengths fill in from the tool crib.","“Read a program” imports the tools of a CNC program or a Mastercam list; the A4 preview updates on the right.","Print, PDF or Excel at the top right. The preview switches between PDF and Excel; “PDF ⇄ Excel” (Machines page) turns one file into the other."]],
+   ["editor","Making a tool sheet",["Fill in the article (number, designation, reference, program), then one row per tool.","For an insert tool, write the insert reference. H and D are the length and radius offset numbers; “Read a program” takes them from G43 H and G41 / G42 D. In any box, Shift+Enter adds a line. “Columns” renames the titles or adds your own columns, saved as a layout; the default layout is used for new sheets, and each sheet can pick another one. Drag a title’s edge to widen it.","Type the tool code: type, Ø, radius and lengths fill in from the tool crib.","“Read a program” imports the tools of a CNC program or a Mastercam list; the A4 preview updates on the right.","Print, PDF or Excel at the top right. The preview switches between PDF and Excel; “PDF ⇄ Excel” (Machines page) turns one file into the other."]],
    ["validated","Validating and new index",["“Validate the sheet” locks it: nothing can be changed, and the PDF shows VALIDATED, the date and the name.","To change it: “New index” (A → B…). The old index stays in the history, with its PDF.","Only the admin can type an index; an index already used is refused."]],
    ["crib","Tool crib",["Every tool code with its details, location and stock.","Filters show low stock and out of stock; “Order list (CSV)” lists what to order.","When the tool planner signs in, a low-stock alert comes up right away."]],
    ["code","A tool’s card",["Sketch or photo of the tool, its details, and where it is used.","− and + change the stock; “Correct the count” after counting. Every move is logged with the name.","Comments from production show on the card."]],
