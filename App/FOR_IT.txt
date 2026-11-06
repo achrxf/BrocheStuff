@@ -11,6 +11,7 @@ Microsoft Edge WebView2 component already part of Windows 10/11.
 DOWNLOADS
   BrocheStuff-Setup-x.x.x.exe     installer (NSIS 3, 64-bit, per-user, not code-signed)
   BrocheStuff-Windows.zip   the same program without installer (portable)
+  BrocheStuff-Update-x.x.x.neu   update file (from 2.4.0 on), see UPDATES
 Installed files: BrocheStuff.exe (the Neutralinojs 5.4.0 runtime, unchanged
 except for the icon and version information), resources.neu (the program
 itself, HTML / JavaScript, readable), README.txt, FOR_IT.txt, Uninstall.exe.
@@ -29,9 +30,22 @@ INSTALLATION
   argument). Silent uninstall: "%LOCALAPPDATA%\Programs\BrocheStuff\Uninstall.exe" /S
 - Uninstalling removes the program, shortcuts and registry entries; the data
   folder is kept.
+- Running a newer setup over an installed version updates it in place
+  (no need to uninstall); data is kept.
+
+UPDATES (no internet)
+- From 2.4.0 on, the admin can update from the Admin page: "Install an
+  update..." takes a BrocheStuff-Update-x.x.x.neu file (USB stick, network
+  folder). It replaces resources.neu in the program folder, keeps the old one
+  as resources.previous.neu (button "Go back to the previous version"), and
+  restarts the program. BrocheStuff.exe itself is not changed.
+- The file is also copied to <data folder>\Updates. Every PC using that data
+  folder shows "Update to x.x.x" at start; one click updates that PC.
+- Data, accounts and backups are not touched. The file is checked (it must
+  be a BrocheStuff program file) before anything is replaced.
 
 NETWORK
-- The program makes NO internet connection: no update check, no telemetry, no
+- The program makes NO internet connection: no online update check, no telemetry, no
   analytics, no account, no licence server, no external fonts or scripts
   (everything is inside resources.neu).
 - The page enforces a Content-Security-Policy that only allows the program's own
@@ -83,8 +97,8 @@ No other place on the disk is used.
 WHAT THE PROGRAM IS ALLOWED TO DO
 The runtime only allows these native functions (nativeAllowList in the
 configuration inside resources.neu): exit the app, get the Documents path,
-read the COMPUTERNAME variable (for the sign-in log), show the Save and the
-Choose folder dialogs, open a saved file or the data folder with its default
+read the COMPUTERNAME variable (for the sign-in log), show the Save, Open and
+Choose folder dialogs, restart itself after an update, open a saved file or the data folder with its default
 program, and read / write / copy / delete / list files and create folders
 (used only for the folders above).
 It can NOT run commands or other programs, read the clipboard, change Windows
