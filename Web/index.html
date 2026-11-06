@@ -790,8 +790,8 @@ body.gating .crumbs,body.gating #tbar{display:none}
 .tile4.t-ok b{color:var(--done)}
 .hist li i{font-style:normal;font-weight:600;color:var(--ink)}
 /* production: bigger touch targets */
-.role-prod .stepper button{min-width:38px;min-height:36px}
-.role-prod .bigstock .bs{width:64px;height:64px;font-size:30px}
+.role-prod .stepper button,.take-mode .stepper button{min-width:38px;min-height:36px}
+.role-prod .bigstock .bs,.take-mode .bigstock .bs{width:64px;height:64px;font-size:30px}
 .logt td.cl{min-width:220px;white-space:normal}
 @media (max-width:760px){
   .ptools thead,.pholders thead,.part thead{display:none}
@@ -1077,7 +1077,7 @@ body.gating .getapp{padding-left:12px;padding-right:12px}
   .bigcode{font-size:34px}
   .codehead{flex-wrap:wrap;gap:10px}
   .bigloc{font-size:24px}
-  .role-prod .bigstock .bs{width:72px;height:72px}
+  .role-prod .bigstock .bs,.take-mode .bigstock .bs{width:72px;height:72px}
 }
 @media (max-width:760px){
   .top{padding:6px 8px 6px 12px}
@@ -1384,6 +1384,27 @@ fieldset.rights .chk.rgt>span{display:flex;flex-direction:column;gap:1px}
 .phgo:hover{border-color:var(--ink,#222)}
 .phs.nomach .phgo{border-style:dashed}
 .phn{font-family:var(--mono,monospace);font-size:12px;font-weight:700;background:var(--fill,#f2f2f2);border-radius:5px;padding:1px 6px}
+/* profiles: pages and rights */
+.permgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.pgblk{border:1px solid var(--line,#ddd);border-radius:10px;padding:8px 10px}
+.pgblk.off{opacity:.55}
+.pgblk .pgk{display:flex;align-items:center;gap:8px}
+.pgblk .pgr{margin:4px 0 0 4px}
+.pgblk .chk.rgt{display:flex;align-items:flex-start;gap:8px;margin:4px 0}
+.pgblk .chk.rgt>span{display:flex;flex-direction:column;gap:1px}
+.pgblk.gen{grid-column:1/-1}
+.pgblk.gen .pgr{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:2px 14px}
+.dlg.permdlg{width:min(980px,96vw)}
+.dlg.permdlg .bd{max-height:72vh;overflow:auto}
+.rtag.r-custom{background:var(--fill,#eee)}
+.phroute{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:6px 0 0}
+.phroute .arr{color:var(--mid,#888)}
+.phstep{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line,#ddd);background:none;border-radius:8px;padding:3px 8px;font:inherit;color:inherit;cursor:pointer}
+.phstep.here{border-color:var(--ink,#222);font-weight:600}
+.downtag{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:#b42318;border-radius:5px;padding:1px 6px;margin-left:4px;text-transform:uppercase;letter-spacing:.02em}
+.downbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.artnote textarea{width:100%;box-sizing:border-box;min-height:44px}
+.artn{font-size:12px;color:var(--mid,#666);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:320px}
 </style></head>
 <body>
 <header class="top">
@@ -1957,7 +1978,10 @@ en:{
   delWith:n=>`Delete with its ${n} ${pl(n,"article","articles")}?`, clickDel:"Click again to delete", machineDeleted:n=>`${n} deleted`, clickConfirm:"Click again to confirm",
   copyTitle:"Copy article", copyP:"Makes a new article with the same tools. Use it for a new index, or when the same article runs on another machine.", copyOn:"Put the copy on", articleNumber:"Article number", index:"Index", makeCopy:"Make copy", copyMade:"Copy made. You're now editing the copy.",
   article:"Article", autoSaved:"Saved automatically", designation:"Designation", desPh:"Support bracket", reference:"Reference", refPh:"Part / drawing reference", program:"Program", material:"Material",
-  tools:"Tools", nTools:n=>`${n} ${pl(n,"tool","tools")}`, colTool:"Tool", colType:"Type", colHolder:"Holder", updT:"Program update", updCur:v=>`Installed version: ${v}`, updP:"Install the update file (BrocheStuff-Update-….neu) from a USB stick or a folder. No internet needed, your data doesn’t change. It is also put in the data folder, so every PC sharing it offers the update at start.", updPick:"Install an update…", updBack:"Go back to the previous version", updPickT:"Choose the update file", updQ:(a,b)=>`Replace version ${a} with version ${b}? BrocheStuff restarts by itself.`, updOlder:"This version is older than the one installed.", updSame:"This version is already installed.", updSafe:"Your data, accounts and backups don’t change.", updShare:"The file is also put in the data folder (Updates): the other PCs will offer it at start.", updGo:v=>`Update to ${v}`, updWorking:"Updating…", updDone:v=>`Version ${v} installed: restarting…`, updBad:"This isn’t a BrocheStuff update file.", updFail:"The update couldn’t be installed:", updNoPrev:"No previous version is kept on this PC.", updNew:"Update", updNewP:v=>`Version ${v} is ready (put there by the admin).`, dwArt:n=>`article ${n}`, dwMach:n=>`machine ${n}`, dwCode:n=>`tool code ${n}`, dwHolder:n=>`holder ${n}`, dwAcc:n=>`the account of ${n}`, noRight:"You don’t have this right: ask the admin.", delT:"Delete?", delQ:w=>`Delete ${w}?`, delBkP:"A backup first lets you get everything back if it was a mistake.", delBk:"Back up, then delete", delBkOnly:"Save a backup first", delGo:"Delete without backup", delIxWarn:"Its earlier indexes and their history are deleted with it.", magRO:"You can see this magazine but not change it (ask the admin for the right).", magClearWhat:m=>`everything loaded in the magazine of ${m}`, ixT:"Indexes", ixNone:"No earlier index yet. When a new index is made, the earlier ones show here.", ixNow:"(now)", ixArch:"Earlier index", ixChgBtn:i=>`Changes since ${i}`, ixBackBtn:"Go back to it", ixChgT:(a,b)=>`What changed: index ${a} → ${b}`, ixArt:"Article", ixAdd:n=>`${n} ${pl(n,"tool","tools")} added`, ixDel:n=>`${n} ${pl(n,"tool","tools")} removed`, ixChg:n=>`${n} ${pl(n,"tool","tools")} changed`, ixSame:"Nothing changed between these two indexes.", ixBackT:i=>`Go back to index ${i}`, ixBackQ:(i,n,o)=>`The sheet becomes index ${n} with the content of index ${i}. Index ${o} stays in the list, with its PDF. The new index has to be validated again.`, ixBackGo:(i,n)=>`Make ${n} from ${i}`, ixBackDone:(i,n)=>`Index ${n} made from index ${i}.`, hRevert:(f,i)=>`Back to index ${f} (now ${i})`, right_devalidate:"Reopen validated sheets", rightP_devalidate:"Unlock a validated sheet without changing its index.", right_revertIndex:"Go back to an earlier index", rightP_revertIndex:"Everyone who sees a sheet can look at its earlier indexes and what changed; only this right can bring one back.", right_editMag:"Change machine magazines", rightP_editMag:"Load, swap and empty pockets, change the size, apply a comparison.", right_deleteArticle:"Delete articles and machines", rightP_deleteArticle:"Dangerous: deleting a machine deletes its articles too.", rightP_validate:"Lock the sheet as validated, with the name and date on the PDF.", navArts:"Articles", artsT:"Articles", artsSub:"Every article, its phases and the machine where each phase is made.", artsQ:"Article, reference, machine, phase…", artsMulti:"Several phases or machines", artsWhere:"Phases and machines", noMachine:"No machine", noMachineS:"No machine", phase:"Phase", phaseS:"Ph.", phaseT:"Machining phase (10, 20…), when the article is made in several steps", moveBtn:"Move", moveT:n=>`Move ${n}`, moveFrom:m=>`Now on: ${m}`, moveTo:"Move to", moveP:"The tool sheet goes with it; the move is written in its history.", moveGo:"Move", newPhase:"+ Phase", newPhaseT:n=>`New phase for ${n}`, newPhaseP:"A phase is its own tool sheet, on its own machine, with the same article number.", phaseFirst:"Phase of the existing sheet", phaseCopy:"Start from the same tools", phaseUsed:p=>`Phase ${p} already exists.`, phaseMade:p=>`Phase ${p} made.`, hMove:(f,to)=>`Moved ${f} → ${to}`, hPhase:p=>`Phase ${p} made`, delKeep:n=>`Its ${n} ${pl(n,"article stays","articles stay")}, marked "No machine".`, keptNoMach:n=>`${n} ${pl(n,"article","articles")} now without machine`, right_moveArticle:"Move articles and make phases", rightP_moveArticle:"Change the machine of a sheet or add a phase on another machine.", rightS_moveArticle:"moves", colsShowT:"Show this column", colsJoinT:"Joined columns (PDF)", colsJoinP:"Ticked: the column is drawn together with another one on the PDF. Unticked: it gets its own column. The editor and the Excel file always keep separate columns.", joinInType:"inside Type", joinPrev:"with the column before", accRights:"Rights", accRightsP:"The admin has every right. More rights will be added here.", right_validate:"Validate tool sheets", rightS_validate:"✓ validates", rightS_devalidate:"reopens", rightS_revertIndex:"index back", rightS_editMag:"magazines", rightS_deleteArticle:"deletes", valNoRight:"You can’t validate tool sheets: ask the admin for the right.", colsAdminOnly:"Only the admin can change the columns and layouts. Pick a layout for this sheet in the list.", readyVal:"Ready to validate", pctTip:"Share of the required boxes that are filled in", alertSplit:(c,h)=>`${c} tool codes · ${h} holders`, colsLabP:"Leave a title empty to keep the usual one.", ixWhy:"Reason for the change (optional)", ixApprClr:"“Approved by” will be cleared: the new index has to be approved again.", orderDone:n=>`${n} ${pl(n,"code","codes")} to order`, rep12m:"last 12 months, whatever the period above", inSheets:"In tool sheets", magOver:s=>`past the ${s} pockets: free pocket`,  colsKeep:"The tool number always stays", colsShowP:"Untick a column to remove it from this layout (its data is kept and comes back if you tick it again).", demoResetQ2:"Click again to reset", reopenQ2:"Click again to reopen", clickAgain:"Click again to confirm.", colsBtn:"Columns", colsBtnT:"Rename the column titles, add columns, save them as a layout", layT:"Tool sheet layout", layShort:"Layout", laySelT:"The layout of this tool sheet (★ = default for new sheets)", layStd:"Standard", layFirst:"My layout", layThis:"Layout of this sheet", layStdP:"BrocheStuff’s own layout. Change titles or add columns, then save them as a new layout.", layName:"Layout name", layDefault:"Default layout (new tool sheets start with it)", layShared:n=>`Used by ${n} tool sheets: saving changes them all.`, colsTitles:"Column titles", layNewName:"Name of the new layout", layNamePh:"e.g. Toyoda with cut length", layCreate:"Create the layout", laySaveAs:"Save as new layout…", layApply:"Apply", layDel:"Delete layout", layNeedName:"Give the layout a name.", layNameTaken:"A layout already has this name.", laySaved:n=>`Layout “${n}” saved`, layApplied:n=>`Layout: ${n}`, layDeleted:n=>`Layout “${n}” deleted`, layStdEdit:"Standard can’t be changed: give your layout a name to save it.", layDelQ:(n,k)=>`Delete the layout “${n}”? ${k} tool ${k>1?"sheets use":"sheet uses"} it; they go back to the default layout.`, colsExtra:"Your own columns", colsNone:"No extra column yet.", colsNamePh:"Column title, e.g. Lg coupe", colsAdd:"+ Add a column", colsReset:"Usual titles", colsSaved:"Columns saved", colsDelQ:(l,n)=>`Remove the column “${l}”? It is filled in ${n} ${pl(n,"article","articles")}; that data will no longer show.`, colWT:"Drag to widen or narrow · double-click to reset", widthT:"Drag to widen or narrow the page · double-click to reset", splitT:"Drag to resize the preview · double-click to reset", convT:"Turn an Excel tool sheet into a PDF, or a PDF made by BrocheStuff into an Excel file", convTitle:"PDF ⇄ Excel", convP:"Choose an Excel tool sheet (from the model or exported here) or a PDF made by BrocheStuff. You get it back in the other format, or keep it as an article.", convDrop:"Choose a file", convDropP:"or drop it here · Excel, CSV or PDF", convReading:"Reading the file…", convNoTools:"No tool list found in this file: the table needs titles like Outil, Type, Ø, LS, Porte-outil.", pdfNoData:"This PDF was not made by BrocheStuff, so its table can’t be read back. Use the Excel file, or a PDF downloaded from the app.", convGetPdf:"Download the PDF", convGetXls:"Download the Excel", convSaveIn:"Keep it as an article in", convSave:"Save the article", convOther:"Another file", convPickMachine:"Choose a machine first", convSaved:n=>`Article ${n} saved`, pvPdf:"PDF", pvXls:"Excel", pvXlsInfo:n=>`Excel · ${n} ${pl(n,"tool","tools")}`, dlXlsT:"Download the tool sheet as an Excel file you can edit (and import back)", saveXlsT:"Save the tool sheet (Excel)", openFile:"Open", xlsFail:"Excel file not made: ", holder2Ph:"+ 2nd line", holder2T:"Second line (Shift+Enter in the holder box)", colCorr:"Offsets", colIns:"Insert", colInsT:"Insert reference", colHT:"Length offset (H)", colDT:"Radius offset (D)", colFinish:"Finish", colCode:"Code", typePh:"END MILL", addTool:"+ Add tool",
+  tools:"Tools", nTools:n=>`${n} ${pl(n,"tool","tools")}`, colTool:"Tool", colType:"Type", colHolder:"Holder", updT:"Program update", updCur:v=>`Installed version: ${v}`, updP:"Install the update file (BrocheStuff-Update-….neu) from a USB stick or a folder. No internet needed, your data doesn’t change. It is also put in the data folder, so every PC sharing it offers the update at start.", updPick:"Install an update…", updBack:"Go back to the previous version", updPickT:"Choose the update file", updQ:(a,b)=>`Replace version ${a} with version ${b}? BrocheStuff restarts by itself.`, updOlder:"This version is older than the one installed.", updSame:"This version is already installed.", updSafe:"Your data, accounts and backups don’t change.", updShare:"The file is also put in the data folder (Updates): the other PCs will offer it at start.", updGo:v=>`Update to ${v}`, updWorking:"Updating…", updDone:v=>`Version ${v} installed: restarting…`, updDone2:v=>`Version ${v} is installed.`, updReopen:"BrocheStuff restarts now. If it only closes, open it again from the Start menu or the desktop.", updRestart:"Restart now", updBad:"This isn’t a BrocheStuff update file.", updFail:"The update couldn’t be installed:", updNoPrev:"No previous version is kept on this PC.", updNew:"Update", updNewP:v=>`Version ${v} is ready (put there by the admin).`, dwArt:n=>`article ${n}`, dwMach:n=>`machine ${n}`, dwCode:n=>`tool code ${n}`, dwHolder:n=>`holder ${n}`, dwAcc:n=>`the account of ${n}`, noRight:"You don’t have this right: ask the admin.", delT:"Delete?", delQ:w=>`Delete ${w}?`, delBkP:"A backup first lets you get everything back if it was a mistake.", delBk:"Back up, then delete", delBkOnly:"Save a backup first", delGo:"Delete without backup", delIxWarn:"Its earlier indexes and their history are deleted with it.", magRO:"You can see this magazine but not change it (ask the admin for the right).", magClearWhat:m=>`everything loaded in the magazine of ${m}`, ixT:"Indexes", ixNone:"No earlier index yet. When a new index is made, the earlier ones show here.", ixNow:"(now)", ixArch:"Earlier index", ixChgBtn:i=>`Changes since ${i}`, ixBackBtn:"Go back to it", ixChgT:(a,b)=>`What changed: index ${a} → ${b}`, ixArt:"Article", ixAdd:n=>`${n} ${pl(n,"tool","tools")} added`, ixDel:n=>`${n} ${pl(n,"tool","tools")} removed`, ixChg:n=>`${n} ${pl(n,"tool","tools")} changed`, ixSame:"Nothing changed between these two indexes.", ixBackT:i=>`Go back to index ${i}`, ixBackQ:(i,n,o)=>`The sheet becomes index ${n} with the content of index ${i}. Index ${o} stays in the list, with its PDF. The new index has to be validated again.`, ixBackGo:(i,n)=>`Make ${n} from ${i}`, ixBackDone:(i,n)=>`Index ${n} made from index ${i}.`, hRevert:(f,i)=>`Back to index ${f} (now ${i})`, right_devalidate:"Reopen validated sheets", rightP_devalidate:"Unlock a validated sheet without changing its index.", right_revertIndex:"Go back to an earlier index", rightP_revertIndex:"Everyone who sees a sheet can look at its earlier indexes and what changed; only this right can bring one back.", right_editMag:"Change machine magazines", rightP_editMag:"Load, swap and empty pockets, change the size, apply a comparison.", right_deleteArticle:"Delete articles and machines", rightP_deleteArticle:"Dangerous: deleting a machine deletes its articles too.", rightP_validate:"Lock the sheet as validated, with the name and date on the PDF.", navArts:"Articles", artsT:"Articles", artsSub:"Every article, its phases and the machine where each phase is made.", artsQ:"Article, reference, machine, phase…", artsMulti:"Several phases or machines", artsWhere:"Phases and machines", noMachine:"No machine", noMachineS:"No machine", phase:"Phase", phaseS:"Ph.", phaseT:"Machining phase (10, 20…), when the article is made in several steps", moveBtn:"Move", moveT:n=>`Move ${n}`, moveFrom:m=>`Now on: ${m}`, moveTo:"Move to", moveP:"The tool sheet goes with it; the move is written in its history.", moveGo:"Move", newPhase:"+ Phase", newPhaseT:n=>`New phase for ${n}`, newPhaseP:"A phase is its own tool sheet, on its own machine, with the same article number.", phaseFirst:"Phase of the existing sheet", phaseCopy:"Start from the same tools", phaseUsed:p=>`Phase ${p} already exists.`, phaseMade:p=>`Phase ${p} made.`, hMove:(f,to)=>`Moved ${f} → ${to}`, hPhase:p=>`Phase ${p} made`, delKeep:n=>`Its ${n} ${pl(n,"article stays","articles stay")}, marked "No machine".`, keptNoMach:n=>`${n} ${pl(n,"article","articles")} now without machine`, right_moveArticle:"Move articles and make phases", rightP_moveArticle:"Change the machine of a sheet or add a phase on another machine.", rightS_moveArticle:"moves", page_machines:"Machines and their articles", page_sheets:"Tool sheets: make and change", page_sheetsView:"Tool sheets: read only", page_arts:"Articles page", page_crib:"Tool crib", page_holders:"Holders", page_prod:"Production search", page_mags:"Machine magazines", page_log:"Stock log", page_reports:"Reports", page_gen:"Everywhere", pageViewOnly:"View only.",
+ right_machEdit:"Add and change machines", rightP_machEdit:"Add a machine, change its name, control or spindle.", right_wipe:"Delete everything at once", rightP_wipe:"The “Delete everything” buttons (machines, crib, holders).", right_newIndex:"Make a new index", rightP_newIndex:"Start index B, C… from a validated sheet.", right_setIndex:"Type the index by hand", rightP_setIndex:"Otherwise the index only moves with “New index”.", right_layouts:"Change columns and layouts", rightP_layouts:"Rename, add, remove or join columns; save layouts.", right_artNote:"Write the article note", rightP_artNote:"The note shared by all phases of an article.", right_cribEdit:"Create and change tool codes", rightP_cribEdit:"New codes, their details and photos, delete codes.", right_stock:"Change the stock", rightP_stock:"+ / − and stock counts, for tools and holders.", right_holderEdit:"Create and change holders", rightP_holderEdit:"New holders, their details, delete holders.", right_takeTool:"Take tools out", rightP_takeTool:"The “Take 1” button in production.", right_import:"Import files", rightP_import:"Excel lists and CNC programs.", right_backup:"Save a backup", rightP_backup:"The “Back up” button.", right_restore:"Restore a backup", rightP_restore:"Replaces all data with a backup.", right_logo:"Change the logo", rightP_logo:"The logo printed on the sheets.",
+ profT:"Profiles", profCardP:"A profile is what a group of people sees and may do. Each account follows its profile, or gets its own settings.", profName:"Name", profNamePh:"Workshop manager", profPages:"Pages", profAcc:"Accounts", profNew:"+ New profile", profEdit:p=>`Profile · ${p}`, profP:"Tick the pages this profile opens, and what it may do on each.", profUsed:n=>`${n} ${pl(n,"account uses","accounts use")} it.`, profDel:"Delete the profile", profReset:"Back to the original settings", profNeedName:"Give the profile a name.", profNameUsed:"Another profile already has this name.", profNeedPage:"Tick at least one page.", profSaved:"Profile saved.", profDeleted:"Profile deleted.", profInUse:n=>`${n} ${pl(n,"account still uses","accounts still use")} this profile: give ${pl(n,"it","them")} another profile first.`, profCustom:"(own profile)", dwProf:p=>`the profile ${p}`,
+ accOwn:"Own settings for this account (instead of its profile’s)", accOwnP:"This account’s own pages and rights:", accFollowP:p=>`Follows the profile ${p} (tick “Own settings” to change it for this account only):`, accAdminAll:"The admin sees every page and has every right.", accOwnS:"(own settings)", noPagesT:"No page yet", noPagesP:"Your profile doesn’t open any page yet: ask the admin.", phRoute:"Phases:", downS:"stopped", downL:"Machine stopped (breakdown, maintenance…)", downWhy:"Why / until when", downPh:"Spindle repair, back on the 20th", downBar:n=>`This machine is stopped: its ${n} ${pl(n,"article","articles")} may need to move.`, downSee:"See them on the Articles page", downHere:"The machine of this sheet is stopped.", artsDown:"Machine stopped", moveCone:(n,c)=>`${n} ${pl(n,"holder doesn’t","holders don’t")} fit ${c}:`, ixOtherPh:l=>`This article also has: ${l}. Check whether they need a new index too.`, artNoteT:"Article note", artNoteH:"shared by all phases", artNotePh:"Customer, drawing revision, special instructions…", colsShowT:"Show this column", colsJoinT:"Joined columns (PDF)", colsJoinP:"Ticked: the column is drawn together with another one on the PDF. Unticked: it gets its own column. The editor and the Excel file always keep separate columns.", joinInType:"inside Type", joinPrev:"with the column before", accRights:"Rights", accRightsP:"The admin has every right. More rights will be added here.", right_validate:"Validate tool sheets", rightS_validate:"✓ validates", rightS_devalidate:"reopens", rightS_revertIndex:"index back", rightS_editMag:"magazines", rightS_deleteArticle:"deletes", valNoRight:"You can’t validate tool sheets: ask the admin for the right.", colsAdminOnly:"Only the admin can change the columns and layouts. Pick a layout for this sheet in the list.", readyVal:"Ready to validate", pctTip:"Share of the required boxes that are filled in", alertSplit:(c,h)=>`${c} tool codes · ${h} holders`, colsLabP:"Leave a title empty to keep the usual one.", ixWhy:"Reason for the change (optional)", ixApprClr:"“Approved by” will be cleared: the new index has to be approved again.", orderDone:n=>`${n} ${pl(n,"code","codes")} to order`, rep12m:"last 12 months, whatever the period above", inSheets:"In tool sheets", magOver:s=>`past the ${s} pockets: free pocket`,  colsKeep:"The tool number always stays", colsShowP:"Untick a column to remove it from this layout (its data is kept and comes back if you tick it again).", demoResetQ2:"Click again to reset", reopenQ2:"Click again to reopen", clickAgain:"Click again to confirm.", colsBtn:"Columns", colsBtnT:"Rename the column titles, add columns, save them as a layout", layT:"Tool sheet layout", layShort:"Layout", laySelT:"The layout of this tool sheet (★ = default for new sheets)", layStd:"Standard", layFirst:"My layout", layThis:"Layout of this sheet", layStdP:"BrocheStuff’s own layout. Change titles or add columns, then save them as a new layout.", layName:"Layout name", layDefault:"Default layout (new tool sheets start with it)", layShared:n=>`Used by ${n} tool sheets: saving changes them all.`, colsTitles:"Column titles", layNewName:"Name of the new layout", layNamePh:"e.g. Toyoda with cut length", layCreate:"Create the layout", laySaveAs:"Save as new layout…", layApply:"Apply", layDel:"Delete layout", layNeedName:"Give the layout a name.", layNameTaken:"A layout already has this name.", laySaved:n=>`Layout “${n}” saved`, layApplied:n=>`Layout: ${n}`, layDeleted:n=>`Layout “${n}” deleted`, layStdEdit:"Standard can’t be changed: give your layout a name to save it.", layDelQ:(n,k)=>`Delete the layout “${n}”? ${k} tool ${k>1?"sheets use":"sheet uses"} it; they go back to the default layout.`, colsExtra:"Your own columns", colsNone:"No extra column yet.", colsNamePh:"Column title, e.g. Lg coupe", colsAdd:"+ Add a column", colsReset:"Usual titles", colsSaved:"Columns saved", colsDelQ:(l,n)=>`Remove the column “${l}”? It is filled in ${n} ${pl(n,"article","articles")}; that data will no longer show.`, colWT:"Drag to widen or narrow · double-click to reset", widthT:"Drag to widen or narrow the page · double-click to reset", splitT:"Drag to resize the preview · double-click to reset", convT:"Turn an Excel tool sheet into a PDF, or a PDF made by BrocheStuff into an Excel file", convTitle:"PDF ⇄ Excel", convP:"Choose an Excel tool sheet (from the model or exported here) or a PDF made by BrocheStuff. You get it back in the other format, or keep it as an article.", convDrop:"Choose a file", convDropP:"or drop it here · Excel, CSV or PDF", convReading:"Reading the file…", convNoTools:"No tool list found in this file: the table needs titles like Outil, Type, Ø, LS, Porte-outil.", pdfNoData:"This PDF was not made by BrocheStuff, so its table can’t be read back. Use the Excel file, or a PDF downloaded from the app.", convGetPdf:"Download the PDF", convGetXls:"Download the Excel", convSaveIn:"Keep it as an article in", convSave:"Save the article", convOther:"Another file", convPickMachine:"Choose a machine first", convSaved:n=>`Article ${n} saved`, pvPdf:"PDF", pvXls:"Excel", pvXlsInfo:n=>`Excel · ${n} ${pl(n,"tool","tools")}`, dlXlsT:"Download the tool sheet as an Excel file you can edit (and import back)", saveXlsT:"Save the tool sheet (Excel)", openFile:"Open", xlsFail:"Excel file not made: ", holder2Ph:"+ 2nd line", holder2T:"Second line (Shift+Enter in the holder box)", colCorr:"Offsets", colIns:"Insert", colInsT:"Insert reference", colHT:"Length offset (H)", colDT:"Radius offset (D)", colFinish:"Finish", colCode:"Code", typePh:"END MILL", addTool:"+ Add tool",
   excelNote:"<b>From Excel:</b> copy the rows (Tool, Type, Ø, R/°, LS, LT, Z, Holder, Code) and paste into any cell. <b>Enter</b> in the last row adds a new one.",
   notesSign:"Notes & sign-off", notes:"Notes", notesPh:"Printed on the sheet. Leave empty for blank lines to write on.", preparedBy:"Prepared by", approvedBy:"Approved by", date:"Date", datePh:"dd/mm/yyyy",
   signNote:"Leave Prepared by / Approved by empty to sign by hand on paper.", pages:n=>`A4 · ${n} ${pl(n,"page","pages")}`, pvError:"Preview error: ",
@@ -2037,7 +2061,10 @@ fr:{
   delWith:n=>`Supprimer avec ${pl(n,"son article","ses "+n+" articles")} ?`, clickDel:"Cliquez encore pour supprimer", machineDeleted:n=>`${n} supprimée`, clickConfirm:"Cliquez encore pour confirmer",
   copyTitle:"Copier l'article", copyP:"Crée un nouvel article avec les mêmes outils. Pour un nouvel indice, ou quand le même article passe sur une autre machine.", copyOn:"Mettre la copie sur", articleNumber:"Numéro d'article", index:"Indice", makeCopy:"Créer la copie", copyMade:"Copie créée. Vous modifiez maintenant la copie.",
   article:"Article", autoSaved:"Enregistré automatiquement", designation:"Désignation", desPh:"Support", reference:"Référence", refPh:"Référence pièce / plan", program:"Programme", material:"Matière",
-  tools:"Outils", nTools:n=>`${n} ${pl(n,"outil","outils")}`, colTool:"Outil", colType:"Type", colHolder:"Porte-outil", updT:"Mise à jour du programme", updCur:v=>`Version installée : ${v}`, updP:"Installez le fichier de mise à jour (BrocheStuff-Update-….neu) depuis une clé USB ou un dossier. Pas besoin d’internet, vos données ne changent pas. Il est aussi déposé dans le dossier des données : chaque poste qui le partage propose la mise à jour au démarrage.", updPick:"Installer une mise à jour…", updBack:"Revenir à la version précédente", updPickT:"Choisissez le fichier de mise à jour", updQ:(a,b)=>`Remplacer la version ${a} par la version ${b} ? BrocheStuff redémarre tout seul.`, updOlder:"Cette version est plus ancienne que celle installée.", updSame:"Cette version est déjà installée.", updSafe:"Vos données, comptes et sauvegardes ne changent pas.", updShare:"Le fichier est aussi déposé dans le dossier des données (Updates) : les autres postes le proposeront au démarrage.", updGo:v=>`Mettre à jour en ${v}`, updWorking:"Mise à jour…", updDone:v=>`Version ${v} installée : redémarrage…`, updBad:"Ce n’est pas un fichier de mise à jour BrocheStuff.", updFail:"La mise à jour n’a pas pu être installée :", updNoPrev:"Aucune version précédente n’est gardée sur ce poste.", updNew:"Mise à jour", updNewP:v=>`La version ${v} est prête (déposée par l’admin).`, dwArt:n=>`l’article ${n}`, dwMach:n=>`la machine ${n}`, dwCode:n=>`le code outil ${n}`, dwHolder:n=>`le porte-outil ${n}`, dwAcc:n=>`le compte de ${n}`, noRight:"Vous n’avez pas ce droit : demandez à l’admin.", delT:"Supprimer ?", delQ:w=>`Supprimer ${w} ?`, delBkP:"Une sauvegarde avant permet de tout récupérer en cas d’erreur.", delBk:"Sauvegarder puis supprimer", delBkOnly:"Sauvegarder d’abord", delGo:"Supprimer sans sauvegarde", delIxWarn:"Ses indices précédents et son historique sont supprimés avec lui.", magRO:"Vous pouvez voir ce magasin mais pas le modifier (demandez le droit à l’admin).", magClearWhat:m=>`tout ce qui est chargé dans le magasin de ${m}`, ixT:"Indices", ixNone:"Pas encore d’indice précédent. Quand un nouvel indice est créé, les précédents apparaissent ici.", ixNow:"(actuel)", ixArch:"Indice précédent", ixChgBtn:i=>`Changements depuis ${i}`, ixBackBtn:"Revenir à cet indice", ixChgT:(a,b)=>`Ce qui a changé : indice ${a} → ${b}`, ixArt:"Article", ixAdd:n=>`${n} ${pl(n,"outil ajouté","outils ajoutés")}`, ixDel:n=>`${n} ${pl(n,"outil retiré","outils retirés")}`, ixChg:n=>`${n} ${pl(n,"outil modifié","outils modifiés")}`, ixSame:"Rien n’a changé entre ces deux indices.", ixBackT:i=>`Revenir à l’indice ${i}`, ixBackQ:(i,n,o)=>`La fiche devient l’indice ${n} avec le contenu de l’indice ${i}. L’indice ${o} reste dans la liste, avec son PDF. Le nouvel indice doit être validé à nouveau.`, ixBackGo:(i,n)=>`Créer ${n} depuis ${i}`, ixBackDone:(i,n)=>`Indice ${n} créé depuis l’indice ${i}.`, hRevert:(f,i)=>`Retour à l’indice ${f} (devenu ${i})`, right_devalidate:"Rouvrir les fiches validées", rightP_devalidate:"Déverrouiller une fiche validée sans changer d’indice.", right_revertIndex:"Revenir à un indice précédent", rightP_revertIndex:"Tous ceux qui voient une fiche voient ses indices précédents et les changements ; seul ce droit permet d’en reprendre un.", right_editMag:"Modifier les magasins machines", rightP_editMag:"Charger, échanger, vider les poches, changer la taille, appliquer une comparaison.", right_deleteArticle:"Supprimer des articles et des machines", rightP_deleteArticle:"Dangereux : supprimer une machine supprime aussi ses articles.", rightP_validate:"Verrouiller la fiche comme validée, avec le nom et la date sur le PDF.", navArts:"Articles", artsT:"Articles", artsSub:"Tous les articles, leurs phases et la machine de chaque phase.", artsQ:"Article, référence, machine, phase…", artsMulti:"Plusieurs phases ou machines", artsWhere:"Phases et machines", noMachine:"Sans machine", noMachineS:"Sans machine", phase:"Phase", phaseS:"Ph.", phaseT:"Phase d’usinage (10, 20…), quand l’article est fait en plusieurs étapes", moveBtn:"Déplacer", moveT:n=>`Déplacer ${n}`, moveFrom:m=>`Actuellement : ${m}`, moveTo:"Déplacer vers", moveP:"La fiche outils suit ; le déplacement est noté dans son historique.", moveGo:"Déplacer", newPhase:"+ Phase", newPhaseT:n=>`Nouvelle phase pour ${n}`, newPhaseP:"Une phase est une fiche outils à part, sur sa machine, avec le même numéro d’article.", phaseFirst:"Phase de la fiche existante", phaseCopy:"Partir des mêmes outils", phaseUsed:p=>`La phase ${p} existe déjà.`, phaseMade:p=>`Phase ${p} créée.`, hMove:(f,to)=>`Déplacé ${f} → ${to}`, hPhase:p=>`Phase ${p} créée`, delKeep:n=>`${pl(n,"Son article reste","Ses "+n+" articles restent")}, marqué${n>1?"s":""} « Sans machine ».`, keptNoMach:n=>`${n} ${pl(n,"article","articles")} maintenant sans machine`, right_moveArticle:"Déplacer les articles et créer des phases", rightP_moveArticle:"Changer la machine d’une fiche ou ajouter une phase sur une autre machine.", rightS_moveArticle:"déplace", colsShowT:"Afficher cette colonne", colsJoinT:"Colonnes regroupées (PDF)", colsJoinP:"Coché : la colonne est dessinée avec une autre sur le PDF. Décoché : elle a sa propre colonne. L’éditeur et le fichier Excel gardent toujours des colonnes séparées.", joinInType:"dans Type", joinPrev:"avec la colonne d’avant", accRights:"Droits", accRightsP:"L’admin a tous les droits. D’autres droits viendront ici.", right_validate:"Valider les fiches outils", rightS_validate:"✓ valide", rightS_devalidate:"rouvre", rightS_revertIndex:"retour d’indice", rightS_editMag:"magasins", rightS_deleteArticle:"supprime", valNoRight:"Vous ne pouvez pas valider les fiches outils : demandez le droit à l’admin.", colsAdminOnly:"Seul l’admin peut changer les colonnes et les modèles. Choisissez un modèle pour cette fiche dans la liste.", readyVal:"Prête à valider", pctTip:"Part des cases obligatoires remplies", alertSplit:(c,h)=>`${c} codes outils · ${h} porte-outils`, colsLabP:"Laissez un titre vide pour garder le titre habituel.", ixWhy:"Motif du changement (facultatif)", ixApprClr:"« Approuvé par » sera vidé : le nouvel indice doit être approuvé à nouveau.", orderDone:n=>`${n} ${pl(n,"code","codes")} à commander`, rep12m:"12 derniers mois, quelle que soit la période", inSheets:"Dans les fiches outils", magOver:s=>`au-delà des ${s} poches : poche libre`,  colsKeep:"Le numéro d’outil reste toujours", colsShowP:"Décochez une colonne pour la retirer de cette mise en page (ses données sont gardées et reviennent si vous la cochez à nouveau).", demoResetQ2:"Cliquez encore pour réinitialiser", reopenQ2:"Cliquez encore pour rouvrir", clickAgain:"Cliquez encore pour confirmer.", colsBtn:"Colonnes", colsBtnT:"Renommer les titres, ajouter des colonnes, les enregistrer comme mise en page", layT:"Mise en page de la fiche outils", layShort:"Mise en page", laySelT:"La mise en page de cette fiche (★ = par défaut pour les nouvelles fiches)", layStd:"Standard", layFirst:"Ma mise en page", layThis:"Mise en page de cette fiche", layStdP:"La mise en page de BrocheStuff. Changez des titres ou ajoutez des colonnes, puis enregistrez-les comme nouvelle mise en page.", layName:"Nom de la mise en page", layDefault:"Mise en page par défaut (les nouvelles fiches commencent avec)", layShared:n=>`Utilisée par ${n} fiches : l’enregistrer les modifie toutes.`, colsTitles:"Titres des colonnes", layNewName:"Nom de la nouvelle mise en page", layNamePh:"ex. Toyoda avec Lg coupe", layCreate:"Créer la mise en page", laySaveAs:"Enregistrer comme nouvelle…", layApply:"Appliquer", layDel:"Supprimer la mise en page", layNeedName:"Donnez un nom à la mise en page.", layNameTaken:"Une mise en page porte déjà ce nom.", laySaved:n=>`Mise en page « ${n} » enregistrée`, layApplied:n=>`Mise en page : ${n}`, layDeleted:n=>`Mise en page « ${n} » supprimée`, layStdEdit:"Standard ne se modifie pas : donnez un nom à votre mise en page pour l’enregistrer.", layDelQ:(n,k)=>`Supprimer la mise en page « ${n} » ? ${k} ${k>1?"fiches l’utilisent":"fiche l’utilise"} ; elles reprennent la mise en page par défaut.`, colsExtra:"Vos colonnes", colsNone:"Aucune colonne ajoutée.", colsNamePh:"Titre de la colonne, ex. Lg coupe", colsAdd:"+ Ajouter une colonne", colsReset:"Titres habituels", colsSaved:"Colonnes enregistrées", colsDelQ:(l,n)=>`Retirer la colonne « ${l} » ? Elle est remplie dans ${n} ${n>1?"articles":"article"} ; ces données ne s’afficheront plus.`, colWT:"Glisser pour élargir ou rétrécir · double-clic pour revenir", widthT:"Glisser pour élargir ou rétrécir la page · double-clic pour revenir", splitT:"Glisser pour redimensionner l’aperçu · double-clic pour revenir", convT:"Transformer une fiche outils Excel en PDF, ou un PDF fait par BrocheStuff en fichier Excel", convTitle:"PDF ⇄ Excel", convP:"Choisissez une fiche outils Excel (le modèle ou un fichier exporté ici) ou un PDF fait par BrocheStuff. Vous la récupérez dans l’autre format, ou vous la gardez comme article.", convDrop:"Choisir un fichier", convDropP:"ou le déposer ici · Excel, CSV ou PDF", convReading:"Lecture du fichier…", convNoTools:"Aucune liste d’outils dans ce fichier : le tableau doit avoir des titres comme Outil, Type, Ø, LS, Porte-outil.", pdfNoData:"Ce PDF n’a pas été fait par BrocheStuff : son tableau ne peut pas être relu. Utilisez le fichier Excel, ou un PDF téléchargé depuis l’application.", convGetPdf:"Télécharger le PDF", convGetXls:"Télécharger l’Excel", convSaveIn:"Garder comme article dans", convSave:"Enregistrer l’article", convOther:"Un autre fichier", convPickMachine:"Choisissez d’abord une machine", convSaved:n=>`Article ${n} enregistré`, pvPdf:"PDF", pvXls:"Excel", pvXlsInfo:n=>`Excel · ${n} ${n>1?"outils":"outil"}`, dlXlsT:"Télécharger la fiche outils en fichier Excel modifiable (et réimportable)", saveXlsT:"Enregistrer la fiche outils (Excel)", openFile:"Ouvrir", xlsFail:"Fichier Excel non créé : ", holder2Ph:"+ 2e ligne", holder2T:"Deuxième ligne (Maj+Entrée dans la case porte-outil)", colCorr:"N° corr.", colIns:"Plaquette", colInsT:"Référence plaquette", colHT:"Correcteur de longueur (H)", colDT:"Correcteur de rayon (D)", colFinish:"Rugosité", colCode:"Code", typePh:"FRAISE 2T", addTool:"+ Ajouter un outil",
+  tools:"Outils", nTools:n=>`${n} ${pl(n,"outil","outils")}`, colTool:"Outil", colType:"Type", colHolder:"Porte-outil", updT:"Mise à jour du programme", updCur:v=>`Version installée : ${v}`, updP:"Installez le fichier de mise à jour (BrocheStuff-Update-….neu) depuis une clé USB ou un dossier. Pas besoin d’internet, vos données ne changent pas. Il est aussi déposé dans le dossier des données : chaque poste qui le partage propose la mise à jour au démarrage.", updPick:"Installer une mise à jour…", updBack:"Revenir à la version précédente", updPickT:"Choisissez le fichier de mise à jour", updQ:(a,b)=>`Remplacer la version ${a} par la version ${b} ? BrocheStuff redémarre tout seul.`, updOlder:"Cette version est plus ancienne que celle installée.", updSame:"Cette version est déjà installée.", updSafe:"Vos données, comptes et sauvegardes ne changent pas.", updShare:"Le fichier est aussi déposé dans le dossier des données (Updates) : les autres postes le proposeront au démarrage.", updGo:v=>`Mettre à jour en ${v}`, updWorking:"Mise à jour…", updDone:v=>`Version ${v} installée : redémarrage…`, updDone2:v=>`La version ${v} est installée.`, updReopen:"BrocheStuff redémarre maintenant. S’il se ferme seulement, rouvrez-le depuis le menu Démarrer ou le bureau.", updRestart:"Redémarrer maintenant", updBad:"Ce n’est pas un fichier de mise à jour BrocheStuff.", updFail:"La mise à jour n’a pas pu être installée :", updNoPrev:"Aucune version précédente n’est gardée sur ce poste.", updNew:"Mise à jour", updNewP:v=>`La version ${v} est prête (déposée par l’admin).`, dwArt:n=>`l’article ${n}`, dwMach:n=>`la machine ${n}`, dwCode:n=>`le code outil ${n}`, dwHolder:n=>`le porte-outil ${n}`, dwAcc:n=>`le compte de ${n}`, noRight:"Vous n’avez pas ce droit : demandez à l’admin.", delT:"Supprimer ?", delQ:w=>`Supprimer ${w} ?`, delBkP:"Une sauvegarde avant permet de tout récupérer en cas d’erreur.", delBk:"Sauvegarder puis supprimer", delBkOnly:"Sauvegarder d’abord", delGo:"Supprimer sans sauvegarde", delIxWarn:"Ses indices précédents et son historique sont supprimés avec lui.", magRO:"Vous pouvez voir ce magasin mais pas le modifier (demandez le droit à l’admin).", magClearWhat:m=>`tout ce qui est chargé dans le magasin de ${m}`, ixT:"Indices", ixNone:"Pas encore d’indice précédent. Quand un nouvel indice est créé, les précédents apparaissent ici.", ixNow:"(actuel)", ixArch:"Indice précédent", ixChgBtn:i=>`Changements depuis ${i}`, ixBackBtn:"Revenir à cet indice", ixChgT:(a,b)=>`Ce qui a changé : indice ${a} → ${b}`, ixArt:"Article", ixAdd:n=>`${n} ${pl(n,"outil ajouté","outils ajoutés")}`, ixDel:n=>`${n} ${pl(n,"outil retiré","outils retirés")}`, ixChg:n=>`${n} ${pl(n,"outil modifié","outils modifiés")}`, ixSame:"Rien n’a changé entre ces deux indices.", ixBackT:i=>`Revenir à l’indice ${i}`, ixBackQ:(i,n,o)=>`La fiche devient l’indice ${n} avec le contenu de l’indice ${i}. L’indice ${o} reste dans la liste, avec son PDF. Le nouvel indice doit être validé à nouveau.`, ixBackGo:(i,n)=>`Créer ${n} depuis ${i}`, ixBackDone:(i,n)=>`Indice ${n} créé depuis l’indice ${i}.`, hRevert:(f,i)=>`Retour à l’indice ${f} (devenu ${i})`, right_devalidate:"Rouvrir les fiches validées", rightP_devalidate:"Déverrouiller une fiche validée sans changer d’indice.", right_revertIndex:"Revenir à un indice précédent", rightP_revertIndex:"Tous ceux qui voient une fiche voient ses indices précédents et les changements ; seul ce droit permet d’en reprendre un.", right_editMag:"Modifier les magasins machines", rightP_editMag:"Charger, échanger, vider les poches, changer la taille, appliquer une comparaison.", right_deleteArticle:"Supprimer des articles et des machines", rightP_deleteArticle:"Dangereux : supprimer une machine supprime aussi ses articles.", rightP_validate:"Verrouiller la fiche comme validée, avec le nom et la date sur le PDF.", navArts:"Articles", artsT:"Articles", artsSub:"Tous les articles, leurs phases et la machine de chaque phase.", artsQ:"Article, référence, machine, phase…", artsMulti:"Plusieurs phases ou machines", artsWhere:"Phases et machines", noMachine:"Sans machine", noMachineS:"Sans machine", phase:"Phase", phaseS:"Ph.", phaseT:"Phase d’usinage (10, 20…), quand l’article est fait en plusieurs étapes", moveBtn:"Déplacer", moveT:n=>`Déplacer ${n}`, moveFrom:m=>`Actuellement : ${m}`, moveTo:"Déplacer vers", moveP:"La fiche outils suit ; le déplacement est noté dans son historique.", moveGo:"Déplacer", newPhase:"+ Phase", newPhaseT:n=>`Nouvelle phase pour ${n}`, newPhaseP:"Une phase est une fiche outils à part, sur sa machine, avec le même numéro d’article.", phaseFirst:"Phase de la fiche existante", phaseCopy:"Partir des mêmes outils", phaseUsed:p=>`La phase ${p} existe déjà.`, phaseMade:p=>`Phase ${p} créée.`, hMove:(f,to)=>`Déplacé ${f} → ${to}`, hPhase:p=>`Phase ${p} créée`, delKeep:n=>`${pl(n,"Son article reste","Ses "+n+" articles restent")}, marqué${n>1?"s":""} « Sans machine ».`, keptNoMach:n=>`${n} ${pl(n,"article","articles")} maintenant sans machine`, right_moveArticle:"Déplacer les articles et créer des phases", rightP_moveArticle:"Changer la machine d’une fiche ou ajouter une phase sur une autre machine.", rightS_moveArticle:"déplace", page_machines:"Machines et leurs articles", page_sheets:"Fiches outils : créer et modifier", page_sheetsView:"Fiches outils : lecture seule", page_arts:"Page Articles", page_crib:"Magasin outils", page_holders:"Porte-outils", page_prod:"Recherche production", page_mags:"Magasins des machines", page_log:"Journal du stock", page_reports:"Rapports", page_gen:"Partout", pageViewOnly:"Consultation seulement.",
+ right_machEdit:"Ajouter et modifier les machines", rightP_machEdit:"Ajouter une machine, changer son nom, sa commande ou son cône.", right_wipe:"Tout supprimer d’un coup", rightP_wipe:"Les boutons « Tout supprimer » (machines, magasin, porte-outils).", right_newIndex:"Créer un nouvel indice", rightP_newIndex:"Passer à l’indice B, C… depuis une fiche validée.", right_setIndex:"Taper l’indice à la main", rightP_setIndex:"Sinon l’indice ne change qu’avec « Nouvel indice ».", right_layouts:"Changer les colonnes et mises en page", rightP_layouts:"Renommer, ajouter, retirer ou regrouper des colonnes ; enregistrer des mises en page.", right_artNote:"Écrire la note de l’article", rightP_artNote:"La note commune à toutes les phases d’un article.", right_cribEdit:"Créer et modifier les codes outils", rightP_cribEdit:"Nouveaux codes, leurs caractéristiques et photos, supprimer des codes.", right_stock:"Changer le stock", rightP_stock:"+ / − et comptages, pour les outils et les porte-outils.", right_holderEdit:"Créer et modifier les porte-outils", rightP_holderEdit:"Nouveaux porte-outils, leurs caractéristiques, supprimer.", right_takeTool:"Sortir des outils", rightP_takeTool:"Le bouton « Sortir 1 » en production.", right_import:"Importer des fichiers", rightP_import:"Listes Excel et programmes CN.", right_backup:"Faire une sauvegarde", rightP_backup:"Le bouton « Sauvegarder ».", right_restore:"Restaurer une sauvegarde", rightP_restore:"Remplace toutes les données par une sauvegarde.", right_logo:"Changer le logo", rightP_logo:"Le logo imprimé sur les fiches.",
+ profT:"Profils", profCardP:"Un profil, c’est ce qu’un groupe de personnes voit et peut faire. Chaque compte suit son profil, ou a ses propres réglages.", profName:"Nom", profNamePh:"Responsable atelier", profPages:"Pages", profAcc:"Comptes", profNew:"+ Nouveau profil", profEdit:p=>`Profil · ${p}`, profP:"Cochez les pages que ce profil ouvre, et ce qu’il peut faire sur chacune.", profUsed:n=>`${n} ${pl(n,"compte l’utilise","comptes l’utilisent")}.`, profDel:"Supprimer le profil", profReset:"Revenir aux réglages d’origine", profNeedName:"Donnez un nom au profil.", profNameUsed:"Un autre profil a déjà ce nom.", profNeedPage:"Cochez au moins une page.", profSaved:"Profil enregistré.", profDeleted:"Profil supprimé.", profInUse:n=>`${n} ${pl(n,"compte utilise","comptes utilisent")} encore ce profil : donnez-${pl(n,"lui","leur")} un autre profil d’abord.`, profCustom:"(profil ajouté)", dwProf:p=>`le profil ${p}`,
+ accOwn:"Réglages propres à ce compte (au lieu de ceux du profil)", accOwnP:"Pages et droits propres à ce compte :", accFollowP:p=>`Suit le profil ${p} (cochez « Réglages propres » pour changer ce compte seulement) :`, accAdminAll:"L’admin voit toutes les pages et a tous les droits.", accOwnS:"(réglages propres)", noPagesT:"Aucune page pour l’instant", noPagesP:"Votre profil n’ouvre encore aucune page : demandez à l’admin.", phRoute:"Phases :", downS:"à l’arrêt", downL:"Machine à l’arrêt (panne, maintenance…)", downWhy:"Pourquoi / jusqu’à quand", downPh:"Réparation broche, retour le 20", downBar:n=>`Cette machine est à l’arrêt : ${pl(n,"son article devra peut-être être déplacé","ses "+n+" articles devront peut-être être déplacés")}.`, downSee:"Les voir dans la page Articles", downHere:"La machine de cette fiche est à l’arrêt.", artsDown:"Machine à l’arrêt", moveCone:(n,c)=>`${n} ${pl(n,"porte-outil ne va","porte-outils ne vont")} pas sur ${c} :`, ixOtherPh:l=>`Cet article a aussi : ${l}. Vérifiez s’il faut aussi un nouvel indice.`, artNoteT:"Note de l’article", artNoteH:"commune à toutes les phases", artNotePh:"Client, révision du plan, consignes particulières…", colsShowT:"Afficher cette colonne", colsJoinT:"Colonnes regroupées (PDF)", colsJoinP:"Coché : la colonne est dessinée avec une autre sur le PDF. Décoché : elle a sa propre colonne. L’éditeur et le fichier Excel gardent toujours des colonnes séparées.", joinInType:"dans Type", joinPrev:"avec la colonne d’avant", accRights:"Droits", accRightsP:"L’admin a tous les droits. D’autres droits viendront ici.", right_validate:"Valider les fiches outils", rightS_validate:"✓ valide", rightS_devalidate:"rouvre", rightS_revertIndex:"retour d’indice", rightS_editMag:"magasins", rightS_deleteArticle:"supprime", valNoRight:"Vous ne pouvez pas valider les fiches outils : demandez le droit à l’admin.", colsAdminOnly:"Seul l’admin peut changer les colonnes et les modèles. Choisissez un modèle pour cette fiche dans la liste.", readyVal:"Prête à valider", pctTip:"Part des cases obligatoires remplies", alertSplit:(c,h)=>`${c} codes outils · ${h} porte-outils`, colsLabP:"Laissez un titre vide pour garder le titre habituel.", ixWhy:"Motif du changement (facultatif)", ixApprClr:"« Approuvé par » sera vidé : le nouvel indice doit être approuvé à nouveau.", orderDone:n=>`${n} ${pl(n,"code","codes")} à commander`, rep12m:"12 derniers mois, quelle que soit la période", inSheets:"Dans les fiches outils", magOver:s=>`au-delà des ${s} poches : poche libre`,  colsKeep:"Le numéro d’outil reste toujours", colsShowP:"Décochez une colonne pour la retirer de cette mise en page (ses données sont gardées et reviennent si vous la cochez à nouveau).", demoResetQ2:"Cliquez encore pour réinitialiser", reopenQ2:"Cliquez encore pour rouvrir", clickAgain:"Cliquez encore pour confirmer.", colsBtn:"Colonnes", colsBtnT:"Renommer les titres, ajouter des colonnes, les enregistrer comme mise en page", layT:"Mise en page de la fiche outils", layShort:"Mise en page", laySelT:"La mise en page de cette fiche (★ = par défaut pour les nouvelles fiches)", layStd:"Standard", layFirst:"Ma mise en page", layThis:"Mise en page de cette fiche", layStdP:"La mise en page de BrocheStuff. Changez des titres ou ajoutez des colonnes, puis enregistrez-les comme nouvelle mise en page.", layName:"Nom de la mise en page", layDefault:"Mise en page par défaut (les nouvelles fiches commencent avec)", layShared:n=>`Utilisée par ${n} fiches : l’enregistrer les modifie toutes.`, colsTitles:"Titres des colonnes", layNewName:"Nom de la nouvelle mise en page", layNamePh:"ex. Toyoda avec Lg coupe", layCreate:"Créer la mise en page", laySaveAs:"Enregistrer comme nouvelle…", layApply:"Appliquer", layDel:"Supprimer la mise en page", layNeedName:"Donnez un nom à la mise en page.", layNameTaken:"Une mise en page porte déjà ce nom.", laySaved:n=>`Mise en page « ${n} » enregistrée`, layApplied:n=>`Mise en page : ${n}`, layDeleted:n=>`Mise en page « ${n} » supprimée`, layStdEdit:"Standard ne se modifie pas : donnez un nom à votre mise en page pour l’enregistrer.", layDelQ:(n,k)=>`Supprimer la mise en page « ${n} » ? ${k} ${k>1?"fiches l’utilisent":"fiche l’utilise"} ; elles reprennent la mise en page par défaut.`, colsExtra:"Vos colonnes", colsNone:"Aucune colonne ajoutée.", colsNamePh:"Titre de la colonne, ex. Lg coupe", colsAdd:"+ Ajouter une colonne", colsReset:"Titres habituels", colsSaved:"Colonnes enregistrées", colsDelQ:(l,n)=>`Retirer la colonne « ${l} » ? Elle est remplie dans ${n} ${n>1?"articles":"article"} ; ces données ne s’afficheront plus.`, colWT:"Glisser pour élargir ou rétrécir · double-clic pour revenir", widthT:"Glisser pour élargir ou rétrécir la page · double-clic pour revenir", splitT:"Glisser pour redimensionner l’aperçu · double-clic pour revenir", convT:"Transformer une fiche outils Excel en PDF, ou un PDF fait par BrocheStuff en fichier Excel", convTitle:"PDF ⇄ Excel", convP:"Choisissez une fiche outils Excel (le modèle ou un fichier exporté ici) ou un PDF fait par BrocheStuff. Vous la récupérez dans l’autre format, ou vous la gardez comme article.", convDrop:"Choisir un fichier", convDropP:"ou le déposer ici · Excel, CSV ou PDF", convReading:"Lecture du fichier…", convNoTools:"Aucune liste d’outils dans ce fichier : le tableau doit avoir des titres comme Outil, Type, Ø, LS, Porte-outil.", pdfNoData:"Ce PDF n’a pas été fait par BrocheStuff : son tableau ne peut pas être relu. Utilisez le fichier Excel, ou un PDF téléchargé depuis l’application.", convGetPdf:"Télécharger le PDF", convGetXls:"Télécharger l’Excel", convSaveIn:"Garder comme article dans", convSave:"Enregistrer l’article", convOther:"Un autre fichier", convPickMachine:"Choisissez d’abord une machine", convSaved:n=>`Article ${n} enregistré`, pvPdf:"PDF", pvXls:"Excel", pvXlsInfo:n=>`Excel · ${n} ${n>1?"outils":"outil"}`, dlXlsT:"Télécharger la fiche outils en fichier Excel modifiable (et réimportable)", saveXlsT:"Enregistrer la fiche outils (Excel)", openFile:"Ouvrir", xlsFail:"Fichier Excel non créé : ", holder2Ph:"+ 2e ligne", holder2T:"Deuxième ligne (Maj+Entrée dans la case porte-outil)", colCorr:"N° corr.", colIns:"Plaquette", colInsT:"Référence plaquette", colHT:"Correcteur de longueur (H)", colDT:"Correcteur de rayon (D)", colFinish:"Rugosité", colCode:"Code", typePh:"FRAISE 2T", addTool:"+ Ajouter un outil",
   excelNote:"<b>Depuis Excel :</b> copiez les lignes (Outil, Type, Ø, R/°, LS, LT, Z, Porte-outil, Code) et collez-les dans n'importe quelle case. <b>Entrée</b> sur la dernière ligne ajoute une ligne.",
   notesSign:"Remarques et visa", notes:"Remarques", notesPh:"Imprimé sur la fiche. Laissez vide pour avoir des lignes à remplir à la main.", preparedBy:"Établi par", approvedBy:"Approuvé par", date:"Date", datePh:"jj/mm/aaaa",
   signNote:"Laissez Établi par / Approuvé par vides pour signer à la main sur papier.", pages:n=>`A4 · ${n} page${n>1?"s":""}`, pvError:"Erreur d'aperçu : ",
@@ -2688,6 +2715,7 @@ function parseRoute(){const h=location.hash.slice(1);
   if(h==="mags")return{view:"mags"};
   if(h==="reports")return{view:"reports"};
   if(h==="arts")return{view:"arts"};
+  if(h==="nopage")return{view:"nopage"};
   if(h.startsWith("mag-")&&M(h.slice(4)))return{view:"mag",id:h.slice(4)};
   if(h.startsWith("v-")&&A(h.slice(2)))return{view:"aview",id:h.slice(2)};
   if(h.startsWith("pc-")){const k=decodeURIComponent(h.slice(3));if(C_(k))return{view:"pcode",code:normCode(k)};return{view:"prod"}}
@@ -2759,12 +2787,12 @@ function render(){
   route=parseRoute();
   // a service that can't edit sees the read-only version of the same page
   if(route.view==="article"&&!can("article"))route={view:"aview",id:route.id};
-  if(route.view==="code"&&!can("code"))route={view:"pcode",code:route.code};
-  if(route.view==="holder"&&!can("holder"))route={view:"pholder",ref:route.ref};
-  if(!can(route.view)){const hm=ROLES[ROLE].home;if((location.hash||"#")!==hm){location.replace(hm);return}}
+  if(route.view==="code"&&!(can("code")&&hasRight("cribEdit")))route={view:"pcode",code:route.code};
+  if(route.view==="holder"&&!(can("holder")&&hasRight("holderEdit")))route={view:"pholder",ref:route.ref};
+  if(!can(route.view)){const hm=PERM.home;if((location.hash||"#")!==hm){location.replace(hm);return}}
   const cr=$("#crumbs"), tb=$("#tbar");tb.innerHTML="";
   if(route.view!=="article")pvTeardown();
-  const sec={crib:"#crib",code:"#crib",holders:"#holders",holder:"#holders",prod:"#prod",pcode:"#prod",pholder:"#prod",aview:ROLE==="outil"?"":"#prod",log:"#log",mags:"#mags",mag:"#mags",reports:"#reports",admin:"#admin",arts:"#arts"}[route.view]??"#";
+  const sec={crib:"#crib",code:"#crib",holders:"#holders",holder:"#holders",prod:"#prod",pcode:"#prod",pholder:"#prod",aview:can("prod")?"#prod":"",log:"#log",mags:"#mags",mag:"#mags",reports:"#reports",admin:"#admin",arts:"#arts"}[route.view]??"#";
   const pcr=can("prod")?`<i>/</i><a data-go="#prod">${esc(t("prodT"))}</a>`:"";
   document.querySelectorAll("[data-nav]").forEach(b=>b.setAttribute("aria-current",String(b.dataset.nav===sec)));
   if(route.view==="home"){cr.innerHTML="";renderHome()}
@@ -2773,6 +2801,7 @@ function render(){
   else if(route.view==="mags"){cr.innerHTML="";renderMags()}
   else if(route.view==="reports"){cr.innerHTML="";renderReports()}
   else if(route.view==="arts"){cr.innerHTML="";renderArts()}
+  else if(route.view==="nopage"){cr.innerHTML="";$("#view").innerHTML=`<div class="page"><div class="empty"><h3>${esc(t("noPagesT"))}</h3><p>${esc(t("noPagesP"))}</p></div></div>`}
   else if(route.view==="admin"){cr.innerHTML="";renderAdminPage()}
   else if(route.view==="mag"){const m=M(route.id);cr.innerHTML=`<i>/</i><a data-go="#mags">${esc(t("navMags"))}</a><i>/</i><span>${esc(mShort(m))}</span>`;renderMag(m)}
   else if(route.view==="pcode"){const c=C_(route.code);cr.innerHTML=`${pcr}<i>/</i><span>${esc(c.code)}</span>`;renderPItem(c,false)}
@@ -2845,7 +2874,7 @@ function renderHome(){
   $("#view").innerHTML=`<div class="page">
     <div class="ph"><div><h2>${esc(t("machines"))}<b>.</b></h2><div class="sub">${esc(t("homeSub"))}</div></div><span class="sp"></span>
       <div class="search">${searchIcon}<input id="q" type="search" placeholder="${esc(t("homeSearch"))}" value="${esc(homeQ)}" autocomplete="off"></div>
-      ${tplBtn("machines")}${convBtn()}<button class="btn" id="b-impm" title="${esc(t("impT"))}">${esc(t("imp"))}</button>${ROLE==="admin"&&(db.machines.length||db.articles.length)?`<button class="btn danger" id="b-wipe">${esc(t("wipeAll"))}</button>`:""}</div>
+      ${tplBtn("machines")}${convBtn()}<button class="btn" id="b-impm" title="${esc(t("impT"))}">${esc(t("imp"))}</button>${hasRight("wipe")&&(db.machines.length||db.articles.length)?`<button class="btn danger" id="b-wipe">${esc(t("wipeAll"))}</button>`:""}</div>
     <div id="hres"></div>
     ${backupNote()}
   </div>`;
@@ -2870,7 +2899,7 @@ function drawHome(){
     </section>`:""}
     <div class="mgrid">${machinesSorted().map(m=>{const mc=counts(artsOf(m.id));return `<div class="mc" role="button" tabindex="0" data-m="${m.id}">
       <button class="edit-m" data-edit="${m.id}" title="${esc(t("editT"))}">${esc(t("edit"))}</button>
-      ${m.abbr?`<span class="ab">${esc(m.abbr)}</span>`:""}<span class="nm${m.abbr?" sm":""}">${esc(m.name)}</span><span class="md">${esc(mInfo(m))}${coneTag(m.cone)?" "+coneTag(m.cone):""}</span>
+      ${m.abbr?`<span class="ab">${esc(m.abbr)}</span>`:""}<span class="nm${m.abbr?" sm":""}">${esc(m.name)}</span>${m.down?`<span class="downtag" title="${esc(m.downWhy||"")}">${esc(t("downS"))}</span>`:""}<span class="md">${esc(mInfo(m))}${coneTag(m.cone)?" "+coneTag(m.cone):""}</span>
       <div class="ct"><b>${mc.done}</b><span>${esc(t("slashDone",mc.all))}</span><span class="sp"></span><span class="ip">${mc.progress?esc(t("nInProgress",mc.progress)):""}</span></div>
       ${stackBar(mc)}</div>`}).join("")}
     <button class="mc add" id="addm">${esc(t("addMachine"))}</button></div>`;
@@ -2886,10 +2915,12 @@ function renderMachine(m){
     <div class="ph"><div class="mhead">${m.abbr?`<span class="abbig">${esc(m.abbr)}</span>`:""}<div><h2>${esc(m.name)}<b>.</b></h2><div class="sub">${coneTag(m.cone,1)?coneTag(m.cone,1)+" ":""}${esc(mInfo(m))}${mInfo(m)?" · ":""}<span id="mcount"></span></div></div></div><span class="sp"></span>
       <div class="search">${searchIcon}<input id="q" type="search" placeholder="${esc(t("machSearch"))}" value="${esc(machQ)}" autocomplete="off"></div>
       ${tplBtn("articles")}${convBtn()}<button class="btn" id="b-impa" title="${esc(t("impT"))}">${esc(t("imp"))}</button><button class="btn" id="b-impnc" title="${esc(t("impNCP"))}">${esc(t("impNC"))}</button><button class="btn ghost" id="b-mag">${esc(t("navMags"))}</button>
-      ${ROLE==="admin"&&db.articles.some(a=>a.machineId===m.id)?`<button class="btn danger" id="b-wipe">${esc(t("wipeAll"))}</button>`:""}
+      ${hasRight("wipe")&&db.articles.some(a=>a.machineId===m.id)?`<button class="btn danger" id="b-wipe">${esc(t("wipeAll"))}</button>`:""}
       <button class="btn red" id="newa">${esc(t("newArticle"))}</button></div>
+    ${m.down?`<p class="warnline downbar">${esc(t("downBar",artsOf(m.id).length))}${m.downWhy?" — "+esc(m.downWhy):""}${can("arts")?` <button class="btn sm" id="b-downarts">${esc(t("downSee"))}</button>`:""}</p>`:""}
     <div id="mres"></div>
   </div>`;
+  $("#b-downarts")&&($("#b-downarts").onclick=()=>{artsF="down";artsQ="";go("#arts")});
   $("#newa").onclick=()=>newArticle(m);$("#b-impa").onclick=()=>startImport("articles",{machineId:m.id});$("#b-impnc").onclick=()=>importPrograms(m);$("#b-mag").onclick=()=>go("#mag-"+m.id);if($("#b-wipe"))$("#b-wipe").onclick=()=>wipeDialog("machine",m);
   const q=$("#q");q.oninput=()=>{machQ=q.value;drawMachine(m)};drawMachine(m);
 }
@@ -2940,31 +2971,50 @@ function artGroups(){const G=new Map();
 function renderArts(){
   $("#view").innerHTML=`<div class="page artsp"><div class="ph"><div><h2>${esc(t("artsT"))}<b>.</b></h2><div class="sub">${esc(t("artsSub"))}</div></div></div>
     <div class="resbar"><div class="search">${searchIcon}<input id="arts-q" type="search" placeholder="${esc(t("artsQ"))}" value="${esc(artsQ)}" autocomplete="off"></div><div class="chips">
-      ${[["all",t("accAll")],["multi",t("artsMulti")],["none",t("noMachine")]].map(([k,l])=>`<button class="chip" data-afl="${k}" aria-pressed="${artsF===k}">${esc(l)}<b id="afn-${k}"></b></button>`).join("")}</div></div>
+      ${[["all",t("accAll")],["multi",t("artsMulti")],["down",t("artsDown")],["none",t("noMachine")]].map(([k,l])=>`<button class="chip" data-afl="${k}" aria-pressed="${artsF===k}">${esc(l)}<b id="afn-${k}"></b></button>`).join("")}</div></div>
     <div id="artsres"></div></div>`;
   const q=$("#arts-q");let qt;q.oninput=()=>{artsQ=q.value;clearTimeout(qt);qt=setTimeout(drawArts,120)};
   $("#view").querySelectorAll("[data-afl]").forEach(b=>b.onclick=()=>{artsF=b.dataset.afl;$("#view").querySelectorAll("[data-afl]").forEach(x=>x.setAttribute("aria-pressed",x===b));drawArts()});
   drawArts()}
 function drawArts(){const box=$("#artsres");if(!box)return;const all=artGroups();
   const multi=L=>new Set(L.map(a=>a.machineId)).size>1||L.some(a=>phOf(a)),none=L=>L.some(a=>a.machineId==="nomachine"||!M(a.machineId));
-  const cnt={all:all.length,multi:all.filter(multi).length,none:all.filter(none).length};Object.entries(cnt).forEach(([k,n])=>{const e=$("#afn-"+k);if(e)e.textContent=n});
+  const down=L=>L.some(a=>M(a.machineId)&&M(a.machineId).down);
+  const cnt={all:all.length,multi:all.filter(multi).length,down:all.filter(down).length,none:all.filter(none).length};Object.entries(cnt).forEach(([k,n])=>{const e=$("#afn-"+k);if(e)e.textContent=n});
   const terms=artsQ.toLowerCase().split(/\s+/).filter(Boolean);
-  const L=all.filter(G=>(artsF==="all"||(artsF==="multi"?multi(G):none(G)))&&(!terms.length||terms.every(w=>G.some(a=>{const m=M(a.machineId);return[a.article.number,a.article.reference,a.article.designation,a.article.program,phOf(a),m&&m.abbr,m&&m.name].join(" ").toLowerCase().includes(w)}))));
+  const L=all.filter(G=>(artsF==="all"||(artsF==="multi"?multi(G):artsF==="down"?down(G):none(G)))&&(!terms.length||terms.every(w=>G.some(a=>{const m=M(a.machineId);return[a.article.number,a.article.reference,a.article.designation,a.article.program,phOf(a),m&&m.abbr,m&&m.name].join(" ").toLowerCase().includes(w)}))));
   const LIM=80,canOpen=a=>can("article")?"#a-"+a.id:"#v-"+a.id,mv=hasRight("moveArticle"),mk=can("article")&&mv;
   box.innerHTML=L.length?`<div class="list"><table class="lt artt"><thead><tr><th>${esc(t("thArticle"))}</th><th>${esc(t("designation"))}</th><th>${esc(t("artsWhere"))}</th><th></th></tr></thead><tbody>
-    ${L.slice(0,LIM).map(G=>{const a0=G[0];return`<tr><td><b class="an">${esc(a0.article.number||t("noNumber"))}</b><div class="dim small">${esc(a0.article.reference||"")}</div></td><td class="cl"><span class="clip">${esc(a0.article.designation||"")}</span></td>
-      <td><div class="phases">${G.map(a=>{const m=M(a.machineId),s=statusOf(a),nm=!m||m.id==="nomachine";return`<div class="phs${nm?" nomach":""}"><button class="phgo" data-go="${canOpen(a)}">${phOf(a)?`<span class="phn">${esc(t("phaseS"))} ${esc(phOf(a))}</span>`:""}<span class="mtag">${esc(mShort(m))}</span>${a.article.index?`<span class="dim">${esc(t("index"))} ${esc(a.article.index)}</span>`:""}<span class="ast ast-${s}">${esc(t(s==="done"?"done":s==="progress"?"inProgress":"notStarted"))}</span></button>${mv?`<button class="btn sm ghost" data-mv="${a.id}">${esc(t("moveBtn"))}</button>`:""}</div>`}).join("")}</div></td>
+    ${L.slice(0,LIM).map(G=>{const a0=G[0];return`<tr><td><b class="an">${esc(a0.article.number||t("noNumber"))}</b><div class="dim small">${esc(a0.article.reference||"")}</div></td><td class="cl"><span class="clip">${esc(a0.article.designation||"")}</span>${artNote(a0)?`<div class="artn" title="${esc(artNote(a0).text)}">✎ ${esc(artNote(a0).text)}</div>`:""}</td>
+      <td><div class="phases">${G.map(a=>{const m=M(a.machineId),s=statusOf(a),nm=!m||m.id==="nomachine";return`<div class="phs${nm?" nomach":""}"><button class="phgo" data-go="${canOpen(a)}">${phOf(a)?`<span class="phn">${esc(t("phaseS"))} ${esc(phOf(a))}</span>`:""}<span class="mtag">${esc(mShort(m))}</span>${m&&m.down?`<span class="downtag">${esc(t("downS"))}</span>`:""}${a.article.index?`<span class="dim">${esc(t("index"))} ${esc(a.article.index)}</span>`:""}<span class="ast ast-${s}">${esc(t(s==="done"?"done":s==="progress"?"inProgress":"notStarted"))}</span></button>${mv?`<button class="btn sm ghost" data-mv="${a.id}">${esc(t("moveBtn"))}</button>`:""}</div>`}).join("")}</div></td>
       <td class="act">${mk?`<button class="btn sm" data-nph="${a0.id}">${esc(t("newPhase"))}</button>`:""}</td></tr>`}).join("")}</tbody></table></div>${L.length>LIM?`<p class="note">${esc(t("pMore",L.length-LIM))}</p>`:""}`
     :`<div class="empty"><h3>${esc(t("pNone"))}</h3></div>`;
   box.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
   box.querySelectorAll("[data-mv]").forEach(b=>b.onclick=()=>moveDialog(A(b.dataset.mv),drawArts));
   box.querySelectorAll("[data-nph]").forEach(b=>b.onclick=()=>phaseDialog(A(b.dataset.nph)));fadeClips(box)}
+
+/* ---------- article note (shared by every phase), phase route, machine stopped, holders that don't fit ---------- */
+const numKey=a=>clean(a&&a.article&&a.article.number).toLowerCase();
+const artNote=a=>{const k=numKey(a);return k&&(db.artNotes||[]).find(n=>n.num===k)||null};
+function setArtNote(a,text){const k=numKey(a);if(!k)return;db.artNotes=db.artNotes||[];const n=db.artNotes.find(x=>x.num===k);text=String(text||"").trim();
+  if(!text){db.artNotes=db.artNotes.filter(x=>x!==n);return}if(n)Object.assign(n,{text,ts:Date.now(),who:USER||""});else db.artNotes.push({num:k,text,ts:Date.now(),who:USER||""})}
+const phasesOf=a=>{const k=numKey(a);if(!k)return[a];const nat=(p,q)=>String(p).localeCompare(String(q),undefined,{numeric:true});
+  return db.articles.filter(x=>numKey(x)===k).sort((p,q)=>nat(phOf(p)||"0",phOf(q)||"0"))};
+function phRouteHTML(a){const L=phasesOf(a);if(L.length<2)return"";
+  return`<div class="phroute"><span class="dim">${esc(t("phRoute"))}</span>${L.map((x,i)=>`${i?`<span class="arr">→</span>`:""}<button class="phstep${x===a?" here":""}" data-go="${can("article")?"#a-":"#v-"}${x.id}">${phOf(x)?`<b>${esc(t("phaseS"))} ${esc(phOf(x))}</b> `:""}<span class="mtag">${esc(mShort(M(x.machineId)))}</span>${M(x.machineId)&&M(x.machineId).down?` <span class="downtag">${esc(t("downS"))}</span>`:""}</button>`).join("")}</div>`}
+function wirePhRoute(root){root&&root.querySelectorAll(".phroute [data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go))}
+function coneMisfits(a,mid){const mc=normCone(M(mid)&&M(mid).cone);if(!mc)return[];const out=[];
+  realTools(a.tools).forEach(x=>splitHolders(x.holder).forEach(h=>{const c=refCone(h);if(c&&c!==mc)out.push(`${normT(x.t)} ${h} (${c})`)}));return out}
+function moveWarnHTML(a,mid){const bad=coneMisfits(a,mid);if(!bad.length)return"";
+  return`<p class="warnline" style="margin:6px 0 0">${esc(t("moveCone",bad.length,normCone(M(mid).cone)))}</p><ul class="ixl">${bad.slice(0,12).map(x=>`<li>${esc(x)}</li>`).join("")}${bad.length>12?`<li>…</li>`:""}</ul>`}
+function noteCardHTML(a,editable){const n=artNote(a);if(!numKey(a))return"";
+  return`<div class="artnote"><h4 class="imph">${esc(t("artNoteT"))} <span class="hint">${esc(t("artNoteH"))}</span></h4>${editable?`<textarea id="artnote" rows="2" placeholder="${esc(t("artNotePh"))}">${esc(n?n.text:"")}</textarea>`:`<p style="margin:0;white-space:pre-wrap">${n?esc(n.text):`<span class="dim">—</span>`}</p>`}${n&&n.who?`<p class="dim small" style="margin:2px 0 0">${esc(n.who)} · ${esc(when(n.ts))}</p>`:""}</div>`}
+function wireNote(a){const el=$("#artnote");if(!el)return;let tm;el.oninput=()=>{clearTimeout(tm);tm=setTimeout(()=>{setArtNote(a,el.value);saveDB()},500)};el.onblur=()=>{clearTimeout(tm);setArtNote(a,el.value);saveDB()}}
 function machOpts(sel){return machinesSorted().filter(m=>m.id!=="nomachine").map(m=>`<option value="${m.id}" ${m.id===sel?"selected":""}>${esc(mLabel(m))}</option>`).join("")}
 function moveDialog(a,after){if(!hasRight("moveArticle")){toast(t("noRight"));return}
   dialog(esc(t("moveT",a.article.number||t("noNumber"))),`<p style="margin:0">${esc(t("moveFrom",mLabel(M(a.machineId))))}</p>
-    <label class="f">${esc(t("moveTo"))}<select id="mv-m">${machOpts(a.machineId)}</select></label><label class="f">${esc(t("phase"))}<input id="mv-ph" value="${esc(phOf(a))}" placeholder="—"></label><p class="note" style="margin:0">${esc(t("moveP"))}</p>`,
+    <label class="f">${esc(t("moveTo"))}<select id="mv-m">${machOpts(a.machineId)}</select></label><div id="mv-warn"></div><label class="f">${esc(t("phase"))}<input id="mv-ph" value="${esc(phOf(a))}" placeholder="—"></label><p class="note" style="margin:0">${esc(t("moveP"))}</p>`,
     `<button class="btn ghost" id="d-cancel">${esc(t("cancel"))}</button><button class="btn red" id="d-ok">${esc(t("moveGo"))}</button>`);
-  $("#d-cancel").onclick=closeDlg;
+  $("#d-cancel").onclick=closeDlg;const mw=()=>{$("#mv-warn").innerHTML=moveWarnHTML(a,$("#mv-m").value)};$("#mv-m").onchange=mw;mw();
   $("#d-ok").onclick=()=>{const to=$("#mv-m").value,ph=clean($("#mv-ph").value),from=a.machineId;if(to===from&&ph===phOf(a)){closeDlg();return}
     if(to!==from)addHist(a,"move",{from:mShort(M(from)),to:mShort(M(to))});a.machineId=to;a.article.phase=ph;a.updatedAt=Date.now();saveDB();closeDlg();toast(t("movedTo",mLabel(M(to))));after?after():render()}}
 function phaseDialog(a0){
@@ -3028,21 +3078,22 @@ function wipeDialog(where,m){
     toast(msg,{label:t("undoW"),fn:()=>{const o=JSON.parse(snap);db.machines=o.machines;db.articles=o.articles;db.catalog=o.catalog;db.holders=o.holders||[];saveDB();render();toast(t("restoredWipe"))}});
   };
 }
-function machineDialog(m){
+function machineDialog(m){if(!hasRight("machEdit")){toast(t("noRight"));return}
   const ov=dialog(esc(m?t("editMachine"):t("addMachineT")),`
     <div class="grid"><label class="f c2">${esc(t("abbr"))}<input id="d-abbr" class="big up" value="${esc(m?.abbr||"")}" placeholder="M6" maxlength="8"></label>
     <label class="f c4">${esc(t("machineName"))}<input id="d-name" value="${esc(m?.name||"")}" placeholder="NMV5000-M6"></label>
     <label class="f c3">${esc(t("brand"))}<input id="d-brand" class="up" value="${esc(m?.brand||(m&&!m.brand&&!m.control?m.model||"":""))}" placeholder="DMG MORI"></label>
     <label class="f c3">${esc(t("control"))}<input id="d-control" class="up" value="${esc(m?.control||"")}" placeholder="FANUC"></label>
-    <label class="f c3">${esc(t("spindle"))}<input id="d-cone" class="up" list="cones" value="${esc(normCone(m?.cone))}" placeholder="BT40 / BT50"></label><p class="note c3" style="align-self:end;margin:0 0 10px">${esc(t("spindleP"))}</p></div>
+    <label class="f c3">${esc(t("spindle"))}<input id="d-cone" class="up" list="cones" value="${esc(normCone(m?.cone))}" placeholder="BT40 / BT50"></label><p class="note c3" style="align-self:end;margin:0 0 10px">${esc(t("spindleP"))}</p>
+    <label class="chk c6"><input type="checkbox" id="d-down" ${m&&m.down?"checked":""}> ${esc(t("downL"))}</label><label class="f c6">${esc(t("downWhy"))}<input id="d-downwhy" value="${esc(m&&m.downWhy||"")}" placeholder="${esc(t("downPh"))}"></label></div>
     <p class="err" id="d-err" hidden></p>`,
     `${m&&hasRight("deleteArticle")?`<button class="btn danger" id="d-del">${esc(t("delMachine"))}</button><span class="sp"></span>`:""}<button class="btn ghost" id="d-cancel">${esc(t("cancel"))}</button><button class="btn red" id="d-ok">${esc(m?t("save"):t("addMachineT"))}</button>`);
   const err=x=>{$("#d-err").textContent=x;$("#d-err").hidden=false};
   const ok=()=>{const abbr=$("#d-abbr").value.trim().toUpperCase(),name=$("#d-name").value.trim()||abbr;if(!name){err(t("needName"));return}
     if(db.machines.some(x=>x!==m&&x.name.toLowerCase()===name.toLowerCase())){err(t("nameTaken"));return}
     if(abbr&&db.machines.some(x=>x!==m&&(x.abbr||"").toUpperCase()===abbr)){err(t("abbrTaken"));return}
-    const vals={abbr,name,brand:$("#d-brand").value.trim().toUpperCase(),control:$("#d-control").value.trim().toUpperCase(),cone:normCone($("#d-cone").value)};
-    if(m){Object.assign(m,vals);delete m.model}else db.machines.push({id:uid(),...vals,createdAt:Date.now()});
+    const vals={abbr,name,brand:$("#d-brand").value.trim().toUpperCase(),control:$("#d-control").value.trim().toUpperCase(),cone:normCone($("#d-cone").value),down:$("#d-down").checked,downWhy:$("#d-down").checked?clean($("#d-downwhy").value):""};if(!vals.down){delete vals.down;delete vals.downWhy}
+    if(m){delete m.down;delete m.downWhy;Object.assign(m,vals);delete m.model}else db.machines.push({id:uid(),...vals,createdAt:Date.now()});
     saveDB();closeDlg();render();toast(m?t("machineSaved"):t("machineAdded",abbr||name))};
   $("#d-ok").onclick=ok;ov.querySelectorAll("input").forEach(i=>i.onkeydown=e=>{if(e.key==="Enter")ok()});
   $("#d-cancel").onclick=closeDlg;
@@ -3072,7 +3123,7 @@ function copyDialog(src){
   dialog(esc(t("copyTitle")),`
     <p class="note" style="margin:0">${esc(t("copyP"))}</p>
     <label class="f">${esc(t("copyOn"))}<select id="d-m">${machinesSorted().map(m=>`<option value="${m.id}" ${m.id===src.machineId?"selected":""}>${esc(mLabel(m))}</option>`).join("")}</select></label>
-    <div class="grid"><label class="f c4">${esc(t("articleNumber"))}<input id="d-num" class="big" value="${esc(src.article.number||"")}"></label><label class="f c2">${esc(t("index"))}<input id="d-ix" class="big${ROLE==="admin"?"":" ro"}" ${ROLE==="admin"?"":"readonly"} value="${esc(nextIndex(src.article.index)||"A")}"></label></div><p class="err" id="d-err" hidden></p>`,
+    <div class="grid"><label class="f c4">${esc(t("articleNumber"))}<input id="d-num" class="big" value="${esc(src.article.number||"")}"></label><label class="f c2">${esc(t("index"))}<input id="d-ix" class="big${hasRight("setIndex")?"":" ro"}" ${hasRight("setIndex")?"":"readonly"} value="${esc(nextIndex(src.article.index)||"A")}"></label></div><p class="err" id="d-err" hidden></p>`,
     `<button class="btn ghost" id="d-cancel">${esc(t("cancel"))}</button><button class="btn red" id="d-ok">${esc(t("makeCopy"))}</button>`);
   $("#d-cancel").onclick=closeDlg;
   $("#d-ok").onclick=()=>{const mid=$("#d-m").value,num=$("#d-num").value.trim(),ix=$("#d-ix").value.trim();
@@ -3118,7 +3169,7 @@ const layUse=id=>db.articles.filter(a=>layoutIdOf(a)===id).length;
 function layoutOptions(sel){return [`<option value="std" ${sel==="std"?"selected":""}>${esc(t("layStd"))}${defaultLayoutId()==="std"?" ★":""}</option>`,
   ...layoutsAll().map(l=>`<option value="${l.id}" ${sel===l.id?"selected":""}>${esc(l.name)}${defaultLayoutId()===l.id?" ★":""}</option>`)].join("")}
 /* the "Layout" dialog: choose, edit, save, save as, make default, delete */
-function columnsDialog(art){if(ROLE!=="admin"){toast(t("colsAdminOnly"));return}
+function columnsDialog(art){if(!hasRight("layouts")){toast(t("colsAdminOnly"));return}
   let selId=layoutIdOf(art),buf,name,isDef;
   const load=id=>{selId=id;const l=layoutById(id);buf=JSON.parse(JSON.stringify(normCfg(l)));name=l?l.name:"";isDef=defaultLayoutId()===id};
   load(selId);
@@ -3239,6 +3290,8 @@ function renderEditor(art){fillHolderList(M(art.machineId)?.cone);
         <label class="f c1" title="${esc(t("phaseT"))}">${esc(t("phase"))}<input id="a-phase" class="big" placeholder="—" autocomplete="off"></label>
         <label class="f c2">${esc(t("index"))}<input id="a-index" class="big" placeholder="C" autocomplete="off"></label>
         <p class="warnline c6" id="dupwarn" hidden></p>
+        <div class="c6" id="edph">${phRouteHTML(cur)}${M(cur.machineId)&&M(cur.machineId).down?`<p class="warnline" style="margin:4px 0 0">${esc(t("downHere"))}</p>`:""}</div>
+        <div class="c6">${noteCardHTML(cur,hasRight("artNote"))}</div>
         <label class="f c3">${esc(t("designation"))}<input id="a-designation" placeholder="${esc(t("desPh"))}"></label>
         <label class="f c3">${esc(t("reference"))}<input id="a-reference" placeholder="${esc(t("refPh"))}"></label>
         <label class="f c2">${esc(t("program"))}<input id="a-program" placeholder="O1234"></label>
@@ -3253,7 +3306,7 @@ function renderEditor(art){fillHolderList(M(art.machineId)?.cone);
         <thead><tr>${[...LABK.filter(k=>showK(k)),...sheetCfg().extra.map(e=>xKey(e.id))].map(k=>{const w=thW(k),ttl=k==="corr"?t("colHT")+" · "+t("colDT"):k==="insert"?t("colInsT"):k==="oal"?t("oal"):"";
           return `<th data-ck="${k}"${w?` style="width:${w}px"`:""}${ttl?` title="${esc(ttl)}"`:""}${k.startsWith("x_")?' class="xth"':""}>${esc(colLabel(k))}${k==="holder"&&coneTag(M(cur.machineId)?.cone)?" "+coneTag(M(cur.machineId)?.cone):""}<span class="colrs" title="${esc(t("colWT"))}"></span></th>`}).join("")}<th class="actth"></th></tr></thead>
         <tbody id="rows"></tbody></table></div>
-      <div class="rowbar"><button class="btn" id="b-add">${esc(t("addTool"))}</button><button class="btn ghost" id="b-impt" title="${esc(t("impT"))}">${esc(t("imp"))}</button><button class="btn ghost" id="b-ncimp" title="${esc(t("impNCP"))}">${esc(t("ncFromProg"))}</button><label class="laysel" title="${esc(t("laySelT"))}"><span>${esc(t("layShort"))}</span><select id="a-layout">${layoutOptions(layoutIdOf(art))}</select></label>${ROLE==="admin"?`<button class="btn ghost" id="b-cols" title="${esc(t("colsBtnT"))}">${esc(t("colsBtn"))}</button>`:""}<button class="btn ghost" id="b-prep" title="${esc(t("prepT"))}">${esc(t("prep"))}</button><button class="btn ghost" id="b-magcmp">${esc(t("magCmpBtn"))}</button>${tplBtn("tools")}<span class="note">${t("excelNote")}</span></div>
+      <div class="rowbar"><button class="btn" id="b-add">${esc(t("addTool"))}</button><button class="btn ghost" id="b-impt" title="${esc(t("impT"))}">${esc(t("imp"))}</button><button class="btn ghost" id="b-ncimp" title="${esc(t("impNCP"))}">${esc(t("ncFromProg"))}</button><label class="laysel" title="${esc(t("laySelT"))}"><span>${esc(t("layShort"))}</span><select id="a-layout">${layoutOptions(layoutIdOf(art))}</select></label>${hasRight("layouts")?`<button class="btn ghost" id="b-cols" title="${esc(t("colsBtnT"))}">${esc(t("colsBtn"))}</button>`:""}<button class="btn ghost" id="b-prep" title="${esc(t("prepT"))}">${esc(t("prep"))}</button><button class="btn ghost" id="b-magcmp">${esc(t("magCmpBtn"))}</button>${tplBtn("tools")}<span class="note">${t("excelNote")}</span></div>
     </div>
     <div class="card">
       <h2>${esc(t("notesSign"))}</h2>
@@ -3269,8 +3322,9 @@ function renderEditor(art){fillHolderList(M(art.machineId)?.cone);
     <div class="card"><h2>${esc(t("histT"))}</h2><div id="histbox"></div></div>
   </section>
   <section class="pv" id="pvsec"><div class="pvbar"><span>${esc(t("preview"))}</span><div class="seg pvseg" role="group"><button data-pvm="pdf" aria-pressed="${pvMode!=="xlsx"}">${esc(t("pvPdf"))}</button><button data-pvm="xlsx" aria-pressed="${pvMode==="xlsx"}">${esc(t("pvXls"))}</button></div><span id="pvinfo">A4</span></div><div class="pvpages" id="pvpages"></div></section></div>`;
+  wirePhRoute($("#edph"));wireNote(cur);
   AFIELDS.forEach(k=>{const el=$("#a-"+k);el.value=a[k]??"";el.addEventListener("input",()=>{cur.article[k]=el.value;edited();if(REQ_ART.includes(k))drawStatus();if(k==="number"||k==="index"){checkDup();$("#crumbs span:last-child").textContent=cur.article.number||t("newArticleCrumb")}})});
-  $("#a-machine").onchange=e=>{const from=cur.machineId;cur.machineId=e.target.value;addHist(cur,"move",{from:mShort(M(from)),to:mShort(M(cur.machineId))});edited();const mm=M(cur.machineId);$("#crumbs a").textContent=mShort(mm);$("#crumbs a").dataset.go="#m-"+mm.id;checkDup();toast(t("movedTo",mLabel(mm)))};
+  $("#a-machine").onchange=e=>{const from=cur.machineId;cur.machineId=e.target.value;addHist(cur,"move",{from:mShort(M(from)),to:mShort(M(cur.machineId))});edited();const mm=M(cur.machineId);$("#crumbs a").textContent=mShort(mm);$("#crumbs a").dataset.go="#m-"+mm.id;checkDup();const bad=coneMisfits(cur,cur.machineId);toast(t("movedTo",mLabel(mm))+(bad.length?" · "+t("moveCone",bad.length,normCone(mm.cone)):""));markMissing()};
   renderRows();checkDup();
   const rows=$("#rows");wireDiagram(rows.closest(".card"),"k");
   rows.addEventListener("input",e=>{const tr=e.target.closest("tr"),k=e.target.dataset.k;if(!tr||!k)return;
@@ -3315,7 +3369,7 @@ function renderEditor(art){fillHolderList(M(art.machineId)?.cone);
   $("#b-impt").onclick=()=>startImport("tools",{});$("#b-ncimp").onclick=()=>startImport("tools",{});
   $("#b-magcmp").onclick=()=>{flushEditor();compareDialog(M(cur.machineId),cur)};
   $("#a-index").addEventListener("change",e=>{const v=clean(e.target.value).toUpperCase(),prev=(cur.history||[]).filter(h=>h.ix).map(h=>h.ix);
-    if(ROLE!=="admin"){return}
+    if(!hasRight("setIndex")){return}
     if(v&&prev.includes(v)&&v!==clean(edIndex0)){toast(t("indexUsed",v));e.target.value=edIndex0;cur.article.index=edIndex0;edited();return}
     e.target.value=v;cur.article.index=v});
   edIndex0=cur.article.index||"";edBaseline();applyLock();drawHistory();
@@ -3333,7 +3387,7 @@ function drawStatus(){const box=$("#stbox");if(!box)return;const done=cur.status
   box.classList.toggle("is-done",done);
   if(done){const v=cur.validated||{ts:cur.updatedAt,who:""};
     box.innerHTML=`<div class="vstamp">✓ ${esc(t("validatedBy",when(v.ts),v.who))}${cur.article.index?` · ${esc(t("index"))} <b>${esc(cur.article.index)}</b>`:""}</div><span class="sp"></span>
-      ${can("article")?`<button class="btn red" id="b-newix">${esc(t("newIndex"))}</button>`:""}${hasRight("devalidate")?`<button class="btn ghost" id="b-reopen">${esc(t("reopen"))}</button>`:""}<p class="note lockp">${esc(t("lockedP"))}</p>`;
+      ${can("article")&&hasRight("newIndex")?`<button class="btn red" id="b-newix">${esc(t("newIndex"))}</button>`:""}${hasRight("devalidate")?`<button class="btn ghost" id="b-reopen">${esc(t("reopen"))}</button>`:""}<p class="note lockp">${esc(t("lockedP"))}</p>`;
     $("#b-newix")&&($("#b-newix").onclick=newIndexArticle);$("#b-reopen")&&($("#b-reopen").onclick=reopenArticle);return}
   const okV=hasRight("validate");
   box.innerHTML=`${okV?`<button class="btn red" id="b-validate">✓ ${esc(t("validate"))}</button>`:""}${statusCell({...cur,status:cur.status})}<span class="miss-n">${esc(miss?t("stillEmpty",miss):t("allFilled"))}</span>${okV?"":`<span class="note valno">${esc(t("valNoRight"))}</span>`}`;
@@ -3531,7 +3585,7 @@ function drawCrib(){
     body=list.length?`<div class="list"><table class="lt crt"><thead><tr>${COLS.map((c,i)=>th(c,c[0]==="type"?' style="min-width:170px"':"")).join("")}<th></th></tr></thead><tbody id="crows"></tbody></table><div id="cmore" class="cmore"></div></div>`
       :`<div class="empty"><h3>${esc(t(cat.length?"noCodeMatch":"cribEmpty"))}</h3>${cat.length?"":`<p>${esc(t("cribEmptyP"))}</p><div class="actions2">${missing.length?`<button class="btn red" id="addall2">${esc(t("addAll",missing.length))}</button>`:""}<button class="btn" id="nc3b">${esc(t("imp"))}</button><button class="btn" id="nc2b">${esc(t("newCode"))}</button></div>`}</div>`;
   }
-  const tools2=cat.length?`<button class="btn sm" id="b-order" title="${esc(t("orderListT"))}">${esc(t("orderList"))}</button>${ROLE==="admin"?`<button class="btn sm danger" id="b-wipe">${esc(t("wipeAll"))}</button>`:""}`:"";
+  const tools2=cat.length?`<button class="btn sm" id="b-order" title="${esc(t("orderListT"))}">${esc(t("orderList"))}</button>${hasRight("wipe")?`<button class="btn sm danger" id="b-wipe">${esc(t("wipeAll"))}</button>`:""}`:"";
   box.innerHTML=tiles+`<div class="resbar">${tools2}<span class="sp"></span>${chips}</div>`+body;if(!$("#crows"))fadeClips(box);
   $("#b-order")&&($("#b-order").onclick=orderCSV);$("#b-wipe")&&($("#b-wipe").onclick=()=>wipeDialog("crib"));
   box.querySelectorAll("[data-cf]").forEach(b=>b.onclick=()=>{cribF=b.dataset.cf;drawCrib()});
@@ -3540,7 +3594,7 @@ function drawCrib(){
   if(tb){cribShown=0;moreCribRows();
     const tbl=tb.closest("table");
     tbl.onclick=e=>{const sd=e.target.closest("[data-sd]"),dl=e.target.closest("[data-delc]"),tr=e.target.closest("tr[data-code]");
-      if(sd){const c=C_(sd.dataset.c);moveStock(c,+sd.dataset.sd,+sd.dataset.sd>0?t("hAdd"):t("hTake"));saveDB();refreshCribRow(c);return}
+      if(sd){if(!canStock())return;const c=C_(sd.dataset.c);moveStock(c,+sd.dataset.sd,+sd.dataset.sd>0?t("hAdd"):t("hTake"));saveDB();refreshCribRow(c);return}
       if(dl){const c=C_(dl.dataset.delc);if(!c)return;askDelete(t("dwCode",c.code),()=>{const i=db.catalog.indexOf(c);if(i<0)return;db.catalog.splice(i,1);saveDB();drawCrib();
         toast(t("codeDeleted",c.code),{label:t("undoW"),fn:()=>{db.catalog.splice(Math.min(i,db.catalog.length),0,c);saveDB();drawCrib()}})});return}
       if(tr&&!e.target.closest("button"))go("#c-"+encodeURIComponent(tr.dataset.code))};
@@ -3607,7 +3661,7 @@ function drawStockCard(c){
   const set=()=>{const v=parseInt($("#cf-set").value);if(isNaN(v)||v<0)return;const b0=+c.stock||0,d=v-b0;c.stock=v;c.history=[{ts:Date.now(),d:0,set:v,note:t("hSet")+(d?` (${d>0?"+":""}${d})`:""),who:USER||""},...(c.history||[])].slice(0,60);logStock(c,b0,v,t("hSet"),true);saveDB();drawStockCard(c)};
   $("#b-set").onclick=set;$("#cf-set").onkeydown=e=>{if(e.key==="Enter")set()};
 }
-function newCodeDialog(){
+function newCodeDialog(){if(!hasRight("cribEdit")){toast(t("noRight"));return}
   const draft={type:"",photo:null,draft:true};
   dialog(esc(t("newCodeT")),`<div class="grid"><label class="f c2">${esc(t("cCode"))}<input id="d-code" class="big up" placeholder="" autocomplete="off"></label>
     <label class="f c4">${esc(t("cType"))}<input id="d-type" class="up" list="types" placeholder="${esc(t("typePh"))}" autocomplete="off"></label></div>
@@ -3827,7 +3881,7 @@ function drawHolders(){
         <td><div class="stk"><div class="stepper"><button data-hsd="-1" data-hr="${esc(h.ref)}">−</button><span>${+h.stock||0}</span><button data-hsd="1" data-hr="${esc(h.ref)}">+</button></div><span class="spill s-${s}">${esc(SSL(s))}</span></div></td>
         <td class="m">${+h.min||0}</td><td class="act"><button class="ib x" data-delh="${esc(h.ref)}" title="${esc(t("delHolder"))}">✕</button></td></tr>`}).join("")}</tbody></table></div>`
       :`<div class="empty"><h3>${esc(t(H.length?"noCodeMatch":"holdEmpty"))}</h3>${H.length?"":`<div class="actions2">${missing.length?`<button class="btn red" id="haddall2">${esc(t("addAll",missing.length))}</button>`:""}<button class="btn" id="nh3b">${esc(t("imp"))}</button></div>`}</div>`}
-  const tools2=H.length&&ROLE==="admin"?`<button class="btn sm danger" id="b-wipeh">${esc(t("wipeAll"))}</button>`:"";
+  const tools2=H.length&&hasRight("wipe")?`<button class="btn sm danger" id="b-wipeh">${esc(t("wipeAll"))}</button>`:"";
   box.innerHTML=tiles+`<div class="resbar">${tools2}<span class="sp"></span>${holdF==="missing"?"":cChips}${chips}</div>`+body;fadeClips(box);
   box.querySelectorAll("[data-hc]").forEach(b=>b.onclick=()=>{holdC=b.dataset.hc;drawHolders()});
   $("#b-wipeh")&&($("#b-wipeh").onclick=()=>wipeDialog("holders"));
@@ -3837,11 +3891,11 @@ function drawHolders(){
   box.querySelectorAll("[data-addh]").forEach(b=>b.onclick=()=>add([b.dataset.addh]));
   $("#haddall")&&($("#haddall").onclick=()=>add(missing.filter(k=>match(k))));$("#haddall2")&&($("#haddall2").onclick=()=>add(missing));$("#nh3b")&&($("#nh3b").onclick=()=>startImport("holders",{}));
   const tbl=box.querySelector("table.crt");if(tbl)tbl.onclick=e=>{const sd=e.target.closest("[data-hsd]"),dl=e.target.closest("[data-delh]"),tr=e.target.closest("tr[data-h]");
-    if(sd){const h=H_(sd.dataset.hr);moveStock(h,+sd.dataset.hsd,+sd.dataset.hsd>0?t("hAdd"):t("hTake"));saveDB();drawHolders();return}
+    if(sd){if(!canStock())return;const h=H_(sd.dataset.hr);moveStock(h,+sd.dataset.hsd,+sd.dataset.hsd>0?t("hAdd"):t("hTake"));saveDB();drawHolders();return}
     if(dl){const h=H_(dl.dataset.delh);if(!h)return;askDelete(t("dwHolder",h.ref),()=>{const i=db.holders.indexOf(h);if(i<0)return;db.holders.splice(i,1);saveDB();drawHolders();toast(t("holderDeleted",h.ref),{label:t("undoW"),fn:()=>{db.holders.splice(Math.min(i,db.holders.length),0,h);saveDB();drawHolders()}})});return}
     if(tr&&!e.target.closest("button"))go("#h-"+encodeURIComponent(tr.dataset.h))};
 }
-function newHolderDialog(){const draft={type:"",photo:null,draft:true};
+function newHolderDialog(){if(!hasRight("holderEdit")){toast(t("noRight"));return}const draft={type:"",photo:null,draft:true};
   dialog(esc(t("newHolderT")),`<div class="grid"><label class="f c3">${esc(t("hRef"))}<input id="d-href" class="up" autocomplete="off"></label><label class="f c2">${esc(t("cType"))}<input id="d-htype" class="up" list="htypes" autocomplete="off"></label><label class="f c1">${esc(t("hCone"))}<input id="d-hcone" class="up" list="cones" autocomplete="off"></label></div><div id="d-hvbox"></div><p class="err" id="d-err" hidden></p>`,
     `<button class="btn ghost" id="d-cancel">${esc(t("cancel"))}</button><button class="btn red" id="d-ok">${esc(t("create"))}</button>`);
   $(".dlg").classList.add("wide2");
@@ -4117,7 +4171,7 @@ const XLS_ACCEPT=".xlsx,.pdf,application/pdf,.xls,.xlsm,.xlsb,.ods,.csv,.txt,.js
 function pickFile(){return new Promise(res=>{const i=document.createElement("input");i.type="file";i.accept=XLS_ACCEPT;i.onchange=()=>res(i.files[0]||null);i.click()})}
 
 /* entry points */
-function importChooser(){
+function importChooser(){if(!hasRight("import")){toast(t("noRight"));return}
   dialog(esc(t("imp")),`<p class="note" style="margin:0">${esc(t("impChoose"))}</p>
     <div class="impchoice"><button data-k="machines"><b>${esc(t("impMachinesOpt"))}</b><span>${esc(t("impMachinesP"))}</span></button>
     <button data-k="articles"><b>${esc(t("impArticlesOpt"))}</b><span>${esc(t("impArticlesP"))}</span></button></div>`,
@@ -4126,7 +4180,7 @@ function importChooser(){
   $("#d-cancel").onclick=closeDlg;
   $("#ov").querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>{closeDlg();startImport(b.dataset.k,{})});
 }
-async function startImport(kind,ctx){
+async function startImport(kind,ctx){if(!hasRight("import")){toast(t("noRight"));return}
   const file=await pickFile();if(!file)return;
   let sheets;try{sheets=await readTable(file)}catch(e){console.error(e);toast(e.message==="nodata"?t("pdfNoData"):t("impFail"));return}
   if(kind==="tools")sheets.forEach(s=>{if(!s.art){const h=findHeader(s.rows,TOOLF);s.art={article:h.row>0?readBlock(s.rows,h.row):{}}}});
@@ -4324,12 +4378,51 @@ const ROLES={
   prod:{views:["prod","pcode","pholder","aview"],nav:["#prod"],home:"#prod",stock:1}
 };
 let ROLE=null,USER="";
-const can=v=>!!ROLE&&(ROLES[ROLE].views==="*"||ROLES[ROLE].views.includes(v));
-const canStock=()=>!!ROLE&&!!ROLES[ROLE].stock;
-const roleName=r=>t({admin:"rAdmin",methode:"rMethode",outil:"rOutil",prod:"rProd"}[r]||"rAdmin");
+/* ---------- profiles: which pages each person sees and what they may do on them ----------
+   The three services are built-in profiles; the admin can change what they give and make new profiles (desktop).
+   An account follows its profile, or has its own pages and rights. */
+const PAGES=[
+  {k:"machines",views:["home","machine"],nav:"#",rights:["machEdit","deleteArticle","wipe"]},
+  {k:"sheets",views:["article","aview"],rights:["validate","devalidate","newIndex","setIndex","revertIndex","moveArticle","layouts"]},
+  {k:"sheetsView",views:["aview"],rights:[]},
+  {k:"arts",views:["arts"],nav:"#arts",rights:["artNote"]},
+  {k:"crib",views:["crib","code","pcode"],nav:"#crib",rights:["cribEdit","stock"]},
+  {k:"holders",views:["holders","holder","pholder"],nav:"#holders",rights:["holderEdit"]},
+  {k:"prod",views:["prod","pcode","pholder","aview"],nav:"#prod",rights:["takeTool"]},
+  {k:"mags",views:["mags","mag"],nav:"#mags",rights:["editMag"]},
+  {k:"log",views:["log"],nav:"#log",rights:[]},
+  {k:"reports",views:["reports"],nav:"#reports",rights:[]}];
+const GEN_RIGHTS=["import","backup","restore","logo"];
+const ALL_RIGHTS=[...PAGES.flatMap(p=>p.rights),...GEN_RIGHTS];
+const NAV_ORDER=["#","#arts","#crib","#holders","#prod","#mags","#log","#reports"];
+const BUILTIN={
+  methode:{pages:["machines","sheets","arts","mags"],rights:["machEdit","validate","newIndex","moveArticle","artNote","editMag","import","backup"]},
+  outil:{pages:["crib","holders","sheetsView","mags","log","reports"],rights:["cribEdit","holderEdit","stock","editMag","import","backup"]},
+  prod:{pages:["prod","sheetsView"],rights:["takeTool"]}};
+const OLD_RIGHTS=["validate","devalidate","revertIndex","editMag","moveArticle","deleteArticle"];
+const userProfiles=()=>(typeof USERS!=="undefined"&&USERS&&Array.isArray(USERS.profiles))?USERS.profiles:[];
+const profileIds=()=>["methode","outil","prod",...userProfiles().filter(p=>!BUILTIN[p.id]&&p.id!=="admin").map(p=>p.id)];
+function profileOf(id){if(id==="admin")return{id,pages:PAGES.map(p=>p.k),rights:[...ALL_RIGHTS],admin:1};
+  const u=userProfiles().find(p=>p.id===id),b=BUILTIN[id];
+  if(u)return{id,name:u.name,pages:u.pages||(b&&b.pages)||[],rights:u.rights||(b&&b.rights)||[],custom:!b};
+  return b?{id,...b}:{id,pages:[],rights:[]}}
+function permOf(roleId,acc){const P=profileOf(roleId);if(P.admin)return{...P};
+  let pages=P.pages,rights=P.rights;
+  if(acc&&acc.own){pages=acc.pages||pages;rights=acc.rights||rights}
+  // accounts set up before pages existed keep the rights they were given, plus the new ones of their service
+  else if(acc&&Array.isArray(acc.rights)&&!acc.rv)rights=[...new Set([...acc.rights.filter(k=>OLD_RIGHTS.includes(k)),...P.rights.filter(k=>!OLD_RIGHTS.includes(k))])];
+  return{id:roleId,pages:[...pages],rights:[...rights]}}
+const accRec=()=>(typeof DESK!=="undefined"&&DESK&&!DEMO_ON&&ACC)?((USERS&&USERS.users||[]).find(x=>x.id===ACC.id)||ACC):null;
+let PERM=null;
+function setPerm(){if(!ROLE){PERM=null;return}const P=permOf(ROLE,accRec());const pg=PAGES.filter(p=>P.admin||P.pages.includes(p.k));
+  P.views=P.admin?"*":[...new Set(pg.flatMap(p=>p.views))];P.nav=NAV_ORDER.filter(h=>P.admin||pg.some(p=>p.nav===h));P.home=P.nav[0]||"#nopage";PERM=P}
+const can=v=>!!ROLE&&!!PERM&&(v==="nopage"||PERM.views==="*"||PERM.views.includes(v));
+const canStock=()=>hasRight("stock");
+const takeMode=()=>hasRight("takeTool")&&!hasRight("stock");
+const roleName=r=>{const b={admin:"rAdmin",methode:"rMethode",outil:"rOutil",prod:"rProd"}[r];if(b){const u=userProfiles().find(p=>p.id===r);return u&&clean(u.name)||t(b)}const u=userProfiles().find(p=>p.id===r);return u?u.name:r||""};
 // where a tool / holder / article link should go for the current service
-const codeHref=k=>(can("code")?"#c-":"#pc-")+encodeURIComponent(normCode(k));
-const holderHref=k=>(can("holder")?"#h-":"#ph-")+encodeURIComponent(normH_(k));
+const codeHref=k=>(can("code")&&hasRight("cribEdit")?"#c-":"#pc-")+encodeURIComponent(normCode(k));
+const holderHref=k=>(can("holder")&&hasRight("holderEdit")?"#h-":"#ph-")+encodeURIComponent(normH_(k));
 const PRODV=["prod","pcode","pholder","aview"];
 const artHref=a=>(can("article")&&!PRODV.includes(route.view)?"#a-":"#v-")+a.id;
 const WHOKEY="toolmanager.who";
@@ -4365,7 +4458,7 @@ function commentCard(ctx,redraw){
 function wireComment(root,ctx,redraw){root.querySelectorAll("[data-cm]").forEach(b=>b.onclick=()=>commentDialog(ctx,redraw))}
 
 /* ---------- the start screen ---------- */
-const roleIcons={
+const roleIcons={custom:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>`,
   methode:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6M9 9h2"/></svg>`,
   outil:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><path d="M10 7h4M10 17h4"/></svg>`,
   prod:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V10l5 3V10l5 3V6l8 4v11z"/><path d="M7 17h2M12 17h2M17 17h2"/></svg>`,
@@ -4400,26 +4493,33 @@ function askWho(r){
   $("#g-back").onclick=()=>{w.hidden=true;box.classList.remove("asking");box.querySelectorAll(".gcard").forEach(c=>c.classList.remove("picked"))};
 }
 function enterRole(r,name){
-  ROLE=r;USER=name||"";
+  ROLE=r;USER=name||"";setPerm();
   const pl0=(whoMem().lang||{})[USER];if(USER&&pl0&&pl0!==LANG){LANG=pl0;lsSet(LANGKEY,pl0);chrome()}document.body.classList.remove("gating");
-  document.body.className=document.body.className.replace(/\brole-\w+/g,"").trim();document.body.classList.add("role-"+r);
+  document.body.className=document.body.className.replace(/\brole-\w+|\btake-mode\b/g,"").trim();document.body.classList.add("role-"+(BUILTIN[r]||r==="admin"?r:"custom"));if(takeMode())document.body.classList.add("take-mode");
   roleChrome();
   const h=location.hash||"#";const want=parseRoute().view;
   const ok=can(want)||(want==="article"&&can("aview"))||(want==="code"&&can("pcode"))||(want==="holder"&&can("pholder"));
-  const alert=()=>{if(r==="outil")setTimeout(stockAlert,60)};
-  if(!ok||(r!=="admin"&&h==="#"&&ROLES[r].home!=="#")){if(h!==ROLES[r].home){location.hash=ROLES[r].home;alert();return}}
+  const alert=()=>{if(r!=="admin"&&hasRight("stock")&&can("crib"))setTimeout(stockAlert,60)};
+  if(!ok||(r!=="admin"&&h==="#"&&PERM.home!=="#")){if(h!==PERM.home){location.hash=PERM.home;alert();return}}
   render();alert();
 }
-function leaveRole(){if(edTimer){clearTimeout(edTimer);flushEditor()}ROLE=null;USER="";ACC=null;roleChrome();render()}
+function leaveRole(){if(edTimer){clearTimeout(edTimer);flushEditor()}ROLE=null;USER="";ACC=null;PERM=null;roleChrome();render()}
 function roleChrome(){
-  const R=ROLE?ROLES[ROLE]:null;
-  document.querySelectorAll("[data-nav]").forEach(b=>b.hidden=!R||!R.nav.includes(b.dataset.nav));
-  $("#b-backup").hidden=!R||!R.backup;$("#b-restore").hidden=!R||!R.restore;$("#b-logo").hidden=!R||ROLE!=="admin";
+  if(ROLE&&!PERM)setPerm();const R=ROLE?PERM:null;
+  document.querySelectorAll("[data-nav]").forEach(b=>b.hidden=!R||!(b.dataset.nav==="#admin"?ROLE==="admin"&&DESK:R.nav.includes(b.dataset.nav)));
+  $("#b-backup").hidden=!R||!hasRight("backup");$("#b-restore").hidden=!R||!hasRight("restore");$("#b-logo").hidden=!R||!hasRight("logo");
   const rc=$("#b-role");rc.hidden=!R;
-  if(R){rc.innerHTML=`<span class="gi">${roleIcons[ROLE]}</span><span class="rl"><b>${esc(roleName(ROLE))}</b>${USER&&USER!==roleName(ROLE)?`<span>${esc(USER)}</span>`:""}</span>`;rc.title=t("switchRole")}
+  if(R){rc.innerHTML=`<span class="gi">${roleIcons[ROLE]||roleIcons.custom}</span><span class="rl"><b>${esc(roleName(ROLE))}</b>${USER&&USER!==roleName(ROLE)?`<span>${esc(USER)}</span>`:""}</span>`;rc.title=t("switchRole")}
   $("#nav-a").textContent=t("navArts");$("#nav-p").textContent=t("navProd");$("#nav-l").textContent=t("navLog");$("#nav-g").textContent=t("navMags");$("#nav-r").textContent=t("navReports");$("#nav-x").textContent=t("navAdmin");
 }
 $("#b-role").onclick=()=>{if(DESK&&!DEMO_ON&&ACC)accountMenu();else leaveRole()};
+
+/* ---------- buttons follow the rights of the person signed in ---------- */
+const NEED={"#b-impm":"import","#addm-csv":"import","#b-impa":"import","#b-impnc":"import","#b-impt":"import","#b-ncimp":"import","#b-impc":"import","#b-imph":"import","#nc3b":"import","#nh3b":"import",
+  "#addm":"machEdit","[data-edit]":"machEdit","#b-newcode":"cribEdit","#nc2":"cribEdit","#nc2b":"cribEdit","#addall2":"cribEdit","[data-delc]":"cribEdit",
+  "#b-newh":"holderEdit","#nh2":"holderEdit","#haddall":"holderEdit","#haddall2":"holderEdit","[data-delh]":"holderEdit","[data-sd]":"stock","[data-hsd]":"stock"};
+function gateUI(){if(!ROLE||ROLE==="admin")return;const v=$("#view");if(!v)return;for(const [sel,k] of Object.entries(NEED))if(!hasRight(k))v.querySelectorAll(sel).forEach(e=>{e.hidden=true;e.style.display="none"})}
+let gateQ=0;new MutationObserver(()=>{if(gateQ)return;gateQ=1;queueMicrotask(()=>{gateQ=0;gateUI()})}).observe(document.getElementById("view"),{childList:true,subtree:true});
 
 /* ---------- production: one search for tools, holders and articles ---------- */
 let prodQ="",prodS="all";
@@ -4435,11 +4535,11 @@ function renderProd(){
   $("#b-pcm").onclick=()=>commentDialog({});
   drawProd();q.focus();q.setSelectionRange(q.value.length,q.value.length);
 }
-const pstep=(k,n)=>ROLE==="prod"?`<div class="takebox"><b class="m">${n}</b>${n>0?`<button class="btn sm take" data-ptake="${esc(k)}" title="${esc(t("takeT"))}">${esc(t("takeOne"))}</button>`:`<span class="take-none"></span>`}</div>`:canStock()?`<div class="stepper"><button data-pmv="-1" data-pk="${esc(k)}" aria-label="−1">−</button><span>${n}</span><button data-pmv="1" data-pk="${esc(k)}" aria-label="+1">+</button></div>`:`<b class="m">${n}</b>`;
+const pstep=(k,n)=>takeMode()?`<div class="takebox"><b class="m">${n}</b>${n>0?`<button class="btn sm take" data-ptake="${esc(k)}" title="${esc(t("takeT"))}">${esc(t("takeOne"))}</button>`:`<span class="take-none"></span>`}</div>`:canStock()?`<div class="stepper"><button data-pmv="-1" data-pk="${esc(k)}" aria-label="−1">−</button><span>${n}</span><button data-pmv="1" data-pk="${esc(k)}" aria-label="+1">+</button></div>`:`<b class="m">${n}</b>`;
 const itemOf=k=>k.startsWith("h:")?H_(k.slice(2)):C_(k.slice(2));
 function stockHandler(root,redraw,art){
   root.addEventListener("click",e=>{const tk=e.target.closest("[data-ptake]");if(tk){e.stopPropagation();const it=itemOf(tk.dataset.ptake);if(it)takeDialog(it,art,redraw);return}
-    const b=e.target.closest("[data-pmv]");if(!b)return;e.stopPropagation();if(ROLE==="prod")return;const it=itemOf(b.dataset.pk);if(!it||!canStock())return;
+    const b=e.target.closest("[data-pmv]");if(!b)return;e.stopPropagation();if(takeMode())return;const it=itemOf(b.dataset.pk);if(!it||!canStock())return;
     const d=+b.dataset.pmv,isH=it.code==null,k=isH?it.ref:it.code;moveStock(it,d,t(d>0?"pReturn":"pTake"));saveDB();
     toast(t("movedTo",k,+it.stock||0),{label:t("cmShort"),fn:()=>commentDialog({k:isH?"h":"c",key:k,label:k},redraw)});redraw()},true);
 }
@@ -4539,7 +4639,7 @@ function renderPItem(it,isH){
           ${arts.length?`<div class="uselist">${uses.map(u=>`<button class="useitem" data-go="${artHref(u.a)}"><span class="an">${esc(u.a.article.number||t("noNumber"))}</span><span class="mtag">${esc(mShort(M(u.a.machineId)))}</span><span class="use"><b>${esc(normT(u.x.t))}</b></span></button>`).join("")}</div>`:`<p class="note" style="margin:0">${esc(t(isH?"notUsedH":"notUsed"))}</p>`}</div></div></div></div>`;
   const draw=()=>{const s=stockState(it),box=$("#pstock");box.className=`card stockcard s-${s}`;
     box.innerHTML=`<h2>${esc(t("inStock"))} <span class="spill s-${s}">${esc(SSL(s))}</span></h2>
-      ${ROLE==="prod"?`<div class="bigstock"><b>${+it.stock||0}</b></div><button class="btn red takebig" data-ptake="${esc(key)}" ${(+it.stock||0)<=0?"disabled":""}>${esc((+it.stock||0)<=0?t("takeNone"):t("takeOneBig"))}</button>`:`<div class="bigstock">${canStock()?`<button class="bs" data-pmv="-1" data-pk="${esc(key)}" aria-label="−1">−</button>`:""}<b>${+it.stock||0}</b>${canStock()?`<button class="bs" data-pmv="1" data-pk="${esc(key)}" aria-label="+1">+</button>`:""}</div>`}
+      ${takeMode()?`<div class="bigstock"><b>${+it.stock||0}</b></div><button class="btn red takebig" data-ptake="${esc(key)}" ${(+it.stock||0)<=0?"disabled":""}>${esc((+it.stock||0)<=0?t("takeNone"):t("takeOneBig"))}</button>`:`<div class="bigstock">${canStock()?`<button class="bs" data-pmv="-1" data-pk="${esc(key)}" aria-label="−1">−</button>`:""}<b>${+it.stock||0}</b>${canStock()?`<button class="bs" data-pmv="1" data-pk="${esc(key)}" aria-label="+1">+</button>`:""}</div>`}
       ${+it.min?`<p class="note" style="margin:0;text-align:center">${esc(t("minimum"))} : ${+it.min}</p>`:""}
       <h2 style="margin-top:4px">${esc(t("lastMoves"))}</h2>
       ${(it.history||[]).length?`<ul class="hist">${it.history.slice(0,8).map(h=>`<li><b class="${h.d>0?"pos":h.d<0?"neg":""}">${h.d>0?"+"+h.d:h.d<0?"−"+(-h.d):"="+(h.set??"")}</b><span>${esc(h.note||"")}${h.who?` · <i>${esc(h.who)}</i>`:""}</span><span class="dim">${when(h.ts)} ${hhmm(h.ts)}</span></li>`).join("")}</ul>`:`<p class="note" style="margin:0">${esc(t("noMoves"))}</p>`}`};
@@ -4555,11 +4655,12 @@ function renderAView(art){
   $("#view").innerHTML=`<div class="page aview">
     <div class="ph"><div class="codehead"><span class="bigcode">${esc(a.number||t("noNumber"))}${a.index?`<i class="aidx">${esc(a.index)}</i>`:""}</span><div>
       <div class="sub" style="margin:0;display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="mtag">${esc(mShort(m))}</span>${coneTag(m&&m.cone)}<span>${esc(m?m.name:"")}</span></div>
-      <div class="sub" style="margin:0">${esc([a.reference,a.designation].filter(Boolean).join(" · "))}</div></div></div><span class="sp"></span>
+      <div class="sub" style="margin:0">${esc([a.reference,a.designation].filter(Boolean).join(" · "))}</div>${phRouteHTML(art)}</div></div><span class="sp"></span>
       <span class="ast ast-${s}">${esc(t(s==="done"?"done":s==="progress"?"inProgress":"notStarted"))}</span></div>
     <div class="avinfo">${[["reference",a.reference],["designation",a.designation],["program",a.program],["material",a.material]].map(([k,v])=>`<div><dt>${esc(t(k))}</dt><dd>${esc(v||"—")}</dd></div>`).join("")}<div><dt>${esc(t("sTools"))}</dt><dd>${rows.length}</dd></div></div>
     <div class="seg avtabs" role="tablist"><button data-av="list" aria-pressed="${avTab==="list"}">${esc(t("listTab"))}</button><button data-av="pdf" aria-pressed="${avTab==="pdf"}">${esc(t("sheetTab"))}</button><button data-av="ix" aria-pressed="${avTab==="ix"}">${esc(t("ixT"))}</button></div>
-    <div id="avbody"></div><div id="avcm"></div></div>`;
+    ${m&&m.down?`<p class="warnline">${esc(t("downHere"))}</p>`:""}${artNote(art)?`<div class="card">${noteCardHTML(art,false)}</div>`:""}
+    <div id="avbody"></div><div id="avcm"></div></div>`;wirePhRoute($("#view"));
   $("#view").querySelectorAll("[data-av]").forEach(b=>b.onclick=()=>{avTab=b.dataset.av;$("#view").querySelectorAll("[data-av]").forEach(x=>x.setAttribute("aria-pressed",x===b));drawAV(art)});
   drawAV(art);
   const cctx={k:"a",key:art.id,label:a.number||t("noNumber")},dc=()=>{const b=$("#avcm");if(!b)return;b.innerHTML=commentCard(cctx);wireComment(b,cctx,dc)};dc();
@@ -4640,13 +4741,13 @@ function drawLog(){
 }
 function noteRow(e,li){
   const it=e.ck==="h"?H_(e.key):e.ck==="c"?C_(e.key):null,art=e.ck==="a"?A(e.key):null;
-  const link=it?`<button class="linkcode" data-go="${e.ck==="h"?holderHref(e.key):codeHref(e.key)}">${esc(e.key)}</button>`:art?`<button class="linkcode" data-go="#${can("article")&&ROLE!=="prod"?"a":"v"}-${art.id}">${esc(art.article.number||e.label)}</button> <span class="dim small">${esc(t("article"))}</span>`:e.label?`<span class="m">${esc(e.label)}</span>`:`<span class="dim">—</span>`;
+  const link=it?`<button class="linkcode" data-go="${e.ck==="h"?holderHref(e.key):codeHref(e.key)}">${esc(e.key)}</button>`:art?`<button class="linkcode" data-go="#${can("article")?"a":"v"}-${art.id}">${esc(art.article.number||e.label)}</button> <span class="dim small">${esc(t("article"))}</span>`:e.label?`<span class="m">${esc(e.label)}</span>`:`<span class="dim">—</span>`;
   return `<tr class="noterow logrow" ${li!=null?`data-li="${li}"`:""}><td class="m">${when(e.ts)}</td><td class="m">${hhmm(e.ts)}</td><td><b>${esc(e.who||"—")}</b></td><td><span class="rtag r-${esc(e.role)}">${esc(e.role?roleName(e.role):"—")}</span></td>
     <td>${link}</td><td><span class="ntag">${esc(t("cmTag"))}</span></td><td class="m">${e.re?`<span class="dim small">${esc(t("cmAbout"))}</span> <b class="${e.re.set?"":e.re.d>0?"pos":"neg"}">${e.re.set?"= "+e.re.a:e.re.d>0?"+"+e.re.d:"−"+(-e.re.d)}</b>`:`<span class="dim">—</span>`}</td><td class="cl"><span class="ntext">${esc(e.note)}</span></td></tr>`;
 }
 function logDetail(e){if(!e)return;
   const isN=e.k==="n",ck=isN?e.ck:e.k,it=ck==="h"?H_(e.key):ck==="c"?C_(e.key):null,art=ck==="a"?A(e.key):null;
-  const href=it?(ck==="h"?holderHref(e.key):codeHref(e.key)):art?`#${can("article")&&ROLE!=="prod"?"a":"v"}-${art.id}`:"";
+  const href=it?(ck==="h"?holderHref(e.key):codeHref(e.key)):art?`#${can("article")?"a":"v"}-${art.id}`:"";
   const label=it?e.key:art?(art.article.number||e.label):(e.label||e.key||"—");
   dialog(esc(isN?t("cmTag"):t("lMove")),`<dl class="rodl logdl"><div><dt>${esc(t("lDate"))}</dt><dd>${when(e.ts)} ${hhmm(e.ts)}</dd></div><div><dt>${esc(t("lWho"))}</dt><dd>${esc(e.who||"—")}${e.role?` · ${esc(roleName(e.role))}`:""}</dd></div>
       <div><dt>${esc(t("lItem"))}</dt><dd><b class="m">${esc(label)}</b></dd></div>
@@ -4812,7 +4913,7 @@ Object.assign(I18N.en,{getApp:"Get the app", getAppT:"Download the Windows insta
   demoBar:"Demo: made-up workshop with 20 machines and 500 articles. Changes stay in this browser only.", demoShort:"Made-up data", demoReset:"Reset the demo", demoResetQ:"Reset the demo data? Everything changed here is lost.", demoGo:"Real version"});
 Object.assign(I18N.fr,{getApp:"Télécharger l'app", getAppT:"Télécharger l’installateur Windows",
   demoBar:"Démo : atelier fictif de 20 machines et 500 articles. Vos changements restent dans ce navigateur.", demoShort:"Données fictives", demoReset:"Réinitialiser la démo", demoResetQ:"Réinitialiser les données de la démo ? Tout ce qui a été changé ici sera perdu.", demoGo:"Version réelle"});
-const APP_ZIP="BrocheStuff-Setup-2.6.0.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
+const APP_ZIP="BrocheStuff-Setup-2.7.0.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
 function appUrl(){
   // on the site (…/Web/ or …/Demo/) the program sits next door in …/App/; anywhere else, take it from the site
   if(/^https?:/.test(location.protocol)&&/\/(Web|Demo)\/(index\.html)?$/i.test(location.pathname))return new URL("../App/"+APP_ZIP,location.href).href;
@@ -5016,7 +5117,7 @@ const NC_HEAD=["T number","Type","Diameter","Radius / angle","Insert","LS","LT",
 const ncRows=tools=>{const ex=sheetCfg().extra;return [[...NC_HEAD,...ex.map(e=>e.label)],...tools.map(x=>[x.t,x.type,x.diameter,x.ra,x.insert||"",x.ls,x.oal,x.z,x.corrH||"",x.corrD||"",x.holder,x.code,...ex.map(e=>x[xKey(e.id)]||"")])]};
 // many programs at once: one article each, on this machine
 function pickFiles(accept){return new Promise(res=>{const i=document.createElement("input");i.type="file";i.multiple=true;i.accept=accept;i.onchange=()=>res([...i.files]);i.click()})}
-async function importPrograms(m){
+async function importPrograms(m){if(!hasRight("import")){toast(t("noRight"));return}
   const files=await pickFiles("*");if(!files.length)return;
   const items=[];for(const f of files){try{const txt=await f.text();const r=parseNC(txt,f.name);items.push({f,r})}catch(e){items.push({f,r:null})}}
   const exists=it=>db.articles.some(a=>a.machineId===m.id&&clean(a.article.number).toLowerCase()===clean(it.r.name).toLowerCase());
@@ -5041,7 +5142,7 @@ function renderMags(){
   if(!list.length){$("#view").innerHTML=`<div class="page"><div class="ph"><div><h2>${esc(t("magsT"))}<b>.</b></h2><div class="sub">${esc(t("magsSub"))}</div></div></div><div class="empty"><h3>${esc(t("magsEmpty"))}</h3><p>${esc(t("magsEmptyP"))}</p>${can("home")?`<button class="btn red" data-go="#">${esc(t("navMachines"))}</button>`:""}</div></div>`;$("#view").querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));return}
   $("#view").innerHTML=`<div class="page"><div class="ph"><div><h2>${esc(t("magsT"))}<b>.</b></h2><div class="sub">${esc(t("magsSub"))}</div></div></div>
     <div class="mgrid">${list.map(m=>{const g=magOf(m),n=magCount(m);return `<div class="mc magc" role="button" tabindex="0" data-mag="${m.id}">
-      ${m.abbr?`<span class="ab">${esc(m.abbr)}</span>`:""}<span class="nm${m.abbr?" sm":""}">${esc(m.name)}</span><span class="md">${esc(mInfo(m))}${coneTag(m.cone)?" "+coneTag(m.cone):""}</span>
+      ${m.abbr?`<span class="ab">${esc(m.abbr)}</span>`:""}<span class="nm${m.abbr?" sm":""}">${esc(m.name)}</span>${m.down?`<span class="downtag" title="${esc(m.downWhy||"")}">${esc(t("downS"))}</span>`:""}<span class="md">${esc(mInfo(m))}${coneTag(m.cone)?" "+coneTag(m.cone):""}</span>
       <div class="mprogline"><b>${n}</b><span>/ ${g.size}</span><span class="sp"></span><span class="dim small">${esc(t("magSize"))}</span></div><div class="magbar"><i style="width:${Math.min(100,n/g.size*100)}%"></i></div></div>`}).join("")}</div></div>`;
   $("#view").querySelectorAll("[data-mag]").forEach(c=>{c.onclick=()=>go("#mag-"+c.dataset.mag);c.onkeydown=e=>{if(e.key==="Enter")go("#mag-"+c.dataset.mag)}});
 }
@@ -5201,15 +5302,8 @@ function recordEdit(){
   if(h&&h.act==="edit"&&h.who===(USER||"")&&Date.now()-h.ts<15*60000){h.ts=Date.now();h.f=[...new Set([...(h.f||[]),...f])];h.t=[...new Set([...(h.t||[]),...tt])].sort()}
   else addHist(cur,"edit",{f,t:[...tt].sort()});
 }
-/* ---------- rights the admin gives each account (desktop). Add new ones to RIGHTS. ---------- */
-const RIGHTS=["validate","devalidate","revertIndex","editMag","moveArticle","deleteArticle"];
-// accounts made before a right existed keep what their service could do before
-const DEF_RIGHTS={methode:["validate","editMag","moveArticle"],outil:["editMag","moveArticle"],prod:[]};
-const rightsOf=u=>!u?[]:u.role==="admin"?[...RIGHTS]:Array.isArray(u.rights)?u.rights.filter(k=>RIGHTS.includes(k)):[...(DEF_RIGHTS[u.role]||[])];
-function hasRight(k){
-  if(ROLE==="admin")return true;
-  if(typeof DESK!=="undefined"&&DESK&&!DEMO_ON&&ACC){const u=(USERS&&USERS.users||[]).find(x=>x.id===ACC.id)||ACC;return rightsOf(u).includes(k)}
-  return rightsOf({role:ROLE}).includes(k)}
+/* ---------- rights: see PAGES / GEN_RIGHTS (profiles) ---------- */
+function hasRight(k){if(ROLE==="admin")return true;if(!PERM)setPerm();return!!PERM&&PERM.rights.includes(k)}
 function validateArticle(){if(!hasRight("validate")){toast(t("valNoRight"));return}
   const miss=missing(cur);
   dialog(esc(t("validate")),`<p style="margin:0">${esc(t("validateQ"))}</p>${miss?`<p class="warnline" style="margin:0">${esc(t("validateMiss",miss))}</p>`:""}`,
@@ -5221,7 +5315,7 @@ function validateArticle(){if(!hasRight("validate")){toast(t("valNoRight"));retu
 function newIndexArticle(){
   const a=cur.article,old=a.index||"",used=new Set([old,...(cur.history||[]).map(h=>h.ix).filter(Boolean)]);
   let nx=nextIndex(old||"@");if(!old)nx="A";while(used.has(nx)&&nx!==nextIndex(nx))nx=nextIndex(nx);
-  dialog(esc(t("newIndex")),`<p style="margin:0">${esc(t("newIndexQ",old||"—",nx))}</p><label class="f" style="margin-top:10px">${esc(t("ixWhy"))}<input id="ix-why" maxlength="160"></label>${clean(a.approvedBy)?`<p class="note" style="margin:6px 0 0">${esc(t("ixApprClr"))}</p>`:""}`,`<button class="btn ghost" id="d-cancel">${esc(t("cancel"))}</button><button class="btn red" id="d-ok">${esc(t("newIndex"))} ${esc(nx)}</button>`);
+  dialog(esc(t("newIndex")),`<p style="margin:0">${esc(t("newIndexQ",old||"—",nx))}</p>${phasesOf(cur).length>1?`<p class="warnline" style="margin:6px 0 0">${esc(t("ixOtherPh",phasesOf(cur).filter(x=>x!==cur).map(x=>(phOf(x)?t("phaseS")+" "+phOf(x)+" · ":"")+mShort(M(x.machineId))).join(", ")))}</p>`:""}<label class="f" style="margin-top:10px">${esc(t("ixWhy"))}<input id="ix-why" maxlength="160"></label>${clean(a.approvedBy)?`<p class="note" style="margin:6px 0 0">${esc(t("ixApprClr"))}</p>`:""}`,`<button class="btn ghost" id="d-cancel">${esc(t("cancel"))}</button><button class="btn red" id="d-ok">${esc(t("newIndex"))} ${esc(nx)}</button>`);
   $("#d-cancel").onclick=closeDlg;
   $("#d-ok").onclick=()=>{if(!(cur.history||[]).some(h=>h.act==="validate"&&h.ix===old))addHist(cur,"archive",{ix:old,snap:snapOf(cur)});
     const why=clean($("#ix-why").value);a.index=nx;a.date=today();a.approvedBy="";cur.status="progress";cur.validated=null;addHist(cur,"newindex",{ix:nx,from:old,...(why?{why}:{})});cur.updatedAt=Date.now();saveDB();closeDlg();render();toast(t("hNewIndex",nx))};
@@ -5229,10 +5323,10 @@ function newIndexArticle(){
 function reopenArticle(){if(!hasRight("devalidate")){toast(t("noRight"));return}const b=$("#b-reopen");if(b&&!b.classList.contains("armed")){arm(b,()=>{},t("reopenQ2"));toast(t("reopenQ"));return}cur.status="progress";cur.validated=null;addHist(cur,"reopen",{ix:cur.article.index||""});cur.updatedAt=Date.now();saveDB();render()}
 function applyLock(){
   const ed=$("#ed");if(!ed||!cur)return;const locked=isLocked(cur);ed.classList.toggle("locked",locked);
-  ed.querySelectorAll(".form input,.form textarea,.form select").forEach(el=>{if(el.id==="a-index")return;el.disabled=locked});
+  ed.querySelectorAll(".form input,.form textarea,.form select").forEach(el=>{if(el.id==="a-index")return;if(el.id==="artnote"){el.disabled=!hasRight("artNote");return}el.disabled=locked||(el.id==="a-machine"&&!hasRight("moveArticle"))});
   ["#b-add","#b-impt","#b-ncimp","#b-cols"].forEach(s=>{const b=$(s);if(b)b.hidden=locked});{const ls=$("#a-layout");if(ls)ls.disabled=locked}
   ed.querySelectorAll("#rows .act").forEach(td=>td.style.visibility=locked?"hidden":"");
-  const ix=$("#a-index");if(ix){const admin=ROLE==="admin";ix.readOnly=locked||!admin;ix.title=admin?"":t("indexAdmin");ix.classList.toggle("ro",ix.readOnly)}
+  const ix=$("#a-index");if(ix){const admin=hasRight("setIndex");ix.readOnly=locked||!admin;ix.title=admin?"":t("indexAdmin");ix.classList.toggle("ro",ix.readOnly)}
 }
 
 /* ---------- indexes: every earlier index can be seen (PDF), compared, and brought back by people with the right ---------- */
@@ -5294,7 +5388,7 @@ function drawHistory(){
    admin page, demo switch. The web version doesn't use any of this.
    ===================================================================== */
 const DESKDEMO=/*DESKDEMO*/null;
-const APP_VER="2.6.0";
+const APP_VER="2.7.0";
 let DEMO_ON=false, ACC=null, USERS=null, PCNAME="", realDIR="", loginFails=0, loginWait=0, lastAct=Date.now();
 Object.assign(I18N.en,{
   loginT:"Sign in", loginP:"Enter your name or code and your password.", loginName:"Name or code", loginPw:"Password", loginGo:"Sign in",
@@ -5302,7 +5396,7 @@ Object.assign(I18N.en,{
   loggedOut:"Signed out after inactivity.", accMenu:"My account", myPw:"Change my password", signOut:"Sign out", pwCur:"Current password", pwNew:"New password", pwNew2:"New password again",
   pwShort:"At least 4 characters.", pwDiff:"The two passwords are different.", pwWrong:"The current password is wrong.", pwSaved:"Password changed", navAdmin:"Administration",
   adT:"Administration", adSub:"Accounts, data folder, backups, demo and security of this program.", accT:"Accounts", accNew:"New account", accName:"Name", accCode:"Code", accCodeH:"optional, e.g. badge number",
-  accRole:"Service", accState:"Status", accLast:"Last sign-in", accOn:"Active", accOff:"Disabled", accEdit:"Edit", accPw:"Password", accDel:"Delete", accActive:"Account active",
+  accRole:"Profile", accState:"Status", accLast:"Last sign-in", accOn:"Active", accOff:"Disabled", accEdit:"Edit", accPw:"Password", accDel:"Delete", accActive:"Account active",
   accSave:"Save", accNeedName:"Enter a name.", accNameUsed:"This name is already used.", accCodeUsed:"This code is already used.", accLastAdmin:"There must always be at least one active admin account.",
   accSelf:"You can't delete your own account.", accSaved:"Account saved", accDeleted:n=>`Account ${n} deleted`, accPwT:n=>`New password for ${n}`, accNever:"never", accAll:"All",
   dirT:"Data folder", dirP:"Where the data, the accounts and the backups are kept. To share them between several PCs, choose the same network folder (for example \\\\server\\BrocheStuff) on each PC.",
@@ -5321,7 +5415,7 @@ Object.assign(I18N.fr,{
   loggedOut:"Déconnecté après une période sans activité.", accMenu:"Mon compte", myPw:"Changer mon mot de passe", signOut:"Se déconnecter", pwCur:"Mot de passe actuel", pwNew:"Nouveau mot de passe", pwNew2:"Nouveau mot de passe (encore)",
   pwShort:"Au moins 4 caractères.", pwDiff:"Les deux mots de passe sont différents.", pwWrong:"Le mot de passe actuel est incorrect.", pwSaved:"Mot de passe changé", navAdmin:"Administration",
   adT:"Administration", adSub:"Comptes, dossier des données, sauvegardes, démo et sécurité du programme.", accT:"Comptes", accNew:"Nouveau compte", accName:"Nom", accCode:"Code", accCodeH:"facultatif, ex. numéro de badge",
-  accRole:"Service", accState:"État", accLast:"Dernière connexion", accOn:"Actif", accOff:"Désactivé", accEdit:"Modifier", accPw:"Mot de passe", accDel:"Supprimer", accActive:"Compte actif",
+  accRole:"Profil", accState:"État", accLast:"Dernière connexion", accOn:"Actif", accOff:"Désactivé", accEdit:"Modifier", accPw:"Mot de passe", accDel:"Supprimer", accActive:"Compte actif",
   accSave:"Enregistrer", accNeedName:"Entrez un nom.", accNameUsed:"Ce nom est déjà utilisé.", accCodeUsed:"Ce code est déjà utilisé.", accLastAdmin:"Il faut toujours au moins un compte admin actif.",
   accSelf:"Vous ne pouvez pas supprimer votre propre compte.", accSaved:"Compte enregistré", accDeleted:n=>`Compte ${n} supprimé`, accPwT:n=>`Nouveau mot de passe pour ${n}`, accNever:"jamais", accAll:"Tous",
   dirT:"Dossier des données", dirP:"Là où sont gardés les données, les comptes et les sauvegardes. Pour les partager entre plusieurs PC, choisissez le même dossier réseau (par exemple \\\\serveur\\BrocheStuff) sur chaque PC.",
@@ -5383,7 +5477,7 @@ function renderLogin(){
       if(r==="ok"){const x=U.users.find(y=>y.id===u.id);if(x)x.lastLogin=Date.now()}}).catch(()=>{});
     if(!ok){loginFails++;if(loginFails>=5){loginWait=Date.now()+30000;loginFails=0}await log("bad");return fail(t("loginBad"))}
     if(u.active===false){await log("off");return fail(t("loginOff"))}
-    loginFails=0;await log("ok");lsSet("toolmanager.lastlogin",nm.value.trim());ACC={id:u.id,name:u.name,code:u.code||"",role:u.role,rights:rightsOf(u)};lastAct=Date.now();
+    loginFails=0;await log("ok");lsSet("toolmanager.lastlogin",nm.value.trim());ACC={id:u.id,name:u.name,code:u.code||"",role:u.role};lastAct=Date.now();
     enterRole(u.role,u.name);if(u.def)setTimeout(()=>toast(t("loginDef")),400)};
 }
 function accountMenu(){
@@ -5431,6 +5525,7 @@ function mergeList(b,m,t,key){
 function merge3db(b,m,t){const out={...m,...t};
   for(const [col,key] of [["machines","id"],["articles","id"],["catalog","code"],["holders","ref"]])out[col]=mergeList(b[col]||[],m[col]||[],t[col]||[],key);
   out.layouts=mergeList(b.layouts||[],m.layouts||[],t.layouts||[],"id");if(!out.layouts.length)delete out.layouts;
+  out.artNotes=mergeList(b.artNotes||[],m.artNotes||[],t.artNotes||[],"num");if(!out.artNotes.length)delete out.artNotes;
   out.layoutDefault=(m.layoutDefault||"")!==(b.layoutDefault||"")?m.layoutDefault:t.layoutDefault;if(!out.layoutDefault)delete out.layoutDefault;delete out.sheetCfg;
   out.stockLog=unionLog(m.stockLog||[],t.stockLog||[],20000);out.lastBackup=Math.max(+m.lastBackup||0,+t.lastBackup||0);return out}
 // every save writes a new random revision next to the data (data.rev): a tiny file the other PCs check
@@ -5512,11 +5607,15 @@ async function renderAdminPage(){
     <div class="ph"><div><h2>${esc(t("adT"))}<b>.</b></h2><div class="sub">${esc(t("adSub"))}</div></div></div>
     ${def?`<p class="warnline admwarn">${esc(t("defWarn"))}</p>`:""}
     <div class="card"><h2>${esc(t("accT"))} <span class="hint">${U.length}</span></h2>
-      <div class="resbar"><div class="chips">${["all","methode","outil","prod","admin"].map(r=>`<button class="chip" data-af="${r}" aria-pressed="${accF===r}">${esc(r==="all"?t("accAll"):roleName(r))}<b>${cnt(r)}</b></button>`).join("")}</div><span class="sp"></span><button class="btn red" id="acc-new">${esc(t("accNew"))}</button></div>
+      <div class="resbar"><div class="chips">${["all",...profileIds(),"admin"].map(r=>`<button class="chip" data-af="${r}" aria-pressed="${accF===r}">${esc(r==="all"?t("accAll"):roleName(r))}<b>${cnt(r)}</b></button>`).join("")}</div><span class="sp"></span><button class="btn red" id="acc-new">${esc(t("accNew"))}</button></div>
       <div class="list"><table class="lt acct"><thead><tr><th>${esc(t("accName"))}</th><th>${esc(t("accCode"))}</th><th>${esc(t("accRole"))}</th><th>${esc(t("accState"))}</th><th>${esc(t("accLast"))}</th><th></th></tr></thead><tbody>
-      ${list.map(u=>`<tr data-u="${u.id}" class="${u.active===false?"off":""}"><td><b>${esc(u.name)}</b>${ACC&&ACC.id===u.id?` <span class="dim small">(${esc(LANG==="en"?"you":"vous")})</span>`:""}</td><td class="m">${esc(u.code||"—")}</td><td><span class="rtag r-${u.role}">${esc(roleName(u.role))}</span>${u.role!=="admin"&&rightsOf(u).length?` <span class="dim small">${esc(rightsOf(u).map(k=>t("rightS_"+k)).join(", "))}</span>`:""}</td>
+      ${list.map(u=>`<tr data-u="${u.id}" class="${u.active===false?"off":""}"><td><b>${esc(u.name)}</b>${ACC&&ACC.id===u.id?` <span class="dim small">(${esc(LANG==="en"?"you":"vous")})</span>`:""}</td><td class="m">${esc(u.code||"—")}</td><td><span class="rtag r-${BUILTIN[u.role]||u.role==="admin"?u.role:"custom"}">${esc(roleName(u.role))}</span>${u.own?` <span class="dim small">${esc(t("accOwnS"))}</span>`:""}</td>
         <td>${u.active===false?`<span class="spill s-none">${esc(t("accOff"))}</span>`:`<span class="spill s-ok">${esc(t("accOn"))}</span>`}</td><td class="dim">${u.lastLogin?`${when(u.lastLogin)} ${hhmm(u.lastLogin)}`:esc(t("accNever"))}</td>
         <td><div class="acts"><button class="btn sm" data-ue="${u.id}">${esc(t("accEdit"))}</button><button class="btn sm ghost" data-up="${u.id}">${esc(t("accPw"))}</button><button class="btn sm danger" data-ud="${u.id}">${esc(t("accDel"))}</button></div></td></tr>`).join("")}</tbody></table></div></div>
+    <div class="card"><h2>${esc(t("profT"))} <span class="hint">${profileIds().length}</span></h2><p class="note" style="margin:0 0 8px">${esc(t("profCardP"))}</p>
+      <div class="list"><table class="lt proft"><thead><tr><th>${esc(t("profName"))}</th><th>${esc(t("profPages"))}</th><th>${esc(t("profAcc"))}</th><th></th></tr></thead><tbody>
+      ${profileIds().map(id=>{const P=profileOf(id);return`<tr><td><b>${esc(roleName(id))}</b>${BUILTIN[id]?"":` <span class="dim small">${esc(t("profCustom"))}</span>`}</td><td class="cl"><span class="clip">${esc(P.pages.map(k=>t("page_"+k)).join(", ")||"—")}</span></td><td class="m">${U.filter(u=>u.role===id).length}</td><td><button class="btn sm" data-pfe="${id}">${esc(t("accEdit"))}</button></td></tr>`}).join("")}</tbody></table></div>
+      <div class="admact"><button class="btn red" id="pf-new">${esc(t("profNew"))}</button></div></div>
     <div class="admgrid">
       <div class="card"><h2>${esc(t("dirT"))}</h2><p class="dirpath m">${esc(DIR)}${DIR===LOCAL?` <span class="dim small">(${esc(t("dirLocal"))})</span>`:""}</p><p class="note" style="margin:0">${esc(t("dirP"))}</p>
         <div class="admact"><button class="btn red" id="ad-pick">${esc(t("dirPick"))}</button>${DIR!==LOCAL?`<button class="btn" id="ad-local">${esc(t("dirBack"))}</button>`:""}<button class="btn ghost" id="ad-open">${esc(t("dirOpen"))}</button></div></div>
@@ -5532,7 +5631,7 @@ async function renderAdminPage(){
     </div></div>`;
   const V=$("#view");
   V.querySelectorAll("[data-af]").forEach(b=>b.onclick=()=>{accF=b.dataset.af;renderAdminPage()});
-  $("#acc-new").onclick=()=>accDialog(null);
+  $("#acc-new").onclick=()=>accDialog(null);$("#pf-new").onclick=()=>profileDialog(null);V.querySelectorAll("[data-pfe]").forEach(b=>b.onclick=()=>profileDialog(b.dataset.pfe));
   V.querySelectorAll("[data-ue]").forEach(b=>b.onclick=()=>accDialog(USERS.users.find(u=>u.id===b.dataset.ue)));
   V.querySelectorAll("[data-up]").forEach(b=>b.onclick=()=>accPwDialog(USERS.users.find(u=>u.id===b.dataset.up)));
   V.querySelectorAll("[data-ud]").forEach(b=>b.onclick=()=>{const u=USERS.users.find(x=>x.id===b.dataset.ud);
@@ -5547,28 +5646,60 @@ async function renderAdminPage(){
   $("#ad-demo").onclick=startDeskDemo;
   $("#ad-upd").onclick=updPick;$("#ad-updback").onclick=updBack;
 }
+
+/* ---------- the pages / rights tick boxes, used for profiles and for accounts ---------- */
+function permBlock(P,dis){const on=k=>P.pages.includes(k),r=k=>P.rights.includes(k),D=dis?"disabled":"";
+  const rb=k=>`<label class="chk rgt"><input type="checkbox" data-right="${k}" ${r(k)?"checked":""} ${D}> <span><b>${esc(t("right_"+k))}</b><span class="dim small">${esc(t("rightP_"+k))}</span></span></label>`;
+  return`<div class="permgrid">${PAGES.map(p=>`<div class="pgblk${on(p.k)?"":" off"}" data-pgb="${p.k}"><label class="chk pgk"><input type="checkbox" data-page="${p.k}" ${on(p.k)?"checked":""} ${D}> <b>${esc(t("page_"+p.k))}</b></label>
+      ${p.rights.length?`<div class="pgr">${p.rights.map(rb).join("")}</div>`:`<p class="dim small" style="margin:2px 0 0 26px">${esc(t("pageViewOnly"))}</p>`}</div>`).join("")}
+    <div class="pgblk gen"><b class="pgk">${esc(t("page_gen"))}</b><div class="pgr">${GEN_RIGHTS.map(rb).join("")}</div></div></div>`}
+function wirePerm(root){const sync=()=>root.querySelectorAll("[data-pgb]").forEach(b=>{const c=b.querySelector("[data-page]");b.classList.toggle("off",!c.checked);b.querySelectorAll("[data-right]").forEach(x=>{if(!c.disabled)x.disabled=!c.checked})});
+  root.querySelectorAll("[data-page]").forEach(c=>c.onchange=sync);sync()}
+function readPerm(root){const pages=[...root.querySelectorAll("[data-page]:checked")].map(c=>c.dataset.page);
+  const rights=[...root.querySelectorAll("[data-right]:checked")].filter(c=>{const b=c.closest("[data-pgb]");return!b||pages.includes(b.dataset.pgb)}).map(c=>c.dataset.right);return{pages,rights}}
+function profileDialog(id){const isNew=!id,b=id&&BUILTIN[id],P=isNew?{pages:[],rights:[]}:profileOf(id);
+  const used=id?(USERS.users||[]).filter(u=>u.role===id).length:0;
+  dialog(esc(isNew?t("profNew"):t("profEdit",roleName(id))),`<div class="grid"><label class="f c6">${esc(t("profName"))}<input id="pf-name" value="${esc(isNew?"":roleName(id))}" placeholder="${esc(t("profNamePh"))}"></label></div>
+    <p class="note" style="margin:0 0 8px">${esc(t("profP"))}${used?" "+esc(t("profUsed",used)):""}</p><div id="pf-perm">${permBlock(P)}</div><p class="err" id="pf-err" hidden></p>`,
+    `${!isNew&&!b?`<button class="btn danger" id="pf-del">${esc(t("profDel"))}</button>`:""}${b&&userProfiles().some(p=>p.id===id)?`<button class="btn ghost" id="pf-reset">${esc(t("profReset"))}</button>`:""}<span class="sp"></span><button class="btn ghost" id="d-cancel">${esc(t("cancel"))}</button><button class="btn red" id="d-ok">${esc(t("save"))}</button>`);
+  $(".dlg").classList.add("wide","permdlg");wirePerm($("#pf-perm"));$("#d-cancel").onclick=closeDlg;const er=m=>{const e=$("#pf-err");e.textContent=m;e.hidden=false};
+  $("#d-ok").onclick=async()=>{const name=clean($("#pf-name").value);if(!name)return er(t("profNeedName"));
+    if(profileIds().some(x=>x!==id&&roleName(x).toLowerCase()===name.toLowerCase())||name.toLowerCase()===roleName("admin").toLowerCase())return er(t("profNameUsed"));
+    const pr=readPerm($("#pf-perm"));if(!pr.pages.length)return er(t("profNeedPage"));
+    await usersEdit(U=>{U.profiles=Array.isArray(U.profiles)?U.profiles:[];const nid=id||("p"+uid().slice(0,7));const x=U.profiles.find(p=>p.id===nid);
+      const rec={id:nid,name:b&&name===t({methode:"rMethode",outil:"rOutil",prod:"rProd"}[id])?"":name,pages:pr.pages,rights:pr.rights};if(x)Object.assign(x,rec);else U.profiles.push(rec)});
+    setPerm();roleChrome();closeDlg();toast(t("profSaved"));renderAdminPage()};
+  $("#pf-reset")&&($("#pf-reset").onclick=async()=>{await usersEdit(U=>{U.profiles=(U.profiles||[]).filter(p=>p.id!==id)});setPerm();closeDlg();toast(t("profSaved"));renderAdminPage()});
+  $("#pf-del")&&($("#pf-del").onclick=()=>{if(used){er(t("profInUse",used));return}askDelete(t("dwProf",roleName(id)),async()=>{await usersEdit(U=>{U.profiles=(U.profiles||[]).filter(p=>p.id!==id)});toast(t("profDeleted"));renderAdminPage()})})}
 function accDialog(u){
   const isNew=!u;u=u||{name:"",code:"",role:"prod",active:true};
   dialog(esc(isNew?t("accNew"):t("accEdit")+" · "+u.name),`<div class="grid">
       <label class="f c3">${esc(t("accName"))}<input id="ac-name" value="${esc(u.name)}" autocomplete="off"></label>
       <label class="f c3">${esc(t("accCode"))}<input id="ac-code" class="m" value="${esc(u.code||"")}" placeholder="${esc(t("accCodeH"))}" autocomplete="off"></label>
-      <label class="f c6">${esc(t("accRole"))}<select id="ac-role">${["methode","outil","prod","admin"].map(r=>`<option value="${r}" ${u.role===r?"selected":""}>${esc(roleName(r))}</option>`).join("")}</select></label>
-      <fieldset class="c6 rights"><legend>${esc(t("accRights"))}</legend>${RIGHTS.map(k=>`<label class="chk rgt"><input type="checkbox" data-right="${k}" ${rightsOf(u).includes(k)?"checked":""}> <span><b>${esc(t("right_"+k))}</b><span class="dim small">${esc(t("rightP_"+k))}</span></span></label>`).join("")}<p class="note" style="margin:4px 0 0">${esc(t("accRightsP"))}</p></fieldset>
+      <label class="f c6">${esc(t("accRole"))}<select id="ac-role">${[...profileIds(),"admin"].map(r=>`<option value="${r}" ${u.role===r?"selected":""}>${esc(roleName(r))}</option>`).join("")}</select></label>
+      <label class="chk c6"><input type="checkbox" id="ac-own" ${u.own?"checked":""}> ${esc(t("accOwn"))}</label>
+      <div class="c6" id="ac-perm"></div>
+
       ${isNew?`<label class="f c3">${esc(t("pwNew"))}<input id="ac-pw" type="password" autocomplete="new-password"></label><label class="f c3">${esc(t("pwNew2"))}<input id="ac-pw2" type="password" autocomplete="new-password"></label>`
         :`<label class="chk c6"><input type="checkbox" id="ac-on" ${u.active!==false?"checked":""}> ${esc(t("accActive"))}</label>`}</div><p class="err" id="ac-err" hidden></p>`,
     `<button class="btn ghost" id="d-cancel">${esc(t("cancel"))}</button><button class="btn red" id="d-ok">${esc(t("accSave"))}</button>`);
   $("#d-cancel").onclick=closeDlg;$("#ac-name").focus();const er=m=>{const e=$("#ac-err");e.textContent=m;e.hidden=false};
-  const syncR=()=>{const adm=$("#ac-role").value==="admin";document.querySelectorAll("[data-right]").forEach(c=>{c.disabled=adm;if(adm)c.checked=true})};$("#ac-role").onchange=syncR;syncR();
-  $("#d-ok").onclick=async()=>{const name=$("#ac-name").value.trim().replace(/\s+/g," "),code=$("#ac-code").value.trim(),role=$("#ac-role").value,on=isNew?true:$("#ac-on").checked,rights=[...document.querySelectorAll("[data-right]")].filter(c=>c.checked).map(c=>c.dataset.right);
+  $(".dlg").classList.add("wide","permdlg");
+  const drawP=()=>{const r=$("#ac-role").value,own=$("#ac-own").checked&&r!=="admin";$("#ac-own").disabled=r==="admin";
+    const P=r==="admin"?profileOf("admin"):own&&u.own&&u.role===r?{pages:u.pages||[],rights:u.rights||[]}:own&&drawP.last?drawP.last:permOf(r,u.role===r&&!u.own?u:null);
+    $("#ac-perm").innerHTML=`<p class="note" style="margin:0 0 6px">${esc(r==="admin"?t("accAdminAll"):own?t("accOwnP"):t("accFollowP",roleName(r)))}</p>${permBlock(P,!own)}`;if(own)wirePerm($("#ac-perm"))};
+  $("#ac-role").onchange=()=>{drawP.last=null;drawP()};$("#ac-own").onchange=()=>{drawP.last=$("#ac-own").checked?readPerm($("#ac-perm")):null;drawP()};drawP();
+  $("#d-ok").onclick=async()=>{const name=$("#ac-name").value.trim().replace(/\s+/g," "),code=$("#ac-code").value.trim(),role=$("#ac-role").value,on=isNew?true:$("#ac-on").checked,own=$("#ac-own").checked&&role!=="admin",pr=own?readPerm($("#ac-perm")):null;
+    const perm=own?{own:true,pages:pr.pages,rights:pr.rights,rv:2}:{own:false,pages:undefined,rights:undefined,rv:2};
     if(!name)return er(t("accNeedName"));
     const d=await usersRead();if(d)USERS={settings:{idle:0},log:[],...d};const others=USERS.users.filter(x=>x.id!==u.id);
     if(others.some(x=>x.name.toLowerCase()===name.toLowerCase()||(x.code&&String(x.code).toLowerCase()===name.toLowerCase())))return er(t("accNameUsed"));
     if(code&&others.some(x=>(x.code&&String(x.code).toLowerCase()===code.toLowerCase())||x.name.toLowerCase()===code.toLowerCase()))return er(t("accCodeUsed"));
     if(!isNew&&u.role==="admin"&&(role!=="admin"||!on)&&!others.some(x=>x.role==="admin"&&x.active!==false))return er(t("accLastAdmin"));
     let pw="";if(isNew){pw=$("#ac-pw").value;if(pw.length<4)return er(t("pwShort"));if(pw!==$("#ac-pw2").value)return er(t("pwDiff"))}
-    await usersEdit(async U=>{if(isNew){const n={id:uid(),name,code,role,rights,active:true,createdAt:Date.now()};await setPw(n,pw);U.users.push(n)}
-      else{const x=U.users.find(y=>y.id===u.id);if(!x)return false;Object.assign(x,{name,code,role,rights,active:on});if(ACC&&ACC.id===x.id){ACC.name=name;ACC.code=code;ACC.rights=rightsOf(x)}}});
-    closeDlg();toast(t("accSaved"));renderAdminPage()};
+    await usersEdit(async U=>{if(isNew){const n={id:uid(),name,code,role,...perm,active:true,createdAt:Date.now()};if(!own){delete n.pages;delete n.rights}await setPw(n,pw);U.users.push(n)}
+      else{const x=U.users.find(y=>y.id===u.id);if(!x)return false;Object.assign(x,{name,code,role,...perm,active:on});if(!own){delete x.pages;delete x.rights}if(ACC&&ACC.id===x.id){ACC.name=name;ACC.code=code}}});
+    if(ACC){setPerm();roleChrome()}closeDlg();toast(t("accSaved"));renderAdminPage()};
 }
 function accPwDialog(u){
   dialog(esc(t("accPwT",u.name)),`<label class="f">${esc(t("pwNew"))}<input id="ap-pw" type="password" autocomplete="new-password"></label><label class="f">${esc(t("pwNew2"))}<input id="ap-pw2" type="password" autocomplete="new-password"></label><p class="err" id="ap-err" hidden></p>`,
@@ -5612,7 +5743,13 @@ async function updInstall(path,share){
       const nm=`BrocheStuff-Update-${u.ver}.neu`;if(path!==dst+SEP+nm)await Neutralino.filesystem.writeBinaryFile(dst+SEP+nm,u.buf)}
     if(edTimer){clearTimeout(edTimer);edTimer=null;flushEditor()}desk.pending=true;await desk.flush();
     await Neutralino.filesystem.writeBinaryFile(res,u.buf)}catch(e){toast(t("updFail")+" "+String(e.message||e.code||e));return false}
-  toast(t("updDone",u.ver));setTimeout(()=>Neutralino.app.restartProcess().catch(()=>Neutralino.app.exit()),900);return true}
+  // tell the person, then restart; if Windows doesn't let the program restart itself, it closes and they open it again
+  dialog(esc(t("updT")),`<p style="margin:0">${esc(t("updDone2",u.ver))}</p><p class="note" style="margin:6px 0 0">${esc(t("updReopen"))}</p>`,`<span class="sp"></span><button class="btn red" id="d-ok">${esc(t("updRestart"))}</button>`);
+  const ov=$("#ov");ov.dataset.lock="1";
+  const go2=async()=>{const b=$("#d-ok");if(b){b.disabled=true;b.textContent=t("updWorking")}
+    try{await Promise.race([Neutralino.app.restartProcess(),sleep_(4000)])}catch(e){}
+    try{await Neutralino.app.exit()}catch(e){}};
+  $("#d-ok").onclick=go2;setTimeout(go2,2500);return true}
 function updDialog(path,ver,share){
   const older=verNum(ver)<verNum(APP_VER),same=verNum(ver)===verNum(APP_VER);
   dialog(esc(t("updT")),`<p style="margin:0">${esc(t("updQ",APP_VER,ver))}</p>${older||same?`<p class="warnline" style="margin:6px 0 0">${esc(older?t("updOlder"):t("updSame"))}</p>`:""}
@@ -5647,8 +5784,8 @@ const GUIDE={
    ["machines","Machines",["La page Machines montre chaque machine avec son cône (BT40, BT50…) et l’avancement de ses fiches.","Cliquez sur une machine pour voir ses articles ; « + Ajouter une machine » ou « Importer » pour en créer.","La barre de recherche trouve un article, une référence ou un code outil dans toutes les machines."]],
    ["machine","Articles d’une machine",["Chaque ligne est un article : indice, référence, nombre d’outils et état (non commencé, en cours, terminé).","« + Nouvel article » crée une fiche ; « Programmes CN » crée un article par programme, avec sa liste d’outils.","Les boutons PDF et Copier sont au bout de chaque ligne ; « Modèle Excel » donne le modèle à remplir."]],
    ["editor","Faire une fiche outils",["Remplissez l’article (numéro, désignation, référence, programme), puis une ligne par outil.","Pour un outil à plaquettes, notez la référence de la plaquette. H et D sont les numéros des correcteurs de longueur et de rayon ; « Lire un programme » les reprend des G43 H et G41 / G42 D. Dans n’importe quelle case, Maj+Entrée ajoute une ligne. L’admin prépare les mises en page avec « Colonnes » (renommer, ajouter ou retirer des colonnes) ; chaque fiche choisit sa mise en page dans la liste, et la mise en page par défaut sert aux nouvelles fiches. Dans « Colonnes », « Colonnes regroupées (PDF) » choisit si Ø, R et la plaquette restent dans la case Type ou ont leur propre colonne, et si une colonne partage son titre avec la précédente. Changer de mise en page ne supprime rien : les données d’une colonne absente sont gardées et reviennent avec la mise en page qui l’affiche. Tirez le bord d’un titre pour l’élargir.","Tapez le code outil : type, Ø, rayon et longueurs se remplissent depuis le magasin outils.","« Lire un programme » importe les outils d’un programme CN ou d’une liste Mastercam ; l’aperçu A4 se met à jour à droite.","Imprimer, PDF ou Excel en haut à droite. L’aperçu passe de PDF à Excel ; « PDF ⇄ Excel » (page Machines) transforme un fichier dans l’autre format."]],
-   ["validated","Valider et changer d’indice",["« Valider la fiche » la verrouille : plus rien ne peut être changé, et le PDF porte VALIDÉE, la date et le nom.","La carte « Indices » liste tous les indices : PDF de chacun et « Changements depuis… » (outils ajoutés, retirés, modifiés). « Revenir à cet indice » crée un nouvel indice avec l’ancien contenu ; rien n’est effacé.","Dans le programme Windows, l’admin donne les droits compte par compte (page Admin) : valider, rouvrir une fiche validée, revenir à un indice, modifier les magasins, supprimer des articles et des machines. Toute suppression propose d’abord une sauvegarde.","Pour la modifier : « Nouvel indice » (A → B…). L’ancien indice reste dans l’historique, avec son PDF.","Seul l’admin peut taper un indice ; un indice déjà utilisé est refusé."]],
-   ["arts","Articles et phases",["La page Articles (préparateurs méthode et outil) liste chaque article avec ses phases et la machine de chaque phase.","« + Phase » crée une autre fiche outils pour le même article, sur une autre machine (phase 20, 30…), avec ou sans les mêmes outils. « Déplacer » change la machine d’une fiche ; c’est noté dans l’historique.","Si une machine est supprimée, ses articles restent, marqués « Sans machine » : le filtre du même nom les retrouve pour les déplacer."]],
+   ["validated","Valider et changer d’indice",["« Valider la fiche » la verrouille : plus rien ne peut être changé, et le PDF porte VALIDÉE, la date et le nom.","La carte « Indices » liste tous les indices : PDF de chacun et « Changements depuis… » (outils ajoutés, retirés, modifiés). « Revenir à cet indice » crée un nouvel indice avec l’ancien contenu ; rien n’est effacé.","Dans le programme Windows, l’admin crée des profils (page Admin) : les pages que chacun ouvre et ce qu’il peut y faire (valider, rouvrir, revenir à un indice, modifier les magasins, supprimer…). Chaque compte suit son profil ou a ses propres réglages. Toute suppression propose d’abord une sauvegarde.","Pour la modifier : « Nouvel indice » (A → B…). L’ancien indice reste dans l’historique, avec son PDF.","Seul l’admin peut taper un indice ; un indice déjà utilisé est refusé."]],
+   ["arts","Articles et phases",["La page Articles (préparateurs méthode) liste chaque article avec ses phases et la machine de chaque phase.","« + Phase » crée une autre fiche outils pour le même article, sur une autre machine (phase 20, 30…), avec ou sans les mêmes outils. « Déplacer » change la machine d’une fiche (avec une alerte si des porte-outils ne vont pas sur le cône) ; c’est noté dans l’historique. La note de l’article est commune à toutes ses phases, et une machine peut être marquée « à l’arrêt » pour retrouver ses articles.","Si une machine est supprimée, ses articles restent, marqués « Sans machine » : le filtre du même nom les retrouve pour les déplacer."]],
    ["crib","Magasin outils",["Chaque code outil avec ses caractéristiques, son emplacement et son stock.","Les filtres montrent le stock bas et les ruptures ; « Liste de commande (CSV) » sort ce qu’il faut commander.","À sa connexion, le préparateur outil voit tout de suite une alerte de stock bas."]],
    ["code","Fiche d’un outil",["Croquis ou photo de l’outil, caractéristiques, et où il est utilisé.","Les boutons − et + changent le stock ; « Corriger le stock » après un comptage. Chaque mouvement est noté avec le nom.","Les commentaires de la production apparaissent sur la fiche."]],
    ["holders","Porte-outils",["Chaque porte-outil par cône (BT30, BT40, BT50, HSK63), avec son serrage, sa longueur et son stock.","Un porte-outil du mauvais cône pour la machine est signalé dans la fiche outils."]],
@@ -5667,8 +5804,8 @@ const GUIDE={
    ["machines","Machines",["The Machines page shows each machine with its spindle taper (BT40, BT50…) and how far its sheets are.","Click a machine to see its articles; “+ Add machine” or “Import” to create them.","The search bar finds an article, a reference or a tool code across all machines."]],
    ["machine","A machine’s articles",["Each row is an article: index, reference, number of tools and status (not started, in progress, done).","“+ New article” makes a sheet; “CNC programs” makes one article per program, with its tool list.","PDF and Copy are at the end of each row; “Excel model” gives the model to fill in."]],
    ["editor","Making a tool sheet",["Fill in the article (number, designation, reference, program), then one row per tool.","For an insert tool, write the insert reference. H and D are the length and radius offset numbers; “Read a program” takes them from G43 H and G41 / G42 D. In any box, Shift+Enter adds a line. The admin prepares layouts with “Columns” (rename, add or remove columns); each sheet picks its layout from the list, and the default layout is used for new sheets. In “Columns”, “Joined columns (PDF)” chooses whether Ø, R and the insert stay inside the Type cell or get their own column, and whether a column shares its title with the one before. Changing layout deletes nothing: data in a column the layout doesn't show is kept and comes back with a layout that shows it. Drag a title’s edge to widen it.","Type the tool code: type, Ø, radius and lengths fill in from the tool crib.","“Read a program” imports the tools of a CNC program or a Mastercam list; the A4 preview updates on the right.","Print, PDF or Excel at the top right. The preview switches between PDF and Excel; “PDF ⇄ Excel” (Machines page) turns one file into the other."]],
-   ["validated","Validating and new index",["“Validate the sheet” locks it: nothing can be changed, and the PDF shows VALIDATED, the date and the name.","The “Indexes” card lists every index: the PDF of each and “Changes since…” (tools added, removed, changed). “Go back to it” makes a new index with the old content; nothing is erased.","In the Windows program, the admin gives rights account by account (Admin page): validate, reopen a validated sheet, go back to an index, change magazines, delete articles and machines. Every delete offers a backup first.","To change it: “New index” (A → B…). The old index stays in the history, with its PDF.","Only the admin can type an index; an index already used is refused."]],
-   ["arts","Articles and phases",["The Articles page (methods and tool planners) lists every article with its phases and the machine of each phase.","“+ Phase” makes another tool sheet for the same article, on another machine (phase 20, 30…), with or without the same tools. “Move” changes a sheet’s machine; it is written in the history.","When a machine is deleted, its articles stay, marked “No machine”: the filter of the same name finds them so they can be moved."]],
+   ["validated","Validating and new index",["“Validate the sheet” locks it: nothing can be changed, and the PDF shows VALIDATED, the date and the name.","The “Indexes” card lists every index: the PDF of each and “Changes since…” (tools added, removed, changed). “Go back to it” makes a new index with the old content; nothing is erased.","In the Windows program, the admin makes profiles (Admin page): the pages each one opens and what it may do there (validate, reopen, go back to an index, change magazines, delete…). Each account follows its profile or gets its own settings. Every delete offers a backup first.","To change it: “New index” (A → B…). The old index stays in the history, with its PDF.","Only the admin can type an index; an index already used is refused."]],
+   ["arts","Articles and phases",["The Articles page (methods planners) lists every article with its phases and the machine of each phase.","“+ Phase” makes another tool sheet for the same article, on another machine (phase 20, 30…), with or without the same tools. “Move” changes a sheet’s machine (with a warning when holders don’t fit its spindle); it is written in the history. The article note is shared by all its phases, and a machine can be marked “stopped” to find its articles.","When a machine is deleted, its articles stay, marked “No machine”: the filter of the same name finds them so they can be moved."]],
    ["crib","Tool crib",["Every tool code with its details, location and stock.","Filters show low stock and out of stock; “Order list (CSV)” lists what to order.","When the tool planner signs in, a low-stock alert comes up right away."]],
    ["code","A tool’s card",["Sketch or photo of the tool, its details, and where it is used.","− and + change the stock; “Correct the count” after counting. Every move is logged with the name.","Comments from production show on the card."]],
    ["holders","Holders",["Every holder by taper (BT30, BT40, BT50, HSK63), with clamping, length and stock.","A holder of the wrong taper for the machine is flagged in the tool sheet."]],
@@ -5699,13 +5836,13 @@ function renderGuide(){
     <div class="guidewrap"><nav class="guidetoc"><b>${esc(G.toc)}</b>${G.s.map(([id,h],i)=>`<a href="#guide" data-gto="${id}"><span>${i+1}</span>${esc(h)}</a>`).join("")}</nav>
     <div class="guidebody">${G.s.map(([id,h,steps],i)=>`<section class="gsec" id="g-${id}"><h3><span>${i+1}</span>${esc(h)}</h3>
       <ol>${steps.map(x=>`<li>${esc(x)}</li>`).join("")}</ol>${img(id)?`<img src="${img(id)}" alt="${esc(h)}" loading="lazy">`:""}</section>`).join("")}</div></div></div>`;
-  $("#g-back").onclick=()=>go(guideFooter.back&&guideFooter.back!=="#guide"?guideFooter.back:(ROLE?ROLES[ROLE].home:"#"));
+  $("#g-back").onclick=()=>go(guideFooter.back&&guideFooter.back!=="#guide"?guideFooter.back:(ROLE&&PERM?PERM.home:"#"));
   $("#view").querySelectorAll("[data-gto]").forEach(a=>a.onclick=e=>{e.preventDefault();const s=document.getElementById("g-"+a.dataset.gto);if(s)s.scrollIntoView({behavior:"smooth",block:"start"})});
   $("#view").querySelectorAll("[data-glang]").forEach(b=>b.onclick=()=>{setLang(b.dataset.glang)});
 }
 
 /* ---------- top bar ---------- */
-$("#home").onclick=()=>go(ROLE?ROLES[ROLE].home:"#");
+$("#home").onclick=()=>go(ROLE&&PERM?PERM.home:"#");
 // phones: the header items live in a menu
 const setMenu=o=>{document.body.classList.toggle("menu-open",o);$("#b-menu").setAttribute("aria-expanded",String(o))};
 $("#b-menu").onclick=e=>{e.stopPropagation();setMenu(!document.body.classList.contains("menu-open"))};
@@ -5714,7 +5851,7 @@ document.addEventListener("click",e=>{if(document.body.classList.contains("menu-
 $("#b-backup").onclick=()=>backupNow();
 function backupNow(){if(edTimer){clearTimeout(edTimer);flushEditor()}
   const d=new Date();
-  return download(`${t("backupPrefix")}_${stampOf(d)}.json`,new Blob([JSON.stringify({app:"tool-list-maker",version:3,savedAt:d.toISOString(),machines:db.machines,articles:db.articles,catalog:(db.catalog||[]).map(c=>{const ph=photoOf(c);return ph?{...c,photo:ph}:c}),holders:(db.holders||[]).map(h=>{const ph=photoOf(h);return ph?{...h,photo:ph}:h}),stockLog:db.stockLog||[],logo},null,1)],{type:"application/json"}),"json")
+  return download(`${t("backupPrefix")}_${stampOf(d)}.json`,new Blob([JSON.stringify({app:"tool-list-maker",version:3,savedAt:d.toISOString(),machines:db.machines,articles:db.articles,catalog:(db.catalog||[]).map(c=>{const ph=photoOf(c);return ph?{...c,photo:ph}:c}),holders:(db.holders||[]).map(h=>{const ph=photoOf(h);return ph?{...h,photo:ph}:h}),stockLog:db.stockLog||[],layouts:db.layouts||[],layoutDefault:db.layoutDefault||"",artNotes:db.artNotes||[],logo},null,1)],{type:"application/json"}),"json")
     .then(p=>{if(!p)return p;db.lastBackup=Date.now();saveDB();toast(DESK?t("backupDesk"):t("backupWeb"));if(route.view==="home")render();return p})
     .catch(e=>{toast(t("backupFail")+(e.message||e));return null})}
 $("#b-restore").onclick=()=>restoreDialog();
@@ -5724,7 +5861,7 @@ $("#f-restore").onchange=async e=>{const f=e.target.files[0];e.target.value="";i
       dialog(esc(t("restoreTitle")),`<p style="margin:0">${t("restoreHas",d.machines.length,d.articles.length)}</p><p class="note" style="margin:0">${esc(t("restoreQ"))}</p>`,
         `<button class="btn ghost" id="d-cancel">${esc(t("cancel"))}</button><button class="btn" id="d-merge">${esc(t("addCurrent"))}</button><button class="btn red" id="d-rep">${esc(t("replaceAll"))}</button>`);
       $("#d-cancel").onclick=closeDlg;
-      $("#d-rep").onclick=()=>{db={machines:d.machines,articles:d.articles,catalog:Array.isArray(d.catalog)?d.catalog:[],holders:Array.isArray(d.holders)?d.holders:[],stockLog:Array.isArray(d.stockLog)?d.stockLog:[],lastBackup:Date.now(),migrated:true};if(d.logo){logo=d.logo;lsSet(LOGOKEY,JSON.stringify(logo))}saveDB();movePhotosOut();closeDlg();go("#");toast(t("restored"))};
+      $("#d-rep").onclick=()=>{db={machines:d.machines,articles:d.articles,catalog:Array.isArray(d.catalog)?d.catalog:[],holders:Array.isArray(d.holders)?d.holders:[],stockLog:Array.isArray(d.stockLog)?d.stockLog:[],layouts:Array.isArray(d.layouts)?d.layouts:[],layoutDefault:d.layoutDefault||"",artNotes:Array.isArray(d.artNotes)?d.artNotes:[],lastBackup:Date.now(),migrated:true};if(d.logo){logo=d.logo;lsSet(LOGOKEY,JSON.stringify(logo))}saveDB();movePhotosOut();closeDlg();go("#");toast(t("restored"))};
       $("#d-merge").onclick=()=>{const ids=new Set(db.machines.map(m=>m.id));d.machines.forEach(m=>{if(!ids.has(m.id))db.machines.push(m)});const aids=new Set(db.articles.map(a=>a.id));d.articles.forEach(a=>{if(!aids.has(a.id))db.articles.push(a)});ensureDB();(d.catalog||[]).forEach(c=>{if(!C_(c.code))db.catalog.push(c)});(d.holders||[]).forEach(h=>{if(!H_(h.ref))db.holders.push(h)});if(Array.isArray(d.stockLog)){const seen=new Set(db.stockLog.map(e=>e.ts+"|"+e.key+"|"+e.d));d.stockLog.forEach(e=>{if(!seen.has(e.ts+"|"+e.key+"|"+e.d))db.stockLog.push(e)});db.stockLog.sort((a,b)=>b.ts-a.ts)}saveDB();movePhotosOut();closeDlg();render();toast(t("added"))};
     }else if(d.article&&Array.isArray(d.tools)){
       const name=clean(d.article.machine)||t("unassigned");let m=db.machines.find(x=>x.name.toLowerCase()===name.toLowerCase());if(!m){m={id:uid(),name,model:"",createdAt:Date.now()};db.machines.push(m)}

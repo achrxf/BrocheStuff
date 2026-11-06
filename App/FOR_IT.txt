@@ -61,9 +61,11 @@ ACCOUNTS
 - Every person signs in with a name (or code) and a password; the admin creates
   the accounts and gives each one a service. First sign-in: admin / admin, to
   be changed by the admin.
-- The admin also gives each account its rights: validate tool sheets, reopen
-  a validated sheet, go back to an earlier index, change machine magazines,
-  delete articles and machines. The admin always has every right.
+- Profiles (Admin page) set which pages a group of people opens and what
+  they may do on each (validate, change magazines, delete, import, stock...).
+  The three services are built-in profiles; the admin can change them and add
+  new ones. Each account follows its profile or gets its own settings. The
+  admin always sees everything. Profiles are stored in users.json.
 - Passwords are never stored in clear: PBKDF2-SHA256, 150,000 iterations,
   random salt per account (Web Crypto API). 5 wrong tries = 30 s wait.
   Sign-ins are logged (name, PC name, result) in users.json.
