@@ -38,7 +38,9 @@ UPDATES (no internet)
   update..." takes a BrocheStuff-Update-x.x.x.neu file (USB stick, network
   folder). It replaces resources.neu in the program folder, keeps the old one
   as resources.previous.neu (button "Go back to the previous version"), and
-  restarts the program. BrocheStuff.exe itself is not changed.
+  restarts the program (from 2.10.0: a hidden "cmd /c ping -n 3 127.0.0.1 &
+  start BrocheStuff.exe" waits 2 seconds and opens the program again).
+  BrocheStuff.exe itself is not changed.
 - The file is also copied to <data folder>\Updates. Every PC using that data
   folder shows "Update to x.x.x" at start; one click updates that PC.
 - Data, accounts and backups are not touched. The file is checked (it must
@@ -67,8 +69,10 @@ ACCOUNTS
   new ones. Each account follows its profile or gets its own settings. The
   admin always sees everything. Profiles are stored in users.json.
 - Validation rules (Admin page, optional): no empty boxes, a required reason
-  for every new index, and a validator who is not the last author. Production
-  always sees the last validated index; unvalidated PDFs are watermarked.
+  for every new index. Separately, the right "Validate a sheet they changed
+  themselves" can be unticked per profile or account (someone else checks).
+  Production always sees the last validated index; unvalidated PDFs are
+  watermarked.
 - Passwords are never stored in clear: PBKDF2-SHA256, 150,000 iterations,
   random salt per account (Web Crypto API). 5 wrong tries = 30 s wait.
   Sign-ins are logged (name, PC name, result) in users.json.
@@ -104,10 +108,11 @@ WHAT THE PROGRAM IS ALLOWED TO DO
 The runtime only allows these native functions (nativeAllowList in the
 configuration inside resources.neu): exit the app, get the Documents path,
 read the COMPUTERNAME variable (for the sign-in log), show the Save, Open and
-Choose folder dialogs, restart itself after an update, open a saved file or the data folder with its default
+Choose folder dialogs, restart itself after an update (the only command it
+runs: see UPDATES), open a saved file or the data folder with its default
 program, and read / write / copy / delete / list files and create folders
 (used only for the folders above).
-It can NOT run commands or other programs, read the clipboard, change Windows
+It can NOT run any other command or program, read the clipboard, change Windows
 settings, or install anything. Logging is off; developer tools are off.
 
 CNC PROGRAMS
