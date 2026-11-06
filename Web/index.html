@@ -2374,63 +2374,72 @@ function sheetXLSX(art){
   const ent=n=>C.find(cfb,n)||C.find(cfb,"/"+n);
   const get=n=>new TextDecoder().decode(ent(n).content),put=(n,x)=>{const e=ent(n);e.content=new TextEncoder().encode(x);e.size=e.content.length};
   const X=v=>String(v??"").replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-  const a=art.article||{},m=M(art.machineId),tools=realTools(art.tools),EN=LANG==="en";
-  /* ---- styles: added to the model's own ---- */
+  const a=art.article||{},m=M(art.machineId),tools=realTools(art.tools),EN=LANG==="en",done=art.status==="done";
+  /* ---- styles, same look as the PDF ---- */
   let st=get("xl/styles.xml");
   const add=(tag,item)=>{const re=new RegExp(`<${tag} count="(\\d+)">([\\s\\S]*?)</${tag}>`),mm=st.match(re),n=+mm[1];st=st.replace(mm[0],`<${tag} count="${n+1}">${mm[2]}${item}</${tag}>`);return n};
-  const INK="FF10171E",MID="FF5F6A75",RED="FF9E0F12",HAIR="FFD9DEE3",PAPER="FFF4F5F2",ZEBRA="FFF8F9F7",WHITE="FFFFFFFF";
-  const font=(o={})=>add("fonts",`<font>${o.b?"<b/>":""}<sz val="${o.sz||10}"/><color rgb="${o.c||INK}"/><name val="${o.n||"Calibri"}"/><family val="2"/></font>`);
+  const INK="FF14181C",MID="FF6B737B",RED="FF9E0F12",GREEN="FF1F7A49",HAIR="FFD5D9DD",CARD="FFF1F1EF",WHITE="FFFFFFFF";
+  const SANS="Arial",COND="Arial Narrow",MONO="Consolas";
+  const font=(o={})=>add("fonts",`<font>${o.b?"<b/>":""}<sz val="${o.sz||10}"/><color rgb="${o.c||INK}"/><name val="${o.n||SANS}"/><family val="2"/></font>`);
   const fill=c=>add("fills",`<fill><patternFill patternType="solid"><fgColor rgb="${c}"/><bgColor indexed="64"/></patternFill></fill>`);
-  const side=(s,c)=>s?` style="${s}"><color rgb="${c}"/></`:"/><";
-  const border=(l,r,t,b)=>add("borders",`<border><left${l?side(...l)+"left>":"/>"}<right${r?side(...r)+"right>":"/>"}<top${t?side(...t)+"top>":"/>"}<bottom${b?side(...b)+"bottom>":"/>"}<diagonal/></border>`);
+  const sd=(s,c)=>s?` style="${s}"><color rgb="${c}"/></`:"/><";
+  const border=(l,r,t,b)=>add("borders",`<border><left${l?sd(...l)+"left>":"/>"}<right${r?sd(...r)+"right>":"/>"}<top${t?sd(...t)+"top>":"/>"}<bottom${b?sd(...b)+"bottom>":"/>"}<diagonal/></border>`);
   const xf=(fo,fi,bo,h,v,wrap,ind)=>add("cellXfs",`<xf numFmtId="49" fontId="${fo}" fillId="${fi}" borderId="${bo}" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1" applyNumberFormat="1"><alignment${h?` horizontal="${h}"`:""} vertical="${v||"center"}"${wrap?' wrapText="1"':""}${ind?` indent="${ind}"`:""}/></xf>`);
-  const fTitle=font({b:1,sz:20}),fNum=font({b:1,sz:18,n:"Consolas"}),fSub=font({sz:9,c:MID}),fHead=font({b:1,sz:9.5,c:WHITE}),
-        fBody=font({sz:10}),fBold=font({b:1,sz:10.5}),fMono=font({sz:10,n:"Consolas"}),fMonoB=font({b:1,sz:10.5,n:"Consolas"}),fCorr=font({sz:10,c:MID,n:"Consolas"});
-  const nofill=0,fPaper=fill(PAPER),fZebra=fill(ZEBRA),fInk=fill(INK),fRedF=fill(RED);
-  const hair=["thin",HAIR],bNone=border(),bTitle=border(null,null,null,["medium",RED]),bBox=border(hair,hair,hair,hair),
-        bHead=border(["thin","FF2A3540"],["thin","FF2A3540"],null,["medium",RED]),bCell=border(hair,hair,null,hair);
-  const S={title:xf(fTitle,nofill,bTitle,"left","bottom"),num:xf(fNum,nofill,bTitle,"right","bottom"),sub:xf(fSub,nofill,bNone,"left","top"),
-    box:xf(fBody,fPaper,bBox,"left","top",1,1),head:xf(fHead,fInk,bHead,"center","center",1)};
-  const body=(fo,h,wrap)=>[xf(fo,nofill,bCell,h,"center",wrap,h==="left"?1:0),xf(fo,fZebra,bCell,h,"center",wrap,h==="left"?1:0)];
-  const COL=[["t",body(fMonoB,"center")],["corrH",body(fCorr,"center")],["corrD",body(fCorr,"center")],["type",body(fBold,"left",1)],["diameter",body(fMono,"center")],["ra",body(fMono,"center")],
-    ["insert",body(fMono,"left",1)],["ls",body(fMonoB,"center")],["oal",body(fMono,"center")],["z",body(fMono,"center")],["holder",body(fBody,"left",1)],["code",body(fMonoB,"center")]];
+  const hair=["thin",HAIR],black=["medium",INK];
+  const F0=fill(CARD),Fred=fill(done?GREEN:RED);
+  const b0=border(),bTop=border(null,null,black,hair),bTopL=border(hair,null,black,hair),bRow=border(null,null,null,hair),bHead=border(null,null,null,black),bLast=border(null,null,null,black);
+  const S={
+    title:xf(font({b:1,sz:28,n:COND}),0,b0,"left","bottom"),sub:xf(font({sz:9,c:MID}),0,b0,"left","top",0,0),
+    band:xf(font({b:1,sz:7.5,c:WHITE}),Fred,b0,"left","center",0,1),cardL:xf(font({sz:9,c:MID}),F0,b0,"left","bottom",0,1),
+    cardN:xf(font({b:1,sz:22,n:MONO}),F0,b0,"left","center",0,1),cardD:xf(font({b:1,sz:10.5}),F0,b0,"left","top",1,1),
+    info:xf(font({sz:12}),0,bTop,"left","top",1,0),infoL:xf(font({sz:12}),0,bTopL,"left","top",1,1),
+    info2:xf(font({sz:11}),0,bRow,"left","top",1,0),info2L:xf(font({sz:11}),0,border(hair,null,null,hair),"left","top",1,1),
+    idx:xf(font({b:1,sz:16}),F0,border(hair,null,black,hair),"center","top",1),
+    head:xf(font({sz:9.5,c:MID}),F0,bHead,"left","center",1,1),headC:xf(font({sz:9.5,c:MID}),F0,bHead,"center","center",1)};
+  const BODY=[["t",font({b:1,sz:11}),"left"],["corrH",font({b:1,sz:10.5,n:MONO}),"center"],["corrD",font({b:1,sz:10.5,n:MONO}),"center"],["type",font({b:1,sz:11,n:COND}),"left",1],
+    ["diameter",font({sz:11,n:MONO}),"center"],["ra",font({sz:11,n:MONO}),"center"],["insert",font({sz:9,c:MID,n:MONO}),"left",1],["ls",font({b:1,sz:12.5,n:MONO}),"center"],
+    ["oal",font({sz:10.5,n:MONO}),"center"],["z",font({sz:10.5,n:MONO}),"center"],["holder",font({sz:9.5}),"left",1],["code",font({b:1,sz:11,n:MONO}),"left"]]
+    .map(([k,fo,h,w])=>[k,xf(fo,0,bRow,h,"center",w,h==="left"?1:0),xf(fo,0,bLast,h,"center",w,h==="left"?1:0)]);
   put("xl/styles.xml",st);
   /* ---- the sheet ---- */
   const L="ABCDEFGHIJKL",cell=(ref,s,v)=>v===""||v==null?`<c r="${ref}" s="${s}"/>`:`<c r="${ref}" s="${s}" t="inlineStr"><is><t xml:space="preserve">${X(v)}</t></is></c>`;
-  const rich=(ref,s,label,val)=>`<c r="${ref}" s="${s}" t="inlineStr"><is><r><rPr><sz val="8"/><color rgb="${MID}"/><rFont val="Calibri"/></rPr><t xml:space="preserve">${X(label.toUpperCase())}</t></r><r><rPr><b/><sz val="11"/><color rgb="${INK}"/><rFont val="Calibri"/></rPr><t xml:space="preserve">${X("\n"+(val||" "))}</t></r></is></c>`;
-  const rows=[],merges=[];let r=1;
-  const span=(r0,c0,c1)=>{if(c1>c0)merges.push(`${L[c0]}${r0}:${L[c1]}${r0}`)};
-  // 1: title + article number
-  const num=[clean(a.number),clean(a.index)?(EN?"Index ":"Indice ")+clean(a.index):""].filter(Boolean).join("  ·  ");
-  rows.push(`<row r="1" ht="34" customHeight="1">${L.split("").map((c,i)=>i===0?cell("A1",S.title,EN?"Tool list":"Fiche outils"):i===6?cell("G1",S.num,num):cell(c+"1",i<6?S.title:S.num,"")).join("")}</row>`);span(1,0,5);span(1,6,11);
-  rows.push(`<row r="2" ht="8" customHeight="1"/>`);
-  // 3-5: article boxes
-  const boxes=[[["designation",EN?"Designation":"Désignation",0,5],["reference",EN?"Reference":"Référence",6,11]],
-    [["program",EN?"Program":"Programme",0,3],["machine","Machine",4,7],["material",EN?"Material":"Matière",8,11]],
-    [["preparedBy",EN?"Prepared by":"Établi par",0,3],["approvedBy",EN?"Approved by":"Approuvé par",4,7],["date","Date",8,11]]];
-  boxes.forEach((line,k)=>{const rr=3+k;let cs="";line.forEach(([key,lab,c0,c1])=>{const v=key==="machine"?(m?mLabel(m):""):clean(a[key]);
-      for(let c=c0;c<=c1;c++)cs+=c===c0?rich(L[c]+rr,S.box,lab,v):cell(L[c]+rr,S.box,"");span(rr,c0,c1)});
-    rows.push(`<row r="${rr}" ht="32" customHeight="1">${cs}</row>`)});
-  let rr=6;
-  if(clean(a.notes)){let cs=rich("A6",S.box,EN?"Notes":"Remarques",clean(a.notes).replace(/\s*\n\s*/g," · "));for(let c=1;c<12;c++)cs+=cell(L[c]+"6",S.box,"");span(6,0,11);rows.push(`<row r="6" ht="32" customHeight="1">${cs}</row>`);rr=7}
-  rows.push(`<row r="${rr}" ht="8" customHeight="1"/>`);rr++;
-  // header: same titles as the model, so the file imports back
-  const HR=rr,HEAD=["Outil","Corr. H","Corr. D","Type","Ø","R / °","Réf. plaquette","LS","LT","Z","Porte-outil","Code outil"];
-  rows.push(`<row r="${HR}" ht="30" customHeight="1">${HEAD.map((h,i)=>cell(L[i]+HR,S.head,h)).join("")}</row>`);rr++;
-  const n=Math.max(tools.length+5,20);
-  for(let i=0;i<n;i++,rr++){const tl=tools[i]||{},z=i%2,hol=String(tl.holder??"").trim(),hl=hol?hol.split("\n"):[""];
-    const lines=hl.length+hl.filter(l=>l.length>44).length+(String(tl.type||"").length>34?1:0);
-    const val={t:tl.t?normT(tl.t)||clean(tl.t):"",corrH:corrV(tl.corrH),corrD:corrV(tl.corrD),type:clean(tl.type),diameter:clean(tl.diameter),ra:clean(tl.ra),insert:clean(tl.insert),ls:clean(tl.ls),oal:clean(tl.oal),z:clean(tl.z),holder:hol,code:clean(tl.code)};
-    rows.push(`<row r="${rr}" ht="${lines>2?44:lines>1?32:22}" customHeight="1">${COL.map(([k,s],ci)=>cell(L[ci]+rr,s[z],val[k])).join("")}</row>`)}
-  const last=rr-1;
+  const runs=(...p)=>`<is>${p.map(([t0,o])=>`<r><rPr>${o.b?"<b/>":""}<sz val="${o.sz}"/><color rgb="${o.c||INK}"/><rFont val="${o.n||SANS}"/></rPr><t xml:space="preserve">${X(t0)}</t></r>`).join("")}</is>`;
+  const rich=(ref,s,label,val,vsz)=>`<c r="${ref}" s="${s}" t="inlineStr">${runs([label,{sz:8.5,c:MID}],["\n"+(val||" "),{sz:vsz||12}])}</c>`;
+  const rows=[],merges=[];const span=(r0,c0,c1,r1)=>{merges.push(`${L[c0]}${r0}:${L[c1]}${r1||r0}`)};
+  const row=(r,ht,cells)=>rows.push(`<row r="${r}" ht="${ht}" customHeight="1">${cells}</row>`);
+  const fillRow=(r,c0,c1,s,first)=>{let o=first;for(let c=c0+1;c<=c1;c++)o+=cell(L[c]+r,s,"");return o};
+  const vv=art.validated||{},band=done?[EN?"VALIDATED":"VALIDÉE",vv.ts?new Date(vv.ts).toLocaleDateString(EN?"en-GB":"fr-FR"):"",clean(vv.who)].filter(Boolean).join("  ·  "):(EN?"IN PROGRESS · NOT VALIDATED":"EN COURS · NON VALIDÉE");
+  const num=clean(a.number)||"—";
+  row(1,10,"");
+  // title (left) and article card (right), like the top of the PDF
+  row(2,15,`<c r="A2" s="${S.title}" t="inlineStr">${runs([EN?"Tool List":"Fiche Outils",{b:1,sz:28,n:COND}],[".",{b:1,sz:28,n:COND,c:RED}])}</c>`+fillRow(2,0,5,S.title,"").slice(0)+fillRow(2,7,11,S.band,cell("H2",S.band,band)));
+  row(3,14,fillRow(3,0,5,S.title,"")+fillRow(3,7,11,S.cardL,cell("H3",S.cardL,"Article")));
+  row(4,30,fillRow(4,0,5,S.title,"")+fillRow(4,7,11,S.cardN,cell("H4",S.cardN,num)));
+  row(5,18,fillRow(5,0,5,S.sub,cell("A5",S.sub,EN?"Fiche outils":"Tool list"))+fillRow(5,7,11,S.cardD,cell("H5",S.cardD,clean(a.designation).toUpperCase())));
+  span(2,0,5,4);span(5,0,5);span(2,7,11);span(3,7,11);span(4,7,11);span(5,7,11);
+  row(6,10,"");
+  // info boxes: label above value
+  const box=(r,c0,c1,s,sL,label,val,vsz)=>{let o=rich(L[c0]+r,c0===0?s:sL,label,val,vsz);for(let c=c0+1;c<=c1;c++)o+=cell(L[c]+r,c0===0?s:sL,"");if(c1>c0)span(r,c0,c1);return o};
+  const idxC=`<c r="L7" s="${S.idx}" t="inlineStr">${runs([EN?"Index":"Indice",{sz:8.5,c:MID}],["\n"+(clean(a.index)||"—"),{b:1,sz:16}])}</c>`;
+  row(7,40,box(7,0,3,S.info,S.infoL,EN?"Reference":"Référence",clean(a.reference))+box(7,4,6,S.info,S.infoL,EN?"Program":"Programme",clean(a.program))+box(7,7,9,S.info,S.infoL,EN?"Material":"Matière",clean(a.material))+box(7,10,10,S.info,S.infoL,"Machine",sheetData(art).article.machine)+idxC);
+  row(8,34,box(8,0,3,S.info2,S.info2L,EN?"Prepared by":"Établi par",clean(a.preparedBy),11)+box(8,4,6,S.info2,S.info2L,EN?"Approved by":"Approuvé par",clean(a.approvedBy),11)+box(8,7,9,S.info2,S.info2L,"Date",clean(a.date),11)+box(8,10,11,S.info2,S.info2L,EN?"Notes":"Remarques",clean(a.notes).replace(/\s*\n\s*/g," · "),11));
+  row(9,12,"");
+  // table: same titles as the model so the file imports back
+  const HR=10,HEAD=["Outil","Corr. H","Corr. D","Type","Ø","R / °","Réf. plaquette","LS","LT","Z","Porte-outil","Code outil"],HC=[0,1,1,0,1,1,0,1,1,1,0,0];
+  row(HR,26,HEAD.map((h,i)=>cell(L[i]+HR,HC[i]?S.headC:S.head,h)).join(""));
+  const n=tools.length+5;let r=HR+1;
+  for(let i=0;i<n;i++,r++){const tl=tools[i]||{},lastRow=i===n-1,hol=String(tl.holder??"").trim(),hl=hol?hol.split("\n"):[""];
+    const lines=Math.max(hl.length+hl.filter(l=>l.length>46).length,String(tl.type||"").length>32?2:1,String(tl.insert||"").length>26?2:1);
+    const val={t:tl.t?normT(tl.t)||clean(tl.t):"",corrH:corrV(tl.corrH),corrD:corrV(tl.corrD),type:clean(tl.type).toUpperCase(),diameter:clean(tl.diameter),ra:clean(tl.ra),insert:clean(tl.insert),ls:clean(tl.ls),oal:clean(tl.oal),z:clean(tl.z),holder:hol,code:clean(tl.code).toUpperCase()};
+    row(r,lines>2?44:lines>1?32:24,BODY.map(([k,s,sL],ci)=>cell(L[ci]+r,lastRow?sL:s,val[k])).join(""))}
+  const last=r-1;
   let x=get("xl/worksheets/sheet1.xml");
-  x=x.replace(/<sheetData>[\s\S]*?<\/sheetData>/,`<sheetData>${rows.join("")}</sheetData>`);
-  x=x.replace(/<sheetData\/>/,`<sheetData>${rows.join("")}</sheetData>`);
-  x=x.replace(/<mergeCells[\s\S]*?<\/mergeCells>/,merges.length?`<mergeCells count="${merges.length}">${merges.map(q=>`<mergeCell ref="${q}"/>`).join("")}</mergeCells>`:"");
+  x=x.replace(/<sheetData>[\s\S]*?<\/sheetData>|<sheetData\/>/,`<sheetData>${rows.join("")}</sheetData>`);
+  x=x.replace(/<mergeCells[\s\S]*?<\/mergeCells>/,`<mergeCells count="${merges.length}">${merges.map(q=>`<mergeCell ref="${q}"/>`).join("")}</mergeCells>`);
   x=x.replace(/<dimension ref="[^"]*"\/>/,`<dimension ref="A1:L${last}"/>`);
   x=x.replace(/<pane [^>]*\/>/,`<pane ySplit="${HR}" topLeftCell="A${HR+1}" activePane="bottomLeft" state="frozen"/>`).replace(/<selection [^>]*\/>/,`<selection pane="bottomLeft" activeCell="A${HR+1}" sqref="A${HR+1}"/>`);
-  x=x.replace(/<sheetView /,'<sheetView showGridLines="0" ');
-  const W=[7,6,6,30,7,7,28,9,7,5,40,13];x=x.replace(/<cols>[\s\S]*?<\/cols>/,`<cols>${W.map((w,i)=>`<col min="${i+1}" max="${i+1}" width="${w}" customWidth="1"/>`).join("")}</cols>`);
+  if(!/showGridLines="0"/.test(x))x=x.replace(/<sheetView /,'<sheetView showGridLines="0" ');
+  const W=[7.5,6,6,30,7,7,29,10.5,7,5,40,12];x=x.replace(/<cols>[\s\S]*?<\/cols>/,`<cols>${W.map((w,i)=>`<col min="${i+1}" max="${i+1}" width="${w}" customWidth="1"/>`).join("")}</cols>`);
   // no page header / footer text on the printout
   x=x.replace(/<headerFooter>[\s\S]*?<\/headerFooter>/,"").replace(/<headerFooter\/>/,"");
   put("xl/worksheets/sheet1.xml",x);
