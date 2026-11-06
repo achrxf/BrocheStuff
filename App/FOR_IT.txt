@@ -66,6 +66,9 @@ ACCOUNTS
   The three services are built-in profiles; the admin can change them and add
   new ones. Each account follows its profile or gets its own settings. The
   admin always sees everything. Profiles are stored in users.json.
+- Validation rules (Admin page, optional): no empty boxes, a required reason
+  for every new index, and a validator who is not the last author. Production
+  always sees the last validated index; unvalidated PDFs are watermarked.
 - Passwords are never stored in clear: PBKDF2-SHA256, 150,000 iterations,
   random salt per account (Web Crypto API). 5 wrong tries = 30 s wait.
   Sign-ins are logged (name, PC name, result) in users.json.
