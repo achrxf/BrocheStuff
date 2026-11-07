@@ -2729,7 +2729,7 @@ function sheetModel(art){
   INF.forEach((c,i)=>{const [c0,c1]=rg[i],k=c[1],v=clean(c[1]==="machine"?sheetData(art).article.machine:a[k]);
     put(ri,c0,sInfo(i,false),{runs:[[c[0],F(XL_SANS,6.8,0,MID)],["\n"+(v||" "),F(k==="program"||k==="phase"?XL_MONO:XL_SANS,v.length>26?8:9.6)]]});fillRow(ri,c0,c1,sInfo(i,false));span(ri,c0,ri,c1)});
   const [ix0,ix1]=cols(M.X1-21,M.X1);
-  put(ri,ix0,st("idx",{f:F(XL_MONO,10,1),fill:FILL,bd:{t:black,b:hair},h:"center",v:"bottom",wrap:1}),{runs:[[(clean(a.index)||" "),F(XL_MONO,10,1)],["\n ",F(XL_SANS,5.5)]]});fillRow(ri,ix0,ix1,"idx");span(ri,ix0,ri,ix1);
+  put(ri,ix0,st("idx",{f:F(XL_MONO,14,1),fill:FILL,bd:{t:black,b:hair},h:"center",v:"center",wrap:1}),{runs:[[LB.index,F(XL_SANS,6.8,0,MID)],["\n"+(clean(a.index)||"—"),F(XL_MONO,14,1)]]});fillRow(ri,ix0,ix1,"idx");span(ri,ix0,ri,ix1);
   const idxW=21;
   row(3);
   // ---- the tool table
@@ -2783,7 +2783,7 @@ function sheetModel(art){
       const sv=st("sgV"+(isD?"d":"")+(last?"x":""),{f:F(isD?XL_MONO:XL_SANS,9.8),fill:isD?FILL:undefined,bd:{...(isD?{}:{b:["thin",SOFT]}),...sep},h:"left",v:"bottom",ind:i?1:0});
       const se=st("sgE"+(isD?"d":"")+(last?"x":""),{f:F(XL_SANS,7),fill:isD?FILL:undefined,bd:sep,h:"left",v:"bottom"});
       put(ra,T0+c0,sl,g[0]);fillRow(ra,T0+c0,T0+c1,sl);span(ra,T0+c0,ra,T0+c1);
-      put(rb,T0+c0,sv,clean(a[g[1]]));fillRow(rb,T0+c0,T0+c1,sv);span(rb,T0+c0,rb,T0+c1);fillRow(n1,T0+c0,T0+c1,se);fillRow(n2,T0+c0,T0+c1,se)})}
+      put(rb,T0+c0,sv,clean(a[g[1]]));fillRow(rb,T0+c0,T0+c1,sv);span(rb,T0+c0,rb,T0+c1);[n1,n2].forEach(q=>{put(q,T0+c0,se,"");fillRow(q,T0+c0,T0+c1,se);span(q,T0+c0,q,T0+c1)})})}
   const LASTR=r;
   if(GAP){const PH=297-0.32*25.4-1,hmm=q=>R[q].ht/2.8346;let y=0;for(let q=1;q<GAP;q++){const h=hmm(q);if(y+h>PH)y=hmm(HR)+h;else y+=h}
     let hb=0;for(let q=B0;q<=LASTR;q++)hb+=hmm(q);const want=287.2-hb-y;if(want>7&&y+want+hb<=PH)R[GAP].ht=mmH(want)}
@@ -2793,7 +2793,7 @@ function sheetModel(art){
   const v0=Math.min(LASTR,HR),v1=Math.max(v0,Math.min(LASTR,HR+Math.max(8,nT)));
   put(v0,1,st("spT",{f:F(XL_COND,7.5,1,MID),fill:FILL,bd:{r:hair},h:"center",v:"center",rot:90}),{runs:[[LB.spine.replace(/\s+/g," ")+"   ",F(XL_COND,7.5,1,MID)],[clean(a.number),F(XL_MONO,11,1)]]});span(v0,1,v1,1);
   // pictures: the header (taken from the PDF) and the index triangle
-  const images=[{key:"head",row:1,col:T0,offX:0,offY:0,wmm:151-2-M.X0,hmm:18.8},{key:"tri",row:ri-1,col:ix0,offX:0,offY:0,wmm:idxW,hmm:12.6}];
+  const images=[{key:"head",row:1,col:T0,offX:0,offY:0,wmm:151-2-M.X0,hmm:18.8}];
   return{S,rows,merges,HR,last:LASTR,W:Wmm.map(mmW),Wmm,L:XL_L,images,cut:{x0:M.X0,x1:151-2,y0:8,y1:26.8},
     page:{l:0,r:0.39,t:0,b:0.32,h:0,f:0.12,foot:[O.printed?`&L&"${XL_SANS},Regular"&7&K5B5B5B${LB.printed} &D &T`:"",O.pageNo?`&R&"${XL_SANS},Regular"&7&K5B5B5B${LB.page} &P / &N`:`&R&"${XL_SANS},Regular"&7&K5B5B5B&P / &N`].join("")},
     freeze:HR,tri:{w:idxW,h:12.6,label:LB.index}};
@@ -2821,14 +2821,9 @@ async function xlImages(art,md){const out={};
       const PX=8,vp=pg.getViewport({scale:PX*25.4/72}),cv=document.createElement("canvas");cv.width=Math.ceil((md.cut.x1-md.cut.x0)*PX);cv.height=Math.ceil((md.cut.y1-md.cut.y0)*PX);
       const g=cv.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,cv.width,cv.height);g.translate(-md.cut.x0*PX,-md.cut.y0*PX);await pg.render({canvasContext:g,viewport:vp}).promise;
       out.head=await new Promise(res=>cv.toBlob(b=>b.arrayBuffer().then(x=>res({bytes:new Uint8Array(x),url:cv.toDataURL("image/png")})),"image/png"));XLIMG_CACHE.set(key,out.head)}catch(e){console.error(e)}}
-  {const PX=12,cv=document.createElement("canvas");cv.width=Math.round(md.tri.w*PX);cv.height=Math.round(md.tri.h*PX);const g=cv.getContext("2d");
-   g.fillStyle="#5B5B5B";g.font=`500 ${Math.round(6.8*25.4/72*PX)}px "IBM Plex Sans","Segoe UI",Arial,sans-serif`;g.fillText(md.tri.label||"",3*PX,4.6*PX);
-   const cx=cv.width/2;g.strokeStyle="#161616";g.lineWidth=0.4*PX;g.lineJoin="round";
-   g.beginPath();g.moveTo(cx,3.4*PX);g.lineTo(cx-4.6*PX,11.4*PX);g.lineTo(cx+4.6*PX,11.4*PX);g.closePath();g.stroke();
-   out.tri=await new Promise(res=>cv.toBlob(b=>b.arrayBuffer().then(x=>res({bytes:new Uint8Array(x),url:cv.toDataURL("image/png")})),"image/png"))}
   return out}
 async function sheetXLSX(art){const md=sheetModel(art),imgs=await xlImages(art,md);
-  return bookXLSX([{name:LANG==="en"?"Tool list":"Fiche outils",md,imgs},{name:XL_RAW,md:rawModel(art),hidden:true}],0)}
+  return bookXLSX([{name:LANG==="en"?"Tool list":"Fiche outils",title:`${LANG==="en"?"Tool list":"Fiche outils"} ${clean(art.article&&art.article.number)}`.trim(),md,imgs},{name:XL_RAW,md:rawModel(art),hidden:true}],0)}
 /* writing the .xlsx: every sheet written from its model (cells, merges, sizes, pictures, page setup) */
 const XL_L=Array.from({length:80},(_,i)=>i<26?String.fromCharCode(65+i):String.fromCharCode(64+Math.floor(i/26))+String.fromCharCode(65+i%26));
 function bookXLSX(list,active){
@@ -2868,13 +2863,15 @@ function bookXLSX(list,active){
       ctypes.push(`<Override PartName="/xl/drawings/drawing${dn}.xml" ContentType="application/vnd.openxmlformats-officedocument.drawing+xml"/>`);drawRel='<drawing r:id="rId1"/>'}
     const x=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">`+
       `<sheetPr><pageSetUpPr fitToPage="1"/></sheetPr><dimension ref="A1:${LL}${md.last}"/>`+
-      `<sheetViews><sheetView showGridLines="0"${si===active?' tabSelected="1"':""} workbookViewId="0">${FR?`<pane ySplit="${FR}" topLeftCell="A${FR+1}" activePane="bottomLeft" state="frozen"/><selection pane="bottomLeft" activeCell="A${FR+1}" sqref="A${FR+1}"/>`:""}</sheetView></sheetViews>`+
+      `<sheetViews><sheetView showGridLines="0"${md.images&&md.images.length?' showRowColHeaders="0"':""}${si===active?' tabSelected="1"':""} zoomScale="100" workbookViewId="0">${FR?`<pane ySplit="${FR}" topLeftCell="A${FR+1}" activePane="bottomLeft" state="frozen"/><selection pane="bottomLeft" activeCell="A${FR+1}" sqref="A${FR+1}"/>`:""}</sheetView></sheetViews>`+
       `<sheetFormatPr defaultRowHeight="15"/><cols>${md.W.map((w,i)=>`<col min="${i+1}" max="${i+1}" width="${w}" customWidth="1"/>`).join("")}</cols>`+
       `<sheetData>${data}</sheetData>`+(md.merges.length?`<mergeCells count="${md.merges.length}">${md.merges.map(([r0,c0,r1,c1])=>`<mergeCell ref="${L[c0]}${r0}:${L[c1]}${r1}"/>`).join("")}</mergeCells>`:"")+
       `<pageMargins left="${pg?pg.l:0.35}" right="${pg?pg.r:0.35}" top="${pg?pg.t:0.5}" bottom="${pg?pg.b:0.5}" header="${pg?pg.h:0.2}" footer="${pg?pg.f:0.2}"/>`+
       `<pageSetup paperSize="9" orientation="${md.land?"landscape":"portrait"}" fitToWidth="1" fitToHeight="0"/>`+(pg&&pg.foot?`<headerFooter><oddFooter>${X(pg.foot)}</oddFooter></headerFooter>`:"")+drawRel+`</worksheet>`;
     return{name:nameOf(it.name),xml:x,LL,last:md.last,HR:md.HR,hidden:!!it.hidden,rels}});
   put("xl/styles.xml",st);
+  try{const now=new Date().toISOString().replace(/\.\d+Z$/,"Z"),title=list[0]&&list[0].title||list[0]&&list[0].name||"";
+    put("docProps/core.xml",`<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:title>${X(title)}</dc:title><dc:creator>BrocheStuff</dc:creator><cp:lastModifiedBy>${X(typeof USER!=="undefined"&&USER||"BrocheStuff")}</cp:lastModifiedBy><dcterms:created xsi:type="dcterms:W3CDTF">${now}</dcterms:created><dcterms:modified xsi:type="dcterms:W3CDTF">${now}</dcterms:modified></cp:coreProperties>`)}catch(e){}
   out.forEach((o,i)=>{put(`xl/worksheets/sheet${i+1}.xml`,o.xml);if(o.rels.length)put(`xl/worksheets/_rels/sheet${i+1}.xml.rels`,`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${o.rels.join("")}</Relationships>`)});
   if(out.length<2){try{Cf.utils.cfb_del(cfb,"/xl/worksheets/sheet2.xml")}catch(e){}}
   const q=n=>"'"+n.replace(/'/g,"''")+"'";
@@ -5333,7 +5330,7 @@ Object.assign(I18N.en,{getApp:"Get the app", getAppT:"Download the Windows insta
   demoBar:"Demo: made-up workshop with 20 machines and 500 articles. Changes stay in this browser only.", demoShort:"Made-up data", demoReset:"Reset the demo", demoResetQ:"Reset the demo data? Everything changed here is lost.", demoGo:"Real version"});
 Object.assign(I18N.fr,{getApp:"Télécharger l'app", getAppT:"Télécharger l’installateur Windows",
   demoBar:"Démo : atelier fictif de 20 machines et 500 articles. Vos changements restent dans ce navigateur.", demoShort:"Données fictives", demoReset:"Réinitialiser la démo", demoResetQ:"Réinitialiser les données de la démo ? Tout ce qui a été changé ici sera perdu.", demoGo:"Version réelle"});
-const APP_ZIP="BrocheStuff-Setup-2.12.0.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
+const APP_ZIP="BrocheStuff-Setup-2.12.1.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
 function appUrl(){
   // on the site (…/Web/ or …/Demo/) the program sits next door in …/App/; anywhere else, take it from the site
   if(/^https?:/.test(location.protocol)&&/\/(Web|Demo)\/(index\.html)?$/i.test(location.pathname))return new URL("../App/"+APP_ZIP,location.href).href;
@@ -5857,7 +5854,7 @@ function drawHistory(){
    admin page, demo switch. The web version doesn't use any of this.
    ===================================================================== */
 const DESKDEMO=/*DESKDEMO*/null;
-const APP_VER="2.12.0";
+const APP_VER="2.12.1";
 let DEMO_ON=false, ACC=null, USERS=null, PCNAME="", realDIR="", loginFails=0, loginWait=0, lastAct=Date.now();
 Object.assign(I18N.en,{
   loginT:"Sign in", loginP:"Enter your name or code and your password.", loginName:"Name or code", loginPw:"Password", loginGo:"Sign in",
