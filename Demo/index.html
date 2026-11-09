@@ -2073,7 +2073,7 @@ en:{
   machine:"Machine", slashDone:n=>`/ ${n} done`, nInProgress:n=>`${n} in progress`, edit:"Edit", editT:"Rename or delete",
   footWeb:(m,n)=>`${m} ${pl(m,"machine","machines")} · ${n} ${pl(n,"article","articles")} · saved in this browser on this PC`,
   footDesk:(m,n)=>`${m} ${pl(m,"machine","machines")} · ${n} ${pl(n,"article","articles")} · saved automatically in ${DIR||"Documents\\BrocheStuff"}`,
-  footDaily:"A backup copy is made every day (last 30 kept).",
+  footDaily:"Backup copies follow the schedule chosen in Admin (weekly by default).",
   notBacked:"Not backed up yet. Click “Back up” in the top bar to save everything to a file.", backedDays:d=>`Last backup ${d} days ago.`, backedOn:d=>`Last backup ${d}`,
   codeUsed:(c,n)=>`Tool code ${c} is used in ${n} ${pl(n,"article","articles")}`, codeStarts:c=>`No article uses exactly ${c} · showing codes starting with ${c}`, nFound:n=>`${n} ${pl(n,"article","articles")} found`,
   nothingFilter:"Nothing in this filter", searchHint:"Search looks at article number, reference, designation, program and tool codes.", noMatch:"No article matches", noMatchOn:m=>`No article on ${m} matches`,
@@ -2156,7 +2156,7 @@ fr:{
   machine:"Machine", slashDone:n=>`/ ${n} ${pl(n,"terminé","terminés")}`, nInProgress:n=>`${n} en cours`, edit:"Modifier", editT:"Renommer ou supprimer",
   footWeb:(m,n)=>`${m} ${pl(m,"machine","machines")} · ${n} ${pl(n,"article","articles")} · enregistré dans ce navigateur sur ce PC`,
   footDesk:(m,n)=>`${m} ${pl(m,"machine","machines")} · ${n} ${pl(n,"article","articles")} · enregistré automatiquement dans ${DIR||"Documents\\BrocheStuff"}`,
-  footDaily:"Une copie de sauvegarde est faite chaque jour (les 30 dernières sont gardées).",
+  footDaily:"Les copies de sauvegarde suivent le rythme choisi dans Admin (chaque semaine par défaut).",
   notBacked:"Pas encore sauvegardé. Cliquez sur « Sauvegarder » en haut pour tout enregistrer dans un fichier.", backedDays:d=>`Dernière sauvegarde il y a ${d} jours.`, backedOn:d=>`Dernière sauvegarde le ${d}`,
   codeUsed:(c,n)=>`Le code outil ${c} est utilisé dans ${n} ${pl(n,"article","articles")}`, codeStarts:c=>`Aucun article n'utilise exactement ${c} · codes commençant par ${c}`, nFound:n=>`${n} ${pl(n,"article trouvé","articles trouvés")}`,
   nothingFilter:"Rien dans ce filtre", searchHint:"La recherche porte sur le numéro d'article, la référence, la désignation, le programme et les codes outils.", noMatch:"Aucun article ne correspond", noMatchOn:m=>`Aucun article sur ${m} ne correspond`,
@@ -2592,7 +2592,12 @@ const WEBFS=(()=>{
   const DBN="brochestuff-folders",idb=()=>new Promise((res,rej)=>{const r=indexedDB.open(DBN,1);r.onupgradeneeded=()=>r.result.createObjectStore("h");r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
   const hget=async k=>{const d=await idb();return new Promise(res=>{const q=d.transaction("h").objectStore("h").get(k);q.onsuccess=()=>res(q.result||null);q.onerror=()=>res(null)})};
   const hput=async(k,v)=>{const d=await idb();return new Promise(res=>{const tx=d.transaction("h","readwrite");tx.objectStore("h").put(v,k);tx.oncomplete=()=>res(true);tx.onerror=()=>res(false)})};
-  const roots={};let ready=null,files=new Map(),fileN=0;
+  const roots={};let ready=null,files=new Map(),fileN=0,take=!!W.__QA_TAKEOLD;
+  // data kept in this browser by the earlier web version (only counted here)
+  const oldData=async()=>{let n=0,m=0;try{const raw=localStorage.getItem("toollistmaker.db.v2");if(raw){const d=JSON.parse(raw);n=(d.articles||[]).length;m=(d.machines||[]).length}}catch(e){}
+    try{const L=indexedDB.databases?await indexedDB.databases():[{name:"toolmanager"}];if(L.some(x=>x.name==="toolmanager")){const d=await new Promise(res=>{const r=indexedDB.open("toolmanager");r.onsuccess=()=>res(r.result);r.onerror=()=>res(null);r.onupgradeneeded=()=>{try{r.transaction.abort()}catch(e){}}});
+      if(d&&d.objectStoreNames.contains("kv")){const raw=await new Promise(res=>{const q=d.transaction("kv").objectStore("kv").get("db");q.onsuccess=()=>res(q.result);q.onerror=()=>res(null)});d.close();if(raw){const x=JSON.parse(raw);if((x.articles||[]).length>=n){n=(x.articles||[]).length;m=(x.machines||[]).length}}}else if(d)d.close()}}catch(e){}
+    return n||m?{n,m}:null};
   const ROOT="~",MAIN="~/BrocheStuff";
   const err=(code,m)=>{const e=new Error(m||code);e.code=code;return e};
   // a path → the folder it starts from and the names under it
@@ -2637,30 +2642,39 @@ const WEBFS=(()=>{
   // first visit: choose the folder; next visits: one click so the browser lets the page use it again
   const L=()=>{let l="";try{l=localStorage.getItem("toolmanager.lang")||""}catch(e){}return l||(/^en/i.test(navigator.language||"")?"en":"fr")};
   const TX={fr:{t1:"Où garder vos données ?",p1:"BrocheStuff garde tout dans un dossier de ce PC : fiches, magasin, comptes, sauvegardes. Rien ne part sur internet, et vider le navigateur n’y touche pas.",p2:"Dans la fenêtre qui s’ouvre, allez dans Documents, créez un dossier « BrocheStuff » (bouton « Nouveau dossier ») et sélectionnez-le. Si vous avez déjà un dossier BrocheStuff, choisissez-le simplement.",b1:"Choisir le dossier",
-      t2:"Vos données sont prêtes",p3:n=>`Dossier : ${n}. Pour la sécurité, le navigateur demande votre accord une fois à chaque ouverture.`,b2:"Ouvrir BrocheStuff",other:"Choisir un autre dossier",br:"Navigateur non compatible : utilisez Microsoft Edge ou Google Chrome pour garder les données dans un dossier.",no:"Le navigateur n’a pas donné l’accès au dossier. Réessayez et choisissez « Autoriser » / « Modifier les fichiers »."},
+      t2:"Vos données sont prêtes",p3:n=>`Dossier : ${n}. Pour la sécurité, le navigateur demande votre accord une fois à chaque ouverture.`,b2:"Ouvrir BrocheStuff",other:"Choisir un autre dossier",br:"Navigateur non compatible : utilisez Microsoft Edge ou Google Chrome pour garder les données dans un dossier.",no:"Le navigateur n’a pas donné l’accès au dossier. Réessayez et choisissez « Autoriser » / « Modifier les fichiers ».",
+      has:"Vous avez déjà un dossier BrocheStuff (autre PC, programme Windows) ? Choisissez-le : tout reprend à partir de lui.",oldT:"Anciennes données dans ce navigateur",oldP:n=>`Ce navigateur contient encore des données de l’ancienne version web (${n}). Les reprendre dans ce dossier, ou commencer à vide ?`,take:"Les reprendre dans le dossier",skip:"Commencer à vide",cnt:o=>`${o.n} fiche${o.n>1?"s":""}, ${o.m} machine${o.m>1?"s":""}`},
     en:{t1:"Where should your data live?",p1:"BrocheStuff keeps everything in a folder on this PC: sheets, crib, accounts, backups. Nothing goes on the internet, and clearing the browser doesn’t touch it.",p2:"In the window that opens, go to Documents, make a “BrocheStuff” folder (“New folder” button) and select it. If you already have a BrocheStuff folder, just pick it.",b1:"Choose the folder",
-      t2:"Your data is ready",p3:n=>`Folder: ${n}. For safety the browser asks for your OK once each time you open it.`,b2:"Open BrocheStuff",other:"Choose another folder",br:"This browser can’t do it: use Microsoft Edge or Google Chrome to keep the data in a folder.",no:"The browser didn’t allow the folder. Try again and choose “Allow” / “Edit files”."}};
+      t2:"Your data is ready",p3:n=>`Folder: ${n}. For safety the browser asks for your OK once each time you open it.`,b2:"Open BrocheStuff",other:"Choose another folder",br:"This browser can’t do it: use Microsoft Edge or Google Chrome to keep the data in a folder.",no:"The browser didn’t allow the folder. Try again and choose “Allow” / “Edit files”.",
+      has:"Already have a BrocheStuff folder (another PC, the Windows program)? Pick it: everything carries on from it.",oldT:"Older data in this browser",oldP:n=>`This browser still holds data from the earlier web version (${n}). Bring it into this folder, or start empty?`,take:"Bring it into the folder",skip:"Start empty",cnt:o=>`${o.n} sheet${o.n>1?"s":""}, ${o.m} machine${o.m>1?"s":""}`}};
   const screen=(html)=>{let o=document.getElementById("wfs");if(!o){o=document.createElement("div");o.id="wfs";document.body.appendChild(o)}o.innerHTML=`<div class="wfsbox"><div class="wfsbrand">BrocheStuff<b>.</b></div>${html}</div>`;return o};
   const perm=async(h,ask)=>{try{if((await h.queryPermission({mode:"readwrite"}))==="granted")return true;return ask&&(await h.requestPermission({mode:"readwrite"}))==="granted"}catch(e){return false}};
   const pick=async()=>{const h=await W.showDirectoryPicker({id:"brochestuff",mode:"readwrite",startIn:"documents"});let use=h,has=false,empty=true;
     for await(const [n] of h.entries()){empty=false;if(n==="data.json"||n==="users.json"){has=true;break}}
-    if(!has&&!empty&&h.name.toLowerCase()!=="brochestuff")use=await h.getDirectoryHandle("BrocheStuff",{create:true});return use};
+    if(!has&&!empty&&h.name.toLowerCase()!=="brochestuff")use=await h.getDirectoryHandle("BrocheStuff",{create:true});
+    if(use!==h){has=false;for await(const [n] of use.entries())if(n==="data.json"||n==="users.json"){has=true;break}}
+    return{use,has}};
   const connect=()=>ready||(ready=(async()=>{
-    if(W.__QA_WEBFS){roots.main=await (await navigator.storage.getDirectory()).getDirectoryHandle("BrocheStuff",{create:true});return}
+    if(W.__QA_WEBFS&&!W.__QA_PICK){roots.main=await (await navigator.storage.getDirectory()).getDirectoryHandle("BrocheStuff",{create:true});return}
     const extra=async(ask)=>{const d=await idb();const keys=await new Promise(res=>{const q=d.transaction("h").objectStore("h").getAllKeys();q.onsuccess=()=>res(q.result||[]);q.onerror=()=>res([])});
       for(const k of keys)if(String(k).startsWith("root:")){const h=await hget(k);if(h&&await perm(h,ask))roots[String(k).slice(5)]=h}};
     let h=await hget("main");if(h&&await perm(h,false)){roots.main=h;await extra(false);return}
     const T=TX[L()]||TX.fr;
     await new Promise(done=>{
-      const first=()=>{const o=screen(`<h1>${T.t1}</h1><p>${T.p1}</p><p class="wfsn">${T.p2}</p><button class="btn red big" id="wfs-pick">${T.b1}</button><p class="wfserr" id="wfs-err" hidden></p>`);
-        o.querySelector("#wfs-pick").onclick=async()=>{try{const u=await pick();if(!await perm(u,true))throw new Error("perm");roots.main=u;await hput("main",u);o.remove();done()}catch(e){if(e&&e.name==="AbortError")return;const x=o.querySelector("#wfs-err");x.textContent=T.no;x.hidden=false}}};
+      const first=()=>{const o=screen(`<h1>${T.t1}</h1><p>${T.p1}</p><p class="wfsn">${T.p2}</p><p class="wfsn">${T.has}</p><button class="btn red big" id="wfs-pick">${T.b1}</button><p class="wfserr" id="wfs-err" hidden></p>`);
+        o.querySelector("#wfs-pick").onclick=async()=>{try{const {use:u,has}=await pick();if(!await perm(u,true))throw new Error("perm");roots.main=u;await hput("main",u);
+          // a folder with data is simply used as it is; an empty one + older data in this browser: ask
+          const old=has?null:await oldData();
+          if(!old){o.remove();done();return}
+          const q=screen(`<h1>${T.oldT}</h1><p>${T.oldP(T.cnt(old))}</p><button class="btn red big" id="wfs-take">${T.take}</button><button class="btn ghost" id="wfs-skip">${T.skip}</button>`);
+          q.querySelector("#wfs-take").onclick=()=>{take=true;q.remove();done()};q.querySelector("#wfs-skip").onclick=()=>{take=false;q.remove();done()}}catch(e){if(e&&e.name==="AbortError")return;const x=o.querySelector("#wfs-err");x.textContent=T.no;x.hidden=false}}};
       if(!h){first();return}
       const o=screen(`<h1>${T.t2}</h1><p>${T.p3("<b>"+h.name.replace(/</g,"&lt;")+"</b>")}</p><button class="btn red big" id="wfs-go">${T.b2}</button><button class="btn ghost" id="wfs-other">${T.other}</button><p class="wfserr" id="wfs-err" hidden></p>`);
       o.querySelector("#wfs-go").onclick=async()=>{if(await perm(h,true)){roots.main=h;await extra(true);o.remove();done()}else{const x=o.querySelector("#wfs-err");x.textContent=T.no;x.hidden=false}};
       o.querySelector("#wfs-other").onclick=first;
       setTimeout(()=>o.querySelector("#wfs-go").focus(),50)});
   })());
-  return{connect,saveAs,name:()=>roots.main?roots.main.name:"",MAIN,
+  return{connect,saveAs,name:()=>roots.main?roots.main.name:"",MAIN,takeOld:()=>take,
     // the admin can move the data: the new folder becomes the one this browser opens
     async useAsMain(path){const m=String(path).match(/^~\/@([a-z0-9]+)$/i);if(!m||!roots[m[1]])return false;await hput("main",roots[m[1]]);return true}}
 })();
@@ -2708,14 +2722,19 @@ const desk={
     finally{if(locked)await deskUnlock();desk.busy=false}
   },
   async dailyBackup(){
+    const ev=bkEvery();if(ev==="off")return;
     const d=new Date(),dir=DIR+SEP+"Backups",f=dir+SEP+`backup-${stampOf(d)}.json`;
     try{await Neutralino.filesystem.getStats(f);return}catch(e){}
     if(!db.articles.length&&!db.machines.length)return;
+    // weekly / monthly: only when the last backup file is old enough
+    if(ev!=="day"){try{const L=(await Neutralino.filesystem.readDirectory(dir)).map(x=>x.entry).filter(x=>/^backup-\d{4}-\d\d-\d\d\.json$/.test(x)).sort(),last=L[L.length-1];
+      if(last){const [y,m,dd]=last.slice(7,17).split("-").map(Number),ld=new Date(y,m-1,dd);
+        if(ev==="week"&&(d-ld)<6.5*864e5)return;if(ev==="month"&&ld.getFullYear()===d.getFullYear()&&ld.getMonth()===d.getMonth())return}}catch(e){}}
     try{
       await Neutralino.filesystem.writeFile(f,JSON.stringify({app:"tool-list-maker",version:3,savedAt:d.toISOString(),machines:db.machines,articles:db.articles,catalog:db.catalog,logo}));
       db.lastBackup=Date.now();saveDB();
       const list=(await Neutralino.filesystem.readDirectory(dir)).map(x=>x.entry).filter(x=>/^backup-\d{4}-\d\d-\d\d\.json$/.test(x)).sort();
-      for(const old of list.slice(0,-30)){try{await Neutralino.filesystem.remove(dir+SEP+old)}catch(e){}}
+      for(const old of list.slice(0,-({day:30,week:26,month:24}[ev]||30))){try{await Neutralino.filesystem.remove(dir+SEP+old)}catch(e){}}
     }catch(e){}
   },
   async saveAs(name,blob,kind){
@@ -2735,6 +2754,7 @@ let db={machines:[],articles:[],lastBackup:0}, logo=null, canStore=true;
 async function loadDB(){
   if(DESK){const d=await desk.load();
     if(d&&Array.isArray(d.machines)){const {logo:lg,lang,savedAt,...rest}=d;db={lastBackup:0,...rest};logo=lg||null;if(!LANG&&lang)LANG=lang;ensureDB();desk.base=JSON.stringify(db);try{desk.stamp=await deskStat()}catch(e){desk.stamp=null}}
+    else if(WEBFS&&!WEBFS.takeOld()){/* a new, empty folder: start empty */}
     else{try{const d2=JSON.parse(lsGet(DBKEY)||"null");if(d2&&Array.isArray(d2.machines))db={lastBackup:0,...d2}}catch(e){}
       if(WEBFS&&!db.machines.length){try{const d3=JSON.parse(await IDB.get("kv","db").catch(()=>null)||"null");if(d3&&Array.isArray(d3.machines)){db={lastBackup:0,...d3};
         const P=await IDB.all("photos").catch(()=>new Map());[...(db.catalog||[]),...(db.holders||[])].forEach(c=>{if(c.photo===1){const u=P.get(pkey(c));if(u)c.photo=u;else delete c.photo}});
@@ -5476,7 +5496,7 @@ Object.assign(I18N.en,{getApp:"Get the app", getAppT:"Download the Windows insta
   demoBar:"Demo: made-up workshop with 20 machines and 500 articles. Changes stay in this browser only.", demoShort:"Made-up data", demoReset:"Reset the demo", demoResetQ:"Reset the demo data? Everything changed here is lost.", demoGo:"Real version"});
 Object.assign(I18N.fr,{getApp:"Télécharger l'app", getAppT:"Télécharger l’installateur Windows",
   demoBar:"Démo : atelier fictif de 20 machines et 500 articles. Vos changements restent dans ce navigateur.", demoShort:"Données fictives", demoReset:"Réinitialiser la démo", demoResetQ:"Réinitialiser les données de la démo ? Tout ce qui a été changé ici sera perdu.", demoGo:"Version réelle"});
-const APP_ZIP="BrocheStuff-Setup-2.15.0.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
+const APP_ZIP="BrocheStuff-Setup-2.16.0.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
 function appUrl(){
   // on the site (…/Web/ or …/Demo/) the program sits next door in …/App/; anywhere else, take it from the site
   if(/^https?:/.test(location.protocol)&&/\/(Web|Demo)\/(index\.html)?$/i.test(location.pathname))return new URL("../App/"+APP_ZIP,location.href).href;
@@ -5555,7 +5575,9 @@ Object.assign(I18N.fr,{
 /* ---------- 1. automatic copies every 5 minutes ---------- */
 let lastSnapTs=0;const SNAP_EVERY=5*60000,SNAP_KEEP=24;
 const snapCounts=()=>({m:db.machines.length,a:db.articles.length,c:(db.catalog||[]).length,h:(db.holders||[]).length});
+const BK_EVERY=["off","day","week","month"],bkEvery=()=>BK_EVERY.includes(db.bkEvery)?db.bkEvery:"week";
 async function takeSnapshot(force){
+  if(db.snapOff&&!force)return;
   if(!DIRTY&&!force)return;DIRTY=false;const ts=Date.now();
   try{
     if(DESK){const dir=DIR+SEP+"Backups"+SEP+"auto";try{await Neutralino.filesystem.createDirectory(dir)}catch(e){}
@@ -6000,7 +6022,7 @@ function drawHistory(){
    admin page, demo switch. The web version doesn't use any of this.
    ===================================================================== */
 const DESKDEMO=/*DESKDEMO*/null;
-const APP_VER="2.15.0";
+const APP_VER="2.16.0";
 let DEMO_ON=false, ACC=null, USERS=null, PCNAME="", realDIR="", loginFails=0, loginWait=0, lastAct=Date.now();
 Object.assign(I18N.en,{
   loginT:"Sign in", loginP:"Enter your name or code and your password.", loginName:"Name or code", loginPw:"Password", loginGo:"Sign in",
@@ -6015,7 +6037,7 @@ Object.assign(I18N.en,{
   dirLocal:"local folder of this PC", dirPick:"Choose a folder…", dirBack:"Back to the local folder", dirOpen:"Open the folder", dirPickT:"Data folder for BrocheStuff",
   dirNoWrite:"BrocheStuff can't write in this folder.", dirHas:(m,a)=>`This folder already has BrocheStuff data (${m} machines, ${a} articles).`, dirUse:"Use these data", dirEmpty:"This folder has no BrocheStuff data yet.",
   dirCopy:"Copy the current data and accounts there", dirDone:"Data folder changed. Sign in again.", dirLost:p=>`The data folder can't be reached: ${p}`, dirLostP:"Check the network or the drive, then try again.",
-  retry:"Try again", useLocal:"Use the local folder of this PC", bkT:"Backups", bkNow:"Back up now", bkRestore:"Restore…", bkLast:t=>`Last backup: ${t}`, bkAuto:n=>`${n} automatic ${pl(n,"copy","copies")} (every 5 minutes)`,
+  retry:"Try again", useLocal:"Use the local folder of this PC", bkT:"Backups", bkEveryL:"Full backup file", bkEv_off:"Off", bkEv_day:"Every day", bkEv_week:"Every week", bkEv_month:"Every month", bkEvT:"Backup files go to Backups. The 5-minute copies are a separate safety net (Backups/auto).", bkSnapL:"Copy every 5 minutes when something changed", bkNow:"Back up now", bkRestore:"Restore…", bkLast:t=>`Last backup: ${t}`, bkAuto:n=>`${n} automatic ${pl(n,"copy","copies")} (every 5 minutes)`,
   demoT:"Demo", demoP:"Made-up workshop (20 machines, 500 articles) to try the program or show it. Your real data are not touched.", demoOpen:"Open the demo", demoQuit:"Leave the demo", demoInT:"You are in the demo.",
   secT:"Security", idleL:"Sign out automatically after", idleNever:"never", idleMin:n=>`${n} min without use`, secReset:"Forgotten admin password: put an empty file named reset-admin.txt in the data folder and start the program. The account admin / admin comes back.",
   loginLogT:"Sign-ins", logOk:"signed in", logBad:"wrong password", logOff:"disabled account", logReset:"admin password reset", infoT:"Program", infoVer:"Version", infoPc:"This PC", infoAcc:"Accounts",
@@ -6034,7 +6056,7 @@ Object.assign(I18N.fr,{
   dirLocal:"dossier local de ce PC", dirPick:"Choisir un dossier…", dirBack:"Revenir au dossier local", dirOpen:"Ouvrir le dossier", dirPickT:"Dossier des données de BrocheStuff",
   dirNoWrite:"BrocheStuff ne peut pas écrire dans ce dossier.", dirHas:(m,a)=>`Ce dossier contient déjà des données BrocheStuff (${m} machines, ${a} articles).`, dirUse:"Utiliser ces données", dirEmpty:"Ce dossier ne contient pas encore de données BrocheStuff.",
   dirCopy:"Y copier les données et les comptes actuels", dirDone:"Dossier des données changé. Reconnectez-vous.", dirLost:p=>`Le dossier des données est inaccessible : ${p}`, dirLostP:"Vérifiez le réseau ou le disque, puis réessayez.",
-  retry:"Réessayer", useLocal:"Utiliser le dossier local de ce PC", bkT:"Sauvegardes", bkNow:"Sauvegarder maintenant", bkRestore:"Restaurer…", bkLast:t=>`Dernière sauvegarde : ${t}`, bkAuto:n=>`${n} ${pl(n,"copie automatique","copies automatiques")} (toutes les 5 minutes)`,
+  retry:"Réessayer", useLocal:"Utiliser le dossier local de ce PC", bkT:"Sauvegardes", bkEveryL:"Fichier de sauvegarde complet", bkEv_off:"Désactivé", bkEv_day:"Chaque jour", bkEv_week:"Chaque semaine", bkEv_month:"Chaque mois", bkEvT:"Les fichiers vont dans Backups. Les copies toutes les 5 minutes sont une sécurité à part (Backups/auto).", bkSnapL:"Copie toutes les 5 minutes quand quelque chose a changé", bkNow:"Sauvegarder maintenant", bkRestore:"Restaurer…", bkLast:t=>`Dernière sauvegarde : ${t}`, bkAuto:n=>`${n} ${pl(n,"copie automatique","copies automatiques")} (toutes les 5 minutes)`,
   demoT:"Démo", demoP:"Atelier fictif (20 machines, 500 articles) pour essayer le programme ou le montrer. Vos vraies données ne sont pas touchées.", demoOpen:"Ouvrir la démo", demoQuit:"Quitter la démo", demoInT:"Vous êtes dans la démo.",
   secT:"Sécurité", idleL:"Déconnexion automatique après", idleNever:"jamais", idleMin:n=>`${n} min sans utilisation`, secReset:"Mot de passe admin oublié : placez un fichier vide nommé reset-admin.txt dans le dossier des données et démarrez le programme. Le compte admin / admin revient.",
   loginLogT:"Connexions", logOk:"connecté", logBad:"mauvais mot de passe", logOff:"compte désactivé", logReset:"mot de passe admin réinitialisé", infoT:"Programme", infoVer:"Version", infoPc:"Ce PC", infoAcc:"Comptes",
@@ -6273,6 +6295,8 @@ async function renderAdminPage(){
       <div class="card"><h2>${esc(t("dirT"))}</h2><p class="dirpath m">${esc(WEBFS?(DIR===LOCAL?WEBFS.name():t("webOther")):DIR)}${DIR===LOCAL?` <span class="dim small">(${esc(t(WEBFS?"webMain":"dirLocal"))})</span>`:""}</p><p class="note" style="margin:0">${esc(t(WEBFS?"webDirP":"dirP"))}</p>
         <div class="admact"><button class="btn red" id="ad-pick">${esc(t("dirPick"))}</button>${DIR!==LOCAL?`<button class="btn" id="ad-local">${esc(t("dirBack"))}</button>`:""}${WEBFS?"":`<button class="btn ghost" id="ad-open">${esc(t("dirOpen"))}</button>`}</div></div>
       <div class="card"><h2>${esc(t("bkT"))}</h2><p style="margin:0">${esc(db.lastBackup?t("bkLast",`${when(db.lastBackup)} ${hhmm(db.lastBackup)}`):t("bkLast","—"))}</p><p class="note" style="margin:0">${esc(t("bkAuto",snaps.length))}</p>
+        <label class="f">${esc(t("bkEveryL"))}<select id="ad-bkev">${BK_EVERY.map(k=>`<option value="${k}" ${bkEvery()===k?"selected":""}>${esc(t("bkEv_"+k))}</option>`).join("")}</select></label>
+        <label class="chk"><input type="checkbox" id="ad-snap" ${db.snapOff?"":"checked"}> ${esc(t("bkSnapL"))}</label><p class="note" style="margin:0">${esc(t("bkEvT"))}</p>
         <div class="admact"><button class="btn" id="ad-bk">${esc(t("bkNow"))}</button><button class="btn" id="ad-rs">${esc(t("bkRestore"))}</button></div></div>
       <div class="card"><h2>${esc(t("secT"))}</h2><label class="f">${esc(t("idleL"))}<select id="ad-idle">${IDLES.map(n=>`<option value="${n}" ${(+USERS.settings.idle||0)===n?"selected":""}>${esc(n?t("idleMin",n):t("idleNever"))}</option>`).join("")}</select></label>
         ${ACC?`<div class="admact"><button class="btn" id="ad-mypw">${esc(t("myPw"))}</button></div>`:""}<p class="note" style="margin:0">${esc(t("secReset"))}</p></div>
@@ -6301,6 +6325,8 @@ async function renderAdminPage(){
   if($("#ad-mypw"))$("#ad-mypw").onclick=myPwDialog;
   $("#ad-demo").onclick=startDeskDemo;
   $("#ad-rules").onclick=rulesDialog;
+  $("#ad-bkev").onchange=e=>{db.bkEvery=e.target.value;saveDB();if(db.bkEvery!=="off")desk.dailyBackup();toast(t("bkEv_"+db.bkEvery))};
+  $("#ad-snap").onchange=e=>{db.snapOff=!e.target.checked;saveDB()};
   $("#ad-ap").onchange=e=>{db.autoPdf={off:!e.target.checked};saveDB();toast(t(e.target.checked?"apOnT":"apOffT"))};
   $("#ad-apall").onclick=e=>{const b=e.currentTarget;b.disabled=true;autoPdfAll(b).finally(()=>b.disabled=false)};if($("#ad-upd")){$("#ad-upd").onclick=updPick;$("#ad-updback").onclick=updBack}
 }
@@ -6464,7 +6490,7 @@ const GUIDE={
    ["reports","Rapports",["Outils sortis par mois, les plus sortis, par machine et par personne.","Codes jamais utilisés et outils sans mouvement depuis 90 jours. Export CSV."]],
    ["templates","Modèles Excel et import",["Chaque page a son « Modèle Excel » : le télécharger, l’imprimer ou le remplir.","« Importer » lit un fichier Excel ou CSV ; les colonnes sont reconnues par leur titre, avec un aperçu avant d’importer."]],
    ["it","Pour l’informatique",["Installation : un seul fichier d’installation, sans droits administrateur. Le programme va dans %LOCALAPPDATA%\\Programs\\BrocheStuff.","Données : dans Documents\\BrocheStuff (data.json, comptes, dossier Backups). L’admin peut choisir à la place un dossier réseau partagé : tous les postes travaillent alors sur les mêmes données.","Comptes : l’admin crée les comptes (nom, rôle, mot de passe) dans la page Admin. La version web de démo n’a pas de mots de passe.","Sauvegardes : une copie automatique toutes les 5 minutes quand quelque chose change, dans Backups ; sauvegardez aussi ce dossier avec vos sauvegardes habituelles.","Mises à jour : l’admin installe le fichier BrocheStuff-Update-….neu depuis la page Admin (clé USB ou dossier) ; il est déposé dans le dossier des données et chaque poste le propose au démarrage.","Pas besoin d’internet : rien n’est envoyé à l’extérieur."]],
-   ["backup","Sauvegardes",["Une copie de tout est gardée toutes les 5 minutes quand quelque chose change.","« Sauvegarder » écrit un fichier ; « Restaurer » reprend un fichier ou une copie automatique."]]
+   ["backup","Sauvegardes",["Une copie de tout est gardée toutes les 5 minutes quand quelque chose change (désactivable dans Admin).","Dans Admin, la sauvegarde complète se règle : désactivée, chaque jour, chaque semaine (par défaut) ou chaque mois.","« Sauvegarder » écrit un fichier ; « Restaurer » reprend un fichier ou une copie automatique."]]
   ]},
  en:{title:"Tutorial", sub:"The program step by step, with the demo’s made-up workshop.", back:"Back to the program", foot:"Program tutorial", footP:"How to use BrocheStuff, step by step.", toc:"Contents",
   s:[
@@ -6484,7 +6510,7 @@ const GUIDE={
    ["reports","Reports",["Tools taken per month, most taken, per machine and per person.","Codes never used and tools without a move for 90 days. CSV export."]],
    ["templates","Excel models and import",["Each page has its “Excel model”: download it, print it or fill it in.","“Import” reads an Excel or CSV file; columns are found by their titles, with a preview before importing."]],
    ["it","For IT",["Install: one setup file, no administrator rights needed. The program goes to %LOCALAPPDATA%\\Programs\\BrocheStuff.","Data: in Documents\\BrocheStuff (data.json, accounts, Backups folder). The admin can pick a shared network folder instead: every PC then works on the same data.","Accounts: the admin creates them (name, role, password) on the Admin page. The web demo has no passwords.","Backups: an automatic copy every 5 minutes when something changes, in Backups; include that folder in your usual backups too.","Updates: the admin installs the BrocheStuff-Update-….neu file from the Admin page (USB stick or folder); it is put in the data folder and every PC offers it at start.","No internet needed: nothing is sent outside."]],
-   ["backup","Backups",["A copy of everything is kept every 5 minutes when something changes.","“Back up” writes a file; “Restore” takes back a file or an automatic copy."]]
+   ["backup","Backups",["A copy of everything is kept every 5 minutes when something changes (can be turned off in Admin).","In Admin, the full backup can be set to off, daily, weekly (default) or monthly.","“Back up” writes a file; “Restore” takes back a file or an automatic copy."]]
   ]}};
 function guideFooter(){
   if(!GUIDE_ON()||route.view==="guide")return;const v=$("#view");if(!v||v.querySelector(".guidefoot"))return;const G=GUIDE[LANG]||GUIDE.fr;

@@ -93,8 +93,12 @@ SHARED DATA FOLDER
 FILES IT READS AND WRITES
 - In the data folder: data.json (+ data.previous.json), data.rev, data.lock
   (only while saving), users.json
-- <data folder>\Backups\  daily copy (last 30) and Backups\auto\
-  copy every 5 minutes when data changed (last 24)
+- <data folder>\Backups\  backup file on the schedule set in Admin
+  (off / daily / weekly by default / monthly; last 30 / 26 / 24 kept)
+  and Backups\auto\ copy every 5 minutes when data changed (last 24;
+  can be turned off in Admin)
+- Web version: picking a folder that already has data.json simply
+  continues from it (moving PCs, or the Windows program's folder).
 - Documents\BrocheStuff\Sheets\  PDF tool sheets the user saves
 - Documents\BrocheStuff\settings.json (data folder of this PC) and
   Documents\BrocheStuff\Demo\ (the made-up demo data, when the admin opens it)
