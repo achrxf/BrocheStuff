@@ -136,3 +136,15 @@ de passe (PBKDF2). Données dans Documents\BrocheStuff ou dans un dossier résea
 choisi par l'admin. Serveur local limité à 127.0.0.1 avec jeton à usage
 unique. Les programmes CN sont seulement lus, jamais envoyés à une machine.
 Pour le désinstaller : Paramètres Windows > Applications > BrocheStuff.
+
+
+WEB VERSION (BrocheStuff.html)
+- The same program as one HTML file, opened in Microsoft Edge or Google Chrome.
+  Nothing to install, no internet needed.
+- First time it asks for a folder (e.g. Documents\BrocheStuff). Everything is
+  written there, in the same format as the Windows program (data.json,
+  users.json, Backups, Sheets). The browser only keeps the right to use that
+  folder; each time the file is opened it asks for one click to allow it again.
+- Clearing the browser does not touch the data. The Windows program and the web
+  version can use the same folder.
+- Updating: replace BrocheStuff.html with the new one.
