@@ -148,3 +148,9 @@ WEB VERSION (BrocheStuff.html)
 - Clearing the browser does not touch the data. The Windows program and the web
   version can use the same folder.
 - Updating: replace BrocheStuff.html with the new one.
+
+ARTICLE FOLDERS
+- In the data folder, "Fiches outils" holds one folder per article
+  (number - designation - reference). The program writes the PDF of the
+  current index there a few seconds after each change; files of earlier
+  indexes are never changed. It can be turned off on the Admin page.
