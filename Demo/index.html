@@ -2249,7 +2249,7 @@ function makePDF(data){
   // bold for the Plex text faces (no bold file): the letters get a thin outline of their own colour
   const fauxB=()=>SK&&SK.b===true&&/^Plex/.test(FCUR);
   const useK=k=>{SK=STY[k]||null;if(SK&&!Object.keys(SK).length)SK=null};
-  const tw=(s,cs=0)=>doc.getTextWidth(s)+cs*Math.max(0,s.length-1);
+  const tw=(s,cs=0)=>{s=String(s);if(SK&&SK.u)s=s.toUpperCase();return doc.getTextWidth(s)+cs*Math.max(0,s.length-1)};
   const txt=(s,x,y,o={})=>{if(SK&&SK.u)s=String(s).toUpperCase();const cs=o.cs||0;let X=x;if(o.align==="center")X=x-tw(s,cs)/2;else if(o.align==="right")X=x-tw(s,cs);
     const op=cs?{charSpace:cs}:{};if(fauxB()){doc.setDrawColor(...TCOL);doc.setLineWidth(0.14);op.renderingMode="fillThenStroke"}doc.text(s,X,y,op);return tw(s,cs)};
   const fit=(s,max,cs=0)=>{if(tw(s,cs)<=max)return s;while(s.length>1&&tw(s+"…",cs)>max)s=s.slice(0,-1);return s+"…"};
@@ -2409,6 +2409,12 @@ function makePDF(data){
     if(d>0){const grow=["type","holder","insert"].filter(k=>KI[k]!=null);if(!grow.length)grow.push(...KEYS.filter(k=>k!=="t"&&k!=="corr"));if(!grow.length)grow.push("t");grow.forEach((k,j)=>ws[KI[k]]+=d*(grow.length===1?1:j===0?0.6:0.4/(grow.length-1)))}
     else if(d<0){let over=-d;for(const [k,min] of (BLANK?[["type",22],["holder",22],["insert",14],["code",15]]:[["type",30],["insert",19],["code",16],["holder",34],["type",26],["holder",28]])){if(over<=0||KI[k]==null)continue;const i=KI[k],cut=Math.min(over,ws[i]-min);if(cut>0){ws[i]-=cut;over-=cut}}
       if(over>0){const ex=KEYS.map((k,i)=>i).filter(i=>KEYS[i].startsWith("x_"));const per=over/Math.max(1,ex.length);ex.forEach(i=>ws[i]=Math.max(9,ws[i]-per))}}
+    if(!BLANK&&KI.code!=null&&!(GJ.code&&GJ.code.length)){const i=KI.code,prev=SK;let need=0;
+      useK("code");font("MonoB",9.5);tools.forEach(t=>String(t.code||"").split("\n").forEach(v=>{v=v.trim().toUpperCase();if(v)need=Math.max(need,tw(v,-0.1))}));
+      font("Mono5",10);need=Math.max(need,tw("___"));SK=null;font("Plex5",7.8);need=Math.max(need,tw(lab("code",L.head[7])));SK=prev;
+      need=Math.ceil((need+3.8)*2)/2;
+      const to=[KI.holder,KI.type].find(j=>j!=null&&j!==i);
+      if(to!=null&&ws[i]>need){ws[to]+=ws[i]-need;ws[i]=need}}
     return ws})();
   const typeHead=(()=>{const parts=[on("type")?lab("type",L.type||"Type"):"",inT("diameter")?lab("diameter","Ø"):"",inT("ra")?lab("ra","R / °"):""].filter(Boolean);
     return (!clean(LAB.type)&&!clean(LAB.diameter)&&!clean(LAB.ra)&&parts.length===3)?L.head[2]:parts.join("  ·  ")||lab("insert",L.ins)})();
@@ -2432,8 +2438,17 @@ function makePDF(data){
   }
   // a cell's lines (Shift+Enter in the app)
   const LH=3.8,linesOf=v=>String(v??"").replace(/\r/g,"").split("\n").map(s=>s.trim()).filter((s,i,a)=>s||a.slice(i+1).some(Boolean));
-  const holderLines=t=>{if(KI.holder==null)return 1;const hol=clean(t.holder);if(!hol)return 1;const hl=linesOf(t.holder);if(hl.length>1)return hl.length;
-    if(/\s*\+\s*/.test(hol))return 2;font("Plex5",8.6);return tw(hol)>(COLW[KI.holder]-3.2)*1.25?2:1};
+  const holderShow=t=>{const hl=linesOf(t.holder),prev=SK;useK("holder");const HW=COLW[KI.holder]-3.2,f0=hl.length>2?7.2:7.6,MIN=6.4,out=[];
+    hl.forEach(v=>{let f=f0;font("Plex5",f);while(f>MIN&&tw(v)>HW){f-=0.3;font("Plex5",f)}
+      if(tw(v)<=HW){out.push([v,f]);return}
+      // two even lines (no lonely last word), at the normal size if they fit, else a bit smaller
+      const w=v.split(/\s+/);for(let g=f0;g>=MIN-0.01;g-=0.3){font("Plex5",g);let best=null;
+        for(let i=1;i<w.length;i++){const a=w.slice(0,i).join(" "),b=w.slice(i).join(" "),m=Math.max(tw(a),tw(b));if(m<=HW&&(!best||m<best[2]))best=[a,b,m]}
+        if(best){out.push([best[0],g],[best[1],g]);return}}
+      font("Plex5",MIN);const P=doc.splitTextToSize(SK&&SK.u?v.toUpperCase():v,HW);P.forEach(p=>out.push([p,MIN]))});
+    SK=prev;return out.length>5?[...out.slice(0,4),[out.slice(4).map(x=>x[0]).join(" "),6.4]]:out};
+  const holderLines=t=>{if(KI.holder==null)return 1;const hol=clean(t.holder);if(!hol)return 1;const hl=linesOf(t.holder);if(hl.length>1)return holderShow(t).length;
+    if(/\s*\+\s*/.test(hol))return 2;const prev=SK;useK("holder");font("Plex5",8.6);const two=tw(hol)>(COLW[KI.holder]-3.2)*1.25;SK=prev;return two?2:1};
   const typeRows=t=>{const w2=COLW[KI.type],tl=on("type")?linesOf(t.type):[],dl=inT("diameter")?linesOf(t.diameter):[],rl=inT("ra")?linesOf(t.ra):[],nM=Math.max(tl.length,dl.length,rl.length,(on("type")||inT("diameter")||inT("ra"))?1:0),out=[];
     for(let li=0;li<nM;li++){const ty=(tl[li]||"").toUpperCase(),d=normDia(dl[li]||""),ra=normRA(rl[li]||"");
       const dims=[d?"Ø"+d:"",ra.kind==="R"?"R"+ra.val:ra.kind==="A"?ra.val+"°":(rl[li]&&!ra.kind?rl[li]:"")].filter(Boolean).join("  ");
@@ -2504,10 +2519,10 @@ function makePDF(data){
     if(KI.z!=null){at("z");useK("z");const z=linesOf(t.z);if(z.length)stack(z,X_("z"),W_("z"),"Mono5",10,6,"center");else{font("Mono5",10);txt("—",X_("z")+W_("z")/2,base(10),{align:"center"})};under("z")}
     // holder: one line per line typed; a single long line wraps; "a + b" goes on two lines
     if(KI.holder!=null){at("holder");useK("holder");const hx=X_("holder"),hol=clean(t.holder),HW=W_("holder")-3.2,hl=linesOf(t.holder);
-     if(hl.length>1){const n=hl.length;hl.forEach((v,li)=>{let f=n>2?7.2:7.6;font("Plex5",f);while(f>5.4&&tw(v)>HW){f-=0.3;font("Plex5",f)}txt(fit(v,HW),hx+1.8,yAt(mid,li,n))})}
+     if(hl.length>1){const S2=holderShow(t),n=S2.length;S2.forEach(([v,f],li)=>{font("Plex5",f);txt(fit(v,HW),hx+1.8,yAt(mid,li,n))})}
      else if(hol){let parts=hol.split(/\s*\+\s*/).filter(Boolean);if(parts.length>2)parts=[parts[0],parts.slice(1).join(" + ")];
        const fitLine=(txt0,base0)=>{let f=parts.length>1?7.6:8.6;font("Plex5",f);while(f>5.6&&tw(txt0)>HW){f-=0.3;font("Plex5",f)}txt(fit(txt0,HW),hx+1.8,base0)};
-       if(parts.length===1){const l=doc.splitTextToSize(hol,HW);if(l.length===1||tw(hol)<=HW*1.25)fitLine(hol,base(8.6));else{font("Plex5",7.6);txt(fit(l[0],HW),hx+1.8,mid-0.6);txt(fit(l.slice(1).join(" "),HW),hx+1.8,mid+3)}}
+       if(parts.length===1){font("Plex5",7.6);const l=doc.splitTextToSize(SK&&SK.u?hol.toUpperCase():hol,HW);if(l.length===1||tw(hol)<=HW*1.25)fitLine(hol,base(8.6));else{font("Plex5",7.6);txt(fit(l[0],HW),hx+1.8,mid-0.6);txt(fit(l.slice(1).join(" "),HW),hx+1.8,mid+3)}}
        else{fitLine(parts[0],mid-0.7);fitLine("+ "+parts[1],mid+3)}}
      else dash(hx+1.8);under("holder")}
     if(KI.code!=null){at("code");useK("code");const code=linesOf(t.code).map(v=>v.toUpperCase());if(code.length)stack(code,X_("code")+1.8,W_("code")-3,"MonoB",9.5,6.2,"left",-0.1);else{font("Mono5",10);txt("___",X_("code")+1.8,base(10))};under("code")}
@@ -5552,7 +5567,7 @@ Object.assign(I18N.en,{getApp:"Get the app", getAppT:"Download the Windows insta
   demoBar:"Demo: made-up workshop with 20 machines and 500 articles. Changes stay in this browser only.", demoShort:"Made-up data", demoReset:"Reset the demo", demoResetQ:"Reset the demo data? Everything changed here is lost.", demoGo:"Real version"});
 Object.assign(I18N.fr,{getApp:"Télécharger l'app", getAppT:"Télécharger l’installateur Windows",
   demoBar:"Démo : atelier fictif de 20 machines et 500 articles. Vos changements restent dans ce navigateur.", demoShort:"Données fictives", demoReset:"Réinitialiser la démo", demoResetQ:"Réinitialiser les données de la démo ? Tout ce qui a été changé ici sera perdu.", demoGo:"Version réelle"});
-const APP_ZIP="BrocheStuff-Setup-2.17.0.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
+const APP_ZIP="BrocheStuff-Setup-2.18.0.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
 function appUrl(){
   // on the site (…/Web/ or …/Demo/) the program sits next door in …/App/; anywhere else, take it from the site
   if(/^https?:/.test(location.protocol)&&/\/(Web|Demo)\/(index\.html)?$/i.test(location.pathname))return new URL("../App/"+APP_ZIP,location.href).href;
@@ -6078,7 +6093,7 @@ function drawHistory(){
    admin page, demo switch. The web version doesn't use any of this.
    ===================================================================== */
 const DESKDEMO=/*DESKDEMO*/null;
-const APP_VER="2.17.0";
+const APP_VER="2.18.0";
 let DEMO_ON=false, ACC=null, USERS=null, PCNAME="", realDIR="", loginFails=0, loginWait=0, lastAct=Date.now();
 Object.assign(I18N.en,{
   loginT:"Sign in", loginP:"Enter your name or code and your password.", loginName:"Name or code", loginPw:"Password", loginGo:"Sign in",
