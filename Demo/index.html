@@ -331,6 +331,13 @@ input::placeholder,textarea::placeholder{color:var(--ph);opacity:1}
 .impprev td{padding:7px 10px;font-size:13px;white-space:nowrap}
 .impprev th{padding:7px 10px}
 #impbody{display:flex;flex-direction:column;gap:10px}
+.duplist{display:flex;flex-direction:column;gap:12px}
+.dupg{border:1px solid var(--hair);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.duph{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.duph b{font-size:15px}
+.dtag{font-size:12px;padding:2px 8px;border-radius:99px}.dtag.same{background:var(--fill);color:var(--mid)}.dtag.diff{background:var(--low-bg);color:var(--low-ink)}
+.duptab td,.duptab th{padding:6px 9px;font-size:13px;white-space:nowrap}
+.duptab td.dif,.duptab th.dif{background:var(--low-bg);color:var(--low-ink);font-weight:600}
+.duptab tr.drop td{opacity:.45;text-decoration:line-through}.duptab tr.drop td:first-child{text-decoration:none}
 
 .crt th.srt{cursor:pointer;user-select:none;white-space:nowrap}
 .crt th.srt span{vertical-align:middle}
@@ -4606,7 +4613,7 @@ Object.assign(I18N.en,{
   impChoose:"What do you want to import?", impMachinesOpt:"Machines", impMachinesP:"Abbreviation, name, brand, CNC control", impArticlesOpt:"Articles & tool lists", impArticlesP:"Article number, index, designation, reference, program… and their tools, one row per tool",
   impFile:"File", impSheet:"Sheet", impHeader:n=>`Column titles found on row ${n}.`, impNoHeader:"No column titles recognised. Pick the columns yourself below.",
   impMap:"Which column holds what", impNone:"— not in file —", impPreview:"Preview", impRows:n=>`${n} ${pl(n,"row","rows")} to import`, impGo:n=>`Import ${n} ${pl(n,"row","rows")}`,
-  impAdd:"Add to the list", impReplace:"Replace the list", impNeed:f=>`Choose the column for “${f}”.`, impNeedMachine:"Choose the machine column, or open a machine and import from there.",
+  impSortT:"Put the tools in T order (T1, T2, T3…)", dupT:n=>`${n} ${pl(n,"tool appears","tools appear")} more than once`, dupP:"For each one, choose the copy to keep, or keep them all. Boxes that differ between the copies are highlighted.", dupOneAll:"Keep one of each", dupAllAll:"Keep everything", dupSame:n=>`${n} identical copies`, dupDiff:s=>`Differs: ${s}`, dupOnSheet:"Already on the sheet", dupInFile:n=>`File, row ${n}`, dupKeepAll:n=>`Keep all ${n}`, dupGo:n=>`Import without ${n} ${pl(n,"double","doubles")}`, dupGoAll:"Import everything", impDupOut:n=>`${n} ${pl(n,"double","doubles")} left out`, impAdd:"Add to the list", impReplace:"Replace the list", impNeed:f=>`Choose the column for “${f}”.`, impNeedMachine:"Choose the machine column, or open a machine and import from there.",
   impEmpty:"No rows to import in this sheet.", impFail:"Could not read that file. Use an Excel file (.xlsx, .xls, .ods) or a CSV.",
   impToolsHint:"If the file also has tool columns, each article gets its tool list (one row per tool; rows without an article number belong to the article above).",
   impDoneMachines:(a,s)=>`${a} ${pl(a,"machine","machines")} imported${s?` · ${s} already there`:""}`,
@@ -4622,7 +4629,7 @@ Object.assign(I18N.fr,{
   impChoose:"Que voulez-vous importer ?", impMachinesOpt:"Machines", impMachinesP:"Abréviation, nom, marque, commande CN", impArticlesOpt:"Articles et fiches outils", impArticlesP:"Numéro d\'article, indice, désignation, référence, programme… et leurs outils, une ligne par outil",
   impFile:"Fichier", impSheet:"Feuille", impHeader:n=>`Titres de colonnes trouvés à la ligne ${n}.`, impNoHeader:"Aucun titre de colonne reconnu. Choisissez les colonnes ci-dessous.",
   impMap:"Quelle colonne contient quoi", impNone:"— absent du fichier —", impPreview:"Aperçu", impRows:n=>`${n} ${pl(n,"ligne","lignes")} à importer`, impGo:n=>`Importer ${n} ${pl(n,"ligne","lignes")}`,
-  impAdd:"Ajouter à la liste", impReplace:"Remplacer la liste", impNeed:f=>`Choisissez la colonne « ${f} ».`, impNeedMachine:"Choisissez la colonne machine, ou ouvrez une machine et importez depuis celle-ci.",
+  impSortT:"Mettre les outils dans l’ordre T (T1, T2, T3…)", dupT:n=>`${n} ${pl(n,"outil apparaît","outils apparaissent")} plusieurs fois`, dupP:"Pour chacun, choisissez la copie à garder, ou gardez tout. Les cases qui diffèrent entre les copies sont surlignées.", dupOneAll:"Garder un seul de chaque", dupAllAll:"Tout garder", dupSame:n=>`${n} copies identiques`, dupDiff:s=>`Diffère : ${s}`, dupOnSheet:"Déjà sur la fiche", dupInFile:n=>`Fichier, ligne ${n}`, dupKeepAll:n=>`Garder les ${n}`, dupGo:n=>`Importer sans ${n} ${pl(n,"double","doubles")}`, dupGoAll:"Tout importer", impDupOut:n=>`${n} ${pl(n,"double écarté","doubles écartés")}`, impAdd:"Ajouter à la liste", impReplace:"Remplacer la liste", impNeed:f=>`Choisissez la colonne « ${f} ».`, impNeedMachine:"Choisissez la colonne machine, ou ouvrez une machine et importez depuis celle-ci.",
   impEmpty:"Aucune ligne à importer dans cette feuille.", impFail:"Impossible de lire ce fichier. Utilisez un fichier Excel (.xlsx, .xls, .ods) ou un CSV.",
   impToolsHint:"Si le fichier contient aussi des colonnes outils, chaque article reçoit sa fiche outils (une ligne par outil ; les lignes sans numéro d'article appartiennent à l'article au-dessus).",
   impDoneMachines:(a,s)=>`${a} ${pl(a,"machine importée","machines importées")}${s?` · ${s} déjà présente${s>1?"s":""}`:""}`,
@@ -4757,7 +4764,7 @@ async function startImport(kind,ctx){if(!hasRight("import")){toast(t("noRight"))
 function importDialog(kind,ctx,fname,sheets){
   // tool columns come from the current column setup (renamed and added columns included)
   let fields=(kind==="tools"?TOOLF:kind==="articles"?[...IMPF.articles,...TOOLF]:IMPF[kind]).filter(([f])=>!(kind==="articles"&&f==="machine"&&ctx.machineId));
-  let si=0,hdr,map,mode="add";
+  let si=0,hdr,map,mode="add",sortT=false;try{sortT=localStorage.getItem("bs.impsort")==="1"}catch(e){}
   const setup=()=>{const rows=sheets[si].rows;const h=findHeader(rows,fields);hdr=h.row;map=hdr>=0?autoMap(rows[hdr],fields):{};
     if(fields.some(([f])=>f==="code")){const cc=codeColumn(rows.slice(hdr+1));
       // never steal a column whose title already says what it is (e.g. "Machine" with M1, M2…)
@@ -4782,6 +4789,7 @@ function importDialog(kind,ctx,fname,sheets){
         ${sheets.length>1?`<label class="f inl">${esc(t("impSheet"))}<select id="imp-sheet">${sheets.map((s,i)=>`<option value="${i}" ${i===si?"selected":""}>${esc(s.name)}</option>`).join("")}</select></label>`:""}
         <span class="note">${hdr>=0?esc(t("impHeader",hdr+1)):esc(t("impNoHeader"))}</span></div>
       ${kind==="tools"?`<div class="seg" role="group"><button data-mode="add" aria-pressed="${mode==="add"}">${esc(t("impAdd"))}</button><button data-mode="replace" aria-pressed="${mode==="replace"}">${esc(t("impReplace"))}</button></div>`:""}
+      ${kind==="tools"||kind==="articles"?`<label class="chk"><input type="checkbox" id="imp-sort" ${sortT?"checked":""}> ${esc(t("impSortT"))}</label>`:""}
       <h4 class="imph">${esc(t("impMap"))}</h4>
       ${kind==="articles"?`<p class="imps">${esc(t("grpArticle"))}</p>${grid(artF)}<p class="imps">${esc(t("grpTools"))}</p>${grid(toolF)}<p class="note" style="margin:0">${esc(t("impToolsHint"))}</p>`:grid(fields)}
       <h4 class="imph">${esc(t("impPreview"))} <span class="note">· ${esc(t("impRows",rows.length))}</span></h4>
@@ -4792,12 +4800,17 @@ function importDialog(kind,ctx,fname,sheets){
     $("#impbody").querySelectorAll("select[data-f]").forEach(s=>s.onchange=()=>{const f=s.dataset.f;if(s.value===""){delete map[f]}else{const i=+s.value;Object.keys(map).forEach(k=>{if(map[k]===i)delete map[k]});map[f]=i}draw()});
     $("#imp-sheet")&&($("#imp-sheet").onchange=e=>{si=+e.target.value;setup();draw()});
     $("#impbody").querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>{mode=b.dataset.mode;draw()});
+    $("#imp-sort")&&($("#imp-sort").onchange=e=>{sortT=e.target.checked;try{localStorage.setItem("bs.impsort",sortT?"1":"0")}catch(x){}});
   };
   draw();
-  $("#d-imp").onclick=()=>{
-    const err=m=>{const e=$("#imp-err");e.textContent=m;e.hidden=false};
+  const go=$("#d-imp").onclick=()=>{
+    const err=m=>{const e=$("#imp-err");if(!e){toast(m);return}e.textContent=m;e.hidden=false};
     const rows=dataRows();if(!rows.length){err(t("impEmpty"));return}
-    const r=applyImport(kind,ctx,rows,val,mode,err);if(!r)return;
+    ctx.sortT=sortT;
+    // tool sheet: the same tool twice (in the file, or already on the sheet) → ask which to keep
+    if(kind==="tools"&&!ctx.plan){const groups=impDupGroups(mode==="replace"?[]:cur.tools,rows,val,hdr);
+      if(groups.length){impDupStep(groups,()=>{ctx.plan=groups;$("#d-imp").onclick=go;go()},()=>{draw();$("#d-imp").onclick=go});return}}
+    const r=applyImport(kind,ctx,rows,val,mode,err);delete ctx.plan;if(!r)return;
     // the article block of the file fills the article's empty fields
     let filled=0;if(kind==="tools"&&cur&&sheets[si].art){const fa=sheets[si].art.article||{};["number","index","designation","reference","program","material","preparedBy","approvedBy","date","notes"].forEach(k=>{if(clean(fa[k])&&!clean(cur.article[k])&&!(k==="index"&&cur.status==="done")){cur.article[k]=fa[k];filled++}})}
     saveDB();closeDlg();
@@ -4805,6 +4818,40 @@ function importDialog(kind,ctx,fname,sheets){
     toast(r);
   };
 }
+
+/* tools in T order (T1, T2 … T10); tools without a number keep their place at the end */
+const tNum=v=>{const m=/^\s*T?\s*0*(\d+)/i.exec(String(v||""));return m?+m[1]:null};
+function sortByT(list){return list.map((x,i)=>({x,i,n:tNum(x.t)})).sort((a,b)=>(a.n==null)-(b.n==null)||(a.n-b.n)||(a.i-b.i)).map(o=>o.x)}
+/* the same tool more than once: same T number (T5 = T05), or the very same row when there is no T */
+function impDupGroups(sheetTools,rows,val,hdr){
+  const real=x=>COLS.some(k=>k!=="t"&&clean(x[k]));
+  const tool=r=>{const x={};TOOLF.forEach(([f])=>{const v=val(r,f);if(v)x[f]=v});return x};
+  const key=x=>{const n=tNum(x.t);if(clean(x.t)&&n!=null)return "T"+n;return "="+JSON.stringify(TOOLF.map(([f])=>clean(x[f]).toLowerCase()))};
+  const G=new Map(),add=(c)=>{const k=key(c.tool);if(!G.has(k))G.set(k,[]);G.get(k).push(c)};
+  sheetTools.forEach((x,i)=>{if(real(x))add({src:"sheet",i,tool:x})});
+  rows.forEach((r,i)=>{const x=tool(r);if(real(x))add({src:"file",i,row:hdr+2+i,tool:x})});
+  const same=cs=>cs.every(c=>TOOLF.every(([f])=>clean(c.tool[f]).toLowerCase()===clean(cs[0].tool[f]).toLowerCase()));
+  return [...G.entries()].filter(([,cs])=>cs.length>1).map(([k,cs])=>({label:k[0]==="="?(clean(cs[0].tool.code)||clean(cs[0].tool.type)||"—"):"T"+String(+k.slice(1)).padStart(2,"0"),copies:cs,same:same(cs),choice:0,n:k[0]==="T"?+k.slice(1):1e9})).sort((a,b)=>a.n-b.n)}
+function impDupStep(groups,done,back){
+  const ft=$(".dlg .ft");const oldFt=ft.innerHTML;
+  const draw=()=>{
+    $("#impbody").innerHTML=`<h4 class="imph">${esc(t("dupT",groups.length))}</h4><p class="note" style="margin:0">${esc(t("dupP"))}</p>
+      <div class="admact"><button class="btn" id="dup-one">${esc(t("dupOneAll"))}</button><button class="btn ghost" id="dup-all">${esc(t("dupAllAll"))}</button></div>
+      <div class="duplist">${groups.map((g,gi)=>{const F=TOOLF.filter(([f])=>g.copies.some(c=>clean(c.tool[f])));
+        const dif=f=>new Set(g.copies.map(c=>f==="t"&&tNum(c.tool.t)!=null?tNum(c.tool.t):clean(c.tool[f]).toLowerCase())).size>1;
+        return `<div class="dupg"><div class="duph"><b>${esc(g.label)}</b><span class="dtag ${g.same?"same":"diff"}">${esc(g.same?t("dupSame",g.copies.length):t("dupDiff",F.filter(([f])=>dif(f)).map(([,l])=>t(l)).join(", ")))}</span></div>
+          <div class="tw"><table class="lt duptab"><thead><tr><th></th>${F.map(([f,l])=>`<th class="${dif(f)?"dif":""}">${esc(t(l))}</th>`).join("")}</tr></thead><tbody>
+          ${g.copies.map((c,ci)=>`<tr class="${g.choice===-1||g.choice===ci?"keep":"drop"}"><td><label class="chk"><input type="radio" name="dup${gi}" data-g="${gi}" value="${ci}" ${g.choice===ci?"checked":""}> ${esc(c.src==="sheet"?t("dupOnSheet"):t("dupInFile",c.row))}</label></td>${F.map(([f])=>`<td class="${dif(f)?"dif":""}">${esc(clean(c.tool[f])||"—")}</td>`).join("")}</tr>`).join("")}
+          </tbody></table></div>
+          <label class="chk"><input type="radio" name="dup${gi}" data-g="${gi}" value="-1" ${g.choice===-1?"checked":""}> ${esc(t("dupKeepAll",g.copies.length))}</label></div>`}).join("")}</div>`;
+    $("#impbody").querySelectorAll("input[data-g]").forEach(r=>r.onchange=()=>{groups[+r.dataset.g].choice=+r.value;draw()});
+    $("#dup-one").onclick=()=>{groups.forEach(g=>g.choice=0);draw()};$("#dup-all").onclick=()=>{groups.forEach(g=>g.choice=-1);draw()};
+    const n=groups.reduce((s,g)=>s+(g.choice===-1?0:g.copies.length-1),0);$("#dup-go").textContent=n?t("dupGo",n):t("dupGoAll");
+  };
+  ft.innerHTML=`<button class="btn ghost" id="dup-back">${esc(t("back"))}</button><button class="btn red" id="dup-go"></button>`;
+  $("#dup-back").onclick=()=>{ft.innerHTML=oldFt;$("#d-cancel").onclick=closeDlg;back()};
+  $("#dup-go").onclick=()=>{ft.innerHTML=oldFt;$("#d-cancel").onclick=closeDlg;done()};
+  draw();$(".dlg .bd").scrollTop=0}
 
 /* applying the rows */
 function applyImport(kind,ctx,rows,val,mode,err){
@@ -4820,11 +4867,20 @@ function applyImport(kind,ctx,rows,val,mode,err){
     return t("impDoneMachines",a,s);
   }
   if(kind==="tools"){
-    const list=rows.map(toolOf).filter(hasTool);
-    list.forEach((x,i)=>{if(!x.t)x.t="T"+String(i+1).padStart(2,"0")});
-    if(mode==="replace")cur.tools=list.length?list:[{t:"T01"}];
-    else{cur.tools=cur.tools.filter(x=>hasTool(x));let n=cur.tools.length;list.forEach(x=>{if(!x.t)x.t="T"+String(++n).padStart(2,"0")});cur.tools.push(...list);if(!cur.tools.length)cur.tools=[{t:"T01"}]}
-    return t("impDoneTools",list.length);
+    const base=mode==="replace"?[]:cur.tools.filter(x=>hasTool(x));
+    const list=rows.map(toolOf).map((x,i)=>hasTool(x)?x:null);
+    // the user's choices for the doubles: keep one copy (in the place of the first) or keep them all
+    let dropped=0;
+    if(ctx.plan){const all=[...base.map((x,i)=>({x,s:"sheet",i})),...list.map((x,i)=>({x,s:"file",i}))];
+      ctx.plan.forEach(g=>{if(g.choice===-1)return;const keep=g.copies[g.choice],first=g.copies[0];
+        g.copies.forEach(c=>{if(c===first)return;(c.src==="sheet"?base:list)[c.i]=null;dropped++});
+        (first.src==="sheet"?base:list)[first.i]=keep.tool})}
+    const got=list.filter(Boolean),keepB=base.filter(Boolean);let n=keepB.length;
+    got.forEach(x=>{if(!x.t)x.t="T"+String(++n).padStart(2,"0")});
+    let out=[...keepB,...got];
+    if(ctx.sortT)out=sortByT(out);
+    cur.tools=out.length?out:[{t:"T01"}];
+    return t("impDoneTools",got.length)+(dropped?" · "+t("impDupOut",dropped):"");
   }
   if(kind==="articles"){
     if(!rows.some(r=>val(r,"number"))){err(t("impNeed",t("fNumber")));return null}
@@ -4845,7 +4901,7 @@ function applyImport(kind,ctx,rows,val,mode,err){
         a.updatedAt=Date.now();curArt=a}
       if(curArt&&!curArt._keepTools){const x=toolOf(r);if(hasTool(x)){curArt.tools=curArt.tools.filter(y=>hasTool(y));if(!x.t)x.t="T"+String(curArt.tools.length+1).padStart(2,"0");curArt.tools.push(x)}}
     });
-    db.articles.forEach(a=>{if(touched.has(a.id)){if(!a.tools.length)a.tools=[{t:"T01"}];delete a._new;delete a._keepTools}});
+    db.articles.forEach(a=>{if(touched.has(a.id)){if(ctx.sortT&&!a._keepTools)a.tools=sortByT(a.tools);if(!a.tools.length)a.tools=[{t:"T01"}];delete a._new;delete a._keepTools}});
     return t("impDoneArticles",created,updated,newM);
   }
   if(kind==="holders"){
@@ -5496,7 +5552,7 @@ Object.assign(I18N.en,{getApp:"Get the app", getAppT:"Download the Windows insta
   demoBar:"Demo: made-up workshop with 20 machines and 500 articles. Changes stay in this browser only.", demoShort:"Made-up data", demoReset:"Reset the demo", demoResetQ:"Reset the demo data? Everything changed here is lost.", demoGo:"Real version"});
 Object.assign(I18N.fr,{getApp:"Télécharger l'app", getAppT:"Télécharger l’installateur Windows",
   demoBar:"Démo : atelier fictif de 20 machines et 500 articles. Vos changements restent dans ce navigateur.", demoShort:"Données fictives", demoReset:"Réinitialiser la démo", demoResetQ:"Réinitialiser les données de la démo ? Tout ce qui a été changé ici sera perdu.", demoGo:"Version réelle"});
-const APP_ZIP="BrocheStuff-Setup-2.16.0.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
+const APP_ZIP="BrocheStuff-Setup-2.17.0.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
 function appUrl(){
   // on the site (…/Web/ or …/Demo/) the program sits next door in …/App/; anywhere else, take it from the site
   if(/^https?:/.test(location.protocol)&&/\/(Web|Demo)\/(index\.html)?$/i.test(location.pathname))return new URL("../App/"+APP_ZIP,location.href).href;
@@ -6022,7 +6078,7 @@ function drawHistory(){
    admin page, demo switch. The web version doesn't use any of this.
    ===================================================================== */
 const DESKDEMO=/*DESKDEMO*/null;
-const APP_VER="2.16.0";
+const APP_VER="2.17.0";
 let DEMO_ON=false, ACC=null, USERS=null, PCNAME="", realDIR="", loginFails=0, loginWait=0, lastAct=Date.now();
 Object.assign(I18N.en,{
   loginT:"Sign in", loginP:"Enter your name or code and your password.", loginName:"Name or code", loginPw:"Password", loginGo:"Sign in",
@@ -6488,7 +6544,7 @@ const GUIDE={
    ["mag","Magasins des machines",["Ce qui est chargé dans chaque machine, poche par poche, avec qui l’a changé.","« Comparer avec un article » montre les outils à charger ou à échanger, et charge tout en un clic.","Après un échange, les outils retirés du magasin peuvent être remis au magasin outils (+1 en stock) d’un clic."]],
    ["log","Journal",["Chaque sortie, entrée et comptage : qui, quand, combien et pourquoi.","Cliquez sur une ligne pour lire un commentaire en entier ou ouvrir la fiche de l’outil.","« Exporter (CSV) » pour Excel."]],
    ["reports","Rapports",["Outils sortis par mois, les plus sortis, par machine et par personne.","Codes jamais utilisés et outils sans mouvement depuis 90 jours. Export CSV."]],
-   ["templates","Modèles Excel et import",["Chaque page a son « Modèle Excel » : le télécharger, l’imprimer ou le remplir.","« Importer » lit un fichier Excel ou CSV ; les colonnes sont reconnues par leur titre, avec un aperçu avant d’importer."]],
+   ["templates","Modèles Excel et import",["Chaque page a son « Modèle Excel » : le télécharger, l’imprimer ou le remplir.","« Importer » lit un fichier Excel ou CSV ; les colonnes sont reconnues par leur titre, avec un aperçu avant d’importer.","Fiche outils : une case met les outils dans l’ordre T1, T2, T3… ; si un outil apparaît deux fois (même numéro T, ou la même ligne), BrocheStuff montre les copies et ce qui diffère, et vous choisissez celle à garder ou gardez tout."]],
    ["it","Pour l’informatique",["Installation : un seul fichier d’installation, sans droits administrateur. Le programme va dans %LOCALAPPDATA%\\Programs\\BrocheStuff.","Données : dans Documents\\BrocheStuff (data.json, comptes, dossier Backups). L’admin peut choisir à la place un dossier réseau partagé : tous les postes travaillent alors sur les mêmes données.","Comptes : l’admin crée les comptes (nom, rôle, mot de passe) dans la page Admin. La version web de démo n’a pas de mots de passe.","Sauvegardes : une copie automatique toutes les 5 minutes quand quelque chose change, dans Backups ; sauvegardez aussi ce dossier avec vos sauvegardes habituelles.","Mises à jour : l’admin installe le fichier BrocheStuff-Update-….neu depuis la page Admin (clé USB ou dossier) ; il est déposé dans le dossier des données et chaque poste le propose au démarrage.","Pas besoin d’internet : rien n’est envoyé à l’extérieur."]],
    ["backup","Sauvegardes",["Une copie de tout est gardée toutes les 5 minutes quand quelque chose change (désactivable dans Admin).","Dans Admin, la sauvegarde complète se règle : désactivée, chaque jour, chaque semaine (par défaut) ou chaque mois.","« Sauvegarder » écrit un fichier ; « Restaurer » reprend un fichier ou une copie automatique."]]
   ]},
@@ -6508,7 +6564,7 @@ const GUIDE={
    ["mag","Machine magazines",["What is loaded in each machine, pocket by pocket, and who changed it.","“Compare with an article” shows the tools to load or swap, and loads them in one click.","After a swap, the tools taken out of the magazine can go back to the crib (+1 in stock) in one click."]],
    ["log","Stock log",["Every move out, in and count: who, when, how many and why.","Click a line to read a comment in full or open the tool’s card.","“Export (CSV)” for Excel."]],
    ["reports","Reports",["Tools taken per month, most taken, per machine and per person.","Codes never used and tools without a move for 90 days. CSV export."]],
-   ["templates","Excel models and import",["Each page has its “Excel model”: download it, print it or fill it in.","“Import” reads an Excel or CSV file; columns are found by their titles, with a preview before importing."]],
+   ["templates","Excel models and import",["Each page has its “Excel model”: download it, print it or fill it in.","“Import” reads an Excel or CSV file; columns are found by their titles, with a preview before importing.","Tool sheet: a box puts the tools in T1, T2, T3… order; if a tool appears twice (same T number, or the same row), BrocheStuff shows the copies and what differs, and you choose which to keep or keep them all."]],
    ["it","For IT",["Install: one setup file, no administrator rights needed. The program goes to %LOCALAPPDATA%\\Programs\\BrocheStuff.","Data: in Documents\\BrocheStuff (data.json, accounts, Backups folder). The admin can pick a shared network folder instead: every PC then works on the same data.","Accounts: the admin creates them (name, role, password) on the Admin page. The web demo has no passwords.","Backups: an automatic copy every 5 minutes when something changes, in Backups; include that folder in your usual backups too.","Updates: the admin installs the BrocheStuff-Update-….neu file from the Admin page (USB stick or folder); it is put in the data folder and every PC offers it at start.","No internet needed: nothing is sent outside."]],
    ["backup","Backups",["A copy of everything is kept every 5 minutes when something changes (can be turned off in Admin).","In Admin, the full backup can be set to off, daily, weekly (default) or monthly.","“Back up” writes a file; “Restore” takes back a file or an automatic copy."]]
   ]}};
