@@ -1523,11 +1523,109 @@ table.chgt td.m,table.chgt b.m{font-family:var(--mono,monospace)}
 #wfs p{margin:0;font-size:15px;line-height:1.5}#wfs .wfsn{color:var(--mid)}
 #wfs .btn.big{height:48px;font-size:16px;margin-top:8px}
 #wfs .wfserr{color:var(--red-tx,var(--red));font-weight:600}
+/* ---------- assemblies ---------- */
+.asmc{display:block;margin:3px 0 0;padding:1px 5px;border:0;border-radius:4px;background:var(--fill);color:var(--mid);font:600 10.5px/1.5 var(--mono);letter-spacing:.02em;cursor:pointer;white-space:nowrap}
+.asmc:hover{background:var(--hair);color:var(--ink)}
+.asmt td{vertical-align:top;padding-top:11px;padding-bottom:11px}
+.asmcode{border:1px solid var(--hair);background:var(--paper);color:var(--ink);font:700 14px/1 var(--mono);padding:7px 9px;border-radius:7px;cursor:copy}
+.asmcode:hover{border-color:var(--ink)}
+.asmty{font-family:var(--display6);font-size:15px;letter-spacing:.01em}
+.asmh{max-width:320px}
+.asmuse{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.asmuse .mtag{cursor:pointer;border:0}
+.asmform{gap:10px 12px}
+.asmform textarea{min-height:58px}
+.dlg .ft .sp{flex:1}
+.rowbar{flex-direction:column;align-items:stretch;gap:8px}
+.rowbar .rbg{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.rowbar .rbg+.rbg{padding-top:8px;border-top:1px dashed var(--hair)}
+.rowbar .laysel.sortsel{position:relative;padding:0 12px 0 14px;height:36px;cursor:pointer}
+.rowbar .laysel.sortsel:hover{border-color:var(--ink)}
+.rowbar .laysel.sortsel span{color:var(--ink);font:500 13.5px var(--body);display:inline-flex;align-items:center;gap:6px}
+.rowbar .laysel.sortsel span::before{content:"";width:14px;height:14px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 4v16M3 8l4-4 4 4M17 20V4M13 16l4 4 4-4'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 4v16M3 8l4-4 4 4M17 20V4M13 16l4 4 4-4'/%3E%3C/svg%3E") center/contain no-repeat}
+.rowbar .laysel.sortsel span::after{content:"▾";font-size:11px;color:var(--mid)}
+.rowbar .laysel.sortsel select{position:absolute;inset:0;width:100%;height:100%;max-width:none;opacity:0;cursor:pointer}
+.asmc{font-size:9px!important;letter-spacing:-.02em;padding:0 3px!important;max-width:100%;overflow:hidden;text-overflow:clip;margin-left:auto!important;margin-right:auto!important}
+
+/* ---------- top bar: one size, one style ---------- */
+@media (min-width:761px){
+.top .tb,.top .lang{height:36px;box-sizing:border-box}
+.top .tb{min-width:36px;padding:0 10px;border:1px solid var(--top-bd);border-radius:8px;background:transparent;color:var(--top-ink);font:500 13.5px/1 var(--body);gap:7px;justify-content:center}
+.top .tb:hover{background:var(--top-hover)}
+.top .tb svg{width:17px;height:17px;flex:none}
+.top .tb.menubtn{padding:0}
+.top .tb.themetog,.top #b-logo,.top #b-backup,.top #b-restore,.top #b-getapp{width:36px;padding:0}
+.top #b-role{padding:0 8px}
+.top .lang{display:inline-flex;border-radius:8px;overflow:hidden}
+.top .lang button{height:100%}
+#tbar{display:inline-flex;align-items:center;gap:0;margin-right:4px}
+#tbar:empty{display:none}
+/* the sheet's actions: preview switch, then one joined group: print · PDF · Excel */
+#tbar .tb{border-radius:0;margin-left:-1px}
+#tbar .tb:first-child{border-radius:8px 0 0 8px;margin-left:0}
+#tbar .tb:last-child{border-radius:0 8px 8px 0}
+#tbar .tb:only-child{border-radius:8px}
+#tbar .tb.pvtog{border-radius:8px;margin-right:8px}
+#tbar .tb.pvtog+.tb{border-radius:8px 0 0 8px;margin-left:0}
+#tbar .tb .lbl,#tbar .tb .lbl2{display:inline}
+#tbar .tb.dl .lbl,#tbar .tb.pvtog .lbl{display:none}
+#tbar #b-print .lbl{display:inline}
+#tbar .tb.dl{position:relative;z-index:1;background:var(--red);border-color:var(--red);color:#fff;font-weight:600;padding:0 14px}
+#tbar .tb.dl:hover{background:var(--red-l);border-color:var(--red-l)}
+#tbar .tb.xl{color:var(--top-ink);border-color:var(--top-bd)}
+#tbar .tb.xl .lbl2{display:inline}
+#tbar .tb.xl svg{color:#2f9a5e}
+#tbar .tb.xl:hover{background:var(--top-hover)}
+:root[data-theme="dark"] #tbar .tb.xl{color:var(--top-ink);border-color:var(--top-bd)}
+:root[data-theme="dark"] #tbar .tb.xl:hover{background:var(--top-hover)}
+.top .tb.getapp{border-color:var(--top-bd)!important;font-weight:500}
+.top .tb.getapp:hover{background:var(--top-hover);color:var(--top-ink)}
+.top #b-role{height:36px;padding:0 4px;min-width:36px}
+.top .rolechip .gi{width:26px;height:26px;border-radius:6px;background:transparent;color:var(--red)}
+:root[data-theme="dark"] .top .rolechip .gi{color:#ff6b6e}
+.top .rolechip .gi svg{width:18px;height:18px}
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #tbar .tb.xl{color:var(--top-ink);border-color:var(--top-bd)}}
+@media (max-width:1280px){#tbar #b-print .lbl{display:none}}
+@media (max-width:1100px){#tbar .tb.xl .lbl2{display:none}}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .top .rolechip .gi{color:#ff6b6e}}
+.topmore{position:relative;display:inline-flex}
+.topmore[hidden]{display:none}
+.moremenu{position:absolute;right:0;top:calc(100% + 9px);z-index:80;min-width:250px;background:var(--paper);color:var(--ink);border:1px solid var(--hair);border-radius:11px;box-shadow:0 14px 40px rgba(0,0,0,.22);padding:6px;display:flex;flex-direction:column;gap:1px}
+.moremenu[hidden]{display:none}
+.top .moremenu .tb{display:flex!important;width:100%!important;height:38px!important;min-width:0;justify-content:flex-start!important;gap:10px;padding:0 10px!important;border:0!important;border-radius:7px!important;background:transparent!important;color:var(--ink)!important;font:500 13.5px/1 var(--body)!important;text-decoration:none}
+.top .moremenu .tb[hidden]{display:none!important}
+.top .moremenu .tb:hover{background:var(--fill)!important}
+.top .moremenu .tb svg{width:17px;height:17px;color:var(--mid)}
+.top .moremenu .tb .lbl{display:inline!important}
+.top .moremenu #b-theme::after{content:attr(aria-label)}
+.top .moremenu .lang{display:flex!important;order:-1;height:34px;margin:2px 2px 6px;border:1px solid var(--hair);border-radius:8px;overflow:hidden}
+.top .moremenu .lang button{flex:1;padding:0;color:var(--mid)}
+.top .moremenu .lang button+button{border-left:1px solid var(--hair)}
+.top .moremenu .lang button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.top .moremenu #b-theme{order:-1}
+.top .moremenu #b-getapp{border-top:1px solid var(--hair)!important;border-radius:0 0 7px 7px!important;margin-top:4px}
+/* one line at every computer width */
+@media (min-width:761px){
+  .top{flex-wrap:nowrap}
+  .top #b-role{flex:none}
+  body.role-admin .top .rolechip .rl{display:none}
+  body.role-admin .top #b-role{width:36px;padding:0}
+  .top #tbar,.top .topmore,.top .brand{flex:none}
+  .top .mainnav{min-width:0;overflow:hidden}
+}
+@media (max-width:1700px) and (min-width:761px){body.role-admin .crumbs{display:none}#tbar #b-print .lbl{display:none}}
+@media (max-width:1600px) and (min-width:761px){.top .mainnav button{padding:0 10px}}
+@media (max-width:1366px) and (min-width:761px){.top .crumbs{display:none}.top .mainnav button{padding:0 8px;font-size:13px;letter-spacing:.06em}}
+@media (max-width:1180px) and (min-width:761px){#tbar .tb.xl .lbl2{display:none}.top .mainnav button{padding:0 6px;font-size:12.5px;letter-spacing:.03em}.top .brand h1{font-size:18px}}
+@media (max-width:1000px) and (min-width:761px){#tbar .tb.pvtog{display:none}.top .mainnav button{padding:0 5px;font-size:12px;letter-spacing:0}}
+@media (max-width:880px) and (min-width:761px){.top #tbar #b-print{display:none}#tbar #b-print+.tb{border-radius:8px 0 0 8px;margin-left:0}.top .brand h1{font-size:16px}.top .mainnav{margin-left:0}.top .mainnav button{padding:0 4px;font-size:11.5px}.top{gap:5px}}
+@media (max-width:840px) and (min-width:761px){body.role-admin .top .brand h1{display:none}body.role-admin .top .brand{padding-right:4px}}
 </style></head>
 <body>
 <header class="top">
   <button class="brand" id="home"><i></i><h1>BrocheStuff<b>.</b></h1></button>
-  <nav class="mainnav"><button data-nav="#" id="nav-m"></button><button data-nav="#arts" id="nav-a"></button><button data-nav="#crib" id="nav-c"></button><button data-nav="#holders" id="nav-h"></button><button data-nav="#prod" id="nav-p"></button><button data-nav="#log" id="nav-l"></button><button data-nav="#mags" id="nav-g"></button><button data-nav="#reports" id="nav-r"></button><button data-nav="#admin" id="nav-x" hidden></button></nav>
+  <nav class="mainnav"><button data-nav="#" id="nav-m"></button><button data-nav="#arts" id="nav-a"></button><button data-nav="#asm" id="nav-s"></button><button data-nav="#crib" id="nav-c"></button><button data-nav="#holders" id="nav-h"></button><button data-nav="#prod" id="nav-p"></button><button data-nav="#log" id="nav-l"></button><button data-nav="#mags" id="nav-g"></button><button data-nav="#reports" id="nav-r"></button><button data-nav="#admin" id="nav-x" hidden></button></nav>
   <nav class="crumbs" id="crumbs"></nav>
   <span class="sp"></span>
   <span id="tbar"></span>
@@ -2797,7 +2895,7 @@ function ensureDB(){if(!Array.isArray(db.stockLog))db.stockLog=[];if(!Array.isAr
   if(db.articles.some(a=>!db.machines.some(m=>m.id===a.machineId))){let nm=db.machines.find(m=>m.id==="nomachine");
     if(!nm){nm={id:"nomachine",abbr:"?",name:"SANS MACHINE",brand:"",control:"",createdAt:Date.now()};db.machines.push(nm)}
     db.articles.forEach(a=>{if(!db.machines.some(m=>m.id===a.machineId))a.machineId=nm.id})}
-  db.articles.forEach(a=>{if(!a.article)a.article={};if(!Array.isArray(a.tools))a.tools=[]});db.catalog.forEach(c=>{if("label" in c){if(!clean(c.type)&&clean(c.label))c.type=c.label.toUpperCase();delete c.label}})}
+  db.articles.forEach(a=>{if(!a.article)a.article={};if(!Array.isArray(a.tools))a.tools=[]});if(Array.isArray(db.assemblies)&&typeof asmFix==="function")asmFix();db.catalog.forEach(c=>{if("label" in c){if(!clean(c.type)&&clean(c.label))c.type=c.label.toUpperCase();delete c.label}})}
 /* ---------- storage: saves are grouped (no work on every keystroke); photos live in IndexedDB ---------- */
 const STOREKEY="toolmanager.store";let STORE=lsGet(STOREKEY)==="idb"?"idb":"ls",saveT=null,DIRTY=false;
 const IDB={p:null,open(){return this.p||(this.p=new Promise((res,rej)=>{let r;try{r=indexedDB.open(NS?"toolmanager-demo":"toolmanager",2)}catch(e){return rej(e)}
@@ -3175,6 +3273,7 @@ function parseRoute(){const h=location.hash.slice(1);
   if(h==="admin"&&DESK)return{view:"admin"};
   if(h==="mags")return{view:"mags"};
   if(h==="reports")return{view:"reports"};
+  if(h==="asm")return{view:"asm"};
   if(h==="arts")return{view:"arts"};
   if(h==="nopage")return{view:"nopage"};
   if(h.startsWith("mag-")&&M(h.slice(4)))return{view:"mag",id:h.slice(4)};
@@ -3241,6 +3340,7 @@ function chooseLanguage(){
 
 function render(){
   if(edTimer){clearTimeout(edTimer);edTimer=null;flushEditor()}
+  if(ROLE&&typeof asmBoot==="function")asmBoot();
   migrateLayouts();{const r0=parseRoute();refreshCols((r0.view==="article"||r0.view==="aview")&&r0.id?A(r0.id):null)}applyWidths();
   document.body.classList.remove("menu-open");
   if(location.hash==="#guide"&&GUIDE_ON()){route={view:"guide"};pvTeardown();document.querySelectorAll("[data-nav]").forEach(b=>b.setAttribute("aria-current","false"));renderGuide();if(render.lastHash!=="#guide"){render.lastHash="#guide";$("#view").scrollTop=0}return}
@@ -3253,7 +3353,7 @@ function render(){
   if(!can(route.view)){const hm=PERM.home;if((location.hash||"#")!==hm){location.replace(hm);return}}
   const cr=$("#crumbs"), tb=$("#tbar");tb.innerHTML="";
   if(route.view!=="article")pvTeardown();
-  const sec={crib:"#crib",code:"#crib",holders:"#holders",holder:"#holders",prod:"#prod",pcode:"#prod",pholder:"#prod",aview:can("prod")?"#prod":"",log:"#log",mags:"#mags",mag:"#mags",reports:"#reports",admin:"#admin",arts:"#arts"}[route.view]??"#";
+  const sec={crib:"#crib",code:"#crib",holders:"#holders",holder:"#holders",prod:"#prod",pcode:"#prod",pholder:"#prod",aview:can("prod")?"#prod":"",log:"#log",mags:"#mags",mag:"#mags",reports:"#reports",admin:"#admin",arts:"#arts",asm:"#asm"}[route.view]??"#";
   const pcr=can("prod")?`<i>/</i><a data-go="#prod">${esc(t("prodT"))}</a>`:"";
   document.querySelectorAll("[data-nav]").forEach(b=>b.setAttribute("aria-current",String(b.dataset.nav===sec)));
   if(route.view==="home"){cr.innerHTML="";renderHome()}
@@ -3262,6 +3362,7 @@ function render(){
   else if(route.view==="mags"){cr.innerHTML="";renderMags()}
   else if(route.view==="reports"){cr.innerHTML="";renderReports()}
   else if(route.view==="arts"){cr.innerHTML="";renderArts()}
+  else if(route.view==="asm"){cr.innerHTML="";renderAsm()}
   else if(route.view==="nopage"){cr.innerHTML="";$("#view").innerHTML=`<div class="page"><div class="empty"><h3>${esc(t("noPagesT"))}</h3><p>${esc(t("noPagesP"))}</p></div></div>`}
   else if(route.view==="admin"){cr.innerHTML="";renderAdminPage()}
   else if(route.view==="mag"){const m=M(route.id);cr.innerHTML=`<i>/</i><a data-go="#mags">${esc(t("navMags"))}</a><i>/</i><span>${esc(mShort(m))}</span>`;renderMag(m)}
@@ -3801,7 +3902,7 @@ function columnsDialog(art){const canLay=hasRight("layouts"),canSty=hasRight("co
 /* tool table: each column can be widened or narrowed by dragging its title's edge (remembered on this PC) */
 const CWKEY="toollistmaker.colw";
 const colW=()=>{try{return JSON.parse(lsGet(CWKEY)||"{}")||{}}catch(e){return {}}};
-const DEFW={t:44,corr:62,type:0,diameter:54,ra:58,insert:112,ls:46,oal:54,z:36,holder:140,code:80};
+const DEFW={t:50,corr:62,type:0,diameter:54,ra:58,insert:112,ls:46,oal:54,z:36,holder:140,code:80};
 function thW(k){const w=colW()[k];return w?w:(k.startsWith("x_")?120:DEFW[k])}
 function wireColResize(table){
   const sum=()=>{let s=76;table.querySelectorAll("thead th[data-ck]").forEach(th=>s+=th.getBoundingClientRect().width);return s};
@@ -3848,7 +3949,7 @@ const cellVal=td=>[...td.querySelectorAll("input[data-k]")].map(i=>i.value).join
 function rowHTML(x,i){
   const v=k=>esc(x[k]??"");
   return `<tr data-i="${i}">
-    ${visCols(sheetCfg()).map(k=>k==="t"?`<td data-col="t"><input class="m b up" data-k="t" value="${v("t")}" placeholder="T${String(i+1).padStart(2,"0")}"></td>`
+    ${visCols(sheetCfg()).map(k=>k==="t"?`<td data-col="t"><input class="m b up" data-k="t" value="${v("t")}" placeholder="T${String(i+1).padStart(2,"0")}">${asmChipHTML(x)}</td>`
       :k==="corr"?`<td class="corrcell" data-col="corr"><label title="${esc(t("colHT"))}"><i>H</i><input class="m up" data-k="corrH" value="${v("corrH")}"></label><label title="${esc(t("colDT"))}"><i>D</i><input class="m up" data-k="corrD" value="${v("corrD")}"></label></td>`
       :mlCell(k,x,k.startsWith("x_")?"xcell":k==="holder"?"holdcell":k==="code"?"codecell":"")).join("")}
     <td class="act"><button class="ib" data-r="up" title="${esc(t("up"))}" tabindex="-1">↑</button><button class="ib" data-r="down" title="${esc(t("down"))}" tabindex="-1">↓</button><button class="ib x" data-r="del" title="${esc(t("remove"))}" tabindex="-1">✕</button></td></tr>`;
@@ -3881,7 +3982,7 @@ function renderEditor(art){fillHolderList(M(art.machineId)?.cone);
         <thead><tr>${visCols(sheetCfg()).map(k=>{const w=thW(k),ttl=k==="corr"?t("colHT")+" · "+t("colDT"):k==="insert"?t("colInsT"):k==="oal"?t("oal"):"";
           return `<th data-ck="${k}"${w?` style="width:${w}px"`:""}${ttl?` title="${esc(ttl)}"`:""}${k.startsWith("x_")?' class="xth"':""}>${esc(colLabel(k))}${k==="holder"&&coneTag(M(cur.machineId)?.cone)?" "+coneTag(M(cur.machineId)?.cone):""}<span class="colrs" title="${esc(t("colWT"))}"></span></th>`}).join("")}<th class="actth"></th></tr></thead>
         <tbody id="rows"></tbody></table></div>
-      <div class="rowbar"><button class="btn" id="b-add">${esc(t("addTool"))}</button><button class="btn ghost" id="b-impt" title="${esc(t("impT"))}">${esc(t("imp"))}</button><button class="btn ghost" id="b-ncimp" title="${esc(t("impNCP"))}">${esc(t("ncFromProg"))}</button><label class="laysel" title="${esc(t("laySelT"))}"><span>${esc(t("layShort"))}</span><select id="a-layout">${layoutOptions(layoutIdOf(art))}</select></label><label class="laysel" title="${esc(t("laySelXlT"))}"><span>Excel</span><select id="a-layoutxl"><option value="">${esc(t("laySameXl"))}</option>${layoutsXlOptions(art.layoutXl||"")}</select></label>${hasRight("layouts")||hasRight("colStyle")?`<button class="btn ghost" id="b-cols" title="${esc(t("colsBtnT"))}">${esc(t("colsBtn"))}</button>`:""}<button class="btn ghost" id="b-prep" title="${esc(t("prepT"))}">${esc(t("prep"))}</button><button class="btn ghost" id="b-magcmp">${esc(t("magCmpBtn"))}</button>${tplBtn("tools")}<span class="note">${t("excelNote")}</span></div>
+      <div class="rowbar"><div class="rbg"><button class="btn" id="b-add">${esc(t("addTool"))}</button><button class="btn ghost" id="b-impt" title="${esc(t("impT"))}">${esc(t("imp"))}</button><button class="btn ghost" id="b-ncimp" title="${esc(t("impNCP"))}">${esc(t("ncFromProg"))}</button><label class="laysel sortsel" title="${esc(t("sortT"))}"><span>${esc(t("sortL"))}</span><select id="a-sort"><option value="">—</option>${Object.entries(t("sortBy")).map(([k,l])=>`<option value="${k}">${esc(l)}</option>`).join("")}</select></label></div><div class="rbg"><label class="laysel" title="${esc(t("laySelT"))}"><span>${esc(t("layShort"))}</span><select id="a-layout">${layoutOptions(layoutIdOf(art))}</select></label><label class="laysel" title="${esc(t("laySelXlT"))}"><span>Excel</span><select id="a-layoutxl"><option value="">${esc(t("laySameXl"))}</option>${layoutsXlOptions(art.layoutXl||"")}</select></label>${hasRight("layouts")||hasRight("colStyle")?`<button class="btn ghost" id="b-cols" title="${esc(t("colsBtnT"))}">${esc(t("colsBtn"))}</button>`:""}</div><div class="rbg"><button class="btn ghost" id="b-prep" title="${esc(t("prepT"))}">${esc(t("prep"))}</button><button class="btn ghost" id="b-magcmp">${esc(t("magCmpBtn"))}</button>${tplBtn("tools")}</div><span class="note">${t("excelNote")}</span></div>
     </div>
     <div class="card">
       <h2>${esc(t("notesSign"))}</h2>
@@ -3907,7 +4008,10 @@ function renderEditor(art){fillHolderList(M(art.machineId)?.cone);
     if(k==="code"){const sd=tr.querySelector(".sdot");if(sd)sd.outerHTML=stockDot(cur.tools[+tr.dataset.i].code)}});
   rows.addEventListener("change",e=>{const tr=e.target.closest("tr"),k=e.target.dataset.k;if(tr&&k)autoFill(+tr.dataset.i,k,tr)});
   rows.addEventListener("change",e=>{const tr=e.target.closest("tr");if(!tr||e.target.dataset.k!=="code")return;const i=+tr.dataset.i;
+    const as0=asmFind(cur.tools[i].code);if(as0){asmApply(cur.tools[i],as0);renderRows();edited();toast(t("asmFilled",as0.code));return}
+    if(asmKey(cur.tools[i].code)){toast(t("asmUnknown",asmKey(cur.tools[i].code)));return}
     if(fillFromCrib(i)){renderRows();edited();toast(t("filled",normCode(cur.tools[i].code)))}});
+  rows.addEventListener("click",e=>{const b=e.target.closest(".asmc");if(b&&b.dataset.asm){e.stopPropagation();asmCopy(b.dataset.asm)}});
   rows.addEventListener("click",e=>{const b=e.target.closest("[data-r]");if(!b)return;const i=+b.closest("tr").dataset.i,T=cur.tools;
     if(b.dataset.r==="del"){T.splice(i,1);if(!T.length)T.push({t:"T01"})}
     if(b.dataset.r==="up"&&i>0)[T[i-1],T[i]]=[T[i],T[i-1]];
@@ -3951,7 +4055,8 @@ function renderEditor(art){fillHolderList(M(art.machineId)?.cone);
     const o0=clean(edIndex0);if(v&&o0&&v!==o0&&!(cur.history||[]).some(h=>h.snap&&h.ix===o0&&(h.act==="validate"||h.act==="archive"))){const sn=snapOf(cur);sn.article={...sn.article,index:o0};addHist(cur,"archive",{ix:o0,snap:sn})}
     e.target.value=v;cur.article.index=v;edIndex0=v;drawIx();drawStatus()});
   edIndex0=cur.article.index||"";edBaseline();applyLock();drawHistory();
-  $("#codes").innerHTML=(db.catalog||[]).map(c=>`<option value="${esc(c.code)}">${esc([c.type,c.diameter?"Ø"+c.diameter:""].filter(Boolean).join(" "))}</option>`).join("");
+  $("#codes").innerHTML=(db.catalog||[]).map(c=>`<option value="${esc(c.code)}">${esc([c.type,c.diameter?"Ø"+c.diameter:""].filter(Boolean).join(" "))}</option>`).join("")+asmCodeOptions();
+  $("#a-sort").onchange=e=>{const k=e.target.value;e.target.value="";if(k)sortRows(k)};
   pvSetup();
   if(art.fresh){delete art.fresh;$("#a-number").focus()}
 }
@@ -3978,7 +4083,7 @@ function addRow(){cur.tools.push({t:nextT()});renderRows([cur.tools.length-1,"ty
 function checkDup(){const n=clean(cur.article.number).toLowerCase(),ix=clean(cur.article.index).toLowerCase(),w=$("#dupwarn");
   const ph=clean(cur.article.phase).toLowerCase();const d=n&&db.articles.find(x=>x!==cur&&x.machineId===cur.machineId&&clean(x.article.number).toLowerCase()===n&&clean(x.article.index).toLowerCase()===ix&&clean(x.article.phase).toLowerCase()===ph);
   w.hidden=!d;if(d)w.textContent=t("dup",cur.article.number,cur.article.index,mLabel(M(cur.machineId)))}
-function edited(){cur.updatedAt=Date.now();clearTimeout(edTimer);edTimer=setTimeout(flushEditor,400);schedulePreview()}
+function edited(){if(typeof asmLater==="function")asmLater();cur.updatedAt=Date.now();clearTimeout(edTimer);edTimer=setTimeout(flushEditor,400);schedulePreview()}
 function flushEditor(){edTimer=null;recordEdit();saveDB();if($("#histbox"))drawHistory()}
 let edIndex0="";
 
@@ -5010,8 +5115,8 @@ Object.assign(I18N.fr,{
   cmCard:"Commentaires", cmNone:"Pas encore de commentaire.", cmAbout:"à propos de", cmTag:"Commentaire", kNote:"Commentaires"
 });
 const ROLES={
-  admin:{views:"*",nav:["#","#arts","#crib","#holders","#prod","#mags","#log","#reports"],home:"#",stock:1,backup:1,restore:1},
-  methode:{views:["home","machine","article","mags","mag","arts","aview"],nav:["#","#arts","#mags"],home:"#",stock:0,backup:1},
+  admin:{views:"*",nav:["#","#arts","#asm","#crib","#holders","#prod","#mags","#log","#reports"],home:"#",stock:1,backup:1,restore:1},
+  methode:{views:["home","machine","article","mags","mag","arts","aview","asm"],nav:["#","#arts","#asm","#mags"],home:"#",stock:0,backup:1},
   outil:{views:["crib","code","holders","holder","log","aview","mags","mag","reports","arts"],nav:["#crib","#holders","#arts","#mags","#log","#reports"],home:"#crib",stock:1,backup:1},
   prod:{views:["prod","pcode","pholder","aview"],nav:["#prod"],home:"#prod",stock:1}
 };
@@ -5021,7 +5126,7 @@ let ROLE=null,USER="";
    An account follows its profile, or has its own pages and rights. */
 const PAGES=[
   {k:"machines",views:["home","machine"],nav:"#",rights:["machEdit","deleteArticle","wipe"]},
-  {k:"sheets",views:["article","aview"],rights:["validate","validateOwn","devalidate","newIndex","setIndex","revertIndex","moveArticle","layouts","colStyle"]},
+  {k:"sheets",views:["article","aview","asm"],rights:["validate","validateOwn","devalidate","newIndex","setIndex","revertIndex","moveArticle","layouts","colStyle"]},
   {k:"sheetsView",views:["aview"],rights:[]},
   {k:"arts",views:["arts"],nav:"#arts",rights:["artNote"]},
   {k:"crib",views:["crib","code","pcode"],nav:"#crib",rights:["cribEdit","stock"]},
@@ -5032,7 +5137,7 @@ const PAGES=[
   {k:"reports",views:["reports"],nav:"#reports",rights:[]}];
 const GEN_RIGHTS=["import","backup","restore","logo"];
 const ALL_RIGHTS=[...PAGES.flatMap(p=>p.rights),...GEN_RIGHTS];
-const NAV_ORDER=["#","#arts","#crib","#holders","#prod","#mags","#log","#reports"];
+const NAV_ORDER=["#","#arts","#asm","#crib","#holders","#prod","#mags","#log","#reports"];
 const BUILTIN={
   methode:{pages:["machines","sheets","arts","mags"],rights:["machEdit","validate","validateOwn","newIndex","moveArticle","artNote","editMag","import","backup"]},
   outil:{pages:["crib","holders","sheetsView","mags","log","reports"],rights:["cribEdit","holderEdit","stock","editMag","import","backup"]},
@@ -5055,7 +5160,7 @@ function permOf(roleId,acc){const P=profileOf(roleId);if(P.admin)return{...P};
 const accRec=()=>(typeof DESK!=="undefined"&&DESK&&!DEMO_ON&&ACC)?((USERS&&USERS.users||[]).find(x=>x.id===ACC.id)||ACC):null;
 let PERM=null;
 function setPerm(){if(!ROLE){PERM=null;return}const P=permOf(ROLE,accRec());const pg=PAGES.filter(p=>P.admin||P.pages.includes(p.k));
-  P.views=P.admin?"*":[...new Set(pg.flatMap(p=>p.views))];P.nav=NAV_ORDER.filter(h=>P.admin||pg.some(p=>p.nav===h));P.home=P.nav[0]||"#nopage";PERM=P}
+  P.views=P.admin?"*":[...new Set(pg.flatMap(p=>p.views))];P.nav=NAV_ORDER.filter(h=>P.admin||pg.some(p=>p.nav===h)||(h==="#asm"&&pg.some(p=>p.k==="sheets")));P.home=P.nav[0]||"#nopage";PERM=P}
 const can=v=>!!ROLE&&!!PERM&&(v==="nopage"||PERM.views==="*"||PERM.views.includes(v));
 const canStock=()=>hasRight("stock");
 const takeMode=()=>hasRight("takeTool")&&!hasRight("stock");
@@ -5150,7 +5255,7 @@ function roleChrome(){
   $("#b-backup").hidden=!R||!hasRight("backup");$("#b-restore").hidden=!R||!hasRight("restore");$("#b-logo").hidden=!R||!hasRight("logo");
   const rc=$("#b-role");rc.hidden=!R;
   if(R){rc.innerHTML=`<span class="gi">${roleIcons[ROLE]||roleIcons.custom}</span><span class="rl"><b>${esc(roleName(ROLE))}</b>${USER&&USER!==roleName(ROLE)?`<span>${esc(USER)}</span>`:""}</span>`;rc.title=t("switchRole")}
-  $("#nav-a").textContent=t("navArts");$("#nav-p").textContent=t("navProd");$("#nav-l").textContent=t("navLog");$("#nav-g").textContent=t("navMags");$("#nav-r").textContent=t("navReports");$("#nav-x").textContent=t("navAdmin");
+  $("#nav-a").textContent=t("navArts");$("#nav-s").textContent=t("navAsm");$("#nav-p").textContent=t("navProd");$("#nav-l").textContent=t("navLog");$("#nav-g").textContent=t("navMags");$("#nav-r").textContent=t("navReports");$("#nav-x").textContent=t("navAdmin");
 }
 $("#b-role").onclick=()=>{if(DESK&&!DEMO_ON&&ACC)accountMenu();else leaveRole()};
 
@@ -5567,7 +5672,7 @@ Object.assign(I18N.en,{getApp:"Get the app", getAppT:"Download the Windows insta
   demoBar:"Demo: made-up workshop with 20 machines and 500 articles. Changes stay in this browser only.", demoShort:"Made-up data", demoReset:"Reset the demo", demoResetQ:"Reset the demo data? Everything changed here is lost.", demoGo:"Real version"});
 Object.assign(I18N.fr,{getApp:"Télécharger l'app", getAppT:"Télécharger l’installateur Windows",
   demoBar:"Démo : atelier fictif de 20 machines et 500 articles. Vos changements restent dans ce navigateur.", demoShort:"Données fictives", demoReset:"Réinitialiser la démo", demoResetQ:"Réinitialiser les données de la démo ? Tout ce qui a été changé ici sera perdu.", demoGo:"Version réelle"});
-const APP_ZIP="BrocheStuff-Setup-2.18.0.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
+const APP_ZIP="BrocheStuff-Setup-2.19.0.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
 function appUrl(){
   // on the site (…/Web/ or …/Demo/) the program sits next door in …/App/; anywhere else, take it from the site
   if(/^https?:/.test(location.protocol)&&/\/(Web|Demo)\/(index\.html)?$/i.test(location.pathname))return new URL("../App/"+APP_ZIP,location.href).href;
@@ -5875,6 +5980,150 @@ function compareDialog(m,art,after){
   $("#cmp-art").onchange=e=>{a=A(e.target.value);draw()};draw();
 }
 
+/* ---------- assemblies: a tool with its holder, saved under a code (AS0001…) ----------
+   They are made by themselves from the tool sheets (a row with a holder and a tool code, or a type and a Ø).
+   Typing an assembly code in the Code box of a sheet fills the whole row. */
+Object.assign(I18N.en,{navAsm:"Assemblies", asmT:"Assemblies", asmSub:"Each tool with its holder, saved under a code. Type the code in the Code box of a tool sheet and the whole row fills in.",
+  asmQ:"Assembly code, type, Ø, holder, tool code…", asmNew:"+ New assembly", asmNone:"No assembly yet.", asmNoneP:"They are made by themselves from the tool sheets: a row with a holder and a tool code (or a type and a Ø) becomes an assembly.",
+  asmFAll:"All", asmFUsed:"In a sheet", asmFFree:"In no sheet", asmFKept:"Kept",
+  asmTh:["Assembly","Tool","LS / LT","Holder","Tool code","Used in",""], asmUsedN:n=>`${n} ${pl(n,"sheet","sheets")}`, asmNoUse:"No sheet", asmAuto:"From a sheet", asmManual:"Made by hand",
+  asmFilled:c=>`Row filled from assembly ${c}`, asmUnknown:c=>`No assembly ${c}`, asmChipT:"Assembly code: type it in the Code box of another sheet to get this same row",
+  asmEditT:c=>`Assembly ${c}`, asmNewT:"New assembly", asmName:"Name (optional)", asmKeep:"Keep it even when no sheet uses it", asmSave:"Save", asmDel:"Delete", asmDelQ:c=>`Delete assembly ${c}? The sheets keep their rows.`, asmDelOk:c=>`${c} deleted`,
+  asmNeed:"Give the holder, and a tool code or a type with a Ø.", asmSame:c=>`The same assembly already exists: ${c}.`, asmSaved:c=>`${c} saved`, asmCopied:c=>`${c} copied`, asmCopyT:"Copy the code", asmMade:n=>`${n} new ${pl(n,"assembly","assemblies")}`,
+  sortL:"Sort", sortT:"Put the rows in another order (the PDF follows)", sortBy:{t:"Tool number (T1, T2…)",corr:"Corrector number",type:"Type (A → Z)",dia:"Ø small → large",diaD:"Ø large → small",holder:"Holder",code:"Tool code",ls:"LS short → long"}, sorted:s=>`Sorted: ${s}`, unsort:"Undo"});
+Object.assign(I18N.fr,{navAsm:"Assemblages", asmT:"Assemblages", asmSub:"Chaque outil avec son porte-outil, gardé sous un code. Tapez le code dans la case Code d’une fiche outils et toute la ligne se remplit.",
+  asmQ:"Code d’assemblage, type, Ø, porte-outil, code outil…", asmNew:"+ Nouvel assemblage", asmNone:"Pas encore d’assemblage.", asmNoneP:"Ils se créent tout seuls à partir des fiches outils : une ligne avec un porte-outil et un code outil (ou un type et un Ø) devient un assemblage.",
+  asmFAll:"Tous", asmFUsed:"Dans une fiche", asmFFree:"Dans aucune fiche", asmFKept:"Gardés",
+  asmTh:["Assemblage","Outil","LS / LT","Porte-outil","Code outil","Utilisé dans",""], asmUsedN:n=>`${n} ${pl(n,"fiche","fiches")}`, asmNoUse:"Aucune fiche", asmAuto:"Venu d’une fiche", asmManual:"Fait à la main",
+  asmFilled:c=>`Ligne remplie depuis l’assemblage ${c}`, asmUnknown:c=>`Pas d’assemblage ${c}`, asmChipT:"Code d’assemblage : tapez-le dans la case Code d’une autre fiche pour avoir cette même ligne",
+  asmEditT:c=>`Assemblage ${c}`, asmNewT:"Nouvel assemblage", asmName:"Nom (facultatif)", asmKeep:"Le garder même si aucune fiche ne l’utilise", asmSave:"Enregistrer", asmDel:"Supprimer", asmDelQ:c=>`Supprimer l’assemblage ${c} ? Les fiches gardent leurs lignes.`, asmDelOk:c=>`${c} supprimé`,
+  asmNeed:"Indiquez le porte-outil, et un code outil ou un type avec un Ø.", asmSame:c=>`Le même assemblage existe déjà : ${c}.`, asmSaved:c=>`${c} enregistré`, asmCopied:c=>`${c} copié`, asmCopyT:"Copier le code", asmMade:n=>`${n} ${pl(n,"nouvel assemblage","nouveaux assemblages")}`,
+  sortL:"Trier", sortT:"Mettre les lignes dans un autre ordre (le PDF suit)", sortBy:{t:"Numéro d’outil (T1, T2…)",corr:"Numéro de correcteur",type:"Type (A → Z)",dia:"Ø du petit au grand",diaD:"Ø du grand au petit",holder:"Porte-outil",code:"Code outil",ls:"LS du court au long"}, sorted:s=>`Trié : ${s}`, unsort:"Annuler"});
+const ASMF=["type","diameter","ra","insert","ls","oal","z","holder","code"];
+const asmList=()=>Array.isArray(db.assemblies)?db.assemblies:(db.assemblies=[]);
+const asmNv=v=>clean(v).toUpperCase().replace(/\s+/g," ");
+const asmSig=x=>ASMF.map(k=>k==="diameter"?normDia(x[k]):k==="code"?normCode(x[k]):asmNv(x[k])).join("|");
+const asmReady=x=>!!clean(x.holder)&&(!!clean(x.code)||(!!clean(x.type)&&!!clean(x.diameter)));
+const asmKey=v=>{const m=/^\s*AS[\s-]*0*(\d{1,6})\s*$/i.exec(String(v||""));return m?"AS"+m[1].padStart(4,"0"):null};
+const asmFind=v=>{const k=asmKey(v);return k?asmList().find(a=>a.code===k)||null:null};
+const asmOfTool=x=>{if(!asmReady(x))return null;const s=asmSig(x);return asmList().find(a=>a.sig===s)||null};
+function asmNext(){let n=0;asmList().forEach(a=>{const m=/^AS(\d+)$/.exec(a.code||"");if(m)n=Math.max(n,+m[1])});return "AS"+String(n+1).padStart(4,"0")}
+function asmApply(x,a){ASMF.forEach(k=>{x[k]=a.tool[k]||""});a.usedAt=Date.now()}
+function asmUses(){const U=new Map();db.articles.forEach(a=>realTools(a.tools).forEach(x=>{if(!asmReady(x))return;const s=asmSig(x);if(!U.has(s))U.set(s,[]);U.get(s).push(a)}));return U}
+// a sheet's finished rows become assemblies; the ones made while a row was still being typed (no sheet uses them) go away
+let asmTimer=null,asmDirty=false;
+function asmSync(art){asmDirty=false;if(!art||!Array.isArray(art.tools))return 0;const L=asmList();let ch=0;
+  // first drop this sheet's recent ones that no sheet uses any more, so their number is free again
+  const U=asmUses();for(let i=L.length-1;i>=0;i--){const a=L[i];if(a.auto&&!a.keep&&a.src===art.id&&!U.has(a.sig)&&Date.now()-(a.createdAt||0)<36e5){L.splice(i,1);ch++}}
+  const have=new Set(L.map(a=>a.sig));
+  realTools(art.tools).forEach(x=>{if(!asmReady(x))return;const s=asmSig(x);if(have.has(s))return;
+    const tool={};ASMF.forEach(k=>{if(clean(x[k]))tool[k]=String(x[k]).trim()});
+    L.push({id:uid(),code:asmNext(),tool,sig:s,auto:1,src:art.id,createdAt:Date.now()});have.add(s);ch++});
+  return ch}
+function asmLater(){asmDirty=true;clearTimeout(asmTimer);asmTimer=setTimeout(()=>{if(cur&&asmDirty&&asmSync(cur)){saveDB();asmChips()}},2500)}
+// first start with this version: the existing sheets fill the library
+function asmBoot(){if(asmDirty&&cur){clearTimeout(asmTimer);if(asmSync(cur))saveDB()}
+  if(db.asmSeeded||!Array.isArray(db.articles))return;let n=0;const L=asmList(),have=new Set(L.map(x=>x.sig));let nx=+asmNext().slice(2);
+  [...db.articles].sort((a,b)=>(a.createdAt||0)-(b.createdAt||0)).forEach(a=>{
+    realTools(a.tools).forEach(x=>{if(!asmReady(x))return;const s=asmSig(x);if(have.has(s))return;const tool={};ASMF.forEach(k=>{if(clean(x[k]))tool[k]=String(x[k]).trim()});
+      L.push({id:uid(),code:"AS"+String(nx++).padStart(4,"0"),tool,sig:s,auto:1,src:a.id,createdAt:a.createdAt||Date.now()});have.add(s);n++})});
+  db.asmSeeded=1;if(n||db.articles.length)saveDB()}
+// two PCs that made the same code at the same time: the later one takes the next free code
+function asmFix(){const L=asmList(),seen=new Set();[...L].sort((a,b)=>(a.createdAt||0)-(b.createdAt||0)).forEach(a=>{if(!a.sig)a.sig=asmSig(a.tool||{});if(!a.code||seen.has(a.code))a.code=asmNext();seen.add(a.code)})}
+// the small assembly code under the T number of each row
+function asmChipHTML(x){const a=asmOfTool(x);return `<button class="asmc" data-asm="${a?esc(a.code):""}" title="${esc(t("asmChipT"))}" tabindex="-1"${a?"":" hidden"}>${a?esc(a.code):""}</button>`}
+function asmChips(){const R=$("#rows");if(!R||!cur)return;R.querySelectorAll("tr[data-i]").forEach(tr=>{const x=cur.tools[+tr.dataset.i],b=tr.querySelector(".asmc");if(!x||!b)return;const a=asmOfTool(x);b.hidden=!a;b.dataset.asm=a?a.code:"";b.textContent=a?a.code:""})}
+function asmCodeOptions(){return asmList().map(a=>`<option value="${esc(a.code)}">${esc([a.tool.type,a.tool.diameter?"Ø"+normDia(a.tool.diameter):"",linesOf_(a.tool.holder)[0]].filter(Boolean).join(" · "))}</option>`).join("")}
+const linesOf_=v=>String(v||"").split("\n").map(s=>s.trim()).filter(Boolean);
+function asmCopy(code){try{navigator.clipboard.writeText(code)}catch(e){}toast(t("asmCopied",code))}
+
+/* sorting the rows of a sheet */
+const numOf=v=>{const m=/-?\d+(?:[.,]\d+)?/.exec(String(v||""));return m?parseFloat(m[0].replace(",",".")):null};
+const SORTK={t:x=>tNum(x.t),corr:x=>numOf(x.corrH),type:x=>clean(x.type).toUpperCase()||null,dia:x=>numOf(normDia(x.diameter)),diaD:x=>{const v=numOf(normDia(x.diameter));return v==null?null:-v},
+  holder:x=>clean(x.holder).toUpperCase()||null,code:x=>normCode(x.code)||null,ls:x=>numOf(x.ls)};
+function sortRows(k){const f=SORTK[k];if(!f||!cur)return;flushEditor();const before=cur.tools.slice();
+  const real=cur.tools.filter(x=>realTools([x]).length),empty=cur.tools.filter(x=>!realTools([x]).length);
+  const cmp=(a,b)=>{if(a.v==null&&b.v==null)return a.i-b.i;if(a.v==null)return 1;if(b.v==null)return -1;
+    const c=typeof a.v==="number"&&typeof b.v==="number"?a.v-b.v:String(a.v).localeCompare(String(b.v),undefined,{numeric:true});return c||(tNum(a.x.t)??1e9)-(tNum(b.x.t)??1e9)||a.i-b.i};
+  cur.tools=[...real.map((x,i)=>({x,i,v:f(x)})).sort(cmp).map(o=>o.x),...empty];
+  if(cur.tools.every((x,i)=>x===before[i])){toast(t("sorted",t("sortBy")[k]));return}
+  renderRows();edited();const art=cur;
+  toast(t("sorted",t("sortBy")[k]),{label:t("unsort"),fn:()=>{if(cur!==art)return;cur.tools=before;renderRows();edited()}})}
+
+/* the page */
+let asmQ="",asmF="all";
+function renderAsm(){const ed=can("article");
+  $("#view").innerHTML=`<div class="page asmp"><div class="ph"><div><h2>${esc(t("asmT"))}<b>.</b></h2><div class="sub">${esc(t("asmSub"))}</div></div><span class="sp"></span>${ed?`<button class="btn red" id="asm-new">${esc(t("asmNew"))}</button>`:""}</div>
+    <div class="resbar"><div class="search">${searchIcon}<input id="asm-q" type="search" placeholder="${esc(t("asmQ"))}" value="${esc(asmQ)}" autocomplete="off"></div><div class="chips">
+      ${[["all",t("asmFAll")],["used",t("asmFUsed")],["free",t("asmFFree")],["kept",t("asmFKept")]].map(([k,l])=>`<button class="chip" data-asf="${k}" aria-pressed="${asmF===k}">${esc(l)}<b id="asfn-${k}"></b></button>`).join("")}</div></div>
+    <div id="asmres"></div></div>`;
+  $("#asm-new")&&($("#asm-new").onclick=()=>asmDialog(null));
+  const q=$("#asm-q");let qt;q.oninput=()=>{asmQ=q.value;clearTimeout(qt);qt=setTimeout(drawAsm,120)};
+  $("#view").querySelectorAll("[data-asf]").forEach(b=>b.onclick=()=>{asmF=b.dataset.asf;$("#view").querySelectorAll("[data-asf]").forEach(x=>x.setAttribute("aria-pressed",x===b));drawAsm()});
+  drawAsm()}
+function drawAsm(){const box=$("#asmres");if(!box)return;const U=asmUses(),L=asmList().slice().sort((a,b)=>String(a.code).localeCompare(String(b.code),undefined,{numeric:true}));
+  const used=a=>U.has(a.sig),cnt={all:L.length,used:L.filter(used).length,free:L.filter(a=>!used(a)).length,kept:L.filter(a=>a.keep).length};
+  Object.entries(cnt).forEach(([k,n])=>{const e=$("#asfn-"+k);if(e)e.textContent=n});
+  const terms=asmQ.toLowerCase().split(/\s+/).filter(Boolean),ed=can("article");
+  const R=L.filter(a=>(asmF==="all"||(asmF==="used"?used(a):asmF==="free"?!used(a):a.keep))&&(!terms.length||terms.every(w=>[a.code,a.name,...ASMF.map(k=>a.tool[k]),...(U.get(a.sig)||[]).map(x=>x.article.number)].join(" ").toLowerCase().includes(w))));
+  const LIM=150,open=a=>can("article")?"#a-"+a.id:"#v-"+a.id;
+  box.innerHTML=!L.length?`<div class="empty"><h3>${esc(t("asmNone"))}</h3><p>${esc(t("asmNoneP"))}</p></div>`:R.length?`<div class="list"><table class="lt asmt"><thead><tr>${t("asmTh").map(h=>`<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>
+    ${R.slice(0,LIM).map(a=>{const T=a.tool,ra=normRA(T.ra),dims=[T.diameter?"Ø"+normDia(T.diameter):"",ra.kind==="R"?"R"+ra.val:ra.kind==="A"?ra.val+"°":""].filter(Boolean).join("  "),A2=[...new Set(U.get(a.sig)||[])];
+      return `<tr class="row" data-asmid="${a.id}"><td><button class="asmcode" data-copy="${esc(a.code)}" title="${esc(t("asmCopyT"))}">${esc(a.code)}</button>${clean(a.name)||!a.auto||a.keep?`<div class="dim small">${esc(clean(a.name)||t(a.auto?"asmAuto":"asmManual"))}${a.keep?" · ★":""}</div>`:""}</td>
+        <td><b class="asmty">${esc(T.type||"—")}</b>${dims?` <span class="m">${esc(dims)}</span>`:""}${T.insert?`<div class="dim small m">${esc(T.insert)}</div>`:""}</td>
+        <td class="m">${esc(T.ls||"—")}${T.oal?` <span class="dim">/ ${esc(T.oal)}</span>`:""}</td>
+        <td class="asmh">${linesOf_(T.holder).map((l,i)=>`<div class="${i?"dim small":""}">${esc(l)}</div>`).join("")||"—"}</td>
+        <td><b class="m">${esc(normCode(T.code)||"—")}</b></td>
+        <td>${A2.length?`<div class="asmuse">${A2.slice(0,4).map(x=>`<button class="mtag" data-go="${open(x)}">${esc(x.article.number||"?")} · ${esc(mShort(M(x.machineId)))}</button>`).join("")}${A2.length>4?`<span class="dim small">+${A2.length-4}</span>`:""}</div>`:`<span class="dim">${esc(t("asmNoUse"))}</span>`}</td>
+        <td class="act">${ed?`<button class="btn sm ghost" data-asmed="${a.id}">${esc(t("edit"))}</button>`:""}</td></tr>`}).join("")}</tbody></table></div>${R.length>LIM?`<p class="note">${esc(t("pMore",R.length-LIM))}</p>`:""}`
+    :`<div class="empty"><h3>${esc(t("pNone"))}</h3><p>${esc(t("pNoneP"))}</p></div>`;
+  box.querySelectorAll("[data-go]").forEach(b=>b.onclick=e=>{e.stopPropagation();go(b.dataset.go)});
+  box.querySelectorAll("[data-copy]").forEach(b=>b.onclick=e=>{e.stopPropagation();asmCopy(b.dataset.copy)});
+  box.querySelectorAll("[data-asmed]").forEach(b=>b.onclick=e=>{e.stopPropagation();asmDialog(asmList().find(a=>a.id===b.dataset.asmed))});
+  if(ed)box.querySelectorAll("tr[data-asmid]").forEach(tr=>tr.onclick=()=>asmDialog(asmList().find(a=>a.id===tr.dataset.asmid)))}
+function asmDialog(a){const isNew=!a,T=a?a.tool:{};
+  dialog(esc(isNew?t("asmNewT"):t("asmEditT",a.code)),`<div class="grid asmform">
+    <label class="f c3">${esc(colLabel("type"))}<input data-af="type" class="up" list="types" value="${esc(T.type||"")}"></label>
+    <label class="f c1">Ø<input data-af="diameter" class="m" value="${esc(T.diameter||"")}"></label>
+    <label class="f c1">R / °<input data-af="ra" class="m" value="${esc(T.ra||"")}"></label>
+    <label class="f c1">${esc(colLabel("code"))}<input data-af="code" class="m up" list="codes" value="${esc(T.code||"")}"></label>
+    <label class="f c2">${esc(colLabel("insert"))}<input data-af="insert" class="m up" value="${esc(T.insert||"")}"></label>
+    <label class="f c1">LS<input data-af="ls" class="m" value="${esc(T.ls||"")}"></label>
+    <label class="f c1">LT<input data-af="oal" class="m" value="${esc(T.oal||"")}"></label>
+    <label class="f c1">Z<input data-af="z" class="m" value="${esc(T.z||"")}"></label>
+    <label class="f c1">${esc(t("asmName"))}<input id="as-name" value="${esc(a&&a.name||"")}"></label>
+    <label class="f c6">${esc(colLabel("holder"))}<textarea data-af="holder" class="up" rows="2">${esc(T.holder||"")}</textarea></label>
+    <label class="chk c6"><input type="checkbox" id="as-keep" ${!a||a.keep?"checked":""}> ${esc(t("asmKeep"))}</label>
+    <p class="err c6" id="as-err" hidden></p></div>`,
+    `${isNew?"":`<button class="btn ghost danger" id="as-del">${esc(t("asmDel"))}</button><span class="sp"></span>`}<button class="btn ghost" id="d-cancel">${esc(t("cancel"))}</button><button class="btn red" id="as-ok">${esc(t("asmSave"))}</button>`);
+  $(".dlg").classList.add("wide");$("#d-cancel").onclick=closeDlg;
+  $("#as-ok").onclick=()=>{const tool={};document.querySelectorAll("[data-af]").forEach(i=>{const v=String(i.value||"").replace(/\r/g,"").split("\n").map(s=>s.trim()).filter(Boolean).join("\n");if(v)tool[i.dataset.af]=i.dataset.af==="code"?normCode(v):v});
+    const err=m=>{const e=$("#as-err");e.textContent=m;e.hidden=false};if(!asmReady(tool)){err(t("asmNeed"));return}
+    const s=asmSig(tool),other=asmList().find(x=>x.sig===s&&x!==a);if(other){err(t("asmSame",other.code));return}
+    const name=clean($("#as-name").value),keep=$("#as-keep").checked;
+    if(isNew)asmList().push({id:uid(),code:asmNext(),tool,sig:s,name,keep:keep?1:0,auto:0,createdAt:Date.now()});
+    else{a.tool=tool;a.sig=s;a.name=name;a.keep=keep?1:0;a.updatedAt=Date.now()}
+    saveDB();closeDlg();drawAsm();toast(t("asmSaved",isNew?asmList()[asmList().length-1].code:a.code))};
+  $("#as-del")&&($("#as-del").onclick=()=>{dialog(esc(t("asmDel")),`<p style="margin:0">${esc(t("asmDelQ",a.code))}</p>`,`<button class="btn ghost" id="d-cancel">${esc(t("cancel"))}</button><button class="btn red" id="as-delok">${esc(t("asmDel"))}</button>`);
+    $("#d-cancel").onclick=closeDlg;$("#as-delok").onclick=()=>{const L=asmList(),i=L.indexOf(a);if(i>=0)L.splice(i,1);saveDB();closeDlg();drawAsm();toast(t("asmDelOk",a.code))}})}
+
+/* top bar on computers: the rarely used buttons (theme, language, logo, backup, restore, Windows program) sit in one "⋯" menu;
+   on phones they stay in the phone menu as before */
+(function(){const top=document.querySelector("header.top"),anchor=document.getElementById("f-restore");if(!top||!anchor)return;
+  const wrap=document.createElement("div");wrap.className="topmore";
+  wrap.innerHTML=`<button class="tb" id="b-more" aria-haspopup="true" aria-expanded="false"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="19" cy="12" r="1.9"/></svg></button><div class="moremenu" id="moremenu" hidden></div>`;
+  top.insertBefore(wrap,anchor);
+  const mm=wrap.querySelector(".moremenu"),btn=wrap.querySelector("#b-more"),mq=matchMedia("(min-width:761px)");
+  const items=()=>["#b-theme",".lang","#b-getapp","#b-logo","#b-backup","#b-restore"].map(s=>top.querySelector(s)).filter(Boolean);
+  const place=()=>{const L=items();if(mq.matches)L.forEach(e=>mm.appendChild(e));else L.forEach(e=>top.insertBefore(e,wrap));wrap.hidden=!mq.matches};
+  const open=v=>{mm.hidden=!v;btn.setAttribute("aria-expanded",String(v));btn.title=(typeof LANG!=="undefined"&&LANG==="fr")?"Plus d’options":"More options"};
+  place();open(false);mq.addEventListener?mq.addEventListener("change",place):mq.addListener(place);
+  btn.onclick=e=>{e.stopPropagation();open(mm.hidden)};
+  document.addEventListener("click",e=>{if(!mm.hidden&&!e.target.closest("#moremenu"))open(false)});
+  mm.addEventListener("click",e=>{if(e.target.closest("#b-getapp,#b-logo,#b-backup,#b-restore"))setTimeout(()=>open(false),0)});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!mm.hidden)open(false)});
+})();
+
 /* ---------- 4. reports ---------- */
 let repP="90";
 function renderReports(){
@@ -6093,7 +6342,7 @@ function drawHistory(){
    admin page, demo switch. The web version doesn't use any of this.
    ===================================================================== */
 const DESKDEMO=/*DESKDEMO*/null;
-const APP_VER="2.18.0";
+const APP_VER="2.19.0";
 let DEMO_ON=false, ACC=null, USERS=null, PCNAME="", realDIR="", loginFails=0, loginWait=0, lastAct=Date.now();
 Object.assign(I18N.en,{
   loginT:"Sign in", loginP:"Enter your name or code and your password.", loginName:"Name or code", loginPw:"Password", loginGo:"Sign in",
@@ -6231,6 +6480,7 @@ function merge3db(b,m,t){const out={...m,...t};
   for(const [col,key] of [["machines","id"],["articles","id"],["catalog","code"],["holders","ref"]])out[col]=mergeList(b[col]||[],m[col]||[],t[col]||[],key);
   out.layouts=mergeList(b.layouts||[],m.layouts||[],t.layouts||[],"id");if(!out.layouts.length)delete out.layouts;
   out.artNotes=mergeList(b.artNotes||[],m.artNotes||[],t.artNotes||[],"num");if(!out.artNotes.length)delete out.artNotes;
+  out.assemblies=mergeList(b.assemblies||[],m.assemblies||[],t.assemblies||[],"id");out.asmSeeded=m.asmSeeded||t.asmSeeded;if(!out.asmSeeded)delete out.asmSeeded;
   out.layoutDefault=(m.layoutDefault||"")!==(b.layoutDefault||"")?m.layoutDefault:t.layoutDefault;if(!out.layoutDefault)delete out.layoutDefault;delete out.sheetCfg;
   out.stockLog=unionLog(m.stockLog||[],t.stockLog||[],20000);out.lastBackup=Math.max(+m.lastBackup||0,+t.lastBackup||0);return out}
 // every save writes a new random revision next to the data (data.rev): a tiny file the other PCs check
@@ -6559,6 +6809,8 @@ const GUIDE={
    ["mag","Magasins des machines",["Ce qui est chargé dans chaque machine, poche par poche, avec qui l’a changé.","« Comparer avec un article » montre les outils à charger ou à échanger, et charge tout en un clic.","Après un échange, les outils retirés du magasin peuvent être remis au magasin outils (+1 en stock) d’un clic."]],
    ["log","Journal",["Chaque sortie, entrée et comptage : qui, quand, combien et pourquoi.","Cliquez sur une ligne pour lire un commentaire en entier ou ouvrir la fiche de l’outil.","« Exporter (CSV) » pour Excel."]],
    ["reports","Rapports",["Outils sortis par mois, les plus sortis, par machine et par personne.","Codes jamais utilisés et outils sans mouvement depuis 90 jours. Export CSV."]],
+   ["asm","Assemblages",["Chaque outil avec son porte-outil est gardé sous un code (AS0001…), tout seul, dès qu’une ligne de fiche a un porte-outil et un code outil (ou un type et un Ø).","Le code s’affiche sous le numéro T de la ligne. Tapez-le dans la case Code d’une autre fiche : toute la ligne se remplit.","La page Assemblages les liste, montre les fiches qui les utilisent, et permet d’en créer, modifier ou supprimer."]],
+   ["sort","Trier une fiche",["Sous le tableau des outils, « Trier » remet les lignes dans l’ordre voulu : numéro T, correcteur, type, Ø, porte-outil, code outil ou LS. Le PDF suit. « Annuler » revient à l’ordre d’avant."]],
    ["templates","Modèles Excel et import",["Chaque page a son « Modèle Excel » : le télécharger, l’imprimer ou le remplir.","« Importer » lit un fichier Excel ou CSV ; les colonnes sont reconnues par leur titre, avec un aperçu avant d’importer.","Fiche outils : une case met les outils dans l’ordre T1, T2, T3… ; si un outil apparaît deux fois (même numéro T, ou la même ligne), BrocheStuff montre les copies et ce qui diffère, et vous choisissez celle à garder ou gardez tout."]],
    ["it","Pour l’informatique",["Installation : un seul fichier d’installation, sans droits administrateur. Le programme va dans %LOCALAPPDATA%\\Programs\\BrocheStuff.","Données : dans Documents\\BrocheStuff (data.json, comptes, dossier Backups). L’admin peut choisir à la place un dossier réseau partagé : tous les postes travaillent alors sur les mêmes données.","Comptes : l’admin crée les comptes (nom, rôle, mot de passe) dans la page Admin. La version web de démo n’a pas de mots de passe.","Sauvegardes : une copie automatique toutes les 5 minutes quand quelque chose change, dans Backups ; sauvegardez aussi ce dossier avec vos sauvegardes habituelles.","Mises à jour : l’admin installe le fichier BrocheStuff-Update-….neu depuis la page Admin (clé USB ou dossier) ; il est déposé dans le dossier des données et chaque poste le propose au démarrage.","Pas besoin d’internet : rien n’est envoyé à l’extérieur."]],
    ["backup","Sauvegardes",["Une copie de tout est gardée toutes les 5 minutes quand quelque chose change (désactivable dans Admin).","Dans Admin, la sauvegarde complète se règle : désactivée, chaque jour, chaque semaine (par défaut) ou chaque mois.","« Sauvegarder » écrit un fichier ; « Restaurer » reprend un fichier ou une copie automatique."]]
@@ -6579,6 +6831,8 @@ const GUIDE={
    ["mag","Machine magazines",["What is loaded in each machine, pocket by pocket, and who changed it.","“Compare with an article” shows the tools to load or swap, and loads them in one click.","After a swap, the tools taken out of the magazine can go back to the crib (+1 in stock) in one click."]],
    ["log","Stock log",["Every move out, in and count: who, when, how many and why.","Click a line to read a comment in full or open the tool’s card.","“Export (CSV)” for Excel."]],
    ["reports","Reports",["Tools taken per month, most taken, per machine and per person.","Codes never used and tools without a move for 90 days. CSV export."]],
+   ["asm","Assemblies",["Each tool with its holder is kept under a code (AS0001…), by itself, as soon as a sheet row has a holder and a tool code (or a type and a Ø).","The code shows under the row’s T number. Type it in the Code box of another sheet: the whole row fills in.","The Assemblies page lists them, shows the sheets using each one, and lets you add, change or delete them."]],
+   ["sort","Sorting a sheet",["Under the tools table, “Sort” puts the rows in the order you want: T number, corrector, type, Ø, holder, tool code or LS. The PDF follows. “Undo” goes back to the order before."]],
    ["templates","Excel models and import",["Each page has its “Excel model”: download it, print it or fill it in.","“Import” reads an Excel or CSV file; columns are found by their titles, with a preview before importing.","Tool sheet: a box puts the tools in T1, T2, T3… order; if a tool appears twice (same T number, or the same row), BrocheStuff shows the copies and what differs, and you choose which to keep or keep them all."]],
    ["it","For IT",["Install: one setup file, no administrator rights needed. The program goes to %LOCALAPPDATA%\\Programs\\BrocheStuff.","Data: in Documents\\BrocheStuff (data.json, accounts, Backups folder). The admin can pick a shared network folder instead: every PC then works on the same data.","Accounts: the admin creates them (name, role, password) on the Admin page. The web demo has no passwords.","Backups: an automatic copy every 5 minutes when something changes, in Backups; include that folder in your usual backups too.","Updates: the admin installs the BrocheStuff-Update-….neu file from the Admin page (USB stick or folder); it is put in the data folder and every PC offers it at start.","No internet needed: nothing is sent outside."]],
    ["backup","Backups",["A copy of everything is kept every 5 minutes when something changes (can be turned off in Admin).","In Admin, the full backup can be set to off, daily, weekly (default) or monthly.","“Back up” writes a file; “Restore” takes back a file or an automatic copy."]]
