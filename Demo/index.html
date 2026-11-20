@@ -1547,6 +1547,17 @@ table.chgt td.m,table.chgt b.m{font-family:var(--mono,monospace)}
 .rowbar .laysel.sortsel select{position:absolute;inset:0;width:100%;height:100%;max-width:none;opacity:0;cursor:pointer}
 .tt td input.warn{background:var(--low-bg);border-color:var(--low-ink);color:var(--low-ink)}
 .tt td input.bad{background:var(--miss-bg);border-color:var(--miss-bd)}
+.tt thead tr:first-child th{border-bottom:0}
+.tt thead tr.prrow th{padding:0 6px 6px;height:auto;border-bottom:1px solid var(--hair);background-image:none!important;line-height:1}
+.tt thead tr.prrow th.prlab{padding-left:12px;font:600 10px/1 var(--body);letter-spacing:.06em;color:var(--mid);text-transform:uppercase}
+.tt thead tr:first-child th{padding-bottom:4px}
+.tt th .prck{width:14px;height:14px;margin:0;vertical-align:middle;accent-color:var(--red);cursor:pointer}
+.colr{grid-template-columns:22px minmax(160px,360px) auto minmax(0,1fr) 34px 34px 34px}
+.colr .colpr{grid-column:3}.colr .coltag{grid-column:4}
+.colr [data-mv][data-d="-1"]{grid-column:5}.colr [data-mv][data-d="1"]{grid-column:6}.colr [data-rm]{grid-column:7}
+.tt th.np{color:var(--soft);text-decoration:line-through;text-decoration-color:var(--soft)}
+.colpr{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--mid);white-space:nowrap;margin-right:6px}
+.colpr input{accent-color:var(--red)}
 .tt td input.sugg{border:1px dashed var(--low-ink);cursor:pointer}
 .tt td input.sugg::placeholder{color:var(--low-ink);opacity:1;font-weight:700}
 .filltab td.mine{color:var(--mid)}
@@ -2503,13 +2514,13 @@ function makePDF(data){
   // what each column holds besides its own content (joined columns, drawn under it)
   const GJ={};ORD.forEach(k=>{const to=tgt(k);if(to&&!inT(k))(GJ[to]=GJ[to]||[]).push(k)});
   const typeOn=on("type");
-  const SPEC=(BLANK?[["t",10],["corr",13],["type",33],["diameter",11],["ra",11],["insert",23],["ls",11],["oal",11],["z",8],["holder",33],["code",19]]
-                   :[["t",11],["corr",12],["type",62],["diameter",13],["ra",12],["insert",26],["ls",13],["oal",13],["z",9],["holder",42],["code",21]])
+  const SPEC=(BLANK?[["t",10],["asm",15],["corr",13],["type",33],["diameter",11],["ra",11],["insert",23],["ls",11],["oal",11],["z",8],["holder",33],["code",19]]
+                   :[["t",11],["asm",17],["corr",12],["type",62],["diameter",13],["ra",12],["insert",26],["ls",13],["oal",13],["z",9],["holder",42],["code",21]])
     .concat(EXTRA.map(x=>["x_"+x.id,BLANK?16:18])).filter(([k])=>k==="t"||(BLANK?on(k):k==="type"?typeOn:sepC(k)));
   // the layout's order (the tool number stays first)
   if(Array.isArray(CFG.order)){const O=["t",...CFG.order];SPEC.sort((p,q)=>{const a=O.indexOf(p[0]),b=O.indexOf(q[0]);return(a<0?99:a)-(b<0?99:b)})}
   const KEYS=SPEC.map(s=>s[0]),KI=Object.fromEntries(KEYS.map((k,i)=>[k,i]));
-  const SPW=Object.fromEntries([["t",11],["corr",12],["type",62],["diameter",13],["ra",12],["insert",26],["ls",13],["oal",13],["z",9],["holder",42],["code",21],...EXTRA.map(x=>["x_"+x.id,18])]);
+  const SPW=Object.fromEntries([["t",11],["asm",17],["corr",12],["type",62],["diameter",13],["ra",12],["insert",26],["ls",13],["oal",13],["z",9],["holder",42],["code",21],...EXTRA.map(x=>["x_"+x.id,18])]);
   const COLW=(()=>{const ws=SPEC.map(s=>s[1]);if(!BLANK)Object.entries(GJ).forEach(([k,L])=>{if(KI[k]!=null)ws[KI[k]]+=Math.min(24,L.reduce((a,j)=>a+(SPW[j]||12)*0.45,0))});let d=W-ws.reduce((a,b)=>a+b,0);
     if(d>0){const grow=["type","holder","insert"].filter(k=>KI[k]!=null);if(!grow.length)grow.push(...KEYS.filter(k=>k!=="t"&&k!=="corr"));if(!grow.length)grow.push("t");grow.forEach((k,j)=>ws[KI[k]]+=d*(grow.length===1?1:j===0?0.6:0.4/(grow.length-1)))}
     else if(d<0){let over=-d;for(const [k,min] of (BLANK?[["type",22],["holder",22],["insert",14],["code",15]]:[["type",30],["insert",19],["code",16],["holder",34],["type",26],["holder",28]])){if(over<=0||KI[k]==null)continue;const i=KI[k],cut=Math.min(over,ws[i]-min);if(cut>0){ws[i]-=cut;over-=cut}}
@@ -2630,6 +2641,7 @@ function makePDF(data){
        if(parts.length===1){font("Plex5",7.6);const l=doc.splitTextToSize(SK&&SK.u?hol.toUpperCase():hol,HW);if(l.length===1||tw(hol)<=HW*1.25)fitLine(hol,base(8.6));else{font("Plex5",7.6);txt(fit(l[0],HW),hx+1.8,mid-0.6);txt(fit(l.slice(1).join(" "),HW),hx+1.8,mid+3)}}
        else{fitLine(parts[0],mid-0.7);fitLine("+ "+parts[1],mid+3)}}
      else dash(hx+1.8);under("holder")}
+    if(KI.asm!=null){at("asm");useK("asm");const av=linesOf(t.asm).map(v=>v.toUpperCase());if(av.length)stack(av,X_("asm")+1.6,W_("asm")-2.8,"MonoB",9,6,"left",-0.1);else dash(X_("asm")+1.6);under("asm")}
     if(KI.code!=null){at("code");useK("code");const code=linesOf(t.code).map(v=>v.toUpperCase());if(code.length)stack(code,X_("code")+1.8,W_("code")-3,"MonoB",9.5,6.2,"left",-0.1);else{font("Mono5",10);txt("___",X_("code")+1.8,base(10))};under("code")}
     // your own columns
     EXTRA.forEach(ex=>{const k="x_"+ex.id,v=linesOf(t[k]);if(KI[k]==null)return;at(k);useK(k);if(v.length)stack(v,X_(k)+1.6,W_(k)-2.8,"Plex5",8.6,5.6,"left");under(k)});SK=null;color(C.ink);
@@ -2937,7 +2949,7 @@ const artsOf=mid=>db.articles.filter(a=>a.machineId===mid);
 // the index list printed on the PDF: up to the index of this sheet, with the reason and who validated it
 function revRows(art){const L=ixVersions(art),cut=L.findIndex(V=>V.ix===(art.article&&art.article.index||""));const H=art.history||[];
   return(cut>=0?L.slice(0,cut+1):L).map(V=>{const h=H.find(h=>(h.act==="newindex"||h.act==="revert")&&h.ix===V.ix);return{ix:V.ix,d:V.ts?when(V.ts):"",why:h&&h.why||"",who:V.act==="validate"?V.who||"":""}})}
-const sheetData=art=>{const m=M(art.machineId),cfg=sheetCfg(art);return{revs:cfg.opt&&cfg.opt.revs?revRows(art).slice(-5):null,article:{...art.article,machine:m?(normCone(m.cone)&&m.abbr?`${m.abbr} · ${normCone(m.cone)} · ${m.name}`:mLabel(m)):clean(art.article?.machine)},tools:art.tools,cols:cfg,stamp:art.status==="done"?{done:1,ts:(art.validated&&art.validated.ts)||art.updatedAt,who:(art.validated&&art.validated.who)||""}:{done:0}}};
+const sheetData=art=>{const m=M(art.machineId),cfg=sheetCfg(art);return{revs:cfg.opt&&cfg.opt.revs?revRows(art).slice(-5):null,article:{...art.article,machine:m?(normCone(m.cone)&&m.abbr?`${m.abbr} · ${normCone(m.cone)} · ${m.name}`:mLabel(m)):clean(art.article?.machine)},tools:art.tools,cols:printCfg(cfg,art),stamp:art.status==="done"?{done:1,ts:(art.validated&&art.validated.ts)||art.updatedAt,who:(art.validated&&art.validated.who)||""}:{done:0}}};
 function fileName(art,ext){const s=x=>String(x||"").trim().replace(/[\\/:*?"<>|]+/g,"-").replace(/\s+/g,"_");const a=art.article||{};return `${t("filePrefix")}_${s(a.number)||"sheet"}${clean(a.phase)?"_"+s(a.phase):""}${a.index?"_"+s(a.index):""}.${ext}`}
 async function download(name,blob,kind){if(DESK)return desk.saveAs(name,blob,kind);const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500);return "downloads"}
 // the Excel tool sheet, described once (cells, styles, sizes) and drawn two ways:
@@ -3017,7 +3029,7 @@ function sheetModel(art){
       if(O.tnotes&&clean(t.notes))add("\n"+clean(t.notes),F(XL_SANS,7,0,MID))}
     else if(k==="holder"){const hl=lines(t.holder),hol=clean(t.holder);if(!hol)add("—",dash);else if(hl.length>1)hl.forEach((v,i)=>add((i?"\n":"")+up(k,v),kf(k,F(XL_SANS,7.6))));
       else{let p=hol.split(/\s*\+\s*/).filter(Boolean);if(p.length>2)p=[p[0],p.slice(1).join(" + ")];p.forEach((v,i)=>add((i?"\n+ ":"")+up(k,v),fitF(kf(k,F(XL_SANS,p.length>1?7.6:8.6)),(i?"+ ":"")+v,CWk("holder"),5.6)))}}
-    else{const L0=lines(t[k]);const base=k==="ls"?F(XL_MONO,11,1):k==="code"?F(XL_MONO,9.5,1):k.startsWith("x_")?F(XL_SANS,8.6):k==="insert"?F(XL_MONO,8.4):F(XL_MONO,k==="oal"||k==="z"?10:9.6);
+    else{const L0=lines(t[k]);const base=k==="ls"?F(XL_MONO,11,1):k==="code"||k==="asm"?F(XL_MONO,k==="asm"?9:9.5,1):k.startsWith("x_")?F(XL_SANS,8.6):k==="insert"?F(XL_MONO,8.4):F(XL_MONO,k==="oal"||k==="z"?10:9.6);
       if(!L0.length)add(k==="code"?"___":k==="ls"?"":"—",k==="code"?F(XL_MONO,10,0,INK):dash);else L0.forEach((v,i)=>{const tx=up(k,fmt(k,k==="ls"?v.replace(",",".").replace(/\s*\+\s*/g,"+"):v));add((i?"\n":"")+tx,fitF(kf(k,base),tx,CWk(k)+(k==="z"?2:0),6))})}
     subs(t,k).forEach(([j,v,li])=>{add("\n"+(li?"":M.hl[j]+" "),F(XL_SANS,6.2,0,MID));add(up(j,v),kf(j,F(/^(code|t)$/.test(j)?XL_MONO:/^(holder|type)$/.test(j)||j.startsWith("x_")?XL_SANS:XL_MONO,8,/^(code|t|ls)$/.test(j))))});
     return{runs:R0.length?R0:[[" ",F(XL_SANS,8)]]}};
@@ -3063,7 +3075,7 @@ function sheetModel(art){
 }
 // the plain data, on a hidden sheet: what the import reads back
 // the sheet as the PDF would draw it with the Excel layout (when the sheet has one)
-function xlData(art){const d=sheetData(art),X=cfgXlOf(art);d.cols=X;d.revs=X.opt&&X.opt.revs?revRows(art).slice(-5):null;return d}
+function xlData(art){const d=sheetData(art),X=printCfg(cfgXlOf(art),art);d.cols=X;d.revs=X.opt&&X.opt.revs?revRows(art).slice(-5):null;return d}
 function rawModel(art){const a=art.article||{},tools=realTools(art.tools),EN=LANG==="en",CFG=cfgXlOf(art),EX=CFG.extra;
   const S={c:{f:{b:false,sz:10,c:"161616",n:"Arial"},h:"left",v:"top",wrap:1},h:{f:{b:true,sz:10,c:"161616",n:"Arial"},h:"left",v:"top",wrap:1,bd:{b:["medium","161616"]}}},rows=[];let r=0;const C=(c,v,s)=>({c,s:s||"c",v:v==null?"":String(v)});
   const blk=[["Article",a.number],[EN?"Index":"Indice",a.index],["Désignation",a.designation],[EN?"Reference":"Référence",a.reference],[EN?"Program":"Programme",a.program],["Machine",sheetData(art).article.machine],[EN?"Material":"Matière",a.material],["Phase",a.phase],[EN?"Prepared by":"Établi par",a.preparedBy],[EN?"Approved by":"Approuvé par",a.approvedBy],["Date",a.date],[EN?"Notes":"Remarques",a.notes]];
@@ -3757,7 +3769,7 @@ const normOrder=(o,extra)=>{const keys=[...LABK.filter(k=>k!=="t"),...extra.map(
 // the columns a layout shows, in its order
 const visCols=cfg=>{const c=cfg||LAYCFG;return["t",...(c.order||normOrder(null,c.extra)).filter(k=>k.startsWith("x_")?c.extra.some(x=>xKey(x.id)===k):showK(k,c))]};
 const normCfg=c=>{const n=normCfg0(c);n.joinTo=normJoin(c,n.hidden,n.extra);n.join=Object.keys(n.joinTo);n.order=normOrder(c&&c.order,n.extra);return n};
-const normCfg0=c=>({labels:(c&&c.labels)||{},extra:((c&&c.extra)||[]).filter(x=>x&&x.id&&clean(x.label)),hidden:c?((c.hidden)||[]).filter(k=>k!=="t"&&LABK.includes(k)):[...STDHIDE],join:Array.isArray(c&&c.join)?c.join.filter(k=>k!=="t"):c?[...DEFJOIN]:[...STDJOIN],opt:normOpt(c&&c.opt),style:normStyle(c&&c.style)});
+const normCfg0=c=>({labels:(c&&c.labels)||{},extra:((c&&c.extra)||[]).filter(x=>x&&x.id&&clean(x.label)),hidden:c?((c.hidden)||[]).filter(k=>k!=="t"&&LABK.includes(k)):[...STDHIDE],join:Array.isArray(c&&c.join)?c.join.filter(k=>k!=="t"):c?[...DEFJOIN]:[...STDJOIN],opt:normOpt(c&&c.opt),style:normStyle(c&&c.style),noprint:c&&Array.isArray(c.noprint)?c.noprint.filter(k=>k&&k!=="t"):["asm"]});
 // is a column shown in this layout (H and D go together under "corr")
 const showK=(k,cfg)=>!(cfg||LAYCFG).hidden.includes(k==="corrH"||k==="corrD"?"corr":k);
 const layoutsAll=()=>(typeof db!=="undefined"&&db&&db.layouts)||[];
@@ -3807,7 +3819,7 @@ function columnsDialog(art){const canLay=hasRight("layouts"),canSty=hasRight("co
     <div class="collist" id="collist">${VK.map((k,i)=>{const x=k.startsWith("x_")?buf.extra.find(e=>xKey(e.id)===k):null,val=x?x.label:clean(buf.labels[k])||defLabel(k);
       return`<div class="colr${k==="t"?" fixed":""}${x?" mine":""}" data-ck="${k}"><span class="grip"${k==="t"?"":` draggable="true" title="${esc(t("colsDrag"))}"`} aria-hidden="true">⠿</span>
       <input class="coltitle" data-ct="${k}" value="${esc(val)}" placeholder="${esc(x?t("colsNamePh"):defLabel(k))}" aria-label="${esc(t("colsTitleOf",defLabel(k)))}">
-      <span class="coltag">${esc(k==="t"?t("colsFirst"):x?t("colsMine"):clean(buf.labels[k])?t("colsWas",defLabel(k)):"")}</span>
+      <label class="colpr" title="${esc(t("prLayT"))}"><input type="checkbox" data-cpr="${k}" ${k==="t"||!(buf.noprint||[]).includes(k)?"checked":""} ${k==="t"?"disabled":""}> ${esc(t("prLay"))}</label><span class="coltag">${esc(k==="t"?t("colsFirst"):x?t("colsMine"):clean(buf.labels[k])?t("colsWas",defLabel(k)):"")}</span>
       <button class="ib" data-mv="${k}" data-d="-1" title="${esc(t("colsLeft"))}" ${k==="t"||i===1?"disabled":""}>↑</button><button class="ib" data-mv="${k}" data-d="1" title="${esc(t("colsRight"))}" ${k==="t"||i===VK.length-1?"disabled":""}>↓</button>
       <button class="ib x" data-rm="${k}" title="${esc(x?t("colsDelMine"):t("colsHide"))}" ${k==="t"?"disabled":""}>✕</button></div>`}).join("")}</div>
     <div class="coladd">${LABK.filter(k=>k!=="t"&&buf.hidden.includes(k)).length?`<div class="colsugg"><span class="dim small">${esc(t("colsBack"))}</span>${LABK.filter(k=>k!=="t"&&buf.hidden.includes(k)).map(k=>`<button class="chip sm" data-back="${k}">+ ${esc(clean(buf.labels[k])||defLabel(k))}</button>`).join("")}</div>`:""}
@@ -3841,6 +3853,7 @@ function columnsDialog(art){const canLay=hasRight("layouts"),canSty=hasRight("co
     B.querySelector("#lay-def").onchange=e=>isDef=e.target.checked;B.querySelector("#lay-defxl").onchange=e=>isDefXl=e.target.checked;
     B.querySelectorAll("[data-info]").forEach(c=>c.onchange=()=>{const k=c.dataset.info;buf.opt.info=buf.opt.info.filter(x=>x!==k);if(c.checked)buf.opt.info=INFOK.filter(x=>x===k||buf.opt.info.includes(x))});
     B.querySelectorAll("[data-opt]").forEach(c=>c.onchange=()=>{buf.opt[c.dataset.opt]=c.checked});
+    B.querySelectorAll("[data-cpr]").forEach(c=>c.onchange=()=>{const k=c.dataset.cpr;buf.noprint=(buf.noprint||[]).filter(x=>x!==k);if(!c.checked)buf.noprint.push(k)});
     B.querySelectorAll(".styr [data-sp]").forEach(c=>c.onchange=()=>{const k=c.closest(".styr").dataset.styk,st={...(buf.style[k]||{})},p=c.dataset.sp;
       if(p==="k"){const v=+c.value;if(v===1)delete st.k;else st.k=v}else if(p==="b"){if(c.value==="")delete st.b;else st.b=c.value==="1"}else if(p==="c"){if(c.value)st.c=c.value;else delete st.c}else if(p==="u"){if(c.checked)st.u=true;else delete st.u}
       if(Object.keys(st).length)buf.style[k]=st;else delete buf.style[k];const y=B.scrollTop;draw();$("#colbody").scrollTop=y});
@@ -3883,14 +3896,14 @@ function columnsDialog(art){const canLay=hasRight("layouts"),canSty=hasRight("co
     // footer: Standard can only be saved as a new layout; a saved layout can be updated, copied or deleted
     $("#col-ok").textContent=std?t("layApply"):t("save");$("#lay-as").hidden=false;$("#lay-del").hidden=std;
   };
-  const clean2=()=>({labels:Object.fromEntries(Object.entries(buf.labels).filter(([,v])=>clean(v))),extra:buf.extra.filter(x=>clean(x.label)).map(x=>({id:x.id,label:clean(x.label)})),hidden:[...new Set(buf.hidden)],joinTo:normJoin({joinTo:buf.joinTo},buf.hidden,buf.extra.filter(x=>clean(x.label))),opt:normOpt(buf.opt),style:normStyle(buf.style),order:normOrder(buf.order,buf.extra.filter(x=>clean(x.label)))});
+  const clean2=()=>({labels:Object.fromEntries(Object.entries(buf.labels).filter(([,v])=>clean(v))),extra:buf.extra.filter(x=>clean(x.label)).map(x=>({id:x.id,label:clean(x.label)})),hidden:[...new Set(buf.hidden)],joinTo:normJoin({joinTo:buf.joinTo},buf.hidden,buf.extra.filter(x=>clean(x.label))),opt:normOpt(buf.opt),style:normStyle(buf.style),order:normOrder(buf.order,buf.extra.filter(x=>clean(x.label))),noprint:[...new Set(buf.noprint||[])].filter(k=>k!=="t")});
   const err=m=>{const e=$("#lay-err");e.textContent=m;e.hidden=false};
   const finish=(id,msg)=>{if(art){art.layout=id;art.updatedAt=Date.now()}if(isDef)db.layoutDefault=id==="std"?"":id;else if(defaultLayoutId()===id)db.layoutDefault="";
     if(isDefXl)db.layoutDefaultXl=id;else if(db.layoutDefaultXl===id)db.layoutDefaultXl="";
     refreshCols(art||null);saveDB();closeDlg();render();toast(msg)};
   function saveAs(){const nm=clean($("#lay-asname").value);if(!nm){$("#lay-asname").focus();err(t("layNeedName"));return}
     if(layoutsAll().some(l=>l.name.toLowerCase()===nm.toLowerCase())){err(t("layNameTaken"));return}
-    const c=clean2(),l={id:"l"+uid().slice(0,7),name:nm,labels:c.labels,extra:c.extra.map(x=>({...x})),hidden:c.hidden,joinTo:c.joinTo,join:Object.keys(c.joinTo),opt:c.opt,style:c.style,order:c.order};db.layouts=[...layoutsAll(),l];finish(l.id,t("laySaved",nm))}
+    const c=clean2(),l={id:"l"+uid().slice(0,7),name:nm,labels:c.labels,extra:c.extra.map(x=>({...x})),hidden:c.hidden,joinTo:c.joinTo,join:Object.keys(c.joinTo),opt:c.opt,style:c.style,order:c.order,noprint:c.noprint};db.layouts=[...layoutsAll(),l];finish(l.id,t("laySaved",nm))}
   dialog(esc(t("layT")),`<div id="colbody"></div>`,`<button class="btn ghost danger" id="lay-del">${esc(t("layDel"))}</button><span class="sp"></span><button class="btn ghost" id="d-cancel">${esc(t("cancel"))}</button><button class="btn ghost" id="lay-as">${esc(t("laySaveAs"))}</button><button class="btn red" id="col-ok">${esc(t("save"))}</button>`);
   $(".dlg").classList.add("wide","laydlg");try{const w=+lsGet("bs.laydlgw");if(w>500)$(".dlg").style.width=Math.min(w,innerWidth-24)+"px"}catch(e){}
   try{new ResizeObserver(en=>{const w=Math.round(en[0].contentRect.width);if(w>500)lsSet("bs.laydlgw",String(w))}).observe($(".dlg"))}catch(e){}
@@ -3904,7 +3917,7 @@ function columnsDialog(art){const canLay=hasRight("layouts"),canSty=hasRight("co
       finish("std",t("layApplied",t("layStd")));return}
     const l=layoutById(selId),nm=clean(name);if(!nm){err(t("layNeedName"));return}
     if(layoutsAll().some(x=>x.id!==selId&&x.name.toLowerCase()===nm.toLowerCase())){err(t("layNameTaken"));return}
-    const c=clean2();Object.assign(l,canLay?{name:nm,labels:c.labels,extra:c.extra,hidden:c.hidden,joinTo:c.joinTo,join:Object.keys(c.joinTo),opt:c.opt,style:c.style,order:c.order}:{style:c.style});finish(selId,t("laySaved",nm))};
+    const c=clean2();Object.assign(l,canLay?{name:nm,labels:c.labels,extra:c.extra,hidden:c.hidden,joinTo:c.joinTo,join:Object.keys(c.joinTo),opt:c.opt,style:c.style,order:c.order,noprint:c.noprint}:{style:c.style});finish(selId,t("laySaved",nm))};
 }
 /* tool table: each column can be widened or narrowed by dragging its title's edge (remembered on this PC) */
 const CWKEY="toollistmaker.colw";
@@ -3987,7 +4000,7 @@ function renderEditor(art){fillHolderList(M(art.machineId)?.cone);
       ${toolDiagram("wide")}
       <div class="tw"><table class="tt" style="min-width:${visCols(sheetCfg()).reduce((n,k)=>n+(thW(k)||220),0)+80}px">
         <thead><tr>${visCols(sheetCfg()).map(k=>{const w=thW(k),ttl=k==="corr"?t("colHT")+" · "+t("colDT"):k==="insert"?t("colInsT"):k==="oal"?t("oal"):"";
-          return `<th data-ck="${k}"${w?` style="width:${w}px"`:""}${ttl?` title="${esc(ttl)}"`:""}${k.startsWith("x_")?' class="xth"':""}>${esc(colLabel(k))}${k==="holder"&&coneTag(M(cur.machineId)?.cone)?" "+coneTag(M(cur.machineId)?.cone):""}<span class="colrs" title="${esc(t("colWT"))}"></span></th>`}).join("")}<th class="actth"></th></tr></thead>
+          return `<th data-ck="${k}"${w?` style="width:${w}px"`:""}${ttl?` title="${esc(ttl)}"`:""} class="${k.startsWith("x_")?"xth":""}${k!=="t"&&!prOn(cur,k)?" np":""}">${esc(colLabel(k))}${k==="holder"&&coneTag(M(cur.machineId)?.cone)?" "+coneTag(M(cur.machineId)?.cone):""}<span class="colrs" title="${esc(t("colWT"))}"></span></th>`}).join("")}<th class="actth"></th></tr><tr class="prrow">${visCols(sheetCfg()).map(k=>k==="t"?`<th class="prlab" title="${esc(t("prT"))}">${esc(t("prShort"))}</th>`:`<th title="${esc(t("prT"))}"><input type="checkbox" class="prck" data-pr="${k}" ${prOn(cur,k)?"checked":""} tabindex="-1" aria-label="${esc(t("prT")+" : "+colLabel(k))}"></th>`).join("")}<th></th></tr></thead>
         <tbody id="rows"></tbody></table></div>
       <div class="rowbar"><div class="rbg"><button class="btn" id="b-add">${esc(t("addTool"))}</button><button class="btn ghost" id="b-impt" title="${esc(t("impT"))}">${esc(t("imp"))}</button><button class="btn ghost" id="b-ncimp" title="${esc(t("impNCP"))}">${esc(t("ncFromProg"))}</button><label class="laysel sortsel" title="${esc(t("sortT"))}"><span>${esc(t("sortL"))}</span><select id="a-sort"><option value="">—</option>${Object.entries(t("sortBy")).map(([k,l])=>`<option value="${k}">${esc(l)}</option>`).join("")}</select></label></div><div class="rbg"><label class="laysel" title="${esc(t("laySelT"))}"><span>${esc(t("layShort"))}</span><select id="a-layout">${layoutOptions(layoutIdOf(art))}</select></label><label class="laysel" title="${esc(t("laySelXlT"))}"><span>Excel</span><select id="a-layoutxl"><option value="">${esc(t("laySameXl"))}</option>${layoutsXlOptions(art.layoutXl||"")}</select></label>${hasRight("layouts")||hasRight("colStyle")?`<button class="btn ghost" id="b-cols" title="${esc(t("colsBtnT"))}">${esc(t("colsBtn"))}</button>`:""}</div><div class="rbg"><button class="btn ghost" id="b-prep" title="${esc(t("prepT"))}">${esc(t("prep"))}</button><button class="btn ghost" id="b-magcmp">${esc(t("magCmpBtn"))}</button>${tplBtn("tools")}</div><span class="note">${t("excelNote")}</span></div>
     </div>
@@ -4008,7 +4021,11 @@ function renderEditor(art){fillHolderList(M(art.machineId)?.cone);
   wirePhRoute($("#edph"));wireNote(cur);
   AFIELDS.forEach(k=>{const el=$("#a-"+k);el.value=a[k]??"";el.addEventListener("input",()=>{cur.article[k]=el.value;edited();if(REQ_ART.includes(k))drawStatus();if(k==="number"||k==="index"){checkDup();$("#crumbs span:last-child").textContent=cur.article.number||t("newArticleCrumb")}})});
   $("#a-machine").onchange=e=>{const from=cur.machineId;cur.machineId=e.target.value;addHist(cur,"move",{from:mShort(M(from)),to:mShort(M(cur.machineId))});edited();const mm=M(cur.machineId);$("#crumbs a").textContent=mShort(mm);$("#crumbs a").dataset.go="#m-"+mm.id;checkDup();const bad=coneMisfits(cur,cur.machineId);toast(t("movedTo",mLabel(mm))+(bad.length?" · "+t("moveCone",bad.length,normCone(mm.cone)):""));markMissing()};
-  renderRows();checkDup();
+  renderRows();checkDup();prStyle();
+  $(".tt thead").addEventListener("change",e=>{const c=e.target.closest("[data-pr]");if(!c)return;const k=c.dataset.pr,def=prDef(cfgOf(cur),k);
+    const P={...(cur.pr||{})};if(c.checked===def)delete P[k];else P[k]=c.checked;if(Object.keys(P).length)cur.pr=P;else delete cur.pr;
+    {const th=document.querySelector(`.tt thead th[data-ck="${k}"]`);if(th)th.classList.toggle("np",!c.checked)}prStyle();edited();toast(t(c.checked?"prOn":"prOff",colLabel(k)))});
+  $(".tt thead").addEventListener("pointerdown",e=>{if(e.target.closest("[data-pr]"))e.stopPropagation()},true);
   const rows=$("#rows");wireDiagram(rows.closest(".card"),"k");
   rows.addEventListener("input",e=>{const tr=e.target.closest("tr"),k=e.target.dataset.k;if(!tr||!k)return;
     const mtd=e.target.closest("td.mlc");cur.tools[+tr.dataset.i][k]=mtd?cellVal(mtd):e.target.value;markRow(tr);softCount();edited();
@@ -5582,7 +5599,7 @@ async function printDoc(docPdf){
   }catch(e){console.error(e);toast(t("printFail")+(e.message||e))}
 }
 
-const blankSheet=()=>makePDF({article:{},tools:[],blank:true,cols:sheetCfg()});
+const blankSheet=()=>makePDF({article:{},tools:[],blank:true,cols:printCfg(sheetCfg(),null)});
 async function pdfDocInto(host,docPdf){
   const W=Math.max(320,Math.min(760,Math.floor((host.clientWidth||700)-24)));
   const pdf=await pdfjsLib.getDocument({data:new Uint8Array(docPdf.output("arraybuffer")),isEvalSupported:false}).promise,dpr=Math.min(window.devicePixelRatio||1,2),out=[];
@@ -5692,7 +5709,7 @@ Object.assign(I18N.en,{getApp:"Get the app", getAppT:"Download the Windows insta
   demoBar:"Demo: made-up workshop with 20 machines and 500 articles. Changes stay in this browser only.", demoShort:"Made-up data", demoReset:"Reset the demo", demoResetQ:"Reset the demo data? Everything changed here is lost.", demoGo:"Real version"});
 Object.assign(I18N.fr,{getApp:"Télécharger l'app", getAppT:"Télécharger l’installateur Windows",
   demoBar:"Démo : atelier fictif de 20 machines et 500 articles. Vos changements restent dans ce navigateur.", demoShort:"Données fictives", demoReset:"Réinitialiser la démo", demoResetQ:"Réinitialiser les données de la démo ? Tout ce qui a été changé ici sera perdu.", demoGo:"Version réelle"});
-const APP_ZIP="BrocheStuff-Setup-2.20.1.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
+const APP_ZIP="BrocheStuff-Setup-2.21.0.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
 function appUrl(){
   // on the site (…/Web/ or …/Demo/) the program sits next door in …/App/; anywhere else, take it from the site
   if(/^https?:/.test(location.protocol)&&/\/(Web|Demo)\/(index\.html)?$/i.test(location.pathname))return new URL("../App/"+APP_ZIP,location.href).href;
@@ -6201,6 +6218,21 @@ function asmCheckRow(i,tr){const x=cur&&cur.tools[i];if(!x||clean(x.asm))return;
   const L=asmFits(x);asmChips();if(L.length!==1)return;const a=L[0],key=cur.id+"|"+i+"|"+a.code;if(ASMNO.has(key))return;ASMNO.add(key);
   toast(t("asmSugT",normT(x.t)||"",a.code)+" · "+[a.tool.type,a.tool.diameter?"Ø"+normDia(a.tool.diameter):"",linesOf_(a.tool.holder)[0]].filter(Boolean).join(" · "),{label:t("asmSugUse",a.code),fn:()=>{if(!cur.tools[i]||cur.tools[i]!==x)return;x.asm=a.code;x.asmAuto=0;rowFill(i,a.tool,ASMF,"asm",a.code)}})}
 
+/* ---------- which columns go on the PDF and the Excel ----------
+   The layout says it for every sheet (Columns window: "PDF / Excel" box); each sheet can change it
+   with the box above each column of its tool table. */
+Object.assign(I18N.en,{prT:"On the PDF and the Excel", prShort:"PDF", prOn:c=>`“${c}” will be on the PDF and the Excel`, prOff:c=>`“${c}” will not be on the PDF and the Excel`, prLay:"PDF / Excel", prLayT:"Ticked: the column is on the PDF and the Excel of the sheets using this layout (each sheet can still change it above its tool table)"});
+Object.assign(I18N.fr,{prT:"Sur le PDF et l’Excel", prShort:"PDF", prOn:c=>`« ${c} » sera sur le PDF et l’Excel`, prOff:c=>`« ${c} » ne sera pas sur le PDF et l’Excel`, prLay:"PDF / Excel", prLayT:"Coché : la colonne est sur le PDF et l’Excel des fiches qui utilisent cette mise en page (chaque fiche peut encore le changer au-dessus de son tableau d’outils)"});
+const prDef=(cfg,k)=>!((cfg&&cfg.noprint)||["asm"]).includes(k);
+function prOn(art,k,cfg){const P=(art&&art.pr)||{};if(Object.prototype.hasOwnProperty.call(P,k))return !!P[k];return prDef(cfg||cfgOf(art),k)}
+// the layout as it is printed: the columns not printed are left out, and nothing is put under them
+function printCfg(cfg,art){if(!cfg)return cfg;const keys=[...LABK.filter(k=>k!=="t"),...(cfg.extra||[]).map(x=>xKey(x.id))].filter(k=>!prOn(art,k,cfg));
+  if(!keys.length)return cfg;const hidden=[...new Set([...(cfg.hidden||[]),...keys])],joinTo={};
+  Object.entries(cfg.joinTo||{}).forEach(([k,to])=>{if(!hidden.includes(k)&&!hidden.includes(to))joinTo[k]=to});
+  return{...cfg,hidden,joinTo,join:Object.keys(joinTo)}}
+function prStyle(){if(!cur)return;let el=$("#npstyle");if(!el){el=document.createElement("style");el.id="npstyle";document.head.appendChild(el)}
+  const off=visCols(sheetCfg()).filter(k=>k!=="t"&&!prOn(cur,k));el.textContent=off.map(k=>`.tt td[data-col="${k}"] input{opacity:.5}`).join("")}
+
 /* ---------- 4. reports ---------- */
 let repP="90";
 function renderReports(){
@@ -6421,7 +6453,7 @@ function drawHistory(){
    admin page, demo switch. The web version doesn't use any of this.
    ===================================================================== */
 const DESKDEMO=/*DESKDEMO*/null;
-const APP_VER="2.20.1";
+const APP_VER="2.21.0";
 let DEMO_ON=false, ACC=null, USERS=null, PCNAME="", realDIR="", loginFails=0, loginWait=0, lastAct=Date.now();
 Object.assign(I18N.en,{
   loginT:"Sign in", loginP:"Enter your name or code and your password.", loginName:"Name or code", loginPw:"Password", loginGo:"Sign in",
@@ -6889,6 +6921,7 @@ const GUIDE={
    ["log","Journal",["Chaque sortie, entrée et comptage : qui, quand, combien et pourquoi.","Cliquez sur une ligne pour lire un commentaire en entier ou ouvrir la fiche de l’outil.","« Exporter (CSV) » pour Excel."]],
    ["reports","Rapports",["Outils sortis par mois, les plus sortis, par machine et par personne.","Codes jamais utilisés et outils sans mouvement depuis 90 jours. Export CSV."]],
    ["asm","Assemblages",["Chaque outil avec son porte-outil est gardé sous un code (AS0001…), tout seul, dès qu’une ligne de fiche a un porte-outil et un code outil (ou un type et un Ø).","La colonne « Assemblage » de la fiche montre le code de chaque ligne. Tapez un code d’assemblage dans cette colonne (ou un code outil dans la colonne Code) : les cases vides se remplissent. Si une case contient déjà autre chose, BrocheStuff montre la différence et ne remplace que ce que vous cochez. Une ligne qui ne correspond plus à son assemblage est surlignée en orange.","La page Assemblages les liste, montre les fiches qui les utilisent, et permet d’en créer, modifier ou supprimer."]],
+   ["print","Colonnes sur le PDF et l’Excel",["Chaque colonne du tableau d’outils a une case au-dessus : cochée, la colonne est sur le PDF et l’Excel de cette fiche ; décochée, elle reste dans la fiche mais n’est pas imprimée.","Par défaut, la case suit la mise en page (bouton Colonnes, case « PDF / Excel » de chaque colonne). La colonne Assemblage n’est pas imprimée par défaut."]],
    ["sort","Trier une fiche",["Sous le tableau des outils, « Trier » remet les lignes dans l’ordre voulu : numéro T, correcteur, type, Ø, porte-outil, code outil ou LS. Le PDF suit. « Annuler » revient à l’ordre d’avant."]],
    ["templates","Modèles Excel et import",["Chaque page a son « Modèle Excel » : le télécharger, l’imprimer ou le remplir.","« Importer » lit un fichier Excel ou CSV ; les colonnes sont reconnues par leur titre, avec un aperçu avant d’importer.","Fiche outils : une case met les outils dans l’ordre T1, T2, T3… ; si un outil apparaît deux fois (même numéro T, ou la même ligne), BrocheStuff montre les copies et ce qui diffère, et vous choisissez celle à garder ou gardez tout."]],
    ["it","Pour l’informatique",["Installation : un seul fichier d’installation, sans droits administrateur. Le programme va dans %LOCALAPPDATA%\\Programs\\BrocheStuff.","Données : dans Documents\\BrocheStuff (data.json, comptes, dossier Backups). L’admin peut choisir à la place un dossier réseau partagé : tous les postes travaillent alors sur les mêmes données.","Comptes : l’admin crée les comptes (nom, rôle, mot de passe) dans la page Admin. La version web de démo n’a pas de mots de passe.","Sauvegardes : une copie automatique toutes les 5 minutes quand quelque chose change, dans Backups ; sauvegardez aussi ce dossier avec vos sauvegardes habituelles.","Mises à jour : l’admin installe le fichier BrocheStuff-Update-….neu depuis la page Admin (clé USB ou dossier) ; il est déposé dans le dossier des données et chaque poste le propose au démarrage.","Pas besoin d’internet : rien n’est envoyé à l’extérieur."]],
@@ -6911,6 +6944,7 @@ const GUIDE={
    ["log","Stock log",["Every move out, in and count: who, when, how many and why.","Click a line to read a comment in full or open the tool’s card.","“Export (CSV)” for Excel."]],
    ["reports","Reports",["Tools taken per month, most taken, per machine and per person.","Codes never used and tools without a move for 90 days. CSV export."]],
    ["asm","Assemblies",["Each tool with its holder is kept under a code (AS0001…), by itself, as soon as a sheet row has a holder and a tool code (or a type and a Ø).","The sheet’s “Assembly” column shows each row’s code. Type an assembly code in that column (or a tool code in the Code column): the empty boxes fill in. If a box already holds something else, BrocheStuff shows the difference and only replaces what you tick. A row that no longer matches its assembly is shown in orange.","The Assemblies page lists them, shows the sheets using each one, and lets you add, change or delete them."]],
+   ["print","Columns on the PDF and the Excel",["Each column of the tools table has a box above it: ticked, the column is on this sheet’s PDF and Excel; unticked, it stays in the sheet but is not printed.","By default the box follows the layout (Columns button, “PDF / Excel” box of each column). The Assembly column is not printed by default."]],
    ["sort","Sorting a sheet",["Under the tools table, “Sort” puts the rows in the order you want: T number, corrector, type, Ø, holder, tool code or LS. The PDF follows. “Undo” goes back to the order before."]],
    ["templates","Excel models and import",["Each page has its “Excel model”: download it, print it or fill it in.","“Import” reads an Excel or CSV file; columns are found by their titles, with a preview before importing.","Tool sheet: a box puts the tools in T1, T2, T3… order; if a tool appears twice (same T number, or the same row), BrocheStuff shows the copies and what differs, and you choose which to keep or keep them all."]],
    ["it","For IT",["Install: one setup file, no administrator rights needed. The program goes to %LOCALAPPDATA%\\Programs\\BrocheStuff.","Data: in Documents\\BrocheStuff (data.json, accounts, Backups folder). The admin can pick a shared network folder instead: every PC then works on the same data.","Accounts: the admin creates them (name, role, password) on the Admin page. The web demo has no passwords.","Backups: an automatic copy every 5 minutes when something changes, in Backups; include that folder in your usual backups too.","Updates: the admin installs the BrocheStuff-Update-….neu file from the Admin page (USB stick or folder); it is put in the data folder and every PC offers it at start.","No internet needed: nothing is sent outside."]],
