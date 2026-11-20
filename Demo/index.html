@@ -1547,6 +1547,8 @@ table.chgt td.m,table.chgt b.m{font-family:var(--mono,monospace)}
 .rowbar .laysel.sortsel select{position:absolute;inset:0;width:100%;height:100%;max-width:none;opacity:0;cursor:pointer}
 .tt td input.warn{background:var(--low-bg);border-color:var(--low-ink);color:var(--low-ink)}
 .tt td input.bad{background:var(--miss-bg);border-color:var(--miss-bd)}
+.tt td input.sugg{border:1px dashed var(--low-ink);cursor:pointer}
+.tt td input.sugg::placeholder{color:var(--low-ink);opacity:1;font-weight:700}
 .filltab td.mine{color:var(--mid)}
 .filltab td.theirs{font-weight:600}
 .filltab td,.filltab th{padding:8px 10px;vertical-align:top}
@@ -3960,7 +3962,7 @@ function rowHTML(x,i){
     <td class="act"><button class="ib" data-r="up" title="${esc(t("up"))}" tabindex="-1">↑</button><button class="ib" data-r="down" title="${esc(t("down"))}" tabindex="-1">↓</button><button class="ib x" data-r="del" title="${esc(t("remove"))}" tabindex="-1">✕</button></td></tr>`;
 }
 function renderEditor(art){fillHolderList(M(art.machineId)?.cone);
-  cur=art;const a=art.article,m=M(art.machineId);
+  cur=art;if(typeof asmLink==="function"&&asmLink(art))saveDB();const a=art.article,m=M(art.machineId);
   $("#view").innerHTML=`<div class="ed ${pvOn?"":"nopv"}" id="ed">
   <section class="form">
     <div class="card">
@@ -4022,6 +4024,11 @@ function renderEditor(art){fillHolderList(M(art.machineId)?.cone);
     if(!v){x.asmAuto=0;asmMark(tr);return}const a=asmFind(v);
     if(!a){toast(t("asmUnknown",asmKey(v)||v.toUpperCase()));asmMark(tr);return}
     x.asm=a.code;x.asmAuto=0;rowFill(i,a.tool,ASMF,"asm",a.code)});
+  rows.addEventListener("change",e=>{const k=e.target.dataset.k;if(!k||k==="asm"||k==="t"||k==="corrH"||k==="corrD")return;const tr=e.target.closest("tr");if(!tr)return;const i=+tr.dataset.i;
+    setTimeout(()=>{if($("#ov").hidden)asmCheckRow(i)},60)});
+  // the suggested code: click it, or Enter in the empty box
+  rows.addEventListener("click",e=>{const el=e.target.closest('input[data-k="asm"].sugg');if(!el)return;const tr=el.closest("tr"),i=+tr.dataset.i,x=cur.tools[i],a=asmFind(el.dataset.sugg);if(!a||clean(x.asm))return;e.preventDefault();x.asm=a.code;x.asmAuto=0;rowFill(i,a.tool,ASMF,"asm",a.code)});
+  rows.addEventListener("keydown",e=>{if(e.key!=="Enter")return;const el=e.target.closest('input[data-k="asm"].sugg');if(!el||clean(el.value))return;const tr=el.closest("tr"),i=+tr.dataset.i,x=cur.tools[i],a=asmFind(el.dataset.sugg);if(!a)return;e.preventDefault();e.stopImmediatePropagation();x.asm=a.code;x.asmAuto=0;rowFill(i,a.tool,ASMF,"asm",a.code)},true);
   rows.addEventListener("input",e=>{if(e.target.dataset.k&&e.target.dataset.k!=="asm"){const tr=e.target.closest("tr");if(tr&&clean(cur.tools[+tr.dataset.i].asm))asmMark(tr)}});
   rows.addEventListener("click",e=>{const b=e.target.closest(".asmc");if(b&&b.dataset.asm){e.stopPropagation();asmCopy(b.dataset.asm)}});
   rows.addEventListener("click",e=>{const b=e.target.closest("[data-r]");if(!b)return;const i=+b.closest("tr").dataset.i,T=cur.tools;
@@ -5685,7 +5692,7 @@ Object.assign(I18N.en,{getApp:"Get the app", getAppT:"Download the Windows insta
   demoBar:"Demo: made-up workshop with 20 machines and 500 articles. Changes stay in this browser only.", demoShort:"Made-up data", demoReset:"Reset the demo", demoResetQ:"Reset the demo data? Everything changed here is lost.", demoGo:"Real version"});
 Object.assign(I18N.fr,{getApp:"Télécharger l'app", getAppT:"Télécharger l’installateur Windows",
   demoBar:"Démo : atelier fictif de 20 machines et 500 articles. Vos changements restent dans ce navigateur.", demoShort:"Données fictives", demoReset:"Réinitialiser la démo", demoResetQ:"Réinitialiser les données de la démo ? Tout ce qui a été changé ici sera perdu.", demoGo:"Version réelle"});
-const APP_ZIP="BrocheStuff-Setup-2.20.0.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
+const APP_ZIP="BrocheStuff-Setup-2.20.1.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
 function appUrl(){
   // on the site (…/Web/ or …/Demo/) the program sits next door in …/App/; anywhere else, take it from the site
   if(/^https?:/.test(location.protocol)&&/\/(Web|Demo)\/(index\.html)?$/i.test(location.pathname))return new URL("../App/"+APP_ZIP,location.href).href;
@@ -6036,11 +6043,12 @@ function asmSync(art){asmDirty=false;if(!art||!Array.isArray(art.tools))return 0
 function asmLater(){asmDirty=true;clearTimeout(asmTimer);asmTimer=setTimeout(()=>{if(cur&&asmDirty){const a=asmSync(cur),b=asmLink(cur);if(a||b){saveDB();asmChips()}}},2500)}
 // first start with this version: the existing sheets fill the library
 function asmBoot(){if(asmDirty&&cur){clearTimeout(asmTimer);if(asmSync(cur)+asmLink(cur))saveDB()}
+  if(db.asmSeeded&&!db.asmLinked&&Array.isArray(db.articles)){db.articles.forEach(asmLink);db.asmLinked=1;saveDB()}
   if(db.asmSeeded||!Array.isArray(db.articles))return;let n=0;const L=asmList(),have=new Set(L.map(x=>x.sig));let nx=+asmNext().slice(2);
   [...db.articles].sort((a,b)=>(a.createdAt||0)-(b.createdAt||0)).forEach(a=>{
     realTools(a.tools).forEach(x=>{if(!asmReady(x))return;const s=asmSig(x);if(have.has(s))return;const tool={};ASMF.forEach(k=>{if(clean(x[k]))tool[k]=String(x[k]).trim()});
       L.push({id:uid(),code:"AS"+String(nx++).padStart(4,"0"),tool,sig:s,auto:1,src:a.id,createdAt:a.createdAt||Date.now()});have.add(s);n++})});
-  db.articles.forEach(asmLink);db.asmSeeded=1;if(n||db.articles.length)saveDB()}
+  db.articles.forEach(asmLink);db.asmSeeded=1;db.asmLinked=1;if(n||db.articles.length)saveDB()}
 // two PCs that made the same code at the same time: the later one takes the next free code
 function asmFix(){const L=asmList(),seen=new Set();[...L].sort((a,b)=>(a.createdAt||0)-(b.createdAt||0)).forEach(a=>{if(!a.sig)a.sig=asmSig(a.tool||{});if(!a.code||seen.has(a.code))a.code=asmNext();seen.add(a.code)})}
 // the small assembly code under the T number of each row
@@ -6049,7 +6057,8 @@ function asmChipHTML(x){return ""}
 function asmLink(art){let ch=0;realTools(art.tools).forEach(x=>{const a=asmOfTool(x);if(!a)return;const v=clean(x.asm),cur0=v&&asmFind(v);
   if(!v||!cur0||(x.asmAuto!==0&&cur0!==a)){if(x.asm!==a.code){x.asm=a.code;x.asmAuto=1;ch++}}});return ch}
 function asmChips(){const R=$("#rows");if(!R||!cur)return;R.querySelectorAll("tr[data-i]").forEach(tr=>{const x=cur.tools[+tr.dataset.i],el=tr.querySelector('input[data-k="asm"]');if(!x||!el)return;
-  if(document.activeElement!==el)el.value=x.asm||"";asmMark(tr)});const dl=$("#asmcodes");if(dl)dl.innerHTML=asmCodeOptions()}
+  if(document.activeElement!==el)el.value=x.asm||"";asmMark(tr);
+  const L=clean(x.asm)?[]:asmFits(x),sg=L.length===1?L[0].code:"";el.classList.toggle("sugg",!!sg);if(sg){el.dataset.sugg=sg;el.placeholder=t("asmSugPh",sg);el.title=t("asmSugTip",sg)}else{delete el.dataset.sugg;el.placeholder="AS…";if(!clean(x.asm))el.title=""}});const dl=$("#asmcodes");if(dl)dl.innerHTML=asmCodeOptions()}
 function asmCodeOptions(){return asmList().map(a=>`<option value="${esc(a.code)}">${esc([a.tool.type,a.tool.diameter?"Ø"+normDia(a.tool.diameter):"",linesOf_(a.tool.holder)[0]].filter(Boolean).join(" · "))}</option>`).join("")}
 const linesOf_=v=>String(v||"").split("\n").map(s=>s.trim()).filter(Boolean);
 function asmCopy(code){try{navigator.clipboard.writeText(code)}catch(e){}toast(t("asmCopied",code))}
@@ -6178,6 +6187,19 @@ function rowFill(i,src,keys,kind,label){const x=cur.tools[i];if(!x)return;const 
   $("#fill-keep").onclick=()=>{closeDlg();done([])};
   $("#fill-go").onclick=()=>{const rep=[...document.querySelectorAll("[data-rep]:checked")].map(c=>c.dataset.rep);closeDlg();done(rep)}}
 function cribTool(c){const o={};CRIBMAP.forEach(([tk,ck])=>{if(clean(c[ck]))o[tk]=c[ck]});return o}
+
+/* a row that fits an assembly: the same → its code goes in by itself; part of it → BrocheStuff offers the code */
+Object.assign(I18N.en,{asmSugT:(T,c)=>`${T} fits assembly ${c}`, asmSugUse:c=>`Use ${c}`, asmSugPh:c=>`${c} ?`, asmSugTip:c=>`This row fits assembly ${c}: click, or press Enter, to use it`, asmAutoSet:(T,c)=>`${T}: same as assembly ${c}, code added`});
+Object.assign(I18N.fr,{asmSugT:(T,c)=>`${T} correspond à l’assemblage ${c}`, asmSugUse:c=>`Utiliser ${c}`, asmSugPh:c=>`${c} ?`, asmSugTip:c=>`Cette ligne correspond à l’assemblage ${c} : cliquez, ou appuyez sur Entrée, pour l’utiliser`, asmAutoSet:(T,c)=>`${T} : identique à l’assemblage ${c}, code ajouté`});
+// the assemblies a row could be: every box the row has is the same in the assembly
+function asmFits(x){if(clean(x.asm))return [];const F=ASMF.filter(k=>clean(x[k]));if(!F.some(k=>k==="code"||k==="holder"))return [];
+  return asmList().filter(a=>F.every(k=>clean(a.tool[k])&&fillSame(k,x[k],a.tool[k])))}
+const ASMNO=new Set();
+function asmCheckRow(i,tr){const x=cur&&cur.tools[i];if(!x||clean(x.asm))return;tr=tr||$(`#rows tr[data-i="${i}"]`);
+  const exact=asmOfTool(x);
+  if(exact){x.asm=exact.code;x.asmAuto=1;asmChips();saveDB();toast(t("asmAutoSet",normT(x.t)||"",exact.code));return}
+  const L=asmFits(x);asmChips();if(L.length!==1)return;const a=L[0],key=cur.id+"|"+i+"|"+a.code;if(ASMNO.has(key))return;ASMNO.add(key);
+  toast(t("asmSugT",normT(x.t)||"",a.code)+" · "+[a.tool.type,a.tool.diameter?"Ø"+normDia(a.tool.diameter):"",linesOf_(a.tool.holder)[0]].filter(Boolean).join(" · "),{label:t("asmSugUse",a.code),fn:()=>{if(!cur.tools[i]||cur.tools[i]!==x)return;x.asm=a.code;x.asmAuto=0;rowFill(i,a.tool,ASMF,"asm",a.code)}})}
 
 /* ---------- 4. reports ---------- */
 let repP="90";
@@ -6399,7 +6421,7 @@ function drawHistory(){
    admin page, demo switch. The web version doesn't use any of this.
    ===================================================================== */
 const DESKDEMO=/*DESKDEMO*/null;
-const APP_VER="2.20.0";
+const APP_VER="2.20.1";
 let DEMO_ON=false, ACC=null, USERS=null, PCNAME="", realDIR="", loginFails=0, loginWait=0, lastAct=Date.now();
 Object.assign(I18N.en,{
   loginT:"Sign in", loginP:"Enter your name or code and your password.", loginName:"Name or code", loginPw:"Password", loginGo:"Sign in",
@@ -6537,7 +6559,7 @@ function merge3db(b,m,t){const out={...m,...t};
   for(const [col,key] of [["machines","id"],["articles","id"],["catalog","code"],["holders","ref"]])out[col]=mergeList(b[col]||[],m[col]||[],t[col]||[],key);
   out.layouts=mergeList(b.layouts||[],m.layouts||[],t.layouts||[],"id");if(!out.layouts.length)delete out.layouts;
   out.artNotes=mergeList(b.artNotes||[],m.artNotes||[],t.artNotes||[],"num");if(!out.artNotes.length)delete out.artNotes;
-  out.assemblies=mergeList(b.assemblies||[],m.assemblies||[],t.assemblies||[],"id");out.asmSeeded=m.asmSeeded||t.asmSeeded;if(!out.asmSeeded)delete out.asmSeeded;
+  out.assemblies=mergeList(b.assemblies||[],m.assemblies||[],t.assemblies||[],"id");out.asmSeeded=m.asmSeeded||t.asmSeeded;if(!out.asmSeeded)delete out.asmSeeded;out.asmLinked=m.asmLinked&&t.asmLinked;if(!out.asmLinked)delete out.asmLinked;
   out.layoutDefault=(m.layoutDefault||"")!==(b.layoutDefault||"")?m.layoutDefault:t.layoutDefault;if(!out.layoutDefault)delete out.layoutDefault;delete out.sheetCfg;
   out.stockLog=unionLog(m.stockLog||[],t.stockLog||[],20000);out.lastBackup=Math.max(+m.lastBackup||0,+t.lastBackup||0);return out}
 // every save writes a new random revision next to the data (data.rev): a tiny file the other PCs check
