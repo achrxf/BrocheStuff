@@ -27,7 +27,7 @@ with sync_playwright() as p:
   x=pg.evaluate("cur.tools[0]")
   ok("typing as3 fills the row",x.get("type")=="FRAISE HFS CW" and x.get("code")=="F941" and "CÔNE FRETTÉ" in x.get("holder","") and x.get("t")=="T01",x)
   ok("toast says so","AS0003" in pg.inner_text("#toast"))
-  ok("chip under T shows AS0003",pg.locator('#rows tr[data-i="0"] .asmc').inner_text()=="AS0003")
+  ok("chip under T shows AS0003",pg.locator('#rows tr[data-i="0"] input[data-k=asm]').input_value()=="AS0003")
   inp=pg.locator('#rows tr[data-i="0"] input[data-k="code"]').first
   # unknown code
   pg.evaluate("cur.tools.push({t:'T02'});renderRows()")
@@ -39,7 +39,7 @@ with sync_playwright() as p:
   pg.evaluate("cur.tools[1].holder='MANDRIN À PINCE ER32\\nBT50AD-ER32-120';cur.tools[1].code='F884';renderRows();edited()");pg.wait_for_timeout(2900)
   fin=pg.evaluate("asmList().map(a=>a.code+':'+a.tool.code)")
   ok("half-typed assembly made then replaced (no leftovers)",len(mid)==4 and fin[-1]=="AS0004:F884" and len(fin)==4,(mid,fin))
-  ok("chip updates by itself",pg.locator('#rows tr[data-i="1"] .asmc').inner_text()=="AS0004")
+  ok("chip updates by itself",pg.locator('#rows tr[data-i="1"] input[data-k=asm]').input_value()=="AS0004")
   # sorting
   pg.evaluate("location.hash='#a-a1'");pg.wait_for_timeout(1200)
   pg.select_option("#a-sort","t");pg.wait_for_timeout(400)
