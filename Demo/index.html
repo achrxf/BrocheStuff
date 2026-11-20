@@ -1551,6 +1551,10 @@ table.chgt td.m,table.chgt b.m{font-family:var(--mono,monospace)}
 .tt thead tr.prrow th{padding:0 6px 6px;height:auto;border-bottom:1px solid var(--hair);background-image:none!important;line-height:1}
 .tt thead tr.prrow th.prlab{padding-left:12px;font:600 10px/1 var(--body);letter-spacing:.06em;color:var(--mid);text-transform:uppercase}
 .tt thead tr:first-child th{padding-bottom:4px}
+.tt td[data-col="t"] input.asmin{display:block;height:20px!important;margin-top:2px;padding:1px 2px!important;font-size:10.5px!important;text-overflow:clip;font-weight:600;color:var(--mid);letter-spacing:-.02em}
+.tt td[data-col="t"] input.asmin::placeholder{color:var(--ph2);font-weight:400}
+.tt td[data-col="t"] input.asmin.warn{color:var(--low-ink)}
+.tt thead tr.prrow th.prlab .prck{margin-left:4px}
 .tt th .prck{width:14px;height:14px;margin:0;vertical-align:middle;accent-color:var(--red);cursor:pointer}
 .colr{grid-template-columns:22px minmax(160px,360px) auto minmax(0,1fr) 34px 34px 34px}
 .colr .colpr{grid-column:3}.colr .coltag{grid-column:4}
@@ -2506,7 +2510,7 @@ function makePDF(data){
   const lab=(k,def)=>clean(LAB[k])||def,on=k=>!HID.has(k);
   // joined columns: Ø, R and the insert sit inside the Type cell unless the layout gives them their own column;
   // any other column marked "joined" shares one title with the column before it
-  const TSUB=["diameter","ra","insert"],ORD=["t","corr","type","diameter","ra","insert","ls","oal","z","holder","code",...EXTRA.map(x=>"x_"+x.id)];
+  const TSUB=["diameter","ra","insert"],ORD=["t","asm","corr","type","diameter","ra","insert","ls","oal","z","holder","code",...EXTRA.map(x=>"x_"+x.id)];
   const JT=(()=>{if(CFG.joinTo&&typeof CFG.joinTo==="object")return CFG.joinTo;const L=Array.isArray(CFG.join)?CFG.join:TSUB,o={};
     L.forEach(k=>{if(TSUB.includes(k)){o[k]="type";return}const i=ORD.indexOf(k);for(let j=i-1;j>=0;j--)if(on(ORD[j])&&!L.includes(ORD[j])){o[k]=ORD[j];break}});return o})();
   const tgt=k=>{const to=JT[k];return !BLANK&&k!=="t"&&on(k)&&to&&to!==k&&(to==="t"||on(to))&&!JT[to]&&ORD.includes(to)?to:null};
@@ -3627,7 +3631,7 @@ function trNote(s){s=String(s??"");if(!s)return s;const en=LANG==="en";
   let m=s.match(/^Sorti pour l'article (.*)$/);if(m&&en)return t("hPrep",m[1]);m=s.match(/^Taken for article (.*)$/);if(m&&!en)return t("hPrep",m[1]);return s}
 /* filling a row: H (and D for mills) from the T number; N and F from Vc / fz when the layout has those columns */
 function autoFill(i,k,tr){const x=cur.tools[i];if(!x)return;const num=String(x.t||"").replace(/\D/g,"").replace(/^0+(?=\d)/,"");const ch=[];
-  if((k==="t"||k==="type")&&num){if(!clean(x.corrH)&&k==="t"){x.corrH=num;ch.push("corrH")}
+  if((k==="t"||k==="type")&&num){if(!clean(x.corrH)){x.corrH=num;ch.push("corrH")}
     if(!clean(x.corrD)&&/FRAISE|MILL|T[ÊE]TE|ALÉS|ALES|BORING|SURFAC/i.test(String(x.type||""))){x.corrD=num;ch.push("corrD")}}
   const col=re=>{const e=(LAYCFG.extra||[]).find(e=>re.test(clean(e.label)));return e?xKey(e.id):null};
   const kVc=col(/^vc\b/i),kN=col(/^n\b|tr\/min|rpm/i),kFz=col(/^fz\b/i),kF=col(/^f\b(?!z)|mm\/min/i);
@@ -3759,16 +3763,21 @@ const normOpt=o=>{o=o||{};const sg=o.sign!==false,b=(k,d)=>o[k]===undefined?d:!!
     sign:b("prep",sg)||b("appr",sg)||b("date",sg)}};
 const optSame=(a,b)=>JSON.stringify(normOpt(a))===JSON.stringify(normOpt(b));
 // joined columns (PDF): {column: the column it is drawn inside}. Before 2.12 a list: Ø, R and the insert went inside Type, others with the column before
-const JOINORD=["t","corr","type","diameter","ra","insert","ls","oal","z","holder","code"];
+const JOINORD=["t","asm","corr","type","diameter","ra","insert","ls","oal","z","holder","code"];
 function normJoin(c,hidden,extra){const keys=[...JOINORD,...extra.map(x=>xKey(x.id))],shown=k=>k==="t"||!hidden.includes(k)&&keys.includes(k);let J={};
   if(c&&c.joinTo&&typeof c.joinTo==="object")J={...c.joinTo};
   else{const L=Array.isArray(c&&c.join)?c.join:c?DEFJOIN:STDJOIN;L.forEach(k=>{if(k==="t"||!keys.includes(k))return;if(DEFJOIN.includes(k)){J[k]="type";return}const i=keys.indexOf(k);for(let j=i-1;j>=0;j--)if(shown(keys[j])&&!L.includes(keys[j])){J[k]=keys[j];break}})}
   const out={};Object.entries(J).forEach(([k,to])=>{if(k!=="t"&&k!==to&&keys.includes(k)&&keys.includes(to))out[k]=to});
-  Object.keys(out).forEach(k=>{if(out[out[k]])delete out[k]});return out}
+  Object.keys(out).forEach(k=>{if(out[out[k]])delete out[k]});
+  if(!(c&&c.asmOwn)&&!out.asm&&!(hidden||[]).includes("asm")&&!Object.values(out).includes("asm"))out.asm="t";
+  return out}
 const normOrder=(o,extra)=>{const keys=[...LABK.filter(k=>k!=="t"),...extra.map(x=>xKey(x.id))],out=[];(Array.isArray(o)?o:[]).forEach(k=>{if(keys.includes(k)&&!out.includes(k))out.push(k)});keys.forEach(k=>{if(!out.includes(k)){if(k==="asm")out.unshift(k);else out.push(k)}});return out};
 // the columns a layout shows, in its order
+// the columns of the sheet table: the assembly code joined under the tool number sits in its cell
+const asmUnderT=cfg=>!!(cfg&&cfg.joinTo&&cfg.joinTo.asm==="t");
+const edCols=cfg=>visCols(cfg).filter(k=>!(k==="asm"&&asmUnderT(cfg||LAYCFG)));
 const visCols=cfg=>{const c=cfg||LAYCFG;return["t",...(c.order||normOrder(null,c.extra)).filter(k=>k.startsWith("x_")?c.extra.some(x=>xKey(x.id)===k):showK(k,c))]};
-const normCfg=c=>{const n=normCfg0(c);n.joinTo=normJoin(c,n.hidden,n.extra);n.join=Object.keys(n.joinTo);n.order=normOrder(c&&c.order,n.extra);return n};
+const normCfg=c=>{const n=normCfg0(c);n.asmOwn=!!(c&&c.asmOwn);n.joinTo=normJoin(c,n.hidden,n.extra);n.join=Object.keys(n.joinTo);n.order=normOrder(c&&c.order,n.extra);return n};
 const normCfg0=c=>({labels:(c&&c.labels)||{},extra:((c&&c.extra)||[]).filter(x=>x&&x.id&&clean(x.label)),hidden:c?((c.hidden)||[]).filter(k=>k!=="t"&&LABK.includes(k)):[...STDHIDE],join:Array.isArray(c&&c.join)?c.join.filter(k=>k!=="t"):c?[...DEFJOIN]:[...STDJOIN],opt:normOpt(c&&c.opt),style:normStyle(c&&c.style),noprint:c&&Array.isArray(c.noprint)?c.noprint.filter(k=>k&&k!=="t"):["asm"]});
 // is a column shown in this layout (H and D go together under "corr")
 const showK=(k,cfg)=>!(cfg||LAYCFG).hidden.includes(k==="corrH"||k==="corrD"?"corr":k);
@@ -3786,7 +3795,7 @@ function cfgXlOf(art){if(art&&art.layoutData)return normCfg(art.layoutData);cons
 function editCfg(art){const P=cfgOf(art);if(!art||!xlIdOf(art)||art.layoutData)return P;const X=cfgXlOf(art),ids=new Set(P.extra.map(x=>x.id));
   return{...P,extra:[...P.extra,...X.extra.filter(x=>!ids.has(x.id))],hidden:P.hidden.filter(k=>X.hidden.includes(k))}}
 let VCOLS=[];
-function refreshCols(art){LAYCFG=editCfg(art||null);const ex=LAYCFG.extra;COLS=[...BASEK,...ex.map(x=>xKey(x.id))];VCOLS=visCols(LAYCFG).flatMap(k=>k==="corr"?["corrH","corrD"]:[k]);TOOLF=[...TOOLF0,...ex.map(x=>[xKey(x.id),"__"+x.label])]}
+function refreshCols(art){LAYCFG=editCfg(art||null);const ex=LAYCFG.extra;COLS=[...BASEK,...ex.map(x=>xKey(x.id))];VCOLS=edCols(LAYCFG).flatMap(k=>k==="corr"?["corrH","corrD"]:[k]);TOOLF=[...TOOLF0,...ex.map(x=>[xKey(x.id),"__"+x.label])]}
 // 2.3.0 kept one shared column setup: it becomes the first saved layout, and the default
 function migrateLayouts(){if(!db||!db.sheetCfg)return;const c=normCfg(db.sheetCfg);delete db.sheetCfg;
   if(Object.keys(c.labels).length||c.extra.length){db.layouts=db.layouts||[];const l={id:"l"+uid().slice(0,7),name:t("layFirst"),...c};db.layouts.push(l);if(!db.layoutDefault)db.layoutDefault=l.id}saveDB()}
@@ -3863,7 +3872,10 @@ function columnsDialog(art){const canLay=hasRight("layouts"),canSty=hasRight("co
     const redraw=()=>{const y=$("#colbody").scrollTop;draw();$("#colbody").scrollTop=y};
     // titles are typed right in the list
     B.querySelectorAll("[data-ct]").forEach(i=>{const k=i.dataset.ct;i.oninput=()=>{const v=i.value.trim();if(k.startsWith("x_")){const x=buf.extra.find(e=>xKey(e.id)===k);if(x&&v)x.label=v}else{if(!v||v===defLabel(k))delete buf.labels[k];else buf.labels[k]=v}};
-      i.onchange=()=>{if(k.startsWith("x_")&&!i.value.trim()){i.value=buf.extra.find(e=>xKey(e.id)===k)?.label||""}redraw()}});
+      i.onchange=()=>{if(k.startsWith("x_")&&!i.value.trim()){i.value=buf.extra.find(e=>xKey(e.id)===k)?.label||""}
+        const later=()=>{const a=document.activeElement,nv=$("#col-new")?.value||"",fid=a&&a.id,fct=a&&a.dataset&&a.dataset.ct;redraw();
+          if($("#col-new"))$("#col-new").value=nv;const back=fid?document.getElementById(fid):fct?document.querySelector(`[data-ct="${fct}"]`):null;if(back&&back.focus)back.focus()};
+        if(window.__colPtr)document.addEventListener("pointerup",()=>setTimeout(later,0),{once:true});else setTimeout(later,0)}});
     // order: arrows, or drag the handle
     const moveTo=(k,to,after)=>{if(k===to)return;const o=buf.order.filter(x=>x!==k);let j=to==="t"?0:o.indexOf(to)+(after?1:0);o.splice(Math.max(0,j),0,k);buf.order=o;redraw()};
     B.querySelectorAll("[data-mv]").forEach(b=>b.onclick=()=>{const k=b.dataset.mv,L=VK.slice(1),i=L.indexOf(k),j=i+ +b.dataset.d;if(j<0||j>=L.length)return;moveTo(k,L[j],+b.dataset.d>0);
@@ -3896,14 +3908,14 @@ function columnsDialog(art){const canLay=hasRight("layouts"),canSty=hasRight("co
     // footer: Standard can only be saved as a new layout; a saved layout can be updated, copied or deleted
     $("#col-ok").textContent=std?t("layApply"):t("save");$("#lay-as").hidden=false;$("#lay-del").hidden=std;
   };
-  const clean2=()=>({labels:Object.fromEntries(Object.entries(buf.labels).filter(([,v])=>clean(v))),extra:buf.extra.filter(x=>clean(x.label)).map(x=>({id:x.id,label:clean(x.label)})),hidden:[...new Set(buf.hidden)],joinTo:normJoin({joinTo:buf.joinTo},buf.hidden,buf.extra.filter(x=>clean(x.label))),opt:normOpt(buf.opt),style:normStyle(buf.style),order:normOrder(buf.order,buf.extra.filter(x=>clean(x.label))),noprint:[...new Set(buf.noprint||[])].filter(k=>k!=="t")});
+  const clean2=()=>({labels:Object.fromEntries(Object.entries(buf.labels).filter(([,v])=>clean(v))),extra:buf.extra.filter(x=>clean(x.label)).map(x=>({id:x.id,label:clean(x.label)})),hidden:[...new Set(buf.hidden)],joinTo:normJoin({joinTo:buf.joinTo,asmOwn:!buf.joinTo.asm},buf.hidden,buf.extra.filter(x=>clean(x.label))),asmOwn:!buf.joinTo.asm,opt:normOpt(buf.opt),style:normStyle(buf.style),order:normOrder(buf.order,buf.extra.filter(x=>clean(x.label))),noprint:[...new Set(buf.noprint||[])].filter(k=>k!=="t")});
   const err=m=>{const e=$("#lay-err");e.textContent=m;e.hidden=false};
   const finish=(id,msg)=>{if(art){art.layout=id;art.updatedAt=Date.now()}if(isDef)db.layoutDefault=id==="std"?"":id;else if(defaultLayoutId()===id)db.layoutDefault="";
     if(isDefXl)db.layoutDefaultXl=id;else if(db.layoutDefaultXl===id)db.layoutDefaultXl="";
     refreshCols(art||null);saveDB();closeDlg();render();toast(msg)};
   function saveAs(){const nm=clean($("#lay-asname").value);if(!nm){$("#lay-asname").focus();err(t("layNeedName"));return}
     if(layoutsAll().some(l=>l.name.toLowerCase()===nm.toLowerCase())){err(t("layNameTaken"));return}
-    const c=clean2(),l={id:"l"+uid().slice(0,7),name:nm,labels:c.labels,extra:c.extra.map(x=>({...x})),hidden:c.hidden,joinTo:c.joinTo,join:Object.keys(c.joinTo),opt:c.opt,style:c.style,order:c.order,noprint:c.noprint};db.layouts=[...layoutsAll(),l];finish(l.id,t("laySaved",nm))}
+    const c=clean2(),l={id:"l"+uid().slice(0,7),name:nm,labels:c.labels,extra:c.extra.map(x=>({...x})),hidden:c.hidden,joinTo:c.joinTo,join:Object.keys(c.joinTo),opt:c.opt,style:c.style,order:c.order,noprint:c.noprint,asmOwn:c.asmOwn};db.layouts=[...layoutsAll(),l];finish(l.id,t("laySaved",nm))}
   dialog(esc(t("layT")),`<div id="colbody"></div>`,`<button class="btn ghost danger" id="lay-del">${esc(t("layDel"))}</button><span class="sp"></span><button class="btn ghost" id="d-cancel">${esc(t("cancel"))}</button><button class="btn ghost" id="lay-as">${esc(t("laySaveAs"))}</button><button class="btn red" id="col-ok">${esc(t("save"))}</button>`);
   $(".dlg").classList.add("wide","laydlg");try{const w=+lsGet("bs.laydlgw");if(w>500)$(".dlg").style.width=Math.min(w,innerWidth-24)+"px"}catch(e){}
   try{new ResizeObserver(en=>{const w=Math.round(en[0].contentRect.width);if(w>500)lsSet("bs.laydlgw",String(w))}).observe($(".dlg"))}catch(e){}
@@ -3917,12 +3929,12 @@ function columnsDialog(art){const canLay=hasRight("layouts"),canSty=hasRight("co
       finish("std",t("layApplied",t("layStd")));return}
     const l=layoutById(selId),nm=clean(name);if(!nm){err(t("layNeedName"));return}
     if(layoutsAll().some(x=>x.id!==selId&&x.name.toLowerCase()===nm.toLowerCase())){err(t("layNameTaken"));return}
-    const c=clean2();Object.assign(l,canLay?{name:nm,labels:c.labels,extra:c.extra,hidden:c.hidden,joinTo:c.joinTo,join:Object.keys(c.joinTo),opt:c.opt,style:c.style,order:c.order,noprint:c.noprint}:{style:c.style});finish(selId,t("laySaved",nm))};
+    const c=clean2();Object.assign(l,canLay?{name:nm,labels:c.labels,extra:c.extra,hidden:c.hidden,joinTo:c.joinTo,join:Object.keys(c.joinTo),opt:c.opt,style:c.style,order:c.order,noprint:c.noprint,asmOwn:c.asmOwn}:{style:c.style});finish(selId,t("laySaved",nm))};
 }
 /* tool table: each column can be widened or narrowed by dragging its title's edge (remembered on this PC) */
 const CWKEY="toollistmaker.colw";
 const colW=()=>{try{return JSON.parse(lsGet(CWKEY)||"{}")||{}}catch(e){return {}}};
-const DEFW={asm:88,t:50,corr:62,type:0,diameter:54,ra:58,insert:112,ls:46,oal:54,z:36,holder:140,code:80};
+const DEFW={asm:88,t:62,corr:62,type:0,diameter:54,ra:58,insert:112,ls:46,oal:54,z:36,holder:140,code:80};
 function thW(k){const w=colW()[k];return w?w:(k.startsWith("x_")?120:DEFW[k])}
 function wireColResize(table){
   const sum=()=>{let s=76;table.querySelectorAll("thead th[data-ck]").forEach(th=>s+=th.getBoundingClientRect().width);return s};
@@ -3969,7 +3981,7 @@ const cellVal=td=>[...td.querySelectorAll("input[data-k]")].map(i=>i.value).join
 function rowHTML(x,i){
   const v=k=>esc(x[k]??"");
   return `<tr data-i="${i}">
-    ${visCols(sheetCfg()).map(k=>k==="t"?`<td data-col="t"><input class="m b up" data-k="t" value="${v("t")}" placeholder="T${String(i+1).padStart(2,"0")}">${asmChipHTML(x)}</td>`
+    ${edCols(sheetCfg()).map(k=>k==="t"?`<td data-col="t"><input class="m b up" data-k="t" value="${v("t")}" placeholder="T${String(i+1).padStart(2,"0")}">${asmUnderT(sheetCfg())?`<input class="m up asmin" data-k="asm" value="${v("asm")}" placeholder="AS…" list="asmcodes" title="${esc(t("colAsm"))}">`:""}</td>`
       :k==="corr"?`<td class="corrcell" data-col="corr"><label title="${esc(t("colHT"))}"><i>H</i><input class="m up" data-k="corrH" value="${v("corrH")}"></label><label title="${esc(t("colDT"))}"><i>D</i><input class="m up" data-k="corrD" value="${v("corrD")}"></label></td>`
       :mlCell(k,x,k.startsWith("x_")?"xcell":k==="holder"?"holdcell":k==="code"?"codecell":"")).join("")}
     <td class="act"><button class="ib" data-r="up" title="${esc(t("up"))}" tabindex="-1">↑</button><button class="ib" data-r="down" title="${esc(t("down"))}" tabindex="-1">↓</button><button class="ib x" data-r="del" title="${esc(t("remove"))}" tabindex="-1">✕</button></td></tr>`;
@@ -3998,9 +4010,9 @@ function renderEditor(art){fillHolderList(M(art.machineId)?.cone);
     <div class="card">
       <h2>${esc(t("tools"))} <span class="hint" id="count"></span></h2>
       ${toolDiagram("wide")}
-      <div class="tw"><table class="tt" style="min-width:${visCols(sheetCfg()).reduce((n,k)=>n+(thW(k)||220),0)+80}px">
-        <thead><tr>${visCols(sheetCfg()).map(k=>{const w=thW(k),ttl=k==="corr"?t("colHT")+" · "+t("colDT"):k==="insert"?t("colInsT"):k==="oal"?t("oal"):"";
-          return `<th data-ck="${k}"${w?` style="width:${w}px"`:""}${ttl?` title="${esc(ttl)}"`:""} class="${k.startsWith("x_")?"xth":""}${k!=="t"&&!prOn(cur,k)?" np":""}">${esc(colLabel(k))}${k==="holder"&&coneTag(M(cur.machineId)?.cone)?" "+coneTag(M(cur.machineId)?.cone):""}<span class="colrs" title="${esc(t("colWT"))}"></span></th>`}).join("")}<th class="actth"></th></tr><tr class="prrow">${visCols(sheetCfg()).map(k=>k==="t"?`<th class="prlab" title="${esc(t("prT"))}">${esc(t("prShort"))}</th>`:`<th title="${esc(t("prT"))}"><input type="checkbox" class="prck" data-pr="${k}" ${prOn(cur,k)?"checked":""} tabindex="-1" aria-label="${esc(t("prT")+" : "+colLabel(k))}"></th>`).join("")}<th></th></tr></thead>
+      <div class="tw"><table class="tt" style="min-width:${edCols(sheetCfg()).reduce((n,k)=>n+(thW(k)||220),0)+80}px">
+        <thead><tr>${edCols(sheetCfg()).map(k=>{const w=thW(k),ttl=k==="corr"?t("colHT")+" · "+t("colDT"):k==="insert"?t("colInsT"):k==="oal"?t("oal"):"";
+          return `<th data-ck="${k}"${w?` style="width:${w}px"`:""}${ttl?` title="${esc(ttl)}"`:""} class="${k.startsWith("x_")?"xth":""}${k!=="t"&&!prOn(cur,k)?" np":""}">${esc(colLabel(k))}${k==="holder"&&coneTag(M(cur.machineId)?.cone)?" "+coneTag(M(cur.machineId)?.cone):""}<span class="colrs" title="${esc(t("colWT"))}"></span></th>`}).join("")}<th class="actth"></th></tr><tr class="prrow">${edCols(sheetCfg()).map(k=>k==="t"?`<th class="prlab" title="${esc(t("prT"))}">${esc(t("prShort"))}${asmUnderT(sheetCfg())?` <input type="checkbox" class="prck" data-pr="asm" ${prOn(cur,"asm")?"checked":""} tabindex="-1" title="${esc(t("prT")+" : "+colLabel("asm"))}">`:""}</th>`:`<th title="${esc(t("prT"))}"><input type="checkbox" class="prck" data-pr="${k}" ${prOn(cur,k)?"checked":""} tabindex="-1" aria-label="${esc(t("prT")+" : "+colLabel(k))}"></th>`).join("")}<th></th></tr></thead>
         <tbody id="rows"></tbody></table></div>
       <div class="rowbar"><div class="rbg"><button class="btn" id="b-add">${esc(t("addTool"))}</button><button class="btn ghost" id="b-impt" title="${esc(t("impT"))}">${esc(t("imp"))}</button><button class="btn ghost" id="b-ncimp" title="${esc(t("impNCP"))}">${esc(t("ncFromProg"))}</button><label class="laysel sortsel" title="${esc(t("sortT"))}"><span>${esc(t("sortL"))}</span><select id="a-sort"><option value="">—</option>${Object.entries(t("sortBy")).map(([k,l])=>`<option value="${k}">${esc(l)}</option>`).join("")}</select></label></div><div class="rbg"><label class="laysel" title="${esc(t("laySelT"))}"><span>${esc(t("layShort"))}</span><select id="a-layout">${layoutOptions(layoutIdOf(art))}</select></label><label class="laysel" title="${esc(t("laySelXlT"))}"><span>Excel</span><select id="a-layoutxl"><option value="">${esc(t("laySameXl"))}</option>${layoutsXlOptions(art.layoutXl||"")}</select></label>${hasRight("layouts")||hasRight("colStyle")?`<button class="btn ghost" id="b-cols" title="${esc(t("colsBtnT"))}">${esc(t("colsBtn"))}</button>`:""}</div><div class="rbg"><button class="btn ghost" id="b-prep" title="${esc(t("prepT"))}">${esc(t("prep"))}</button><button class="btn ghost" id="b-magcmp">${esc(t("magCmpBtn"))}</button>${tplBtn("tools")}</div><span class="note">${t("excelNote")}</span></div>
     </div>
@@ -4046,6 +4058,7 @@ function renderEditor(art){fillHolderList(M(art.machineId)?.cone);
   // the suggested code: click it, or Enter in the empty box
   rows.addEventListener("click",e=>{const el=e.target.closest('input[data-k="asm"].sugg');if(!el)return;const tr=el.closest("tr"),i=+tr.dataset.i,x=cur.tools[i],a=asmFind(el.dataset.sugg);if(!a||clean(x.asm))return;e.preventDefault();x.asm=a.code;x.asmAuto=0;rowFill(i,a.tool,ASMF,"asm",a.code)});
   rows.addEventListener("keydown",e=>{if(e.key!=="Enter")return;const el=e.target.closest('input[data-k="asm"].sugg');if(!el||clean(el.value))return;const tr=el.closest("tr"),i=+tr.dataset.i,x=cur.tools[i],a=asmFind(el.dataset.sugg);if(!a)return;e.preventDefault();e.stopImmediatePropagation();x.asm=a.code;x.asmAuto=0;rowFill(i,a.tool,ASMF,"asm",a.code)},true);
+  rows.addEventListener("input",e=>{if(e.target.dataset.k==="t")tDupMark()});
   rows.addEventListener("input",e=>{if(e.target.dataset.k&&e.target.dataset.k!=="asm"){const tr=e.target.closest("tr");if(tr&&clean(cur.tools[+tr.dataset.i].asm))asmMark(tr)}});
   rows.addEventListener("click",e=>{const b=e.target.closest(".asmc");if(b&&b.dataset.asm){e.stopPropagation();asmCopy(b.dataset.asm)}});
   rows.addEventListener("click",e=>{const b=e.target.closest("[data-r]");if(!b)return;const i=+b.closest("tr").dataset.i,T=cur.tools;
@@ -4072,7 +4085,8 @@ function renderEditor(art){fillHolderList(M(art.machineId)?.cone);
     e.preventDefault();const tr=e.target.closest("tr");const r0=+tr.dataset.i,c0=VCOLS.indexOf(e.target.dataset.k);
     let lines=text.replace(/\r/g,"").split("\n").filter(l=>l.trim()!=="").map(l=>l.split("\t"));
     // with a header row: match columns by their titles; without: by position (old 8-column lists still land right)
-    let keyOf=ci=>VCOLS[c0+ci];
+    const PK=["t","type","diameter","ra","ls","oal","z","holder","code"],p0=PK.indexOf(e.target.dataset.k);
+    let keyOf=ci=>p0>=0?PK[p0+ci]:VCOLS[c0+ci];
     if(lines.length&&/type|diam|holder|porte|outil|t\s*number|reference|référence|plaquette|insert|correcteur/i.test(lines[0].join(" "))){
       const mp=autoMap(lines.shift(),TOOLF);const inv={};Object.entries(mp).forEach(([f,i])=>inv[i]=f);if(Object.keys(inv).length>=2)keyOf=ci=>inv[ci]}
     else if(c0===0&&lines.every(l=>l.length===8))keyOf=ci=>["t","type","diameter","ra","ls","z","holder","code"][ci];
@@ -4100,7 +4114,11 @@ function countTools(){$("#count").textContent=t("nTools",realTools(cur.tools).le
 // while typing: only the edited row is re-checked, the counters update once per frame
 function markRow(tr){const x=cur.tools[+tr.dataset.i];const real=x&&COLS.some(k=>k!=="t"&&clean(x[k]));REQ_TOOL.forEach(k=>tr.querySelector(`[data-k="${k}"]`)?.classList.toggle("miss",!!real&&!clean(x[k])));coneMark(tr)}
 let scT=0;function softCount(){if(scT)return;scT=requestAnimationFrame(()=>{scT=0;if(!cur||!$("#count"))return;$("#count").textContent=t("nTools",realTools(cur.tools).length);drawStatus()})}
-function markMissing(){document.querySelectorAll("#rows tr").forEach(tr=>{const x=cur.tools[+tr.dataset.i];const real=x&&COLS.some(k=>k!=="t"&&clean(x[k]));
+// the same tool number twice in a sheet (T1 and T01 are the same)
+function tDupMark(){if(!cur)return;const n=new Map();cur.tools.forEach(x=>{const k=normT(x.t);if(k&&realTools([x]).length)n.set(k,(n.get(k)||0)+1)});
+  document.querySelectorAll("#rows tr[data-i]").forEach(tr=>{const x=cur.tools[+tr.dataset.i],el=tr.querySelector('input[data-k="t"]');if(!x||!el)return;const d=(n.get(normT(x.t))||0)>1&&realTools([x]).length>0;
+    el.classList.toggle("warn",d);el.title=d?t("tDup",normT(x.t)):""})}
+function markMissing(){tDupMark();document.querySelectorAll("#rows tr").forEach(tr=>{const x=cur.tools[+tr.dataset.i];const real=x&&COLS.some(k=>k!=="t"&&clean(x[k]));
   REQ_TOOL.forEach(k=>tr.querySelector(`[data-k="${k}"]`)?.classList.toggle("miss",!!real&&!clean(x[k])));coneMark(tr)})}
 function drawStatus(){const box=$("#stbox");if(!box)return;const done=cur.status==="done",miss=missing(cur);const sig=[done,miss,cur.status,LANG,realTools(cur.tools).length,ROLE,hasRight("validate"),ixVersions(cur).length].join("|");if(box.dataset.sig===sig)return;box.dataset.sig=sig;
   box.classList.toggle("is-done",done);
@@ -5466,16 +5484,16 @@ function drawAV(art){
   if(avTab==="ix"){box.innerHTML=`<div class="card">${ixHTML(art)}</div>`;wireIx(box,art);return}
   if(avTab==="pdf"){box.innerHTML=`<div class="avpdf"><p class="note" id="avinfo">${esc(t("sheetLoading"))}</p><div id="avpages"></div></div>`;pdfInto($("#avpages"),art).then(n=>{const i=$("#avinfo");if(i)i.textContent=t("pages",n)}).catch(e=>{const i=$("#avinfo");if(i)i.textContent=t("pvError")+(e.message||e)});return}
   const rows=realTools(art.tools),AC=sheetCfg(art);
-  box.innerHTML=rows.length?`<div class="list"><table class="lt avt${rows.some(x=>clean(x.insert))?"":" noins"}"><thead><tr>${visCols(AC).filter(k=>!k.startsWith("x_")).map(k=>`<th${k==="insert"?' class="insc"':""}>${esc(colLabel(k,AC))}</th>`).join("")}<th>${esc(t("where"))}</th><th>${esc(t("cStock"))}</th>${AC.extra.map(e=>`<th class="xc">${esc(e.label)}</th>`).join("")}</tr></thead><tbody>
+  box.innerHTML=rows.length?`<div class="list"><table class="lt avt${rows.some(x=>clean(x.insert))?"":" noins"}"><thead><tr>${edCols(AC).filter(k=>!k.startsWith("x_")).map(k=>`<th${k==="insert"?' class="insc"':""}>${esc(colLabel(k,AC))}</th>`).join("")}<th>${esc(t("where"))}</th><th>${esc(t("cStock"))}</th>${AC.extra.map(e=>`<th class="xc">${esc(e.label)}</th>`).join("")}</tr></thead><tbody>
     ${rows.map(x=>{const k=normCode(x.code),c=k?C_(k):null,s=stockState(c);
       const hold=String(x.holder||"").split("\n").map(l=>splitHolders(l).map(p=>H_(p)?`<button class="linkcode sm" data-go="${holderHref(p)}">${esc(p)}</button>`:`<span>${esc(p)}</span>`).join(`<i class="plus">+</i>`)).filter(Boolean).join("<br>");
-      const cells={asm:`<td class="m" data-col="asm">${clean(x.asm)?`<b>${esc(clean(x.asm).toUpperCase())}</b>`:`<span class="dim">—</span>`}</td>`,t:`<td class="m" data-col="t"><b>${esc(normT(x.t))}</b></td>`,corr:`<td class="m corrv" data-col="corr"><span><i>H</i>${esc(corrV(x.corrH))||"—"}</span><span><i>D</i>${esc(corrV(x.corrD))||"—"}</span></td>`,
+      const AT=asmUnderT(AC);const cells={asm:`<td class="m" data-col="asm">${clean(x.asm)?`<b>${esc(clean(x.asm).toUpperCase())}</b>`:`<span class="dim">—</span>`}</td>`,t:`<td class="m" data-col="t"><b>${esc(normT(x.t))}</b>${AT&&clean(x.asm)?`<div class="dim small">${esc(clean(x.asm).toUpperCase())}</div>`:""}</td>`,corr:`<td class="m corrv" data-col="corr"><span><i>H</i>${esc(corrV(x.corrH))||"—"}</span><span><i>D</i>${esc(corrV(x.corrD))||"—"}</span></td>`,
         type:`<td class="cl pl" data-col="type"><span class="clip">${esc(mlv(x.type).toUpperCase())}</span></td>`,diameter:`<td class="m pl" data-col="diameter">${esc(mlv(x.diameter))}</td>`,
         ra:`<td class="m pl" data-col="ra">${esc(/\n/.test(x.ra||"")?mlv(x.ra):raLabel(x.ra)||clean(x.ra))}</td>`,insert:`<td class="m insc pl" data-col="insert">${esc(mlv(x.insert).toUpperCase())}</td>`,
         ls:`<td class="m pl" data-col="ls"><b>${esc(mlv(x.ls))}</b></td>`,oal:`<td class="m pl" data-col="oal">${esc(mlv(x.oal)||(c&&c.oal)||"")}</td>`,z:`<td class="m pl" data-col="z">${esc(mlv(x.z))}</td>`,
         holder:`<td class="cl hcell" data-col="holder">${hold||`<span class="dim">—</span>`}</td>`,
         code:`<td data-col="code">${k?(c?`<button class="linkcode" data-go="${codeHref(k)}">${esc(k)}</button>`:`<span class="m">${esc(k)}</span>`):`<span class="dim">—</span>`}</td>`};
-      return `<tr>${visCols(AC).filter(q=>!q.startsWith("x_")).map(q=>cells[q]).join("")}
+      return `<tr>${edCols(AC).filter(q=>!q.startsWith("x_")).map(q=>cells[q]).join("")}
         <td class="cl" data-col="where"><span class="clip ploc">${esc(c&&c.location||"")}</span></td>
         <td data-col="stock">${c?`<div class="stk">${pstep("c:"+k,+c.stock||0)}<span class="spill s-${s}">${esc(SSL(s))}</span></div>`:k?`<span class="dim small">${esc(t("noCard"))}</span>`:""}</td>${AC.extra.map(e=>`<td class="xc pl">${esc(mlv(x[xKey(e.id)]))}</td>`).join("")}</tr>`}).join("")}</tbody></table></div>`
     :`<div class="empty"><h3>${esc(t("pNone"))}</h3></div>`;
@@ -5709,7 +5727,7 @@ Object.assign(I18N.en,{getApp:"Get the app", getAppT:"Download the Windows insta
   demoBar:"Demo: made-up workshop with 20 machines and 500 articles. Changes stay in this browser only.", demoShort:"Made-up data", demoReset:"Reset the demo", demoResetQ:"Reset the demo data? Everything changed here is lost.", demoGo:"Real version"});
 Object.assign(I18N.fr,{getApp:"Télécharger l'app", getAppT:"Télécharger l’installateur Windows",
   demoBar:"Démo : atelier fictif de 20 machines et 500 articles. Vos changements restent dans ce navigateur.", demoShort:"Données fictives", demoReset:"Réinitialiser la démo", demoResetQ:"Réinitialiser les données de la démo ? Tout ce qui a été changé ici sera perdu.", demoGo:"Version réelle"});
-const APP_ZIP="BrocheStuff-Setup-2.21.0.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
+const APP_ZIP="BrocheStuff-Setup-2.21.1.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
 function appUrl(){
   // on the site (…/Web/ or …/Demo/) the program sits next door in …/App/; anywhere else, take it from the site
   if(/^https?:/.test(location.protocol)&&/\/(Web|Demo)\/(index\.html)?$/i.test(location.pathname))return new URL("../App/"+APP_ZIP,location.href).href;
@@ -6221,8 +6239,8 @@ function asmCheckRow(i,tr){const x=cur&&cur.tools[i];if(!x||clean(x.asm))return;
 /* ---------- which columns go on the PDF and the Excel ----------
    The layout says it for every sheet (Columns window: "PDF / Excel" box); each sheet can change it
    with the box above each column of its tool table. */
-Object.assign(I18N.en,{prT:"On the PDF and the Excel", prShort:"PDF", prOn:c=>`“${c}” will be on the PDF and the Excel`, prOff:c=>`“${c}” will not be on the PDF and the Excel`, prLay:"PDF / Excel", prLayT:"Ticked: the column is on the PDF and the Excel of the sheets using this layout (each sheet can still change it above its tool table)"});
-Object.assign(I18N.fr,{prT:"Sur le PDF et l’Excel", prShort:"PDF", prOn:c=>`« ${c} » sera sur le PDF et l’Excel`, prOff:c=>`« ${c} » ne sera pas sur le PDF et l’Excel`, prLay:"PDF / Excel", prLayT:"Coché : la colonne est sur le PDF et l’Excel des fiches qui utilisent cette mise en page (chaque fiche peut encore le changer au-dessus de son tableau d’outils)"});
+Object.assign(I18N.en,{prT:"On the PDF and the Excel", prShort:"PDF", tDup:T=>`${T} is used twice in this sheet`, prOn:c=>`“${c}” will be on the PDF and the Excel`, prOff:c=>`“${c}” will not be on the PDF and the Excel`, prLay:"PDF / Excel", prLayT:"Ticked: the column is on the PDF and the Excel of the sheets using this layout (each sheet can still change it above its tool table)"});
+Object.assign(I18N.fr,{prT:"Sur le PDF et l’Excel", prShort:"PDF", tDup:T=>`${T} est utilisé deux fois dans cette fiche`, prOn:c=>`« ${c} » sera sur le PDF et l’Excel`, prOff:c=>`« ${c} » ne sera pas sur le PDF et l’Excel`, prLay:"PDF / Excel", prLayT:"Coché : la colonne est sur le PDF et l’Excel des fiches qui utilisent cette mise en page (chaque fiche peut encore le changer au-dessus de son tableau d’outils)"});
 const prDef=(cfg,k)=>!((cfg&&cfg.noprint)||["asm"]).includes(k);
 function prOn(art,k,cfg){const P=(art&&art.pr)||{};if(Object.prototype.hasOwnProperty.call(P,k))return !!P[k];return prDef(cfg||cfgOf(art),k)}
 // the layout as it is printed: the columns not printed are left out, and nothing is put under them
@@ -6231,8 +6249,9 @@ function printCfg(cfg,art){if(!cfg)return cfg;const keys=[...LABK.filter(k=>k!==
   Object.entries(cfg.joinTo||{}).forEach(([k,to])=>{if(!hidden.includes(k)&&!hidden.includes(to))joinTo[k]=to});
   return{...cfg,hidden,joinTo,join:Object.keys(joinTo)}}
 function prStyle(){if(!cur)return;let el=$("#npstyle");if(!el){el=document.createElement("style");el.id="npstyle";document.head.appendChild(el)}
-  const off=visCols(sheetCfg()).filter(k=>k!=="t"&&!prOn(cur,k));el.textContent=off.map(k=>`.tt td[data-col="${k}"] input{opacity:.5}`).join("")}
+  const off=visCols(sheetCfg()).filter(k=>k!=="t"&&!prOn(cur,k));el.textContent=off.map(k=>k==="asm"?`.tt input[data-k="asm"]{opacity:.5}`:`.tt td[data-col="${k}"] input{opacity:.5}`).join("")}
 
+document.addEventListener("pointerdown",()=>{window.__colPtr=1},true);document.addEventListener("pointerup",()=>{setTimeout(()=>{window.__colPtr=0},0)},true);
 /* ---------- 4. reports ---------- */
 let repP="90";
 function renderReports(){
@@ -6453,7 +6472,7 @@ function drawHistory(){
    admin page, demo switch. The web version doesn't use any of this.
    ===================================================================== */
 const DESKDEMO=/*DESKDEMO*/null;
-const APP_VER="2.21.0";
+const APP_VER="2.21.1";
 let DEMO_ON=false, ACC=null, USERS=null, PCNAME="", realDIR="", loginFails=0, loginWait=0, lastAct=Date.now();
 Object.assign(I18N.en,{
   loginT:"Sign in", loginP:"Enter your name or code and your password.", loginName:"Name or code", loginPw:"Password", loginGo:"Sign in",
@@ -7029,6 +7048,8 @@ if(DESK&&!WEBFS)document.addEventListener("keydown",e=>{if(e.key==="F5"||((e.ctr
     if(n.matches(SEL))apply(n);else if(n.firstElementChild)n.querySelectorAll(SEL).forEach(apply)}}).observe(view,{childList:true,subtree:true});
   // where is the pointer: on a column edge, on a row edge, or nowhere
   const hit=e=>{const t=e.target;if(!t||!t.closest)return null;
+    // a box or a button near a column edge is clicked, not dragged
+    if(t.closest("input,select,button,a,label"))return null;
     const th=t.closest("#view thead th");if(th&&th.closest(SEL)){const r=th.getBoundingClientRect(),cells=heads(th.closest("table"));
       const ix=cells.indexOf(th);if(r.right-e.clientX<=7&&ix<cells.length-1)return{kind:"col",tb:th.closest("table"),i:ix};
       if(e.clientX-r.left<=4&&cells.indexOf(th)>0)return{kind:"col",tb:th.closest("table"),i:cells.indexOf(th)-1};return null}

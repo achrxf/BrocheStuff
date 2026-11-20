@@ -2,8 +2,8 @@ from playwright.sync_api import sync_playwright
 R=[]
 def ok(n,c,x=""):R.append((n,bool(c)));print(("PASS " if c else "FAIL ")+n,x)
 U="file:///home/claude/qa/ToolManager.html"
-KEYS="makePDF(sheetData(A('a1'))).bsMeta.keys"
-XK="sheetModel(A('a1'))&&makePDF(xlData(A('a1'))).bsMeta.keys"
+KEYS="(()=>{const m=makePDF(sheetData(A('a1'))).bsMeta;return [...m.keys,...((m.gj&&m.gj.t)||[])]})()"
+XK="(()=>{const m=makePDF(xlData(A('a1'))).bsMeta;return [...m.keys,...((m.gj&&m.gj.t)||[])]})()"
 with sync_playwright() as p:
   b=p.chromium.launch();ctx=b.new_context(viewport={"width":1500,"height":900});ctx.add_init_script("window.__QA_ROLE='admin'")
   pg=ctx.new_page();errs=[];pg.on("pageerror",lambda e:errs.append(str(e)));pg.on("console",lambda m:m.type=="error" and errs.append(m.text[:200]))
@@ -20,7 +20,7 @@ with sync_playwright() as p:
   ok("…and on the Excel",'asm' in pg.evaluate(XK))
   ok("saved on the sheet",pg.evaluate("JSON.stringify(A('a1').pr)")=='{"asm":true}')
   ok("message","Assemblage" in pg.inner_text("#toast"))
-  n=pg.evaluate("(()=>{const d=makePDF(sheetData(A('a1')));return d.bsMeta.colw[d.bsMeta.keys.indexOf('asm')]})()");ok("Assemblage column has a real width on the PDF",n and n>=12,n)
+  ok("Assemblage printed under the tool number (Standard)",pg.evaluate("JSON.stringify(makePDF(sheetData(A('a1'))).bsMeta.gj.t||[])")=='["asm"]')
   # untick LS
   pg.uncheck('.tt thead [data-pr=ls]');pg.wait_for_timeout(500)
   ok("LS off: not on the PDF",'ls' not in pg.evaluate(KEYS))

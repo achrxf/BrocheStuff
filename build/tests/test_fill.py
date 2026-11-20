@@ -8,7 +8,7 @@ SEED="""db.machines.push({id:'m1',abbr:'S3',name:'TOYODA',cone:'BT50',createdAt:
   {t:'T52',corrH:'52',type:'FRAISE HFS CW',diameter:'20',ra:'R3',ls:'55',holder:'CÔNE FRETTÉ\\nE3416560320100',code:'F941'},
   {t:'T09',corrH:'9',type:'TOURTEAU',insert:'RPHT1204',diameter:'63',ra:'R6',ls:'40',holder:'MANDRIN À TENON Ø22',code:'F863'}],createdAt:1,updatedAt:1});
  db.articles.push({id:'a2',machineId:'m1',article:{number:'2000',index:'B'},tools:[{t:'T01'},{t:'T02',type:'FRAISE 2T'},{t:'T03',diameter:'16'},{t:'T04'},{t:'T05'}],createdAt:2,updatedAt:2});
- db.layouts=[{id:'lold',name:'Ancienne',labels:{},extra:[],hidden:['oal','z'],order:['corr','type','diameter','ra','insert','ls','oal','z','holder','code']}];
+ db.layouts=[{id:'lold',name:'Ancienne',labels:{},extra:[],hidden:['oal','z'],order:['corr','type','diameter','ra','insert','ls','oal','z','holder','code']},{id:'lown',name:'Colonne',labels:{},extra:[],hidden:['oal','z'],joinTo:{insert:'type'},asmOwn:true}];db.layoutDefault='lown';
  delete db.asmSeeded;db.assemblies=[];saveDB()"""
 def cell(pg,i,k):return pg.locator(f'#rows tr[data-i="{i}"] input[data-k="{k}"]').first
 def typ(pg,i,k,v):el=cell(pg,i,k);el.fill(v);el.dispatch_event("change");pg.wait_for_timeout(350)
@@ -64,7 +64,7 @@ with sync_playwright() as p:
   pg.click("#b-cols");pg.wait_for_timeout(600);ok("layout editor lists Assemblage","Assemblage" in pg.inner_text(".dlg"));pg.evaluate("closeDlg()")
   n=pg.evaluate("makePDF(sheetData(A('a2'))).getNumberOfPages()");ok("PDF still builds",n>=1)
   pg.evaluate("cur.layout='lold';refreshCols(cur);render()");pg.wait_for_timeout(800)
-  ok("older layout: Assemblage placed after Outil",pg.evaluate("[...document.querySelectorAll('.tt thead th')].slice(0,2).map(t=>t.textContent.trim())")==["Outil","Assemblage"])
+  ok("older layout: code under the tool number",pg.evaluate("[...document.querySelectorAll('.tt thead tr:first-child th')].slice(0,2).map(t=>t.textContent.trim())")[1]!="Assemblage" and pg.locator('#rows td[data-col=t] input[data-k=asm]').count()>0)
   ok("no errors",not errs,errs)
   b.close()
 print("FAILED:",[n for n,c in R if not c])
