@@ -6,7 +6,7 @@ Tool lists, tool crib and holders for a CNC machining shop: every machine, its a
 |---|---|---|
 | **Web** | [achrxf.github.io/BrocheStuff/Web](https://achrxf.github.io/BrocheStuff/Web/) | The program in the browser. Starts empty; your data stays in your browser. |
 | **Demo** | [achrxf.github.io/BrocheStuff/Demo](https://achrxf.github.io/BrocheStuff/Demo/) | The same program filled with a made-up workshop, with a step-by-step tutorial (French / English) linked at the bottom of every page: 20 machines (3, 4 and 5 axes; BT30 / BT40 / BT50 / HSK63), 500 articles, ~500 tool codes, ~130 holders and a month of stock moves. |
-| **App** | [App/BrocheStuff-Setup-2.25.1.exe](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Setup-2.25.1.exe) | The Windows program (10/11, 64-bit) with sign-in accounts and a shared data folder. Run the installer (no admin rights needed), then open BrocheStuff from the Start menu; first sign-in **admin / admin**. Portable version: [BrocheStuff-Windows.zip](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Windows.zip). See [`App/README.txt`](App/README.txt). |
+| **App** | [App/BrocheStuff-Setup-2.26.0.exe](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Setup-2.26.0.exe) | The Windows program (10/11, 64-bit) with sign-in accounts and a shared data folder. Run the installer (no admin rights needed), then open BrocheStuff from the Start menu; first sign-in **admin / admin**. Portable version: [BrocheStuff-Windows.zip](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Windows.zip). See [`App/README.txt`](App/README.txt). |
 
 The web version has a **Download the app** button at the top right. The demo stands on its own: it has no link to the real version and no download, so it can be shared safely.
 
@@ -15,7 +15,7 @@ The web version has a **Download the app** button at the top right. The demo sta
 ```
 Web/   index.html   the web version (one file, works offline once opened)
 Demo/  index.html   the web version with demo data (kept apart from your real data)
-App/   BrocheStuff-Setup-2.25.1.exe (installer), BrocheStuff-Windows.zip (portable), README.txt, FOR_IT.txt, checksums
+App/   BrocheStuff-Setup-2.26.0.exe (installer), BrocheStuff-Windows.zip (portable), README.txt, FOR_IT.txt, checksums
 ```
 
 ## What it does
@@ -25,6 +25,10 @@ App/   BrocheStuff-Setup-2.25.1.exe (installer), BrocheStuff-Windows.zip (portab
 **Machines and articles.** Machine cards with spindle taper (BT40 / BT50 / …) and progress; articles with number, index, designation, reference, program, material; the tool list (T, H / D offsets, type, Ø, R / ∠, insert reference, LS, LT, Z, holder, code) with a drawing that explains each box, Excel paste, live **PDF / Excel preview**, **print**, **PDF** and an editable **Excel** file (same look as the PDF, imports back), a **PDF ⇄ Excel** converter, **several lines in any cell** (Shift+Enter), **your own columns** and renamed column titles saved as **layouts** (a default for new sheets, any layout per sheet), and **page / column widths** you drag to size. A holder of the wrong taper for the machine is flagged.
 
 **Operations, and three modes.** A sheet can hold one line per operation: the same T on several lines, with **Operation**, **Time** (12:30 or 02:54:12) and **Tool life** columns ("+ Operation columns" on a sheet, or in a layout). "+" on a line adds an operation for the same tool with its data copied. Repeated T numbers get a blue dot; a red one when the tool data differ between the lines. The sheet has three modes: **Saisie** (everything, one line per operation), **PDF** (one line per tool, times and tool life added up, your order and columns) and **Excel** (every operation with the total at the end, or the same list as the PDF, its own columns and order). Sorting only changes the PDF (and the Excel if you ask). The read-only sheet and the tool prep show one line per tool.
+
+**Look: Atelier or classic, day or night.** The program opens in the **Atelier** look, built from the shop's own language: titles laid out like a drawing title block, the index as a revision triangle, statuses as inspection stamps, progress as tick gauges, locations as bin labels, Archivo for words and IBM Plex Mono for every T, code and size. A **Day / Night** switch sits at the top right (light drafting paper or graphite). The previous look is kept as **Classic look** in the ⋯ menu, one click either way, nothing lost. Motion is used where it explains something (pages coming in, gauges filling, counters, dialogs, the drawer you open) and turns off when the computer asks for reduced motion.
+
+**Cabinet map.** In the tool crib, **List | Cabinet map**: every cabinet drawn from the front with its drawers, built from the locations you already have (`Armoire B - 2B` → cabinet *Armoire B*, drawer *2B*). Each drawer shows how many tools it holds and ▼ when one needs refilling; the crib filters and search light up the drawers concerned. Click a drawer to see its tools, their stock against the minimum, open a tool, print the drawer's label or jump to the list. Tools without a location wait under the map, one click to give them a place.
 
 **Where each tool is.** The tool sheet has a **Location** column filled from the tool crib (and, as an option, the holder's location): by default it sits under the tool code, on the screen, the PDF and the Excel. A tool with no location yet shows "+ location" right in the sheet to add it on the spot. Sheets can be sorted by location, and the tool prep list can be taken out in shop order (by location). Layout options: row height, check boxes for the tool prep (Ready, or Prepared · Mounted).
 
@@ -82,8 +86,10 @@ BrocheStuff regroupe les machines CNC, leurs articles et leurs outils, produit u
 
 - **Web** : https://achrxf.github.io/BrocheStuff/Web/ — le programme dans le navigateur, vide au départ.
 - **Démo** : https://achrxf.github.io/BrocheStuff/Demo/ — atelier fictif de 20 machines et 500 articles.
-- **Programme Windows** : [App/BrocheStuff-Setup-2.25.1.exe](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Setup-2.25.1.exe) — installez-le (sans droits administrateur), ouvrez BrocheStuff depuis le menu Démarrer, première connexion **admin / admin**. Comptes par personne, dossier de données partagé en réseau, page Administration, démo intégrée (voir `README.txt`).
+- **Programme Windows** : [App/BrocheStuff-Setup-2.26.0.exe](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Setup-2.26.0.exe) — installez-le (sans droits administrateur), ouvrez BrocheStuff depuis le menu Démarrer, première connexion **admin / admin**. Comptes par personne, dossier de données partagé en réseau, page Administration, démo intégrée (voir `README.txt`).
 
 Au démarrage, choisissez votre service : Préparateur méthode, Préparateur outil, Production, ou Accès admin. Les données restent sur l'ordinateur qui les utilise (navigateur, ou `Documents\BrocheStuff` pour le programme). **Sauvegarder / Restaurer** pour les déplacer ; une copie automatique est gardée toutes les 5 minutes.
+
+Nouveau en 2.26 : l'interface **Atelier** (cartouches de plan, tampons, étiquettes de bac, graduations), un interrupteur **Jour / Nuit**, l'**interface classique** toujours disponible dans le menu ⋯, des animations utiles, et le **plan des armoires** au magasin outils (chaque armoire vue de face, ses tiroirs, leur contenu et leur stock).
 
 Nouveau : fiches **validées** (verrouillées, bande verte sur le PDF, nouvel indice pour modifier, historique des versions), **référence plaquette** et **correcteurs H / D** sur chaque outil (repris des G43 H et G41 / G42 D à la lecture d'un programme), import des **programmes CN** et des listes d'outils **Mastercam / FAO**, **magasins des machines** (poche par poche, comparaison avec un article), **rapports** de consommation, **alerte stock** pour le préparateur outil.
