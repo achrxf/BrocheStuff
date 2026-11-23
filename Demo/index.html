@@ -1712,6 +1712,28 @@ table.chgt td.m,table.chgt b.m{font-family:var(--mono,monospace)}
 @media (max-width:600px){.gfkeys{display:none}.gfloc{max-width:46%}}
 @media (max-width:520px){.top .gfbtn{display:none}}
 .tt .colrs{right:0;width:8px}.tt .colrs::after{left:6px}
+/* 2.25 operations */
+.modetabs{display:inline-flex;gap:2px;margin-left:12px;padding:3px;border-radius:10px;background:var(--fill);border:1px solid var(--hair);vertical-align:middle}
+.modetabs button{border:0;background:transparent;padding:5px 12px;border-radius:7px;font:600 13px/1 var(--body);letter-spacing:0;text-transform:none;color:var(--mid);cursor:pointer}
+.modetabs button[aria-selected="true"]{background:var(--paper);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.ed[data-mode="pdf"] .card .tw,.ed[data-mode="excel"] .card .tw,.ed[data-mode="pdf"] .tdiag.wide,.ed[data-mode="excel"] .tdiag.wide,
+.ed[data-mode="pdf"] .rowbar .rbg:first-child,.ed[data-mode="excel"] .rowbar .rbg:first-child,.ed[data-mode="pdf"] .rowbar>.note,.ed[data-mode="excel"] .rowbar>.note,.ed[data-mode="pdf"] .opshint,.ed[data-mode="excel"] .opshint{display:none!important}
+.ed[data-mode="pdf"] .tdtog,.ed[data-mode="excel"] .tdtog{display:none}
+.sortsel{display:none!important}
+#modepanel{display:flex;flex-direction:column;gap:12px;margin-bottom:12px}#modepanel[hidden]{display:none}
+.mpset{display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center}.mpset .chk{font-size:14px}.seg2{display:flex;flex-direction:column;gap:6px}
+.mpcols{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.mplab{font:600 11px/1 var(--body);text-transform:uppercase;letter-spacing:.06em;color:var(--mid);margin-right:4px}
+.mpchip{display:inline-flex;align-items:center;gap:6px;padding:5px 10px 5px 8px;border:1px solid var(--hair);border-radius:999px;font-size:13px;cursor:pointer;color:var(--mid);background:var(--paper)}
+.mpchip.on{border-color:var(--ink);color:var(--ink)}.mpchip input{accent-color:var(--ink);margin:0}
+.mpconf{display:flex;flex-wrap:wrap;gap:4px 14px}.mpn{margin:0}
+.mplist{max-height:min(560px,62vh);overflow:auto}.mpt td,.mpt th{white-space:nowrap}.mpt tr.tot td{border-top:2px solid var(--ink);font-weight:700}
+.tt input[data-k="t"].opg{background-image:radial-gradient(circle at calc(100% - 7px) 50%,#2563eb 3px,transparent 3.6px)!important}
+.tt input[data-k="t"].opbad{background-image:radial-gradient(circle at calc(100% - 7px) 50%,var(--red) 3.4px,transparent 4px)!important}
+.tt tr.oprow td:not([data-col="t"]):not([data-col="op"]):not([data-col="time"]):not([data-col="life"]):not(.act):not([data-col^="x_"]) input{opacity:.42}
+.tt td.durcell input{font-family:var(--mono)}.tt input.bad{outline:2px solid var(--red);outline-offset:-2px}
+.tt .act .ib.op{font-weight:700;color:#2563eb}
+.opshint{margin-left:auto}
+
 /* 2.24 */
 .top .gfbtn kbd{border-color:currentColor!important;color:inherit!important;opacity:.55}
 .ed .card h2:has(.tdtog) .hint{margin-left:auto}
@@ -2620,7 +2642,7 @@ function makePDF(data){
   const lab=(k,def)=>clean(LAB[k])||def,on=k=>!HID.has(k);
   // joined columns: Ø, R and the insert sit inside the Type cell unless the layout gives them their own column;
   // any other column marked "joined" shares one title with the column before it
-  const TSUB=["diameter","ra","insert"],ORD=["t","asm","corr","type","diameter","ra","insert","ls","oal","z","holder","code","loc",...EXTRA.map(x=>"x_"+x.id)];
+  const TSUB=["diameter","ra","insert"],ORD=["t","asm","corr","op","type","diameter","ra","insert","ls","oal","z","holder","code","loc","time","life",...EXTRA.map(x=>"x_"+x.id)];
   const JT=(()=>{if(CFG.joinTo&&typeof CFG.joinTo==="object")return CFG.joinTo;const L=Array.isArray(CFG.join)?CFG.join:TSUB,o={};
     L.forEach(k=>{if(TSUB.includes(k)){o[k]="type";return}const i=ORD.indexOf(k);for(let j=i-1;j>=0;j--)if(on(ORD[j])&&!L.includes(ORD[j])){o[k]=ORD[j];break}});return o})();
   const tgt=k=>{const to=JT[k];return !BLANK&&k!=="t"&&on(k)&&to&&to!==k&&(to==="t"||on(to))&&!JT[to]&&ORD.includes(to)?to:null};
@@ -2630,12 +2652,12 @@ function makePDF(data){
   const typeOn=on("type");
   const SPEC=(BLANK?[["t",10],["asm",15],["corr",13],["type",33],["diameter",11],["ra",11],["insert",23],["ls",11],["oal",11],["z",8],["holder",33],["code",19]]
                    :[["t",11],["asm",17],["corr",12],["type",62],["diameter",13],["ra",12],["insert",26],["ls",13],["oal",13],["z",9],["holder",42],["code",21]])
-    .concat(EXTRA.map(x=>["x_"+x.id,BLANK?16:18])).concat([["loc",24]]).filter(([k])=>k==="t"||(BLANK?on(k)&&k!=="loc":k==="type"?typeOn:sepC(k)));
+    .concat(EXTRA.map(x=>["x_"+x.id,BLANK?16:18])).concat([["loc",24],["op",26],["time",14],["life",14]]).filter(([k])=>k==="t"||(BLANK?on(k)&&k!=="loc":k==="type"?typeOn:sepC(k)));
   // the layout's order (the tool number stays first)
   if(Array.isArray(CFG.order)){const O=["t",...CFG.order];SPEC.sort((p,q)=>{const a=O.indexOf(p[0]),b=O.indexOf(q[0]);return(a<0?99:a)-(b<0?99:b)})}
   if(OPT.chk)SPEC.push(["chk",OPT.chk>1?17:10]);
   const KEYS=SPEC.map(s=>s[0]),KI=Object.fromEntries(KEYS.map((k,i)=>[k,i]));
-  const SPW=Object.fromEntries([["t",11],["asm",17],["corr",12],["type",62],["diameter",13],["ra",12],["insert",26],["ls",13],["oal",13],["z",9],["holder",42],["code",21],["loc",24],["chk",10],...EXTRA.map(x=>["x_"+x.id,18])]);
+  const SPW=Object.fromEntries([["t",11],["asm",17],["corr",12],["type",62],["diameter",13],["ra",12],["insert",26],["ls",13],["oal",13],["z",9],["holder",42],["code",21],["loc",24],["op",26],["time",14],["life",14],["chk",10],...EXTRA.map(x=>["x_"+x.id,18])]);
   const COLW=(()=>{const ws=SPEC.map(s=>s[1]);if(!BLANK)Object.entries(GJ).forEach(([k,L])=>{if(KI[k]!=null)ws[KI[k]]+=Math.min(24,L.reduce((a,j)=>a+(SPW[j]||12)*0.45,0))});
     // what each column holds: NE = width at the normal text size, FLR = width at the smallest size still readable on A4.
     // A column is never made narrower than FLR, so nothing gets cut; the text gets smaller instead.
@@ -2656,7 +2678,7 @@ function makePDF(data){
           const c=widest(k,"Plex5",8.4,parts),cmin=widest(k,"Plex5",4.6,parts.map(v=>/\s/.test(v)&&v.length>24?v.slice(0,Math.ceil(v.length/2)):v));
           n=Math.min(48,Math.max(MINW.holder,c+3.8,headWord(lab("holder",L.head[6]))+3));fl=Math.max(14,cmin+3.4)}
         else if(k==="insert"){const V=TL.flatMap(t=>LO(t.insert).map(v=>v.toUpperCase())),c=widest(k,"Mono5",8.6,V);n=Math.min(40,Math.max(MINW.insert,c+3.6));fl=Math.max(10,widest(k,"Mono5",5,V)+3.2)}
-        else if(k.startsWith("x_")||k==="loc"){const x=EXTRA.find(e=>"x_"+e.id===k),hd=k==="loc"?lab("loc",LANG==="fr"?"Emplacement":"Location"):(x?x.label:""),V=TL.flatMap(t=>LO(t[k]));
+        else if(k.startsWith("x_")||k==="loc"||OPK.includes(k)){const x=EXTRA.find(e=>"x_"+e.id===k),hd=k==="loc"?lab("loc",LANG==="fr"?"Emplacement":"Location"):OPK.includes(k)?lab(k,{op:LANG==="fr"?"Opération":"Operation",time:LANG==="fr"?"Temps":"Time",life:LANG==="fr"?"Vie outil":"Tool life"}[k]):(x?x.label:""),V=TL.flatMap(t=>LO(t[k]));
           n=Math.min(k==="loc"?42:40,Math.max(mnW(k),widest(k,"Plex5",8.4,V)+3.6,headWord(hd)+3.2));fl=Math.max(8,widest(k,"Plex5",4.8,V)+3.2,headWord(hd)*0.85+2.4)}
         else if(k==="code"){let c=widest(k,"MonoB",9.5,TL.flatMap(t=>LO(t.code).map(v=>v.toUpperCase())),-0.1),cmin=c*5/9.5;
           (GJ.code||[]).forEach(j=>{const lb=j==="loc"&&!clean(LAB.loc)?(LANG==="fr"?"Empl. ":"Loc. "):"";font("Plex5",6.2);const lw=lb?tw(lb):0,f=/^(holder|type|loc)$/.test(j)||j.startsWith("x_")?"Plex5":"Mono5",V=TL.flatMap(t=>LO(t[j]));
@@ -2691,7 +2713,7 @@ function makePDF(data){
   const typeHead=(()=>{const parts=[on("type")?lab("type",L.type||"Type"):"",inT("diameter")?lab("diameter","Ø"):"",inT("ra")?lab("ra","R / °"):""].filter(Boolean);
     return (!clean(LAB.type)&&!clean(LAB.diameter)&&!clean(LAB.ra)&&parts.length===3)?L.head[2]:parts.join("  ·  ")||lab("insert",L.ins)})();
   const HEADOF={t:lab("t",L.head[0]),corr:lab("corr",L.head[1]),type:BLANK?lab("type",L.type||"Type"):typeHead,diameter:lab("diameter","Ø"),ra:lab("ra","R / °"),insert:lab("insert",L.ins),
-    ls:lab("ls",L.head[3]),oal:lab("oal",L.head[4]),z:lab("z",L.head[5]),holder:lab("holder",L.head[6]),code:lab("code",L.head[7]),loc:lab("loc",LANG==="fr"?"Emplacement":"Location"),chk:OPT.chk>1?(LANG==="fr"?"Prép. Monté":"Prep Set"):(LANG==="fr"?"Prêt":"Ready"),asm:lab("asm",LANG==="fr"?"Assemblage":"Assembly")};
+    ls:lab("ls",L.head[3]),oal:lab("oal",L.head[4]),z:lab("z",L.head[5]),holder:lab("holder",L.head[6]),code:lab("code",L.head[7]),loc:lab("loc",LANG==="fr"?"Emplacement":"Location"),op:lab("op",LANG==="fr"?"Opération":"Operation"),time:lab("time",LANG==="fr"?"Temps":"Time"),life:lab("life",LANG==="fr"?"Vie outil":"Tool life"),chk:OPT.chk>1?(LANG==="fr"?"Prép. Monté":"Prep Set"):(LANG==="fr"?"Prêt":"Ready"),asm:lab("asm",LANG==="fr"?"Assemblage":"Assembly")};
   EXTRA.forEach(x=>HEADOF["x_"+x.id]=x.label);
   const HEAD=KEYS.map(k=>[HEADOF[k],...(GJ[k]||[]).map(j=>HEADOF[j])].join(" · "));
   const JH=KEYS.map(()=>false);
@@ -2803,6 +2825,7 @@ function makePDF(data){
     if(KI.asm!=null){at("asm");useK("asm");const av=linesOf(t.asm).map(v=>v.toUpperCase());if(av.length)stack(av,X_("asm")+1.6,W_("asm")-2.8,"MonoB",9,6,"left",-0.1);else dash(X_("asm")+1.6);under("asm")}
     if(KI.code!=null){at("code");useK("code");const code=linesOf(t.code).map(v=>v.toUpperCase());if(code.length)stack(code,X_("code")+1.8,W_("code")-3,"MonoB",9.5,6.2,"left",-0.1);else{font("Mono5",10);txt("___",X_("code")+1.8,base(10))};under("code")}
     if(KI.loc!=null){at("loc");useK("loc");const lv=linesOf(t.loc);if(lv.length)stack(lv,X_("loc")+1.6,W_("loc")-2.8,"Plex5",8.4,5.6,"left");else dash(X_("loc")+1.6);under("loc")}
+    OPK.forEach(k=>{if(KI[k]==null)return;at(k);useK(k);const v=linesOf(t[k]);if(v.length)stack(v,X_(k)+1.6,W_(k)-2.8,k==="op"?"Plex5":"Mono5",k==="op"?8.4:9.4,4.8,"left");else if(k!=="op")dash(X_(k)+1.8);under(k)});
     // your own columns
     EXTRA.forEach(ex=>{const k="x_"+ex.id,v=linesOf(t[k]);if(KI[k]==null)return;at(k);useK(k);if(v.length)stack(v,X_(k)+1.6,W_(k)-2.8,"Plex5",8.6,5.6,"left");under(k)});SK=null;color(C.ink);
     if(KI.chk!=null){const x0=X_("chk"),w0=W_("chk"),nb=OPT.chk>1?2:1,bs=3.6,gp=(w0-nb*bs)/(nb+1);stroke(C.ink);doc.setLineWidth(0.3);for(let b=0;b<nb;b++)doc.roundedRect(x0+gp+b*(bs+gp),MID0-bs/2,bs,bs,0.5,0.5,"S")}
@@ -3110,7 +3133,7 @@ const artsOf=mid=>db.articles.filter(a=>a.machineId===mid);
 // the index list printed on the PDF: up to the index of this sheet, with the reason and who validated it
 function revRows(art){const L=ixVersions(art),cut=L.findIndex(V=>V.ix===(art.article&&art.article.index||""));const H=art.history||[];
   return(cut>=0?L.slice(0,cut+1):L).map(V=>{const h=H.find(h=>(h.act==="newindex"||h.act==="revert")&&h.ix===V.ix);return{ix:V.ix,d:V.ts?when(V.ts):"",why:h&&h.why||"",who:V.act==="validate"?V.who||"":""}})}
-const sheetData=art=>{const m=M(art.machineId),cfg=sheetCfg(art);return{revs:cfg.opt&&cfg.opt.revs?revRows(art).slice(-5):null,article:{...art.article,machine:m?(normCone(m.cone)&&m.abbr?`${m.abbr} · ${normCone(m.cone)} · ${m.name}`:mLabel(m)):clean(art.article?.machine)},tools:withLoc(art.tools,cfg),cols:printCfg(cfg,art),stamp:art.status==="done"?{done:1,ts:(art.validated&&art.validated.ts)||art.updatedAt,who:(art.validated&&art.validated.who)||""}:{done:0}}};
+const sheetData=art=>{const m=M(art.machineId),cfg=sheetCfg(art);return{revs:cfg.opt&&cfg.opt.revs?revRows(art).slice(-5):null,article:{...art.article,machine:m?(normCone(m.cone)&&m.abbr?`${m.abbr} · ${normCone(m.cone)} · ${m.name}`:mLabel(m)):clean(art.article?.machine)},tools:withLoc(pdfRowsOf(art),cfg),cols:printCfg(cfg,art),stamp:art.status==="done"?{done:1,ts:(art.validated&&art.validated.ts)||art.updatedAt,who:(art.validated&&art.validated.who)||""}:{done:0}}};
 function fileName(art,ext){const s=x=>String(x||"").trim().replace(/[\\/:*?"<>|]+/g,"-").replace(/\s+/g,"_");const a=art.article||{};return `${t("filePrefix")}_${s(a.number)||"sheet"}${clean(a.phase)?"_"+s(a.phase):""}${a.index?"_"+s(a.index):""}.${ext}`}
 async function download(name,blob,kind){if(DESK)return desk.saveAs(name,blob,kind);const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500);return "downloads"}
 // the Excel tool sheet, described once (cells, styles, sizes) and drawn two ways:
@@ -3122,7 +3145,7 @@ async function download(name,blob,kind){if(DESK)return desk.saveAs(name,blob,kin
 const XL_SANS="Segoe UI",XL_COND="Bahnschrift SemiCondensed",XL_MONO="Consolas",XL_RAW="BrocheStuff data";
 const mmW=mm=>Math.max(0.3,Math.round(mm*96/25.4/7*1000)/1000),mmH=mm=>Math.round(mm*72/25.4*100)/100;
 function sheetModel(art){
-  const a=art.article||{},tools=realTools(withLoc(art.tools,cfgXlOf(art))),done=art.status==="done",EN=LANG==="en";
+  const a=art.article||{},tools=realTools(withLoc(xlRowsOf(art),cfgXlOf(art))),done=art.status==="done",EN=LANG==="en";
   const XD=xlData(art),doc=makePDF(XD),M=doc.bsMeta,O=M.opt,LB=M.L,STY=M.sty||{};
   const INK="161616",MID="5B5B5B",SOFT="9A9A9A",HAIR="E2E2E2",FILL="F6F6F6",HEAD="F1F1F1",RED="9E0F12",GREEN="167A3E",ZEB="F8F8F7",WHITE="FFFFFF";
   const SC={red:RED,blue:"174EA6",grey:MID,green:GREEN};
@@ -3237,14 +3260,14 @@ function sheetModel(art){
 }
 // the plain data, on a hidden sheet: what the import reads back
 // the sheet as the PDF would draw it with the Excel layout (when the sheet has one)
-function xlData(art){const d=sheetData(art),X=printCfg(cfgXlOf(art),art);d.cols=X;d.revs=X.opt&&X.opt.revs?revRows(art).slice(-5):null;return d}
+function xlData(art){const d=sheetData(art),X=printCfgX(cfgXlOf(art),art);d.tools=withLoc(xlRowsOf(art),cfgXlOf(art));d.cols=X;d.revs=X.opt&&X.opt.revs?revRows(art).slice(-5):null;return d}
 function rawModel(art){const a=art.article||{},tools=realTools(art.tools),EN=LANG==="en",CFG=cfgXlOf(art),EX=CFG.extra;
   const S={c:{f:{b:false,sz:10,c:"161616",n:"Arial"},h:"left",v:"top",wrap:1},h:{f:{b:true,sz:10,c:"161616",n:"Arial"},h:"left",v:"top",wrap:1,bd:{b:["medium","161616"]}}},rows=[];let r=0;const C=(c,v,s)=>({c,s:s||"c",v:v==null?"":String(v)});
   const blk=[["Article",a.number],[EN?"Index":"Indice",a.index],["Désignation",a.designation],[EN?"Reference":"Référence",a.reference],[EN?"Program":"Programme",a.program],["Machine",sheetData(art).article.machine],[EN?"Material":"Matière",a.material],["Phase",a.phase],[EN?"Prepared by":"Établi par",a.preparedBy],[EN?"Approved by":"Approuvé par",a.approvedBy],["Date",a.date],[EN?"Notes":"Remarques",a.notes]];
   rows.push({r:++r,ht:30,cells:blk.map(([l,v],i)=>C(i,l+"\n"+(clean(v)||"—")))});rows.push({r:++r,ht:12,cells:[]});
   // same columns and titles as the layout (renamed titles included, removed columns left out), so the import finds them
   const lb=(k,d)=>isRenamed(k,CFG)?colLabel(k,CFG):d;
-  const ALL=[["t",lb("t",EN?"Tool":"Outil")],["corrH",EN?"H offset":"Corr. H"],["corrD",EN?"D offset":"Corr. D"],["type",lb("type","Type")],["diameter",lb("diameter","Ø")],["ra",lb("ra","R / °")],["insert",lb("insert",EN?"Insert ref.":"Réf. plaquette")],["ls",lb("ls","LS")],["oal",lb("oal","LT")],["z",lb("z","Z")],["holder",lb("holder",EN?"Holder":"Porte-outil")],["code",lb("code",EN?"Tool code":"Code outil")],...EX.map(e=>[xKey(e.id),e.label])].filter(([k])=>k.startsWith("x_")||showK(k,CFG));
+  const ALL=[["t",lb("t",EN?"Tool":"Outil")],["corrH",EN?"H offset":"Corr. H"],["corrD",EN?"D offset":"Corr. D"],["op",lb("op",EN?"Operation":"Opération")],["type",lb("type","Type")],["diameter",lb("diameter","Ø")],["ra",lb("ra","R / °")],["insert",lb("insert",EN?"Insert ref.":"Réf. plaquette")],["ls",lb("ls","LS")],["oal",lb("oal","LT")],["z",lb("z","Z")],["holder",lb("holder",EN?"Holder":"Porte-outil")],["code",lb("code",EN?"Tool code":"Code outil")],["time",lb("time",EN?"Time":"Temps")],["life",lb("life",EN?"Tool life":"Vie outil")],...EX.map(e=>[xKey(e.id),e.label])].filter(([k])=>k.startsWith("x_")||showK(k,CFG));
   const HR=++r;rows.push({r:HR,ht:15,cells:ALL.map(([k,h],i)=>C(i,h,"h"))});
   const ml=v=>String(v??"").replace(/\r/g,"").replace(/\n+$/,"").trim();
   tools.forEach(tl=>rows.push({r:++r,ht:Math.max(15,...ALL.map(([k])=>String(tl[k]??"").replace(/\n+$/,"").split("\n").length*12+4)),cells:ALL.map(([k],i)=>C(i,k==="t"?(normT(tl.t)||clean(tl.t)):k==="corrH"||k==="corrD"?corrV(tl[k]):k==="type"||k==="code"?ml(tl[k]).toUpperCase():ml(tl[k])))}));
@@ -3902,12 +3925,12 @@ let cur=null, edTimer=null, pvTimer=null;
 let pvOn=lsGet(PVKEY)==="on"||(lsGet(PVKEY)!=="off"&&window.innerWidth>=1150),pvMode=lsGet(PVKEY+".mode")==="xlsx"?"xlsx":"pdf";
 /* ---------- tool sheet layouts: renamed titles + your own columns, saved under a name ----------
    "std" is BrocheStuff's own layout. One layout is the default (new sheets start with it); each sheet can pick any layout. */
-const BASEK=["t","asm","corrH","corrD","type","diameter","ra","insert","ls","oal","z","holder","code"];
-const LABK=["t","asm","corr","type","diameter","ra","insert","ls","oal","z","holder","code","loc"];   // what a title can be renamed for (H and D share one title)
+const BASEK=["t","asm","corrH","corrD","op","type","diameter","ra","insert","ls","oal","z","holder","code","time","life"];
+const LABK=["t","asm","corr","op","type","diameter","ra","insert","ls","oal","z","holder","code","loc","time","life"];   // what a title can be renamed for (H and D share one title)
 const xKey=id=>"x_"+id;
 const DEFJOIN=["diameter","ra","insert"];   // layouts saved before 2.11 with no choice: Ø, R and the insert sit inside the Type cell
 // the Standard layout: no LT and no Z; Ø and R have their own columns, the insert goes under the type
-const STDHIDE=["oal","z"],STDJOIN=["insert"];
+const STDHIDE=["oal","z","op","time","life"],STDJOIN=["insert"];
 // a column's own text style: k = size (×), b = bold (true / false / auto), c = colour, u = capitals
 const STYC=["red","blue","grey","green"],STYSZ=[0.8,0.9,1,1.15,1.3,1.5];
 const normStyle=o=>{const out={};Object.entries(o||{}).forEach(([k,v])=>{if(!v||typeof v!=="object")return;const x={};
@@ -3922,7 +3945,7 @@ const normOpt=o=>{o=o||{};const sg=o.sign!==false,b=(k,d)=>o[k]===undefined?d:!!
     sign:b("prep",sg)||b("appr",sg)||b("date",sg)}};
 const optSame=(a,b)=>JSON.stringify(normOpt(a))===JSON.stringify(normOpt(b));
 // joined columns (PDF): {column: the column it is drawn inside}. Before 2.12 a list: Ø, R and the insert went inside Type, others with the column before
-const JOINORD=["t","asm","corr","type","diameter","ra","insert","ls","oal","z","holder","code","loc"];
+const JOINORD=["t","asm","corr","op","type","diameter","ra","insert","ls","oal","z","holder","code","loc","time","life"];
 function normJoin(c,hidden,extra){const keys=[...JOINORD,...extra.map(x=>xKey(x.id))],shown=k=>k==="t"||!hidden.includes(k)&&keys.includes(k);let J={};
   if(c&&c.joinTo&&typeof c.joinTo==="object")J={...c.joinTo};
   else{const L=Array.isArray(c&&c.join)?c.join:c?DEFJOIN:STDJOIN;L.forEach(k=>{if(k==="t"||!keys.includes(k))return;if(DEFJOIN.includes(k)){J[k]="type";return}const i=keys.indexOf(k);for(let j=i-1;j>=0;j--)if(shown(keys[j])&&!L.includes(keys[j])){J[k]=keys[j];break}})}
@@ -3931,14 +3954,14 @@ function normJoin(c,hidden,extra){const keys=[...JOINORD,...extra.map(x=>xKey(x.
   if(!(c&&c.asmOwn)&&!out.asm&&!(hidden||[]).includes("asm")&&!Object.values(out).includes("asm"))out.asm="t";
   if(!(c&&c.locOwn)&&!out.loc&&!out.code&&!(hidden||[]).includes("loc")&&!(hidden||[]).includes("code")&&!Object.values(out).includes("loc"))out.loc="code";
   return out}
-const normOrder=(o,extra)=>{const keys=[...LABK.filter(k=>k!=="t"),...extra.map(x=>xKey(x.id))],out=[];(Array.isArray(o)?o:[]).forEach(k=>{if(keys.includes(k)&&!out.includes(k))out.push(k)});keys.forEach(k=>{if(!out.includes(k)){if(k==="asm")out.unshift(k);else if(k==="loc"&&out.includes("code"))out.splice(out.indexOf("code")+1,0,k);else out.push(k)}});return out};
+const normOrder=(o,extra)=>{const keys=[...LABK.filter(k=>k!=="t"),...extra.map(x=>xKey(x.id))],out=[];(Array.isArray(o)?o:[]).forEach(k=>{if(keys.includes(k)&&!out.includes(k))out.push(k)});keys.forEach(k=>{if(!out.includes(k)){if(k==="asm")out.unshift(k);else if(k==="loc"&&out.includes("code"))out.splice(out.indexOf("code")+1,0,k);else if(k==="op"&&out.includes("corr"))out.splice(out.indexOf("corr")+1,0,k);else out.push(k)}});return out};
 // the columns a layout shows, in its order
 // the columns of the sheet table: the assembly code joined under the tool number sits in its cell
 const asmUnderT=cfg=>!!(cfg&&cfg.joinTo&&cfg.joinTo.asm==="t");
 const edCols=cfg=>visCols(cfg).filter(k=>!(k==="asm"&&asmUnderT(cfg||LAYCFG))&&!(k==="loc"&&locUnderC(cfg||LAYCFG)));
 const visCols=cfg=>{const c=cfg||LAYCFG;return["t",...(c.order||normOrder(null,c.extra)).filter(k=>k.startsWith("x_")?c.extra.some(x=>xKey(x.id)===k):showK(k,c))]};
 const normCfg=c=>{const n=normCfg0(c);n.asmOwn=!!(c&&c.asmOwn);n.locOwn=!!(c&&c.locOwn);n.joinTo=normJoin(c,n.hidden,n.extra);n.join=Object.keys(n.joinTo);n.order=normOrder(c&&c.order,n.extra);return n};
-const normCfg0=c=>({labels:(c&&c.labels)||{},extra:((c&&c.extra)||[]).filter(x=>x&&x.id&&clean(x.label)),hidden:c?((c.hidden)||[]).filter(k=>k!=="t"&&LABK.includes(k)):[...STDHIDE],join:Array.isArray(c&&c.join)?c.join.filter(k=>k!=="t"):c?[...DEFJOIN]:[...STDJOIN],opt:normOpt(c&&c.opt),style:normStyle(c&&c.style),noprint:c&&Array.isArray(c.noprint)?c.noprint.filter(k=>k&&k!=="t"):["asm"]});
+const normCfg0=c=>({labels:(c&&c.labels)||{},extra:((c&&c.extra)||[]).filter(x=>x&&x.id&&clean(x.label)),hidden:c?[...new Set([...((c.hidden)||[]).filter(k=>k!=="t"&&LABK.includes(k)),...(c.opsV?[]:["op","time","life"])])]:[...STDHIDE],opsV:1,join:Array.isArray(c&&c.join)?c.join.filter(k=>k!=="t"):c?[...DEFJOIN]:[...STDJOIN],opt:normOpt(c&&c.opt),style:normStyle(c&&c.style),noprint:c&&Array.isArray(c.noprint)?c.noprint.filter(k=>k&&k!=="t"):["asm"]});
 // is a column shown in this layout (H and D go together under "corr")
 const showK=(k,cfg)=>!(cfg||LAYCFG).hidden.includes(k==="corrH"||k==="corrD"?"corr":k);
 const layoutsAll=()=>(typeof db!=="undefined"&&db&&db.layouts)||[];
@@ -3959,7 +3982,7 @@ function refreshCols(art){LAYCFG=editCfg(art||null);const ex=LAYCFG.extra;COLS=[
 // 2.3.0 kept one shared column setup: it becomes the first saved layout, and the default
 function migrateLayouts(){if(!db||!db.sheetCfg)return;const c=normCfg(db.sheetCfg);delete db.sheetCfg;
   if(Object.keys(c.labels).length||c.extra.length){db.layouts=db.layouts||[];const l={id:"l"+uid().slice(0,7),name:t("layFirst"),...c};db.layouts.push(l);if(!db.layoutDefault)db.layoutDefault=l.id}saveDB()}
-const defLabel=k=>({asm:t("colAsm"),t:t("colTool"),corr:t("colCorr"),type:t("colType"),diameter:"Ø",ra:"R / ∠",insert:t("colIns"),ls:"LS",oal:"LT",z:"Z",holder:t("colHolder"),code:t("colCode"),loc:t("colLoc")})[k]||k;
+const defLabel=k=>({asm:t("colAsm"),t:t("colTool"),corr:t("colCorr"),type:t("colType"),diameter:"Ø",ra:"R / ∠",insert:t("colIns"),ls:"LS",oal:"LT",z:"Z",holder:t("colHolder"),code:t("colCode"),loc:t("colLoc"),op:t("colOp"),time:t("colTime"),life:t("colLife")})[k]||k;
 function colLabel(k,cfg){const c=cfg||LAYCFG;if(k.startsWith("x_")){const e=c.extra.find(x=>xKey(x.id)===k);return e?e.label:k}if(k==="corrH"||k==="corrD")k="corr";return clean(c.labels[k])||defLabel(k)}
 const isRenamed=(k,cfg)=>!!clean((cfg||LAYCFG).labels[k]);
 // import: a renamed or added column is found by its own title too
@@ -4068,14 +4091,14 @@ function columnsDialog(art){const canLay=hasRight("layouts"),canSty=hasRight("co
     // footer: Standard can only be saved as a new layout; a saved layout can be updated, copied or deleted
     $("#col-ok").textContent=std?t("layApply"):t("save");$("#lay-as").hidden=false;$("#lay-del").hidden=std;
   };
-  const clean2=()=>({labels:Object.fromEntries(Object.entries(buf.labels).filter(([,v])=>clean(v))),extra:buf.extra.filter(x=>clean(x.label)).map(x=>({id:x.id,label:clean(x.label)})),hidden:[...new Set(buf.hidden)],joinTo:normJoin({joinTo:buf.joinTo,asmOwn:!buf.joinTo.asm,locOwn:!buf.joinTo.loc},buf.hidden,buf.extra.filter(x=>clean(x.label))),asmOwn:!buf.joinTo.asm,locOwn:!buf.joinTo.loc,opt:normOpt(buf.opt),style:normStyle(buf.style),order:normOrder(buf.order,buf.extra.filter(x=>clean(x.label))),noprint:[...new Set(buf.noprint||[])].filter(k=>k!=="t")});
+  const clean2=()=>({labels:Object.fromEntries(Object.entries(buf.labels).filter(([,v])=>clean(v))),extra:buf.extra.filter(x=>clean(x.label)).map(x=>({id:x.id,label:clean(x.label)})),hidden:[...new Set(buf.hidden)],joinTo:normJoin({joinTo:buf.joinTo,asmOwn:!buf.joinTo.asm,locOwn:!buf.joinTo.loc},buf.hidden,buf.extra.filter(x=>clean(x.label))),asmOwn:!buf.joinTo.asm,locOwn:!buf.joinTo.loc,opt:normOpt(buf.opt),style:normStyle(buf.style),order:normOrder(buf.order,buf.extra.filter(x=>clean(x.label))),noprint:[...new Set(buf.noprint||[])].filter(k=>k!=="t"),opsV:1});
   const err=m=>{const e=$("#lay-err");e.textContent=m;e.hidden=false};
   const finish=(id,msg)=>{if(art){art.layout=id;art.updatedAt=Date.now()}if(isDef)db.layoutDefault=id==="std"?"":id;else if(defaultLayoutId()===id)db.layoutDefault="";
     if(isDefXl)db.layoutDefaultXl=id;else if(db.layoutDefaultXl===id)db.layoutDefaultXl="";
     refreshCols(art||null);saveDB();closeDlg();render();toast(msg)};
   function saveAs(){const nm=clean($("#lay-asname").value);if(!nm){$("#lay-asname").focus();err(t("layNeedName"));return}
     if(layoutsAll().some(l=>l.name.toLowerCase()===nm.toLowerCase())){err(t("layNameTaken"));return}
-    const c=clean2(),l={id:"l"+uid().slice(0,7),name:nm,labels:c.labels,extra:c.extra.map(x=>({...x})),hidden:c.hidden,joinTo:c.joinTo,join:Object.keys(c.joinTo),opt:c.opt,style:c.style,order:c.order,noprint:c.noprint,asmOwn:c.asmOwn,locOwn:c.locOwn};db.layouts=[...layoutsAll(),l];finish(l.id,t("laySaved",nm))}
+    const c=clean2(),l={id:"l"+uid().slice(0,7),name:nm,labels:c.labels,extra:c.extra.map(x=>({...x})),hidden:c.hidden,joinTo:c.joinTo,join:Object.keys(c.joinTo),opt:c.opt,style:c.style,order:c.order,noprint:c.noprint,asmOwn:c.asmOwn,locOwn:c.locOwn,opsV:1};db.layouts=[...layoutsAll(),l];finish(l.id,t("laySaved",nm))}
   dialog(esc(t("layT")),`<div id="colbody"></div>`,`<button class="btn ghost danger" id="lay-del">${esc(t("layDel"))}</button><span class="sp"></span><button class="btn ghost" id="d-cancel">${esc(t("cancel"))}</button><button class="btn ghost" id="lay-as">${esc(t("laySaveAs"))}</button><button class="btn red" id="col-ok">${esc(t("save"))}</button>`);
   $(".dlg").classList.add("wide","laydlg");try{const w=+lsGet("bs.laydlgw");if(w>500)$(".dlg").style.width=Math.min(w,innerWidth-24)+"px"}catch(e){}
   try{new ResizeObserver(en=>{const w=Math.round(en[0].contentRect.width);if(w>500)lsSet("bs.laydlgw",String(w))}).observe($(".dlg"))}catch(e){}
@@ -4089,12 +4112,12 @@ function columnsDialog(art){const canLay=hasRight("layouts"),canSty=hasRight("co
       finish("std",t("layApplied",t("layStd")));return}
     const l=layoutById(selId),nm=clean(name);if(!nm){err(t("layNeedName"));return}
     if(layoutsAll().some(x=>x.id!==selId&&x.name.toLowerCase()===nm.toLowerCase())){err(t("layNameTaken"));return}
-    const c=clean2();Object.assign(l,canLay?{name:nm,labels:c.labels,extra:c.extra,hidden:c.hidden,joinTo:c.joinTo,join:Object.keys(c.joinTo),opt:c.opt,style:c.style,order:c.order,noprint:c.noprint,asmOwn:c.asmOwn,locOwn:c.locOwn}:{style:c.style});finish(selId,t("laySaved",nm))};
+    const c=clean2();Object.assign(l,canLay?{name:nm,labels:c.labels,extra:c.extra,hidden:c.hidden,joinTo:c.joinTo,join:Object.keys(c.joinTo),opt:c.opt,style:c.style,order:c.order,noprint:c.noprint,asmOwn:c.asmOwn,locOwn:c.locOwn,opsV:1}:{style:c.style});finish(selId,t("laySaved",nm))};
 }
 /* tool table: each column can be widened or narrowed by dragging its title's edge (remembered on this PC) */
 const CWKEY="toollistmaker.colw";
 const colW=()=>{try{return JSON.parse(lsGet(CWKEY)||"{}")||{}}catch(e){return {}}};
-const DEFW={loc:110,asm:88,t:62,corr:62,type:0,diameter:54,ra:58,insert:112,ls:46,oal:54,z:36,holder:140,code:80};
+const DEFW={op:150,time:84,life:84,loc:110,asm:88,t:62,corr:62,type:0,diameter:54,ra:58,insert:112,ls:46,oal:54,z:36,holder:140,code:80};
 function thW(k){const w=colW()[k];return w?w:(k.startsWith("x_")?120:k==="code"&&locUnderC(LAYCFG)?124:DEFW[k])}
 function wireColResize(table){
   const sum=()=>{let s=76;table.querySelectorAll("thead th[data-ck]").forEach(th=>s+=th.getBoundingClientRect().width);return s};
@@ -4143,8 +4166,8 @@ function rowHTML(x,i){
   return `<tr data-i="${i}">
     ${edCols(sheetCfg()).map(k=>k==="t"?`<td data-col="t"><input class="m b up" data-k="t" value="${v("t")}" placeholder="T${String(i+1).padStart(2,"0")}">${asmUnderT(sheetCfg())?`<input class="m up asmin" data-k="asm" value="${v("asm")}" placeholder="AS…" list="asmcodes" title="${esc(t("colAsm"))}">`:""}</td>`
       :k==="corr"?`<td class="corrcell" data-col="corr"><label title="${esc(t("colHT"))}"><i>H</i><input class="m up" data-k="corrH" value="${v("corrH")}"></label><label title="${esc(t("colDT"))}"><i>D</i><input class="m up" data-k="corrD" value="${v("corrD")}"></label></td>`
-      :(k==="loc"?`<td class="loccell" data-col="loc">${locTag(x)}</td>`:k==="code"&&locUnderC(sheetCfg())?mlCell(k,x,"codecell").replace(/<\/td>$/,locTag(x)+"</td>"):mlCell(k,x,k.startsWith("x_")?"xcell":k==="holder"?"holdcell":k==="code"?"codecell":""))).join("")}
-    <td class="act"><button class="ib" data-r="up" title="${esc(t("up"))}" tabindex="-1">↑</button><button class="ib" data-r="down" title="${esc(t("down"))}" tabindex="-1">↓</button><button class="ib x" data-r="del" title="${esc(t("remove"))}" tabindex="-1">✕</button></td></tr>`;
+      :(k==="loc"?`<td class="loccell" data-col="loc">${locTag(x)}</td>`:k==="code"&&locUnderC(sheetCfg())?mlCell(k,x,"codecell").replace(/<\/td>$/,locTag(x)+"</td>"):mlCell(k,x,k.startsWith("x_")?"xcell":k==="holder"?"holdcell":k==="code"?"codecell":k==="time"||k==="life"?"durcell":""))).join("")}
+    <td class="act">${opsVis()?`<button class="ib op" data-r="addop" title="${esc(t("addOpT"))}" tabindex="-1">+</button>`:""}<button class="ib" data-r="up" title="${esc(t("up"))}" tabindex="-1">↑</button><button class="ib" data-r="down" title="${esc(t("down"))}" tabindex="-1">↓</button><button class="ib x" data-r="del" title="${esc(t("remove"))}" tabindex="-1">✕</button></td></tr>`;
 }
 function renderEditor(art){fillHolderList(M(art.machineId)?.cone);
   cur=art;if(typeof asmLink==="function"&&asmLink(art))saveDB();const a=art.article,m=M(art.machineId);
@@ -4168,13 +4191,13 @@ function renderEditor(art){fillHolderList(M(art.machineId)?.cone);
       </div>
     </div>
     <div class="card">
-      <h2>${esc(t("tools"))} <span class="hint" id="count"></span>${tdBtn()}</h2>
+      <h2>${esc(t("tools"))}${modeTabs()} <span class="hint" id="count"></span>${tdBtn()}</h2><div id="modepanel" hidden></div>
       ${toolDiagram("wide")}
       <div class="tw"><table class="tt">
         <thead><tr>${edCols(sheetCfg()).map(k=>{const w=thW(k),ttl=k==="corr"?t("colHT")+" · "+t("colDT"):k==="insert"?t("colInsT"):k==="oal"?t("oal"):"";
           return `<th data-ck="${k}"${w?` style="width:${w}px"`:""}${ttl?` title="${esc(ttl)}"`:""} class="${k.startsWith("x_")?"xth":""}${k!=="t"&&!prOn(cur,k)?" np":""}">${esc(colLabel(k))}${k==="holder"&&coneTag(M(cur.machineId)?.cone)?" "+coneTag(M(cur.machineId)?.cone):""}<span class="colrs" title="${esc(t("colWT"))}"></span></th>`}).join("")}<th class="actth"></th></tr><tr class="prrow">${edCols(sheetCfg()).map(k=>k==="t"?`<th class="prlab" title="${esc(t("prT"))}">${esc(t("prShort"))}${asmUnderT(sheetCfg())?`<label class="asmpr" title="${esc(t("prT")+" : "+colLabel("asm"))}"><input type="checkbox" class="prck" data-pr="asm" ${prOn(cur,"asm")?"checked":""} tabindex="-1">AS</label>`:""}</th>`:`<th title="${esc(t("prT"))}"><input type="checkbox" class="prck" data-pr="${k}" ${prOn(cur,k)?"checked":""} tabindex="-1" aria-label="${esc(t("prT")+" : "+colLabel(k))}">${k==="code"&&locUnderC(sheetCfg())?`<label class="asmpr locpr" title="${esc(t("prT")+" : "+colLabel("loc"))}"><input type="checkbox" class="prck" data-pr="loc" ${prOn(cur,"loc")?"checked":""} tabindex="-1">${esc(t("locShort"))}</label>`:""}</th>`).join("")}<th></th></tr></thead>
         <tbody id="rows"></tbody></table></div>
-      <div class="rowbar"><div class="rbg"><button class="btn" id="b-add">${esc(t("addTool"))}</button><button class="btn ghost" id="b-impt" title="${esc(t("impT"))}">${esc(t("imp"))}</button><button class="btn ghost" id="b-ncimp" title="${esc(t("impNCP"))}">${esc(t("ncFromProg"))}</button><label class="laysel sortsel" title="${esc(t("sortT"))}"><span>${esc(t("sortL"))}</span><select id="a-sort"><option value="">—</option>${Object.entries(t("sortBy")).map(([k,l])=>`<option value="${k}">${esc(l)}</option>`).join("")}</select></label></div><div class="rbg"><label class="laysel" title="${esc(t("laySelT"))}"><span>${esc(t("layShort"))}</span><select id="a-layout">${layoutOptions(layoutIdOf(art))}</select></label><label class="laysel" title="${esc(t("laySelXlT"))}"><span>Excel</span><select id="a-layoutxl"><option value="">${esc(t("laySameXl"))}</option>${layoutsXlOptions(art.layoutXl||"")}</select></label>${hasRight("layouts")||hasRight("colStyle")?`<button class="btn ghost" id="b-cols" title="${esc(t("colsBtnT"))}">${esc(t("colsBtn"))}</button>`:""}</div><div class="rbg"><button class="btn ghost" id="b-prep" title="${esc(t("prepT"))}">${esc(t("prep"))}</button><button class="btn ghost" id="b-magcmp">${esc(t("magCmpBtn"))}</button>${tplBtn("tools")}</div><span class="note">${t("excelNote")}</span></div>
+      <div class="rowbar"><div class="rbg"><button class="btn" id="b-add">${esc(t("addTool"))}</button><button class="btn ghost" id="b-impt" title="${esc(t("impT"))}">${esc(t("imp"))}</button><button class="btn ghost" id="b-ncimp" title="${esc(t("impNCP"))}">${esc(t("ncFromProg"))}</button><button class="btn ghost" id="b-ops" title="${esc(t("opsBtnT"))}">${esc(art.ops?t("opsOff"):t("opsBtn"))}</button><label class="laysel sortsel" title="${esc(t("sortT"))}"><span>${esc(t("sortL"))}</span><select id="a-sort"><option value="">—</option>${Object.entries(t("sortBy")).map(([k,l])=>`<option value="${k}">${esc(l)}</option>`).join("")}</select></label></div><div class="rbg"><label class="laysel" title="${esc(t("laySelT"))}"><span>${esc(t("layShort"))}</span><select id="a-layout">${layoutOptions(layoutIdOf(art))}</select></label><label class="laysel" title="${esc(t("laySelXlT"))}"><span>Excel</span><select id="a-layoutxl"><option value="">${esc(t("laySameXl"))}</option>${layoutsXlOptions(art.layoutXl||"")}</select></label>${hasRight("layouts")||hasRight("colStyle")?`<button class="btn ghost" id="b-cols" title="${esc(t("colsBtnT"))}">${esc(t("colsBtn"))}</button>`:""}</div><div class="rbg"><button class="btn ghost" id="b-prep" title="${esc(t("prepT"))}">${esc(t("prep"))}</button><button class="btn ghost" id="b-magcmp">${esc(t("magCmpBtn"))}</button>${tplBtn("tools")}</div><span class="note">${t("excelNote")}</span></div>
     </div>
     <div class="card">
       <h2>${esc(t("notesSign"))}</h2>
@@ -4223,6 +4246,8 @@ function renderEditor(art){fillHolderList(M(art.machineId)?.cone);
   rows.addEventListener("click",e=>{const b=e.target.closest(".asmc");if(b&&b.dataset.asm){e.stopPropagation();asmCopy(b.dataset.asm)}});
   rows.addEventListener("click",e=>{const b=e.target.closest("[data-r]");if(!b)return;const i=+b.closest("tr").dataset.i,T=cur.tools;
     if(b.dataset.r==="del"){T.splice(i,1);if(!T.length)T.push({t:"T01"})}
+    if(b.dataset.r==="addop"){const s=T[i],n={};["t","asm","corrH","corrD",...IDK].forEach(k=>{if(clean(s[k]))n[k]=s[k]});const j=i+1;T.splice(j,0,n);
+      setTimeout(()=>{const r=document.querySelector(`#rows tr[data-i="${j}"]`),el=r&&(r.querySelector('input[data-k="op"]')||r.querySelector('input[data-k="time"]'));if(el)el.focus()},40)}
     if(b.dataset.r==="up"&&i>0)[T[i-1],T[i]]=[T[i],T[i-1]];
     if(b.dataset.r==="down"&&i<T.length-1)[T[i+1],T[i]]=[T[i],T[i+1]];
     renderRows();edited()});
@@ -4270,10 +4295,10 @@ function renderEditor(art){fillHolderList(M(art.machineId)?.cone);
   pvSetup();
   if(art.fresh){delete art.fresh;$("#a-number").focus()}
 }
-function countTools(){$("#count").textContent=t("nTools",realTools(cur.tools).length);markMissing();drawStatus()}
+function countTools(){$("#count").textContent=toolCountTxt();markMissing();drawStatus()}
 // while typing: only the edited row is re-checked, the counters update once per frame
 function markRow(tr){const x=cur.tools[+tr.dataset.i];const real=x&&COLS.some(k=>k!=="t"&&clean(x[k]));REQ_TOOL.forEach(k=>tr.querySelector(`[data-k="${k}"]`)?.classList.toggle("miss",!!real&&!clean(x[k])));coneMark(tr)}
-let scT=0;function softCount(){if(scT)return;scT=requestAnimationFrame(()=>{scT=0;if(!cur||!$("#count"))return;$("#count").textContent=t("nTools",realTools(cur.tools).length);drawStatus()})}
+let scT=0;function softCount(){if(scT)return;scT=requestAnimationFrame(()=>{scT=0;if(!cur||!$("#count"))return;$("#count").textContent=toolCountTxt();drawStatus();tDupMark()})}
 // the same tool number twice in a sheet (T1 and T01 are the same)
 function tDupMark(){if(!cur)return;const n=new Map();cur.tools.forEach(x=>{const k=normT(x.t);if(k&&realTools([x]).length)n.set(k,(n.get(k)||0)+1)});
   document.querySelectorAll("#rows tr[data-i]").forEach(tr=>{const x=cur.tools[+tr.dataset.i],el=tr.querySelector('input[data-k="t"]');if(!x||!el)return;const d=(n.get(normT(x.t))||0)>1&&realTools([x]).length>0;
@@ -4588,7 +4613,7 @@ async function orderCSV(){
 /* tool prep for one article */
 function prepDialog(art){
   // tool prep: tick the tools to take out, change how many; everything starts ticked
-  const rows=prepSort(realTools(art.tools).filter(x=>clean(x.code)),art);const ok=x=>{const c=C_(x.code);return c&&(+c.stock||0)>0};
+  const rows=prepSort(opsMerge(realTools(art.tools)).filter(x=>clean(x.code)),art);const ok=x=>{const c=C_(x.code);return c&&(+c.stock||0)>0};
   dialog(esc(t("prepTitle",art.article.number||t("noNumber"))),`<p class="note" style="margin:0">${esc(t("prepP"))}</p>
     <div class="prepbar"><button class="btn sm" id="pp-all">${esc(t("prepAll"))}</button><button class="btn sm" id="pp-none">${esc(t("prepNone"))}</button>${ppSortBar()}<span class="sp"></span><button type="button" class="btn sm ghost ib2" id="pp-print" title="${esc(t("ppPrintT"))}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4v-7h16v7h-2M7 14h10v7H7z"/></svg>${esc(t("ppPrint"))}</button><span class="dim small" id="pp-n"></span></div>
     <div class="tw"><table class="lt prept"><thead><tr><th></th><th>${t("colTool")}</th><th>${t("cCode")}</th><th>${t("cType")}</th><th>Ø</th><th>LS</th><th>${t("cLoc")}</th><th>${t("cStock")}</th><th>${esc(t("prepQty"))}</th></tr></thead><tbody>
@@ -5021,7 +5046,7 @@ const SYN={
   min:["min","minimum","stock mini","mini","stock min","seuil","minimum stock"],
   notes:["notes","note","remarques","remarque","comment","comments","commentaire","commentaires"]
 };
-const TOOLF0=[["t","fT"],["asm","fAsm"],["corrH","fCorrH"],["corrD","fCorrD"],["type","fType"],["diameter","fDia"],["ra","fRA"],["insert","fIns"],["ls","fLS"],["oal","fOal"],["z","fZ"],["holder","fHolder"],["code","fCode"]];
+const TOOLF0=[["t","fT"],["asm","fAsm"],["corrH","fCorrH"],["corrD","fCorrD"],["type","fType"],["diameter","fDia"],["ra","fRA"],["insert","fIns"],["ls","fLS"],["oal","fOal"],["z","fZ"],["holder","fHolder"],["code","fCode"],["op","fOp"],["time","fTime"],["life","fLife"]];
 let TOOLF=TOOLF0.slice();
 const IMPF={
   machines:[["abbr","fAbbr"],["name","fName"],["brand","fBrand"],["control","fControl"],["mcone","fSpindle"]],
@@ -5642,7 +5667,7 @@ function drawAV(art){
   const box=$("#avbody");if(!box)return;
   if(avTab==="ix"){box.innerHTML=`<div class="card">${ixHTML(art)}</div>`;wireIx(box,art);return}
   if(avTab==="pdf"){box.innerHTML=`<div class="avpdf"><p class="note" id="avinfo">${esc(t("sheetLoading"))}</p><div id="avpages"></div></div>`;pdfInto($("#avpages"),art).then(n=>{const i=$("#avinfo");if(i)i.textContent=t("pages",n)}).catch(e=>{const i=$("#avinfo");if(i)i.textContent=t("pvError")+(e.message||e)});return}
-  const rows=realTools(art.tools),AC=sheetCfg(art);
+  const rows=pdfRowsOf(art),AC=sheetCfg(art);
   box.innerHTML=rows.length?`<div class="list"><table class="lt avt${rows.some(x=>clean(x.insert))?"":" noins"}"><thead><tr>${edCols(AC).filter(k=>!k.startsWith("x_")&&k!=="loc").map(k=>`<th${k==="insert"?' class="insc"':""}>${esc(colLabel(k,AC))}</th>`).join("")}<th>${esc(t("where"))}</th><th>${esc(t("cStock"))}</th>${AC.extra.map(e=>`<th class="xc">${esc(e.label)}</th>`).join("")}</tr></thead><tbody>
     ${rows.map(x=>{const k=normCode(x.code),c=k?C_(k):null,s=stockState(c);
       const hold=String(x.holder||"").split("\n").map(l=>splitHolders(l).map(p=>H_(p)?`<button class="linkcode sm" data-go="${holderHref(p)}">${esc(p)}</button>`:`<span>${esc(p)}</span>`).join(`<i class="plus">+</i>`)).filter(Boolean).join("<br>");
@@ -5886,7 +5911,7 @@ Object.assign(I18N.en,{getApp:"Get the app", getAppT:"Download the Windows insta
   demoBar:"Demo: made-up workshop with 20 machines and 500 articles. Changes stay in this browser only.", demoShort:"Made-up data", demoReset:"Reset the demo", demoResetQ:"Reset the demo data? Everything changed here is lost.", demoGo:"Real version"});
 Object.assign(I18N.fr,{getApp:"Télécharger l'app", getAppT:"Télécharger l’installateur Windows",
   demoBar:"Démo : atelier fictif de 20 machines et 500 articles. Vos changements restent dans ce navigateur.", demoShort:"Données fictives", demoReset:"Réinitialiser la démo", demoResetQ:"Réinitialiser les données de la démo ? Tout ce qui a été changé ici sera perdu.", demoGo:"Version réelle"});
-const APP_ZIP="BrocheStuff-Setup-2.24.3.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
+const APP_ZIP="BrocheStuff-Setup-2.25.0.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
 function appUrl(){
   // on the site (…/Web/ or …/Demo/) the program sits next door in …/App/; anywhere else, take it from the site
   if(/^https?:/.test(location.protocol)&&/\/(Web|Demo)\/(index\.html)?$/i.test(location.pathname))return new URL("../App/"+APP_ZIP,location.href).href;
@@ -6518,7 +6543,7 @@ function codeLocChip(c){const L=clean(c.location),ed=hasRight("cribEdit");
   return ed?`<button type="button" class="codeloc add" data-locc="${esc(c.code)}" title="${esc(t("locAddT"))}">${pinIcon}<span>${esc(t("locAdd"))}</span></button>`:`<span class="codeloc none">${esc(t("locNone"))}</span>`}
 document.addEventListener("input",e=>{if(e.target&&e.target.id==="cf-location"){const c=route&&route.view==="code"?C_(route.code||route.id||""):null,h=$(".codehead .codeloc");if(h&&c)h.outerHTML=codeLocChip(c)}});
 // the pick list, printed in the order shown in the tool prep window
-function printPick(){const art=ppArt;if(!art)return;const rows=prepSort(realTools(art.tools).filter(x=>clean(x.code)),art),A0=art.article||{},m=M(art.machineId);
+function printPick(){const art=ppArt;if(!art)return;const rows=prepSort(opsMerge(realTools(art.tools)).filter(x=>clean(x.code)),art),A0=art.article||{},m=M(art.machineId);
   const qty=[...document.querySelectorAll("#ov input.ppq")].map(i=>i.value);
   const tr=rows.map((x,i)=>{const code=linesOf_(x.code)[0]||"",c=C_(code),loc=locLines(x,{opt:{locH:1}});
     return `<tr><td class="bx"><i></i></td><td class="loc">${loc?loc.split("\n").map((l,j)=>j?`<div class="sub2">${esc(l)}</div>`:esc(l)).join(""):"<span class=dim>—</span>"}</td><td class="m b">${esc(clean(x.t))}</td><td class="m b">${esc(normCode(code))}</td><td>${esc([clean(x.type).toUpperCase(),normDia(x.diameter)?"Ø"+normDia(x.diameter):"",raLabel(x.ra)].filter(Boolean).join(" "))}</td><td class="m">${esc(clean(x.ls))}</td><td>${esc(splitHolders(x.holder).join(" + "))}</td><td class="m c">${esc(qty[i]||"1")}</td><td class="m c">${c?(+c.stock||0):"—"}</td></tr>`}).join("");
@@ -6558,12 +6583,109 @@ function labelsDialog(){const G=locGroups();
     printHTML({css,body:`<div class="grid">${L.map(g=>`<div class="lb"><h2>${esc(g.loc)}</h2>${g.items.slice(0,MAX).map(it=>`<div class="it"><b>${esc(it.code)}</b><span>${esc(it.txt)}</span></div>`).join("")}${g.items.length>MAX?`<div class="more">${esc(t("lblMore",g.items.length-MAX))}</div>`:""}</div>`).join("")}</div>`},false)}}
 document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("#b-labels")){e.preventDefault();labelsDialog()}});
 
+/* ---------- 2.25: operations (same T several times), Saisie / PDF / Excel modes ---------- */
+Object.assign(I18N.en,{colOp:"Operation",colTime:"Time",colLife:"Tool life",fOp:"Operation",fTime:"Time",fLife:"Tool life",
+  nOps:n=>`${n} operation${n>1?"s":""}`,addOpT:"Add an operation for this tool (same T, tool data copied)",opGrp:(k,n)=>`${k} is used for ${n} operations: one line on the PDF`,
+  opConf:(k,s)=>`${k}: not the same tool on every line (${s}). The PDF takes the first line.`,durBad:"Type a time like 12:30 (min:s) or 02:54:12 (h:min:s)",
+  mSaisie:"Saisie",mSaisieT:"Everything you type, one line per operation",mPdfT:"How the PDF shows it",mXlT:"How the Excel shows it",
+  mpGroup:"One line per tool: lines with the same T are combined (times and tool life added up)",mpOrder:"Order",mpOrderSaisie:"As typed",mpCols:"Columns",
+  mpPdfN:(t,o)=>`${t} tool${t>1?"s":""} on the PDF`+(o>t?` (from ${o} operations)`:""),mpConf:"Same T, different tool:",
+  mxRows:"Lines",mxOps:"Every operation, with the total at the end",mxPdf:"One line per tool (like the PDF)",mxOrder:"Order",mxOrderSaisie:"As typed",mxOrderPdf:"Like the PDF",
+  mxN:n=>`${n} line${n>1?"s":""} in the Excel`,opsBtn:"+ Operation columns",opsBtnT:"Show Operation, Time and Tool life on this sheet, to type one line per operation",opsOff:"Hide operation columns",
+  mTotal:"TOTAL",opsHint:"Add an operation: + on the tool's line. The same T on several lines is one tool on the PDF."});
+Object.assign(I18N.fr,{colOp:"Opération",colTime:"Temps",colLife:"Vie outil",fOp:"Opération",fTime:"Temps",fLife:"Vie outil",
+  nOps:n=>`${n} opération${n>1?"s":""}`,addOpT:"Ajouter une opération pour cet outil (même T, données de l’outil copiées)",opGrp:(k,n)=>`${k} sert à ${n} opérations : une seule ligne sur le PDF`,
+  opConf:(k,s)=>`${k} : pas le même outil sur toutes les lignes (${s}). Le PDF prend la première ligne.`,durBad:"Tapez un temps comme 12:30 (min:s) ou 02:54:12 (h:min:s)",
+  mSaisie:"Saisie",mSaisieT:"Tout ce que vous tapez, une ligne par opération",mPdfT:"Ce que montre le PDF",mXlT:"Ce que montre l’Excel",
+  mpGroup:"Une ligne par outil : les lignes avec le même T sont regroupées (temps et vie outil additionnés)",mpOrder:"Ordre",mpOrderSaisie:"Ordre de saisie",mpCols:"Colonnes",
+  mpPdfN:(t,o)=>`${t} outil${t>1?"s":""} sur le PDF`+(o>t?` (à partir de ${o} opérations)`:""),mpConf:"Même T, outil différent :",
+  mxRows:"Lignes",mxOps:"Toutes les opérations, avec le total à la fin",mxPdf:"Une ligne par outil (comme le PDF)",mxOrder:"Ordre",mxOrderSaisie:"Ordre de saisie",mxOrderPdf:"Comme le PDF",
+  mxN:n=>`${n} ligne${n>1?"s":""} dans l’Excel`,opsBtn:"+ Colonnes d’opération",opsBtnT:"Afficher Opération, Temps et Vie outil sur cette fiche, pour taper une ligne par opération",opsOff:"Masquer les colonnes d’opération",
+  mTotal:"TOTAL",opsHint:"Ajouter une opération : + sur la ligne de l’outil. Le même T sur plusieurs lignes = un seul outil sur le PDF."});
+try{Object.assign(SYN,{op:["operation","op","operation name","nom operation","usinage","phase usinage","toolpath","parcours"],
+  time:["time","temps","duree","temps usinage","machining time","cycle time","temps operation","temps cycle","duration"],
+  life:["tool life","vie outil","duree de vie","duree vie","life","usure","durabilite","durability","vie"]})}catch(e){}
+const OPK=["op","time","life"],IDK=["type","diameter","ra","insert","ls","oal","z","holder","code","corrH","corrD"];
+// times: 12:30 = 12 min 30 s, 02:54:12 = 2 h 54 min 12 s, a plain number = minutes
+const durS=v=>{v=clean(v).replace(",",".");if(!v)return null;let m=v.match(/^(\d+):(\d{1,2}):(\d{1,2})$/);if(m)return +m[1]*3600+ +m[2]*60+ +m[3];
+  m=v.match(/^(\d+):(\d{1,2})$/);if(m)return +m[1]*60+ +m[2];m=v.match(/^\d+(\.\d+)?$/);if(m)return Math.round(parseFloat(v)*60);return null};
+const durF=s=>{if(s==null)return "";s=Math.round(s);const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60,p=n=>String(n).padStart(2,"0");return h?`${p(h)}:${p(m)}:${p(x)}`:`${p(m)}:${p(x)}`};
+const durSum=vals=>{let tot=0,any=0;vals.forEach(v=>linesOf_(v).forEach(l=>{const s=durS(l);if(s!=null){tot+=s;any=1}}));return any?durF(tot):""};
+// lines with the same T are one tool
+function opsGroups(tools){const G=[],by=new Map();realTools(tools).forEach(x=>{const k=clean(x.t)?normT(x.t):"";if(!k){G.push([x]);return}if(by.has(k))by.get(k).push(x);else{const g=[x];by.set(k,g);G.push(g)}});return G}
+function opsMerge(tools){return opsGroups(tools).map(g=>{if(g.length===1)return g[0];const r={...g[0]};
+  g.slice(1).forEach(x=>Object.keys(x).forEach(f=>{if(!clean(r[f])&&clean(x[f]))r[f]=x[f]}));
+  r.time=durSum(g.map(x=>x.time));r.life=durSum(g.map(x=>x.life));r.op=[...new Set(g.map(x=>clean(x.op)).filter(Boolean))].join(" · ");return r})}
+const cmpV=(f,v)=>{v=clean(v);if(!v)return "";if(f==="diameter")return normDia(v);if(f==="ra"){const r=normRA(v);return r.kind+r.val}return v.toUpperCase().replace(/\s+/g," ")};
+function opsConflicts(tools){const out=[];opsGroups(tools).forEach(g=>{if(g.length<2)return;const k=normT(g[0].t);
+  const diff=IDK.filter(f=>new Set(g.map(x=>cmpV(f,x[f])).filter(Boolean)).size>1);
+  if(diff.length)out.push({t:k,fields:diff,txt:diff.map(f=>`${f==="corrH"?"H":f==="corrD"?"D":colLabel(f==="corrH"||f==="corrD"?"corr":f)} ${[...new Set(g.map(x=>clean(x[f])).filter(Boolean))].join(" / ")}`).join(" · ")})});return out}
+// the PDF list and the Excel list
+function sortList(L,k){const f=SORTK[k];if(!f)return L;
+  const cmp=(a,b)=>{if(a.v==null&&b.v==null)return a.i-b.i;if(a.v==null)return 1;if(b.v==null)return -1;
+    const c=typeof a.v==="number"&&typeof b.v==="number"?a.v-b.v:String(a.v).localeCompare(String(b.v),undefined,{numeric:true});return c||(tNum(a.x.t)??1e9)-(tNum(b.x.t)??1e9)||a.i-b.i};
+  return L.map((x,i)=>({x,i,v:f(x)})).sort(cmp).map(o=>o.x)}
+function pdfRowsOf(art){let L=realTools(art.tools);if(art.pdfGroup!==false)L=opsMerge(L);return sortList(L,art.pdfSort)}
+function xlRowsOf(art){if(art.xlRows==="pdf")return pdfRowsOf(art);let L=realTools(art.tools);if(art.xlSort==="pdf")L=sortList(L,art.pdfSort);
+  const T=durSum(L.map(x=>x.time)),F=durSum(L.map(x=>x.life));return L.length&&(T||F)?[...L,{t:t("mTotal"),time:T,life:F,_total:1}]:L}
+// the Excel can have its own columns (by default the PDF's; Operation is in it when every operation is listed)
+function prOnX(art,k,cfg){const P=(art&&art.prx)||{};if(Object.prototype.hasOwnProperty.call(P,k))return !!P[k];if(k==="op")return (art&&art.xlRows)!=="pdf";return prOn(art,k,cfg)}
+function printCfgX(cfg,art){if(!cfg)return cfg;const keys=[...LABK.filter(k=>k!=="t"),...(cfg.extra||[]).map(x=>xKey(x.id))].filter(k=>!prOnX(art,k,cfg));
+  if(!keys.length)return cfg;const hidden=[...new Set([...(cfg.hidden||[]),...keys])],joinTo={};
+  Object.entries(cfg.joinTo||{}).forEach(([k,to])=>{if(!hidden.includes(k)&&!hidden.includes(to))joinTo[k]=to});return{...cfg,hidden,joinTo,join:Object.keys(joinTo)}}
+// operation columns: hidden in layouts unless shown, or switched on for one sheet
+const opsCfg=(cfg,art)=>art&&art.ops&&cfg?{...cfg,hidden:cfg.hidden.filter(k=>!OPK.includes(k))}:cfg;
+{const c0=cfgOf;cfgOf=function(art){return opsCfg(c0(art),art)};const c1=cfgXlOf;cfgXlOf=function(art){return opsCfg(c1(art),art)}}
+const opsVis=()=>!!cur&&edCols(sheetCfg()).some(k=>OPK.includes(k));
+function toolCountTxt(){const real=realTools(cur.tools),n=opsGroups(cur.tools).length;return t("nTools",n)+(real.length>n?" · "+t("nOps",real.length):"")}
+// same T on several lines: a dot on the T (blue), red when the tool data differ; later lines dimmed
+function tDupMark(){if(!cur)return;const G=new Map();cur.tools.forEach((x,i)=>{const k=normT(x.t);if(clean(x.t)&&realTools([x]).length){if(!G.has(k))G.set(k,[]);G.get(k).push(i)}});
+  const CF=new Map(opsConflicts(cur.tools).map(c=>[c.t,c]));
+  document.querySelectorAll("#rows tr[data-i]").forEach(tr=>{const i=+tr.dataset.i,x=cur.tools[i],el=tr.querySelector('input[data-k="t"]');if(!x||!el)return;
+    const k=normT(x.t),g=G.get(k)||[],n=g.length,cf=CF.get(k);el.classList.remove("warn");el.classList.toggle("opg",n>1&&!cf);el.classList.toggle("opbad",n>1&&!!cf);
+    tr.classList.toggle("oprow",n>1&&g[0]!==i);el.title=n>1?(cf?t("opConf",k,cf.txt):t("opGrp",k,n)):""})}
+// times typed: 12:3 -> 12:03, 90 -> 01:30:00 (minutes), wrong ones marked
+document.addEventListener("change",e=>{const i=e.target;if(!i||!i.matches||!i.matches('#rows input[data-k="time"],#rows input[data-k="life"]'))return;const v=clean(i.value);
+  if(!v){i.classList.remove("bad");return}const s=durS(v);i.classList.toggle("bad",s==null);i.title=s==null?t("durBad"):"";if(s!=null&&durF(s)!==v){i.value=durF(s);i.dispatchEvent(new Event("input",{bubbles:true}))}},true);
+// modes
+let edMode=lsGet("bs.edmode");if(!["saisie","pdf","excel"].includes(edMode))edMode="saisie";
+const modeTabs=()=>`<span class="modetabs" role="tablist">${[["saisie",t("mSaisie"),t("mSaisieT")],["pdf","PDF",t("mPdfT")],["excel","Excel",t("mXlT")]].map(([m,l,tt])=>`<button type="button" role="tab" data-edm="${m}" title="${esc(tt)}" aria-selected="${edMode===m}">${esc(l)}</button>`).join("")}</span>`;
+function setEdMode(m){edMode=m;lsSet("bs.edmode",m);const ed=$("#ed");if(ed)ed.dataset.mode=m;document.querySelectorAll("[data-edm]").forEach(b=>b.setAttribute("aria-selected",b.dataset.edm===m));
+  if(m!=="saisie"){const pv=m==="excel"?"xlsx":"pdf";if(pvMode!==pv){const b=document.querySelector(`[data-pvm="${pv}"]`);if(b)b.click()}}
+  drawModePanel();if(m==="saisie")requestAnimationFrame(()=>{try{ttFit()}catch(_){}})}
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-edm]");if(b){e.preventDefault();setEdMode(b.dataset.edm)}});
+function mpVal(x,k,cfg){if(k==="corr"){const h=corrV(x.corrH),d=corrV(x.corrD);return h||d?`H${h||"—"} D${d||"—"}`:""}if(k==="diameter"){const d=normDia(x.diameter);return d?"Ø"+d:""}
+  if(k==="ra")return raLabel(x.ra);return linesOf_(x[k]).join(" · ")}
+function drawModePanel(){const P=$("#modepanel");if(!P||!cur)return;P.hidden=edMode==="saisie";if(edMode==="saisie"){P.innerHTML="";return}
+  const art=cur,pdf=edMode==="pdf",cfg=pdf?sheetCfg(art):cfgXlOf(art),keys=visCols(cfg).filter(k=>k!=="t"),on=k=>pdf?prOn(art,k):prOnX(art,k);
+  const rows=withLoc(pdf?pdfRowsOf(art):xlRowsOf(art),cfg),shown=keys.filter(on),nOps=realTools(art.tools).length,nT=opsGroups(art.tools).length,CF=opsConflicts(art.tools);
+  const sortSel=(id,val,first)=>`<select id="${id}">${first}${Object.entries(t("sortBy")).map(([k,l])=>`<option value="${k}" ${val===k?"selected":""}>${esc(l)}</option>`).join("")}</select>`;
+  const set=pdf?`<div class="mpset"><label class="chk"><input type="checkbox" id="mp-group" ${art.pdfGroup!==false?"checked":""}> ${esc(t("mpGroup"))}</label>
+      <label class="laysel"><span>${esc(t("mpOrder"))}</span>${sortSel("mp-sort",art.pdfSort||"",`<option value="">${esc(t("mpOrderSaisie"))}</option>`)}</label></div>`
+    :`<div class="mpset"><div class="seg2" role="radiogroup" aria-label="${esc(t("mxRows"))}"><label class="chk"><input type="radio" name="mx-rows" value="ops" ${art.xlRows!=="pdf"?"checked":""}> ${esc(t("mxOps"))}</label><label class="chk"><input type="radio" name="mx-rows" value="pdf" ${art.xlRows==="pdf"?"checked":""}> ${esc(t("mxPdf"))}</label></div>
+      ${art.xlRows!=="pdf"?`<label class="laysel"><span>${esc(t("mxOrder"))}</span><select id="mx-sort"><option value="">${esc(t("mxOrderSaisie"))}</option><option value="pdf" ${art.xlSort==="pdf"?"selected":""}>${esc(t("mxOrderPdf"))}</option></select></label>`:""}</div>`;
+  P.innerHTML=`${set}
+    <div class="mpcols"><span class="mplab">${esc(t("mpCols"))}</span>${keys.map(k=>`<label class="mpchip${on(k)?" on":""}"><input type="checkbox" data-mpk="${k}" ${on(k)?"checked":""}>${esc(colLabel(k,cfg))}</label>`).join("")}</div>
+    ${CF.length?`<div class="warnline mpconf"><b>${esc(t("mpConf"))}</b> ${CF.map(c=>`<span>${esc(c.t)} — ${esc(c.txt)}</span>`).join("")}</div>`:""}
+    <p class="note mpn">${esc(pdf?t("mpPdfN",art.pdfGroup!==false?nT:nOps,nOps):t("mxN",rows.filter(r=>!r._total).length))}</p>
+    <div class="list mplist"><table class="lt mpt"><thead><tr><th>T</th>${shown.map(k=>`<th>${esc(colLabel(k,cfg))}</th>`).join("")}</tr></thead><tbody>
+      ${rows.map(x=>`<tr class="${x._total?"tot":""}"><td class="m b">${esc(x._total?x.t:normT(x.t))}</td>${shown.map(k=>`<td class="${/^(time|life|ls|oal|z|diameter|ra|code|asm|corr)$/.test(k)?"m":""}${(k==="time"||k==="life")&&x._total?" b":""}">${esc(mpVal(x,k,cfg))}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+  const ch=()=>{edited();pvLastKey="";schedulePreview(30);drawModePanel()};
+  if(pdf){$("#mp-group").onchange=e=>{art.pdfGroup=e.target.checked;ch()};$("#mp-sort").onchange=e=>{art.pdfSort=e.target.value||"";ch()}}
+  else{P.querySelectorAll('[name="mx-rows"]').forEach(r=>r.onchange=()=>{art.xlRows=r.value==="pdf"?"pdf":"ops";ch()});const xs=$("#mx-sort");if(xs)xs.onchange=e=>{art.xlSort=e.target.value||"";ch()}}
+  if(art.status==="done")P.querySelectorAll("input,select").forEach(i=>i.disabled=true);
+  P.querySelectorAll("[data-mpk]").forEach(c=>c.onchange=()=>{const k=c.dataset.mpk;if(pdf){art.pr=art.pr||{};art.pr[k]=c.checked;try{prStyle()}catch(_){}document.querySelectorAll(`.tt [data-pr="${k}"]`).forEach(b=>b.checked=c.checked)}else{art.prx=art.prx||{};art.prx[k]=c.checked}ch()})}
+{const r0=renderEditor;renderEditor=function(art){r0.apply(this,arguments);const ed=$("#ed");if(ed)ed.dataset.mode=edMode;drawModePanel();
+  if(cur&&cur.status==="done")setTimeout(()=>{const P=$("#modepanel");if(P)P.querySelectorAll("input,select").forEach(i=>i.disabled=true)},0)}}
+// "+ operation columns" on one sheet
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("#b-ops");if(!b||!cur)return;cur.ops=!cur.ops;edited();try{refreshCols(cur)}catch(_){}renderEditor(cur)});
+
 /* ---------- which columns go on the PDF and the Excel ----------
    The layout says it for every sheet (Columns window: "PDF / Excel" box); each sheet can change it
    with the box above each column of its tool table. */
 Object.assign(I18N.en,{prT:"On the PDF and the Excel", prShort:"PDF", tDup:T=>`${T} is used twice in this sheet`, prOn:c=>`“${c}” will be on the PDF and the Excel`, prOff:c=>`“${c}” will not be on the PDF and the Excel`, prLay:"PDF / Excel", prLayT:"Ticked: the column is on the PDF and the Excel of the sheets using this layout (each sheet can still change it above its tool table)"});
 Object.assign(I18N.fr,{prT:"Sur le PDF et l’Excel", prShort:"PDF", tDup:T=>`${T} est utilisé deux fois dans cette fiche`, prOn:c=>`« ${c} » sera sur le PDF et l’Excel`, prOff:c=>`« ${c} » ne sera pas sur le PDF et l’Excel`, prLay:"PDF / Excel", prLayT:"Coché : la colonne est sur le PDF et l’Excel des fiches qui utilisent cette mise en page (chaque fiche peut encore le changer au-dessus de son tableau d’outils)"});
-const prDef=(cfg,k)=>!((cfg&&cfg.noprint)||["asm"]).includes(k);
+const prDef=(cfg,k)=>k==="op"?false:!((cfg&&cfg.noprint)||["asm"]).includes(k);
 function prOn(art,k,cfg){const P=(art&&art.pr)||{};if(Object.prototype.hasOwnProperty.call(P,k))return !!P[k];return prDef(cfg||cfgOf(art),k)}
 // the layout as it is printed: the columns not printed are left out, and nothing is put under them
 function printCfg(cfg,art){if(!cfg)return cfg;const keys=[...LABK.filter(k=>k!=="t"),...(cfg.extra||[]).map(x=>xKey(x.id))].filter(k=>!prOn(art,k,cfg));
@@ -6571,7 +6693,7 @@ function printCfg(cfg,art){if(!cfg)return cfg;const keys=[...LABK.filter(k=>k!==
   Object.entries(cfg.joinTo||{}).forEach(([k,to])=>{if(!hidden.includes(k)&&!hidden.includes(to))joinTo[k]=to});
   return{...cfg,hidden,joinTo,join:Object.keys(joinTo)}}
 function prStyle(){if(!cur)return;let el=$("#npstyle");if(!el){el=document.createElement("style");el.id="npstyle";document.head.appendChild(el)}
-  const off=visCols(sheetCfg()).filter(k=>k!=="t"&&!prOn(cur,k));el.textContent=off.map(k=>k==="asm"?`.tt input[data-k="asm"]{opacity:.5}`:k==="loc"?`.tt .loctag{opacity:.45}`:`.tt td[data-col="${k}"] input{opacity:.5}`).join("")}
+  const off=visCols(sheetCfg()).filter(k=>k!=="t"&&k!=="op"&&!prOn(cur,k));el.textContent=off.map(k=>k==="asm"?`.tt input[data-k="asm"]{opacity:.5}`:k==="loc"?`.tt .loctag{opacity:.45}`:`.tt td[data-col="${k}"] input{opacity:.5}`).join("")}
 
 document.addEventListener("pointerdown",()=>{window.__colPtr=1},true);document.addEventListener("pointerup",()=>{setTimeout(()=>{window.__colPtr=0},0)},true);
 /* ---------- the tool table fits the space it has (no sideways scrolling unless the window is really too small) ----------
@@ -6579,7 +6701,7 @@ document.addEventListener("pointerdown",()=>{window.__colPtr=1},true);document.a
    the widths you set by dragging stay as you set them when there is room. */
 function ttFit(){const tw=document.querySelector(".ed .tw"),tb=tw&&tw.querySelector("table.tt");if(!tb||window.innerWidth<761)return;
   const avail=tw.clientWidth;if(!avail)return;const ths=[...tb.querySelectorAll("thead tr:first-child th[data-ck]")];if(!ths.length)return;
-  const MIN={type:140,holder:100,insert:76,loc:72},ACT=76;
+  const MIN={type:140,holder:100,insert:76,loc:72,op:90},ACT=76;
   const C=ths.map(th=>{const k=th.dataset.ck;return{th,k,w:thW(k)||0,min:MIN[k]||(k.startsWith("x_")?64:null)}});
   const fixed=C.filter(c=>c.w).reduce((s,c)=>s+c.w,0)+ACT,typ=C.find(c=>c.k==="type"&&!c.w);
   // Type without its own width takes what is left; it still needs its minimum
@@ -6818,7 +6940,7 @@ function drawHistory(){
    admin page, demo switch. The web version doesn't use any of this.
    ===================================================================== */
 const DESKDEMO=/*DESKDEMO*/null;
-const APP_VER="2.24.3";
+const APP_VER="2.25.0";
 let DEMO_ON=false, ACC=null, USERS=null, PCNAME="", realDIR="", loginFails=0, loginWait=0, lastAct=Date.now();
 Object.assign(I18N.en,{
   loginT:"Sign in", loginP:"Enter your name or code and your password.", loginName:"Name or code", loginPw:"Password", loginGo:"Sign in",

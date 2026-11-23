@@ -55,8 +55,9 @@ with sync_playwright() as p:
   ok("Excel draws with boxes","☐" in pg.evaluate("JSON.stringify(sheetModel(A('a1')))"))
   ok("compact rows are smaller",pg.evaluate("(()=>{const a=A('a1'),h=makePDF(sheetData(a)).bsMeta.rh;return h})()")<11.6)
   # sort by location
-  pg.select_option("#a-sort","loc");pg.wait_for_timeout(400)
-  ok("sort by location",pg.evaluate("A('a1').tools.map(x=>x.t).join(',')").startswith("T09"),pg.evaluate("A('a1').tools.map(x=>x.t).join(',')"))
+  pg.click('[data-edm="pdf"]');pg.wait_for_timeout(300);pg.select_option("#mp-sort","loc");pg.wait_for_timeout(400)
+  ok("sort by location (PDF)",pg.evaluate("sheetData(A('a1')).tools.map(x=>x.t).join(',')").startswith("T09"),pg.evaluate("sheetData(A('a1')).tools.map(x=>x.t).join(',')"))
+  pg.click('[data-edm="saisie"]');pg.wait_for_timeout(300)
   # pick list order
   pg.evaluate("prepDialog(A('a1'))");pg.wait_for_timeout(300)
   pg.click("[data-pps=loc]");pg.wait_for_timeout(300)

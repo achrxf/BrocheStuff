@@ -6,7 +6,7 @@ Tool lists, tool crib and holders for a CNC machining shop: every machine, its a
 |---|---|---|
 | **Web** | [achrxf.github.io/BrocheStuff/Web](https://achrxf.github.io/BrocheStuff/Web/) | The program in the browser. Starts empty; your data stays in your browser. |
 | **Demo** | [achrxf.github.io/BrocheStuff/Demo](https://achrxf.github.io/BrocheStuff/Demo/) | The same program filled with a made-up workshop, with a step-by-step tutorial (French / English) linked at the bottom of every page: 20 machines (3, 4 and 5 axes; BT30 / BT40 / BT50 / HSK63), 500 articles, ~500 tool codes, ~130 holders and a month of stock moves. |
-| **App** | [App/BrocheStuff-Setup-2.24.3.exe](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Setup-2.24.3.exe) | The Windows program (10/11, 64-bit) with sign-in accounts and a shared data folder. Run the installer (no admin rights needed), then open BrocheStuff from the Start menu; first sign-in **admin / admin**. Portable version: [BrocheStuff-Windows.zip](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Windows.zip). See [`App/README.txt`](App/README.txt). |
+| **App** | [App/BrocheStuff-Setup-2.25.0.exe](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Setup-2.25.0.exe) | The Windows program (10/11, 64-bit) with sign-in accounts and a shared data folder. Run the installer (no admin rights needed), then open BrocheStuff from the Start menu; first sign-in **admin / admin**. Portable version: [BrocheStuff-Windows.zip](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Windows.zip). See [`App/README.txt`](App/README.txt). |
 
 The web version has a **Download the app** button at the top right. The demo stands on its own: it has no link to the real version and no download, so it can be shared safely.
 
@@ -15,7 +15,7 @@ The web version has a **Download the app** button at the top right. The demo sta
 ```
 Web/   index.html   the web version (one file, works offline once opened)
 Demo/  index.html   the web version with demo data (kept apart from your real data)
-App/   BrocheStuff-Setup-2.24.3.exe (installer), BrocheStuff-Windows.zip (portable), README.txt, FOR_IT.txt, checksums
+App/   BrocheStuff-Setup-2.25.0.exe (installer), BrocheStuff-Windows.zip (portable), README.txt, FOR_IT.txt, checksums
 ```
 
 ## What it does
@@ -23,6 +23,8 @@ App/   BrocheStuff-Setup-2.24.3.exe (installer), BrocheStuff-Windows.zip (portab
 **Services.** On opening, each person picks a service: *Préparateur méthode* (machines, articles, tool sheets), *Préparateur outil* (tool crib, holders, stock log), *Production* (find a tool, a holder or an article, read the sheet, take a tool out of stock one at a time, leave a comment) or *Admin* (everything). Stock moves are logged with the person's name and time.
 
 **Machines and articles.** Machine cards with spindle taper (BT40 / BT50 / …) and progress; articles with number, index, designation, reference, program, material; the tool list (T, H / D offsets, type, Ø, R / ∠, insert reference, LS, LT, Z, holder, code) with a drawing that explains each box, Excel paste, live **PDF / Excel preview**, **print**, **PDF** and an editable **Excel** file (same look as the PDF, imports back), a **PDF ⇄ Excel** converter, **several lines in any cell** (Shift+Enter), **your own columns** and renamed column titles saved as **layouts** (a default for new sheets, any layout per sheet), and **page / column widths** you drag to size. A holder of the wrong taper for the machine is flagged.
+
+**Operations, and three modes.** A sheet can hold one line per operation: the same T on several lines, with **Operation**, **Time** (12:30 or 02:54:12) and **Tool life** columns ("+ Operation columns" on a sheet, or in a layout). "+" on a line adds an operation for the same tool with its data copied. Repeated T numbers get a blue dot; a red one when the tool data differ between the lines. The sheet has three modes: **Saisie** (everything, one line per operation), **PDF** (one line per tool, times and tool life added up, your order and columns) and **Excel** (every operation with the total at the end, or the same list as the PDF, its own columns and order). Sorting only changes the PDF (and the Excel if you ask). The read-only sheet and the tool prep show one line per tool.
 
 **Where each tool is.** The tool sheet has a **Location** column filled from the tool crib (and, as an option, the holder's location): by default it sits under the tool code, on the screen, the PDF and the Excel. A tool with no location yet shows "+ location" right in the sheet to add it on the spot. Sheets can be sorted by location, and the tool prep list can be taken out in shop order (by location). Layout options: row height, check boxes for the tool prep (Ready, or Prepared · Mounted).
 
@@ -80,7 +82,7 @@ BrocheStuff regroupe les machines CNC, leurs articles et leurs outils, produit u
 
 - **Web** : https://achrxf.github.io/BrocheStuff/Web/ — le programme dans le navigateur, vide au départ.
 - **Démo** : https://achrxf.github.io/BrocheStuff/Demo/ — atelier fictif de 20 machines et 500 articles.
-- **Programme Windows** : [App/BrocheStuff-Setup-2.24.3.exe](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Setup-2.24.3.exe) — installez-le (sans droits administrateur), ouvrez BrocheStuff depuis le menu Démarrer, première connexion **admin / admin**. Comptes par personne, dossier de données partagé en réseau, page Administration, démo intégrée (voir `README.txt`).
+- **Programme Windows** : [App/BrocheStuff-Setup-2.25.0.exe](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Setup-2.25.0.exe) — installez-le (sans droits administrateur), ouvrez BrocheStuff depuis le menu Démarrer, première connexion **admin / admin**. Comptes par personne, dossier de données partagé en réseau, page Administration, démo intégrée (voir `README.txt`).
 
 Au démarrage, choisissez votre service : Préparateur méthode, Préparateur outil, Production, ou Accès admin. Les données restent sur l'ordinateur qui les utilise (navigateur, ou `Documents\BrocheStuff` pour le programme). **Sauvegarder / Restaurer** pour les déplacer ; une copie automatique est gardée toutes les 5 minutes.
 
