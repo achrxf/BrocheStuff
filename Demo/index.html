@@ -2768,13 +2768,15 @@ function makePDF(data){
        const yT=yAt(mid,li,n);const w1=ty||(first&&on("type"))?txt(fit(ty||(first?"—":""),room,0.18),cx2+1.8,yT,{cs:0.18}):0;
        if(dims){font("Mono5",9.6);color(C.ink);txt(dims,cx2+1.8+w1+(w1?2.4:0),yT)}}
      subs.forEach(([kind,v],si)=>{const yS=yAt(mid,nMain+si,n);
-       if(kind==="ins"){font("Plex5",7);color(C.mid);const lw=txt(L.insS+" ",cx2+1.8,yS);font("Mono5",7.6);color(C.ink);txt(fit(v,w2-3.6-lw),cx2+1.8+lw,yS)}
+       if(kind==="ins"){const RM=w2-3.6;font("Plex5",6.6);let lw=tw(L.insS+" "),f=7.6;font("Mono5",f);while(f>5.6&&tw(v)>RM-lw){f-=0.2;font("Mono5",f)}
+         if(tw(v)>RM-lw){lw=0;f=7.6;font("Mono5",f);while(f>5&&tw(v)>RM){f-=0.2;font("Mono5",f)}}
+         if(lw){font("Plex5",Math.min(6.6,f));color(C.mid);txt(L.insS+" ",cx2+1.8,yS)}font("Mono5",f);color(C.ink);txt(fit(v,RM-lw),cx2+1.8+lw,yS)}
        else{font("Plex4",7);color(C.mid);txt(fit(v,w2-3.6),cx2+1.8,yS)}color(C.ink)});under("type")}
     SK=null;const dash=(xx,c)=>{font("Mono5",10);txt("—",c?xx-tw("—")/2:xx,base(10))};
     // Ø, R and the insert in their own columns (when the layout doesn't join them to Type)
     if(KI.diameter!=null){at("diameter");useK("diameter");const v=linesOf(t.diameter).map(x=>{const d=normDia(x);return d?"Ø"+d:x});if(v.length)stack(v,X_("diameter")+1.6,W_("diameter")-2.6,"Mono5",9.6,6,"left");else dash(X_("diameter")+1.8);under("diameter")}
     if(KI.ra!=null){at("ra");useK("ra");const v=linesOf(t.ra).map(x=>{const r=normRA(x);return r.kind==="R"?"R"+r.val:r.kind==="A"?r.val+"°":x});if(v.length)stack(v,X_("ra")+1.6,W_("ra")-2.6,"Mono5",9.6,6,"left");else dash(X_("ra")+1.8);under("ra")}
-    if(KI.insert!=null){at("insert");useK("insert");const iw=W_("insert")-2.8;font("Mono5",7.6);const v=linesOf(t.insert).map(x=>x.toUpperCase()).flatMap(x=>tw(x)>iw&&/\s/.test(x)?doc.splitTextToSize(x,iw):[x]);if(v.length)stack(v,X_("insert")+1.6,W_("insert")-2.8,"Mono5",8.4,5.6,"left");under("insert")}
+    if(KI.insert!=null){at("insert");useK("insert");const iw=W_("insert")-2.8;font("Mono5",7.6);const v=linesOf(t.insert).map(x=>x.toUpperCase()).flatMap(x=>tw(x)>iw&&/\s/.test(x)?doc.splitTextToSize(x,iw):[x]);if(v.length)stack(v,X_("insert")+1.6,W_("insert")-2.8,"Mono5",8.4,5,"left");under("insert")}
     if(KI.ls!=null){at("ls");useK("ls");const ls=linesOf(t.ls).map(v=>v.replace(",",".").replace(/\s*\+\s*/g,"+"));
      if(ls.length)stack(ls,X_("ls")+1.2,W_("ls")-2.4,"MonoB",11,6,"left");
      else{stroke(C.soft);doc.setLineWidth(0.25);doc.setLineDashPattern([0.8,0.6],0);doc.roundedRect(X_("ls")+1.4,mid-3.1,W_("ls")-3.4,6.2,1,1,"S");doc.setLineDashPattern([],0)}under("ls")}
@@ -5874,7 +5876,7 @@ Object.assign(I18N.en,{getApp:"Get the app", getAppT:"Download the Windows insta
   demoBar:"Demo: made-up workshop with 20 machines and 500 articles. Changes stay in this browser only.", demoShort:"Made-up data", demoReset:"Reset the demo", demoResetQ:"Reset the demo data? Everything changed here is lost.", demoGo:"Real version"});
 Object.assign(I18N.fr,{getApp:"Télécharger l'app", getAppT:"Télécharger l’installateur Windows",
   demoBar:"Démo : atelier fictif de 20 machines et 500 articles. Vos changements restent dans ce navigateur.", demoShort:"Données fictives", demoReset:"Réinitialiser la démo", demoResetQ:"Réinitialiser les données de la démo ? Tout ce qui a été changé ici sera perdu.", demoGo:"Version réelle"});
-const APP_ZIP="BrocheStuff-Setup-2.24.1.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
+const APP_ZIP="BrocheStuff-Setup-2.24.2.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
 function appUrl(){
   // on the site (…/Web/ or …/Demo/) the program sits next door in …/App/; anywhere else, take it from the site
   if(/^https?:/.test(location.protocol)&&/\/(Web|Demo)\/(index\.html)?$/i.test(location.pathname))return new URL("../App/"+APP_ZIP,location.href).href;
@@ -6805,7 +6807,7 @@ function drawHistory(){
    admin page, demo switch. The web version doesn't use any of this.
    ===================================================================== */
 const DESKDEMO=/*DESKDEMO*/null;
-const APP_VER="2.24.1";
+const APP_VER="2.24.2";
 let DEMO_ON=false, ACC=null, USERS=null, PCNAME="", realDIR="", loginFails=0, loginWait=0, lastAct=Date.now();
 Object.assign(I18N.en,{
   loginT:"Sign in", loginP:"Enter your name or code and your password.", loginName:"Name or code", loginPw:"Password", loginGo:"Sign in",
