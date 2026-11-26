@@ -2294,6 +2294,19 @@ html:not(.noup) .tt .asmin,html:not(.noup) input[list="types"],html:not(.noup) :
 html:not(.noup) .tt td:is([data-col="type"],[data-col="insert"],[data-col="holder"],[data-col="code"],[data-col="op"],[data-col^="x_"]) :is(input,textarea)::placeholder{text-transform:none}
 #b-upper .upck{margin-left:auto;font-weight:700;color:var(--done,#2b7a50)}
 @media (max-width:760px){#b-upper .lbl{display:none}}
+
+/* 2.27.4: read a program into a filled sheet */
+.pgtw{max-height:46vh;overflow:auto;border:1px solid var(--hair,#ddd)}
+.pgt{width:100%;border-collapse:collapse;font-size:13px}
+.pgt th{position:sticky;top:0;background:var(--fill,#f3f1ec);text-align:left;font:700 11px var(--display,inherit);letter-spacing:.05em;text-transform:uppercase;padding:6px 8px;color:var(--mid,#666)}
+.pgt td{padding:5px 8px;border-top:1px solid var(--hair,#e5e5e5);vertical-align:top}
+.pgt td:first-child{color:var(--mid,#888);font:12px var(--mono,monospace)}
+.pgt td b{color:var(--red,#b00);font-family:var(--mono,monospace)}
+.pgt tr.kp td{opacity:.65}
+.pgt .pgs,.pgt .pgn,.pgt .pgk{font-size:11px;white-space:nowrap;padding:1px 6px;border:1px solid var(--line2,#ccc)}
+.pgt .pgn{border-color:#2563eb;color:#2563eb}
+.pgt .pgk{border-style:dashed}
+.pgo{display:flex;gap:8px;align-items:center;margin-top:10px;font-size:13.5px}
 </style></head>
 <body>
 <script>try{if(localStorage.getItem("bs.skin")!=="classic")document.documentElement.classList.add("at")}catch(e){document.documentElement.classList.add("at")}</script>
@@ -6434,7 +6447,7 @@ Object.assign(I18N.en,{getApp:"Get the app", getAppT:"Download the Windows insta
   demoBar:"Demo: made-up workshop with 20 machines and 500 articles. Changes stay in this browser only.", demoShort:"Made-up data", demoReset:"Reset the demo", demoResetQ:"Reset the demo data? Everything changed here is lost.", demoGo:"Real version"});
 Object.assign(I18N.fr,{getApp:"Télécharger l'app", getAppT:"Télécharger l’installateur Windows",
   demoBar:"Démo : atelier fictif de 20 machines et 500 articles. Vos changements restent dans ce navigateur.", demoShort:"Données fictives", demoReset:"Réinitialiser la démo", demoResetQ:"Réinitialiser les données de la démo ? Tout ce qui a été changé ici sera perdu.", demoGo:"Version réelle"});
-const APP_ZIP="BrocheStuff-Setup-2.27.3.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
+const APP_ZIP="BrocheStuff-Setup-2.27.4.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
 function appUrl(){
   // on the site (…/Web/ or …/Demo/) the program sits next door in …/App/; anywhere else, take it from the site
   if(/^https?:/.test(location.protocol)&&/\/(Web|Demo)\/(index\.html)?$/i.test(location.pathname))return new URL("../App/"+APP_ZIP,location.href).href;
@@ -8407,6 +8420,51 @@ document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest
   cur.ops=opsVis()?false:true;edited();try{refreshCols(cur)}catch(_){}renderEditor(cur)},true);
 // CNC files saved by older posts/editors are often not UTF-8: read them as Windows text so É, Ø, ° show right
 async function ncText(f){const buf=await f.arrayBuffer();try{return new TextDecoder("utf-8",{fatal:true}).decode(buf)}catch(_){try{return new TextDecoder("windows-1252").decode(buf)}catch(__){return new TextDecoder().decode(buf)}}}
+
+/* ===================== 2.27.4: read a program into a sheet that already has its tools ===================== */
+Object.assign(I18N.fr,{pgT:"Lire le programme dans cette fiche",
+  pgIntro:(n,p)=>`Cette fiche a déjà ${n} ${pl(n,"outil","outils")}. Le programme fait ${p} ${pl(p,"changement d’outil","changements d’outil")}.`,
+  pgHow:"Les lignes sont remises dans l’ordre du programme, un outil utilisé deux fois donne deux lignes. Ce que vous avez déjà tapé (porte-outil, LS, code, Ø, assemblage…) est gardé et recopié sur chaque répétition ; le programme ne remplit que les cases vides.",
+  pgKeep:n=>`${n} ${pl(n,"outil de la fiche n’est pas","outils de la fiche ne sont pas")} dans le programme : ${pl(n,"gardé","gardés")} à la fin.`,
+  pgFrom:"de la fiche",pgNew:"nouveau (programme)",pgKept:"pas dans le programme",
+  pgOps:"Afficher les noms d’opération",pgGo:"Suivre le programme",pgOther:"Autres choix (ajouter / remplacer)…",
+  pgDone:(n,k)=>`${n} ${pl(n,"ligne","lignes")} dans l’ordre du programme${k?` · ${k} ${pl(k,"outil gardé","outils gardés")} à la fin`:""}`,pgUndo:"Annuler",pgUndone:"Fiche remise comme avant"});
+Object.assign(I18N.en,{pgT:"Read the program into this sheet",
+  pgIntro:(n,p)=>`This sheet already has ${n} ${pl(n,"tool","tools")}. The program has ${p} ${pl(p,"tool change","tool changes")}.`,
+  pgHow:"The lines are put in the program's order; a tool used twice gives two lines. What you already typed (holder, LS, code, Ø, assembly…) is kept and copied onto every repeat; the program only fills empty boxes.",
+  pgKeep:n=>`${n} ${pl(n,"tool of the sheet is","tools of the sheet are")} not in the program: kept at the end.`,
+  pgFrom:"from the sheet",pgNew:"new (program)",pgKept:"not in the program",
+  pgOps:"Show the operation names",pgGo:"Follow the program",pgOther:"Other choices (add / replace)…",
+  pgDone:(n,k)=>`${n} ${pl(n,"line","lines")} in the program's order${k?` · ${k} ${pl(k,"tool","tools")} kept at the end`:""}`,pgUndo:"Undo",pgUndone:"Sheet put back as it was"});
+// the sheet's lines in the program's order: sheet data wins, the program fills the gaps and names the operation
+function pgMerge(tools,seq){const have=realTools(tools),byT=new Map();have.forEach(x=>{const k=normT(x.t);if(!byT.has(k))byT.set(k,[]);byT.get(k).push(x)});
+  const used=new Set(),out=[],inProg=new Set();
+  seq.forEach(p=>{const k=normT(p.t);inProg.add(k);const list=byT.get(k)||[];let src=list.find(x=>!used.has(x));if(src)used.add(src);const base=src||list[0];
+    let line;if(base){line=JSON.parse(JSON.stringify(base));Object.keys(p).forEach(f=>{if(f==="t"||f==="op")return;if(!clean(line[f])&&clean(p[f]))line[f]=p[f]});if(clean(p.op))line.op=p.op;line._pg=src?"sheet":"copy"}
+    else{line={...p};line._pg="new"}
+    out.push(line)});
+  const kept=have.filter(x=>!used.has(x)&&!inProg.has(normT(x.t))).map(x=>({...JSON.parse(JSON.stringify(x)),_pg:"kept"}));
+  return{lines:[...out,...kept],kept:kept.length}}
+function pgDialog(sheet,ctx,fname,sheets,goOther){const A=cur,seq=sheet.nc.seqTools,have=realTools(A.tools),M0=pgMerge(A.tools,seq);
+  const tag=x=>x._pg==="new"?`<span class="pgn">${esc(t("pgNew"))}</span>`:x._pg==="kept"?`<span class="pgk">${esc(t("pgKept"))}</span>`:`<span class="pgs">${esc(t("pgFrom"))}</span>`;
+  const rows=M0.lines.map((x,i)=>`<tr${x._pg==="kept"?' class="kp"':""}><td>${i+1}</td><td><b>${esc(x.t||"")}</b></td><td>${esc(x.op||"")}</td><td>${esc([x.type,x.diameter?"Ø"+x.diameter:""].filter(Boolean).join(" "))}</td><td>${esc(linesOf_(x.holder||"")[0]||"")}</td><td>${tag(x)}</td></tr>`).join("");
+  const ov=dialog(esc(t("pgT")),`<p style="margin:0 0 6px">${esc(t("pgIntro",have.length,seq.length))}</p><p class="note" style="margin:0 0 10px">${esc(t("pgHow"))}</p>
+    ${M0.kept?`<p class="note" style="margin:0 0 10px;color:var(--warn,#b45309)">${esc(t("pgKeep",M0.kept))}</p>`:""}
+    <div class="pgtw"><table class="pgt"><thead><tr><th>#</th><th>T</th><th>${esc(t("colOp"))}</th><th>${esc(LANG==="fr"?"Outil":"Tool")}</th><th>${esc(LANG==="fr"?"Porte-outil":"Holder")}</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>
+    <label class="pgo"><input type="checkbox" id="pg-ops"> ${esc(t("pgOps"))}</label>`,
+    `<button class="btn ghost" id="pg-other">${esc(t("pgOther"))}</button><span style="flex:1"></span><button class="btn ghost" id="pg-no">${esc(t("cancel"))}</button><button class="btn red" id="pg-go">${esc(t("pgGo"))}</button>`);
+  ov.querySelector(".dlg").classList.add("wide");ov.querySelector(".dlg").style.width="min(760px,96vw)";
+  $("#pg-no").onclick=closeDlg;$("#pg-other").onclick=()=>{closeDlg();goOther()};
+  $("#pg-go").onclick=()=>{if(cur!==A){closeDlg();return}flushEditor();const before=JSON.parse(JSON.stringify(A.tools)),opsBefore=A.ops;
+    A.tools=M0.lines.map(x=>{const y={...x};delete y._pg;try{if(upOn())upTool(y)}catch(_){}return y});if(!A.tools.length)A.tools=[{t:"T01"}];
+    if($("#pg-ops").checked)A.ops=true;
+    const nc=sheet.nc;if(nc&&nc.program&&!clean(A.article.program)){A.article.program=nc.program}
+    closeDlg();edited();try{refreshCols(A)}catch(_){}renderEditor(A);try{asmLater()}catch(_){}
+    toast(t("pgDone",M0.lines.length-M0.kept,M0.kept),{label:t("pgUndo"),fn:()=>{if(!db.articles.includes(A))return;A.tools=before;if(opsBefore===undefined)delete A.ops;else A.ops=opsBefore;edited();try{refreshCols(A)}catch(_){}if(cur===A)renderEditor(A);toast(t("pgUndone"))}})}}
+{const d0=importDialog;importDialog=function(kind,ctx,fname,sheets){const a=arguments,self=this;
+  try{const s=sheets&&sheets.find(x=>x.nc&&x.nc.seqTools&&x.nc.seqTools.length);
+    if(kind==="tools"&&ctx&&!ctx.plan&&s&&cur&&route.view==="article"&&realTools(cur.tools).length&&!asmLocked(cur)){pgDialog(s,ctx,fname,sheets,()=>d0.apply(self,a));return}}catch(e){console.error(e)}
+  return d0.apply(this,arguments)}}
 
 </script>
 </body></html>
