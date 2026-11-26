@@ -31,7 +31,7 @@ with sync_playwright() as p:
   got=pg.evaluate("realTools(cur.tools).map(x=>[x.t,x.op||''])")
   ok("sheet has the 5 lines in program order",[x[0] for x in got]==["T01","T05","T12","T05","T01"],got)
   ok("operation names on the sheet",[x[1] for x in got][1]=="CONTOURNAGE EBAUCHE",got)
-  ok("operation columns switched on",pg.evaluate("!!cur.ops"))
+  ok("operation columns NOT switched on by a program (2.27.3)",not pg.evaluate("!!cur.ops"))
   pdf=pg.evaluate("pdfRowsOf(cur).map(x=>x.t)")
   ok("PDF still one line per tool",sorted(pdf)==["T01","T05","T12"],pdf)
   ok("no errors",not errs,errs)
