@@ -6,7 +6,7 @@ Tool lists, tool crib and holders for a CNC machining shop: every machine, its a
 |---|---|---|
 | **Web** | [achrxf.github.io/BrocheStuff/Web](https://achrxf.github.io/BrocheStuff/Web/) | The program in the browser. Starts empty; your data stays in your browser. |
 | **Demo** | [achrxf.github.io/BrocheStuff/Demo](https://achrxf.github.io/BrocheStuff/Demo/) | The same program filled with a made-up workshop, with a step-by-step tutorial (French / English) linked at the bottom of every page: 20 machines (3, 4 and 5 axes; BT30 / BT40 / BT50 / HSK63), 500 articles, ~500 tool codes, ~130 holders and a month of stock moves. |
-| **App** | [App/BrocheStuff-Setup-2.27.5.exe](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Setup-2.27.5.exe) | The Windows program (10/11, 64-bit) with sign-in accounts and a shared data folder. Run the installer (no admin rights needed), then open BrocheStuff from the Start menu; first sign-in **admin / admin**. Portable version: [BrocheStuff-Windows.zip](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Windows.zip). See [`App/README.txt`](App/README.txt). |
+| **App** | [App/BrocheStuff-Setup-2.28.0.exe](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Setup-2.28.0.exe) | The Windows program (10/11, 64-bit) with sign-in accounts and a shared data folder. Run the installer (no admin rights needed), then open BrocheStuff from the Start menu; first sign-in **admin / admin**. Portable version: [BrocheStuff-Windows.zip](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Windows.zip). See [`App/README.txt`](App/README.txt). |
 
 The web version has a **Download the app** button at the top right. The demo stands on its own: it has no link to the real version and no download, so it can be shared safely.
 
@@ -15,7 +15,7 @@ The web version has a **Download the app** button at the top right. The demo sta
 ```
 Web/   index.html   the web version (one file, works offline once opened)
 Demo/  index.html   the web version with demo data (kept apart from your real data)
-App/   BrocheStuff-Setup-2.27.5.exe (installer), BrocheStuff-Windows.zip (portable), README.txt, FOR_IT.txt, checksums
+App/   BrocheStuff-Setup-2.28.0.exe (installer), BrocheStuff-Windows.zip (portable), README.txt, FOR_IT.txt, checksums
 ```
 
 ## What it does
@@ -33,6 +33,14 @@ App/   BrocheStuff-Setup-2.27.5.exe (installer), BrocheStuff-Windows.zip (portab
 **Reading a CNC program.** "Read a program" gives every tool change in the program's order, a line per call: a tool used twice gives two lines (two operations), named from the comment written before the tool change (`(CONTOURNAGE EBAUCHE)`, `; PERCAGE`). Compressed blocks (`N30T1M6`, `M06T12`) are read too. The operation columns switch on by themselves, the PDF keeps one line per tool with the times added up.
 
 **Assemblies with their T number per machine.** An assembly (tool + holder, code AS0001…) is no longer made by itself while you type: "Make the assemblies" under a sheet's table makes them for its complete rows, or "+ New assembly" on the Assemblies page. Each assembly keeps its **T number on each machine**: typing its code in a sheet fills the row and the T for that machine; changing the T in a sheet changes the assembly's T for that machine; another machine can have another T. Changing an assembly updates every sheet that uses it (validated sheets keep theirs); changing a linked row offers to update the assembly. "Delete the unused ones" clears the old automatic ones nobody uses.
+
+**Assemblies that come to you (2.28).** Type a T in a sheet and the assemblies that have that T on this machine pop up as cards: a picture of the tool, type, Ø, holder, tool code, LS, the T on each machine and how many sheets use it. Several assemblies can share one T on a machine; you pick. If the T is already in the sheet, “Same as line…” copies that line's info (it asks first). The Assembly box is a real picker: search by Ø, type, holder, code or T, arrows and Enter. Hover a linked box to see its assembly.
+
+**Repeated T, every box compared.** The dot next to a repeated T is blue (same tool), orange (boxes empty on some lines) or red (different values, with the values in the tooltip). Click it: a window shows the lines side by side, you pick the right value per box, and every line gets it (Undo in the message).
+
+**Check the sheet.** A button above the table counts what is missing or wrong — sheet info, missing boxes, repeated T that differ, rows that no longer match their assembly, holders with the wrong cone for the machine, codes not in the crib, rows identical to an assembly but not linked — each with “Go there” or the fix. The validation window shows it too.
+
+**Faster.** The live preview waits for a pause in typing, the logo is decoded once instead of on every page, and saving to the data folder waits for a pause too.
 
 **Print follows the page.** On a sheet, Print prints the PDF (one line per tool) or the Excel (the rows as in the Excel, repeats included), depending on where you are: the Excel tab, or the Excel preview while typing, prints the Excel; anywhere else the PDF. The button shows PDF or Excel next to it.
 
@@ -96,7 +104,7 @@ BrocheStuff regroupe les machines CNC, leurs articles et leurs outils, produit u
 
 - **Web** : https://achrxf.github.io/BrocheStuff/Web/ — le programme dans le navigateur, vide au départ.
 - **Démo** : https://achrxf.github.io/BrocheStuff/Demo/ — atelier fictif de 20 machines et 500 articles.
-- **Programme Windows** : [App/BrocheStuff-Setup-2.27.5.exe](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Setup-2.27.5.exe) — installez-le (sans droits administrateur), ouvrez BrocheStuff depuis le menu Démarrer, première connexion **admin / admin**. Comptes par personne, dossier de données partagé en réseau, page Administration, démo intégrée (voir `README.txt`).
+- **Programme Windows** : [App/BrocheStuff-Setup-2.28.0.exe](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Setup-2.28.0.exe) — installez-le (sans droits administrateur), ouvrez BrocheStuff depuis le menu Démarrer, première connexion **admin / admin**. Comptes par personne, dossier de données partagé en réseau, page Administration, démo intégrée (voir `README.txt`).
 
 Au démarrage, choisissez votre service : Préparateur méthode, Préparateur outil, Production, ou Accès admin. Les données restent sur l'ordinateur qui les utilise (navigateur, ou `Documents\BrocheStuff` pour le programme). **Sauvegarder / Restaurer** pour les déplacer ; une copie automatique est gardée toutes les 5 minutes.
 

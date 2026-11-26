@@ -2312,6 +2312,102 @@ html:not(.noup) .tt td:is([data-col="type"],[data-col="insert"],[data-col="holde
 #b-print .pmode{font:700 10px var(--mono,monospace);letter-spacing:.04em;padding:1px 5px;border:1px solid currentColor;border-radius:2px;opacity:.75;margin-left:2px}
 #b-print .pmode.xl{color:#1d6f42;border-color:#1d6f42;opacity:1}
 html.at.dark #b-print .pmode.xl,html.dark #b-print .pmode.xl{color:#5fc48c;border-color:#5fc48c}
+/* ===== 2.28: assembly picker ===== */
+.apk{position:fixed;z-index:80;background:var(--paper,#fff);color:var(--ink,#111);border:1px solid var(--line2,#ccc);box-shadow:0 18px 48px rgba(0,0,0,.22),0 2px 6px rgba(0,0,0,.08);border-radius:6px;overflow:hidden;animation:apkIn .14s ease-out both;max-height:min(460px,70vh);display:flex;flex-direction:column}
+html.at .apk{border-radius:2px}
+.apk.out{animation:apkOut .12s ease-in both}
+@keyframes apkIn{from{opacity:0;transform:translateY(-4px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes apkOut{to{opacity:0;transform:translateY(-3px)}}
+@media (prefers-reduced-motion:reduce){.apk,.apk.out{animation:none}}
+.aph{display:flex;align-items:baseline;gap:10px;padding:10px 12px 8px;border-bottom:1px solid var(--hair,#e5e5e5)}
+.aph b{font:700 13px var(--display,inherit);letter-spacing:.03em}
+.aph span{font-size:12px;color:var(--mid,#666)}
+.aph.sm{padding:7px 12px 6px}.aph.sm b{font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--mid,#666)}
+.apx{margin-left:auto;border:0;background:none;color:var(--mid,#777);cursor:pointer;font-size:14px;padding:2px 6px;border-radius:3px}
+.apx:hover{background:var(--fill,#f2f2f2);color:var(--ink,#111)}
+.apls{overflow:auto;padding:4px;flex:1}
+.apc{display:grid;grid-template-columns:74px 1fr;gap:10px;align-items:center;padding:8px 10px;border-radius:4px;cursor:pointer;border:1px solid transparent;transition:background .1s}
+html.at .apc{border-radius:2px}
+.apc:hover{background:var(--fill,#f4f2ee)}
+.apc.on{background:var(--fill,#f4f2ee);border-color:var(--red,#9e0f12);box-shadow:inset 3px 0 0 var(--red,#9e0f12)}
+.apc.cur .apg b{text-decoration:underline;text-underline-offset:3px}
+.apg{display:flex;flex-direction:column;align-items:center;gap:3px}
+.apg b{font:700 12.5px var(--mono,monospace);color:var(--red,#9e0f12);letter-spacing:.02em}
+.apc.line .apg b{color:#2563eb}
+.tg{width:64px;height:26px;fill:var(--ink,#222);stroke:none}
+.tg .tgh{fill:var(--mid,#888)}
+.tg .tgc{fill:var(--ink,#222)}
+.tg .tgl{stroke:var(--paper,#fff);stroke-width:.9;fill:none}
+.apb{min-width:0;display:flex;flex-direction:column;gap:2px}
+.apl1{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.apl1 b{font-size:13px}
+.apl1 span{font:600 12px var(--mono,monospace);color:var(--ink,#222)}
+.apl2{font-size:12px;color:var(--mid,#555);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.apl2 small{opacity:.8}
+.apcode,.apins{font:600 11px var(--mono,monospace);padding:0 4px;border:1px solid var(--line2,#ccc);color:var(--ink,#222);margin-left:2px}
+.apl3{display:flex;gap:4px;align-items:center;flex-wrap:wrap;margin-top:2px}
+.apl3 em{font-style:normal;font-size:11px;color:var(--mid,#888);margin-left:auto}
+.apt{display:inline-flex;font:600 10.5px var(--mono,monospace);border:1px solid var(--line2,#ccc);padding-right:4px}
+.apt i{font-style:normal;background:var(--fill,#f3f3f3);color:var(--mid,#777);padding:0 4px;margin-right:4px;border-right:1px solid var(--line2,#ccc)}
+.apt.here{border-color:var(--red,#9e0f12);color:var(--red,#9e0f12)}
+.apt.here i{background:var(--red,#9e0f12);color:#fff;border-color:var(--red,#9e0f12)}
+.apnone{margin:14px 12px;color:var(--mid,#777);font-size:13px}
+.apf{display:flex;align-items:center;gap:10px;padding:7px 12px;border-top:1px solid var(--hair,#e5e5e5);font-size:11px;color:var(--mid,#888);background:var(--bg,#faf9f6)}
+.apf span{margin-left:auto}
+.apk.hov{pointer-events:none;opacity:0;transition:opacity .12s;animation:none}
+.apk.hov.in{opacity:1}
+.apk.hov .apc{cursor:default}
+.asmgl .tg{width:44px;height:18px;vertical-align:middle;margin-right:6px}
+.asmtw{margin-top:4px;font-size:11.5px;color:#b45309}
+.asmtn .tnw{margin:0;font-size:12.5px;color:#b45309}
+/* ===== 2.28: the dot on a repeated T ===== */
+.tt input[data-k="t"].opg,.tt input[data-k="t"].opbad{background-image:none!important}
+.tdot{position:absolute;top:7px;right:3px;width:14px;height:14px;border-radius:50%;border:0;padding:0;cursor:pointer;background:transparent;z-index:2}
+.tdot::after{content:"";position:absolute;inset:3.5px;border-radius:50%;background:#2563eb;transition:transform .12s}
+.tdot.miss::after{background:#d97706}
+.tdot.bad::after{background:var(--red,#b00)}
+.tdot.bad::before{content:"";position:absolute;inset:0;border-radius:50%;border:1.5px solid var(--red,#b00);opacity:.35;animation:tdPulse 1.8s ease-out infinite}
+@keyframes tdPulse{0%{transform:scale(.6);opacity:.6}100%{transform:scale(1.5);opacity:0}}
+@media (prefers-reduced-motion:reduce){.tdot.bad::before{animation:none}}
+.tdot:hover::after,.tdot:focus-visible::after{transform:scale(1.35)}
+.tdot:focus-visible{outline:2px solid var(--red,#b00);outline-offset:1px}
+/* the "same tool" window */
+.rptw{overflow:auto;max-height:52vh;border:1px solid var(--hair,#ddd)}
+.rpt{border-collapse:collapse;width:100%;font-size:13px}
+.rpt thead th{position:sticky;top:0;background:var(--fill,#f3f1ec);text-align:left;padding:7px 9px;font:700 11px var(--display,inherit);letter-spacing:.05em;text-transform:uppercase;color:var(--mid,#666);vertical-align:bottom}
+.rpt thead th small{display:block;font:500 11px var(--body,inherit);text-transform:none;letter-spacing:0;color:var(--ink,#333);margin-top:2px;max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rpt tbody th{text-align:left;padding:7px 9px;font-weight:700;white-space:nowrap;border-top:1px solid var(--hair,#e5e5e5);position:relative;padding-left:16px}
+.rpt tbody th::before{content:"";position:absolute;left:5px;top:50%;width:6px;height:6px;margin-top:-3px;border-radius:50%;background:#2563eb}
+.rpt tr.b th::before{background:var(--red,#b00)}.rpt tr.m th::before{background:#d97706}
+.rpt td{padding:5px 7px;border-top:1px solid var(--hair,#e5e5e5);vertical-align:top}
+.rpv{display:inline-block;max-width:220px;text-align:left;font:13px var(--body,inherit);padding:4px 8px;border:1px solid var(--line2,#ccc);background:var(--paper,#fff);color:var(--ink,#111);cursor:pointer;border-radius:3px;white-space:normal}
+.rpv:hover{border-color:var(--ink,#333)}
+.rpv.on{border-color:var(--red,#9e0f12);box-shadow:inset 0 0 0 1px var(--red,#9e0f12);background:rgba(158,15,18,.06);font-weight:600}
+.rpv.ro{cursor:default;border-color:transparent;background:none}
+.rpe{color:var(--mid,#999);font-style:normal;font-size:12px}
+.rpfoot{display:flex;gap:14px;align-items:center;justify-content:space-between;margin-top:10px;flex-wrap:wrap}
+.rpok{margin:6px 0;font-weight:600;color:#15803d}
+/* ===== 2.28: check the sheet ===== */
+.ckbtn{display:inline-flex;align-items:center;gap:6px}
+.ckbtn i{font-style:normal;display:inline-grid;place-items:center;width:16px;height:16px;border-radius:50%;font:800 10px var(--mono,monospace);color:#fff;background:#15803d}
+.ckbtn.warn i{background:#d97706}.ckbtn.bad i{background:var(--red,#b00)}
+.ckbtn.ok{opacity:.8}
+.cks{margin:0 0 12px}
+.cks h4{margin:0 0 6px;font:700 11.5px var(--display,inherit);letter-spacing:.08em;text-transform:uppercase;color:var(--mid,#666);display:flex;gap:6px;align-items:center}
+.cks h4 span{font:700 11px var(--mono,monospace);padding:0 5px;border:1px solid currentColor;border-radius:8px}
+.cks.bad h4{color:var(--red,#b00)}.cks.warn h4{color:#b45309}
+.cki{display:grid;grid-template-columns:10px 1fr auto;gap:10px;align-items:center;padding:8px 10px;border:1px solid var(--hair,#e5e5e5);border-radius:4px;margin-bottom:5px;background:var(--paper,#fff)}
+html.at .cki{border-radius:2px}
+.cki p{margin:0;font-size:13.5px}
+.ckd{width:8px;height:8px;border-radius:50%;background:#94a3b8}
+.cks.bad .ckd{background:var(--red,#b00)}.cks.warn .ckd{background:#d97706}
+.ckb{display:flex;gap:6px}
+#rows tr.ckflash>td{animation:ckFlash 1.6s ease-out}
+@keyframes ckFlash{0%,30%{background:rgba(217,119,6,.22)}100%{background:transparent}}
+.ckval{display:flex;align-items:center;gap:10px;margin-top:12px;padding:8px 10px;border:1px solid #d97706;background:rgba(217,119,6,.08);font-size:13px;border-radius:3px}
+.ckval.bad{border-color:var(--red,#b00);background:rgba(176,0,0,.06)}
+.ckval span{flex:1}
+.apc.line .apl1 span{font:500 12px var(--body,inherit);color:var(--mid,#777)}
 </style></head>
 <body>
 <script>try{if(localStorage.getItem("bs.skin")!=="classic")document.documentElement.classList.add("at")}catch(e){document.documentElement.classList.add("at")}</script>
@@ -3063,8 +3159,8 @@ function makePDF(data){
   function header(){
     const Y=8;
     // logo
-    if(!OPT.logo&&!BLANK){}else if(logo){try{const p=doc.getImageProperties(logo.data);const r=Math.min(22/p.width,15/p.height);const w=p.width*r,h=p.height*r;
-      doc.addImage(logo.data,logo.type,X0+(22-w)/2,Y+1.5+(15-h)/2,w,h,undefined,"FAST")}catch(e){}}
+    if(!OPT.logo&&!BLANK){}else if(logo){try{const LG=pdfLogo()||logo,p=LG.p||doc.getImageProperties(LG.data);const r=Math.min(22/p.width,15/p.height);const w=p.width*r,h=p.height*r;
+      doc.addImage(LG.data,LG.type,X0+(22-w)/2,Y+1.5+(15-h)/2,w,h,"bslogo","FAST")}catch(e){}}
     else{stroke(C.soft);doc.setLineWidth(0.25);doc.setLineDashPattern([0.9,0.7],0);doc.rect(X0,Y+1.5,22,15);doc.setLineDashPattern([],0);
       color(C.soft);font("Plex5",6.5);txt("Logo",X0+11,Y+9.9,{align:"center"})}
     // title + dimension-style rule
@@ -3561,7 +3657,7 @@ const desk={
   async read(f){return JSON.parse(await Neutralino.filesystem.readFile(DIR+SEP+f))},
   async load(){try{return await desk.read("data.json")}catch(e){try{return await desk.read("data.previous.json")}catch(e2){
     for(const o of desk.OLDS){try{return JSON.parse(await Neutralino.filesystem.readFile(o+SEP+"data.json"))}catch(e3){}}return null}}},
-  save(){desk.pending=true;clearTimeout(desk.t);desk.t=setTimeout(desk.flush,300)},
+  save(){if(!desk.pending)desk.first=Date.now();desk.pending=true;clearTimeout(desk.t);const w=Date.now()-(desk.first||0)>4000?0:(Date.now()-lastType<1500?1200:300);desk.t=setTimeout(desk.flush,w)},
   async flush(){
     if(!desk.pending)return;
     if(desk.busy){clearTimeout(desk.t);desk.t=setTimeout(desk.flush,200);return}
@@ -3573,8 +3669,8 @@ const desk={
       // another PC saved since we last read the file: merge its changes with ours first
       if(!DEMO_ON&&desk.stamp){let st=null;try{st=await deskStat()}catch(e){}
         if(st&&st!==desk.stamp){try{const th=JSON.parse(await Neutralino.filesystem.readFile(p));if(th&&Array.isArray(th.machines)){deskAdopt(th);desk.adopts=(desk.adopts||0)+1}}catch(e){desk.readFail=(desk.readFail||0)+1}}}
-      try{await Neutralino.filesystem.remove(prev)}catch(e){}
-      try{await Neutralino.filesystem.copy(p,prev)}catch(e){}
+      if(!desk.prevAt||Date.now()-desk.prevAt>120000){desk.prevAt=Date.now();try{await Neutralino.filesystem.remove(prev)}catch(e){}
+      try{await Neutralino.filesystem.copy(p,prev)}catch(e){}}
       // what is written is exactly what becomes the new base (changes made while saving go out with the next save)
       const snap=JSON.stringify(db);await Neutralino.filesystem.writeFile(p,snap.slice(0,-1)+(snap.length>2?",":"")+JSON.stringify({logo,lang:LANG}).slice(1));
       const rev=DEVID+"-"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
@@ -3645,7 +3741,7 @@ const IDB={p:null,open(){return this.p||(this.p=new Promise((res,rej)=>{let r;tr
   async tx(store,mode,fn){const d=await this.open();return new Promise((res,rej)=>{const x=d.transaction(store,mode),st=x.objectStore(store);let out;const rq=fn(st);if(rq)rq.onsuccess=()=>{out=rq.result};x.oncomplete=()=>res(out);x.onerror=()=>rej(x.error);x.onabort=()=>rej(x.error)})},
   get(st,k){return this.tx(st,"readonly",o=>o.get(k))},put(st,k,v){return this.tx(st,"readwrite",o=>o.put(v,k))},del(st,k){return this.tx(st,"readwrite",o=>o.delete(k))},
   async all(st){const d=await this.open();return new Promise((res,rej)=>{const x=d.transaction(st,"readonly"),m=new Map(),rq=x.objectStore(st).openCursor();rq.onsuccess=()=>{const c=rq.result;if(c){m.set(c.key,c.value);c.continue()}};x.oncomplete=()=>res(m);x.onerror=()=>rej(x.error)})}};
-function saveDB(){ensureDB();DIRTY=true;if(DESK){desk.save();return}clearTimeout(saveT);saveT=setTimeout(saveNow,250)}
+function saveDB(){ensureDB();DIRTY=true;if(DESK){desk.save();return}clearTimeout(saveT);saveT=setTimeout(saveNow,Date.now()-lastType<1500?900:250)}
 function saveNow(){clearTimeout(saveT);saveT=null;if(DESK){desk.save();return}const str=JSON.stringify(db);
   if(STORE==="ls"){canStore=lsSet(DBKEY,str);if(canStore)return}
   // too big for browser storage (or already moved): keep everything in IndexedDB instead
@@ -6452,7 +6548,7 @@ Object.assign(I18N.en,{getApp:"Get the app", getAppT:"Download the Windows insta
   demoBar:"Demo: made-up workshop with 20 machines and 500 articles. Changes stay in this browser only.", demoShort:"Made-up data", demoReset:"Reset the demo", demoResetQ:"Reset the demo data? Everything changed here is lost.", demoGo:"Real version"});
 Object.assign(I18N.fr,{getApp:"Télécharger l'app", getAppT:"Télécharger l’installateur Windows",
   demoBar:"Démo : atelier fictif de 20 machines et 500 articles. Vos changements restent dans ce navigateur.", demoShort:"Données fictives", demoReset:"Réinitialiser la démo", demoResetQ:"Réinitialiser les données de la démo ? Tout ce qui a été changé ici sera perdu.", demoGo:"Version réelle"});
-const APP_ZIP="BrocheStuff-Setup-2.27.5.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
+const APP_ZIP="BrocheStuff-Setup-2.28.0.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
 function appUrl(){
   // on the site (…/Web/ or …/Demo/) the program sits next door in …/App/; anywhere else, take it from the site
   if(/^https?:/.test(location.protocol)&&/\/(Web|Demo)\/(index\.html)?$/i.test(location.pathname))return new URL("../App/"+APP_ZIP,location.href).href;
@@ -7961,7 +8057,7 @@ const GUIDE={
    ["mag","Magasins des machines",["Ce qui est chargé dans chaque machine, poche par poche, avec qui l’a changé.","« Comparer avec un article » montre les outils à charger ou à échanger, et charge tout en un clic.","Après un échange, les outils retirés du magasin peuvent être remis au magasin outils (+1 en stock) d’un clic."]],
    ["log","Journal",["Chaque sortie, entrée et comptage : qui, quand, combien et pourquoi.","Cliquez sur une ligne pour lire un commentaire en entier ou ouvrir la fiche de l’outil.","« Exporter (CSV) » pour Excel."]],
    ["reports","Rapports",["Outils sortis par mois, les plus sortis, par machine et par personne.","Codes jamais utilisés et outils sans mouvement depuis 90 jours. Export CSV."]],
-   ["asm","Assemblages",["Un assemblage, c’est un outil avec son porte-outil, gardé sous un code (AS0001…). Il ne se crée plus tout seul : sous le tableau d’une fiche, « Créer les assemblages » en fait un pour chaque ligne complète (porte-outil + code outil, ou type + Ø), ou bien « + Nouvel assemblage » sur la page Assemblages.","Chaque assemblage garde son numéro d’outil par machine. Tapez son code dans la colonne Assemblage (ou dans la colonne Code) : la ligne se remplit, et le T aussi s’il est connu pour cette machine. Changez le T dans la fiche, et l’assemblage retient le nouveau T pour cette machine. Sur une autre machine, il peut avoir un autre T.","Modifier un assemblage (page Assemblages, clic sur la ligne) met à jour toutes les fiches qui l’utilisent, sauf les fiches validées qui gardent l’ancien. La fenêtre montre aussi le T sur chaque machine, à changer ou à ajouter.","Si vous changez l’outil d’une ligne reliée (Ø, LS, porte-outil…), elle passe en orange et BrocheStuff propose « Mettre à jour » l’assemblage. Pour détacher une ligne, videz sa case Assemblage. « Supprimer les inutilisés » nettoie les anciens assemblages créés tout seuls que plus aucune fiche n’utilise."]],
+   ["asm","Assemblages",["Un assemblage, c’est un outil avec son porte-outil, gardé sous un code (AS0001…). Il ne se crée plus tout seul : sous le tableau d’une fiche, « Créer les assemblages » en fait un pour chaque ligne complète (porte-outil + code outil, ou type + Ø), ou bien « + Nouvel assemblage » sur la page Assemblages.","Chaque assemblage garde son numéro d’outil par machine. Tapez son code dans la colonne Assemblage (ou dans la colonne Code) : la ligne se remplit, et le T aussi s’il est connu pour cette machine. Changez le T dans la fiche, et l’assemblage retient le nouveau T pour cette machine. Sur une autre machine, il peut avoir un autre T.","Modifier un assemblage (page Assemblages, clic sur la ligne) met à jour toutes les fiches qui l’utilisent, sauf les fiches validées qui gardent l’ancien. La fenêtre montre aussi le T sur chaque machine, à changer ou à ajouter.","Si vous changez l’outil d’une ligne reliée (Ø, LS, porte-outil…), elle passe en orange et BrocheStuff propose « Mettre à jour » l’assemblage. Pour détacher une ligne, videz sa case Assemblage. « Supprimer les inutilisés » nettoie les anciens assemblages créés tout seuls que plus aucune fiche n’utilise.","Tapez un T dans une fiche : les assemblages qui ont ce T sur cette machine s’affichent en cartes (type, Ø, porte-outil, code, LS), et « Comme la ligne… » si ce T est déjà dans la fiche. Plusieurs assemblages peuvent avoir le même T sur une machine : vous choisissez. La case Assemblage cherche par Ø, type, porte-outil, code ou T. Le point à côté d’un T répété est bleu (même outil), orange (cases vides sur une ligne) ou rouge (valeurs différentes) : cliquez-le pour tout mettre pareil. « Vérifier la fiche » liste ce qui manque ou ne va pas, avec un bouton pour y aller."]],
    ["print","Colonnes sur le PDF et l’Excel",["Chaque colonne du tableau d’outils a une case au-dessus : cochée, la colonne est sur le PDF et l’Excel de cette fiche ; décochée, elle reste dans la fiche mais n’est pas imprimée.","Par défaut, la case suit la mise en page (bouton Colonnes, case « PDF / Excel » de chaque colonne). La colonne Assemblage n’est pas imprimée par défaut.","Les onglets PDF et Excel au-dessus du tableau montrent aussi ces cases : l’Excel peut avoir ses propres colonnes, différentes du PDF."]],
    ["sort","Opérations : Saisie, PDF et Excel",["Une fiche peut avoir une ligne par opération. « + Colonnes d’opération » (sous le tableau) ajoute Opération, Temps et Vie outil à cette fiche ; l’admin peut aussi les mettre dans une mise en page.","Le + bleu au bout d’une ligne ajoute une opération juste dessous, pour le même T, avec les données de l’outil recopiées : il ne reste que l’opération, le temps et la vie outil à taper.","Les temps se tapent 12:30 (min:s) ou 02:54:12 (h:min:s) ; un nombre seul compte en minutes. Un temps mal tapé est entouré de rouge.","Un T utilisé sur plusieurs lignes a un point bleu. Un point rouge veut dire que l’outil n’est pas le même sur toutes ses lignes (passez la souris dessus pour voir ce qui diffère) : le PDF prend la première ligne.","Onglet Saisie : tout ce que vous tapez, dans l’ordre du programme. Onglet PDF : une ligne par outil, temps et vie outil additionnés, l’ordre du PDF (par T, type, Ø, porte-outil, code, emplacement…) et ses colonnes. Trier ne change que le PDF : la saisie garde son ordre (flèches ↑ ↓ pour la changer).","Onglet Excel : toutes les opérations avec le total à la fin, ou la même liste que le PDF ; dans l’ordre de saisie ou comme le PDF, avec ses propres colonnes.","La fiche en lecture seule de la production et la Préparation montrent une ligne par outil."]],
    ["templates","Modèles Excel et import",["Chaque page a son « Modèle Excel » : le télécharger, l’imprimer ou le remplir.","« Importer » lit un fichier Excel ou CSV ; les colonnes sont reconnues par leur titre, avec un aperçu avant d’importer.","Fiche outils : une case met les outils dans l’ordre T1, T2, T3… ; si un outil apparaît deux fois (même numéro T, ou la même ligne), BrocheStuff montre les copies et ce qui diffère, et vous choisissez celle à garder ou gardez tout."]],
@@ -7987,7 +8083,7 @@ const GUIDE={
    ["mag","Machine magazines",["What is loaded in each machine, pocket by pocket, and who changed it.","“Compare with an article” shows the tools to load or swap, and loads them in one click.","After a swap, the tools taken out of the magazine can go back to the crib (+1 in stock) in one click."]],
    ["log","Stock log",["Every move out, in and count: who, when, how many and why.","Click a line to read a comment in full or open the tool’s card.","“Export (CSV)” for Excel."]],
    ["reports","Reports",["Tools taken per month, most taken, per machine and per person.","Codes never used and tools without a move for 90 days. CSV export."]],
-   ["asm","Assemblies",["An assembly is a tool with its holder, kept under a code (AS0001…). It is no longer made by itself: under a sheet’s table, “Make the assemblies” makes one for each complete row (holder + tool code, or type + Ø), or use “+ New assembly” on the Assemblies page.","Each assembly keeps its tool number per machine. Type its code in the Assembly column (or the Code column): the row fills in, and the T too when it is known for this machine. Change the T in the sheet and the assembly remembers the new T for that machine. On another machine it can have another T.","Changing an assembly (Assemblies page, click its row) updates every sheet that uses it, except validated sheets, which keep the old one. The window also shows the T on each machine, to change or add.","If you change the tool of a linked row (Ø, LS, holder…), it turns orange and BrocheStuff offers to “Update” the assembly. To unlink a row, empty its Assembly box. “Delete the unused ones” clears the old automatic assemblies that no sheet uses any more."]],
+   ["asm","Assemblies",["An assembly is a tool with its holder, kept under a code (AS0001…). It is no longer made by itself: under a sheet’s table, “Make the assemblies” makes one for each complete row (holder + tool code, or type + Ø), or use “+ New assembly” on the Assemblies page.","Each assembly keeps its tool number per machine. Type its code in the Assembly column (or the Code column): the row fills in, and the T too when it is known for this machine. Change the T in the sheet and the assembly remembers the new T for that machine. On another machine it can have another T.","Changing an assembly (Assemblies page, click its row) updates every sheet that uses it, except validated sheets, which keep the old one. The window also shows the T on each machine, to change or add.","If you change the tool of a linked row (Ø, LS, holder…), it turns orange and BrocheStuff offers to “Update” the assembly. To unlink a row, empty its Assembly box. “Delete the unused ones” clears the old automatic assemblies that no sheet uses any more.","Type a T in a sheet: the assemblies with that T on this machine show as cards (type, Ø, holder, code, LS), plus “Same as line…” when that T is already in the sheet. Several assemblies can share a T on one machine: you pick. The Assembly box searches by Ø, type, holder, code or T. The dot next to a repeated T is blue (same tool), orange (empty boxes on a line) or red (different values): click it to make them match. “Check the sheet” lists what is missing or wrong, with a button to go there."]],
    ["print","Columns on the PDF and the Excel",["Each column of the tools table has a box above it: ticked, the column is on this sheet’s PDF and Excel; unticked, it stays in the sheet but is not printed.","By default the box follows the layout (Columns button, “PDF / Excel” box of each column). The Assembly column is not printed by default.","The PDF and Excel tabs above the table show these boxes too: the Excel can have its own columns, different from the PDF."]],
    ["sort","Operations: Entry, PDF and Excel",["A sheet can have one line per operation. “+ Operation columns” (under the table) adds Operation, Time and Tool life to that sheet; the admin can also put them in a layout.","The blue + at the end of a line adds an operation right below it, for the same T, with the tool’s data copied: only the operation, time and tool life are left to type.","Times are typed 12:30 (min:s) or 02:54:12 (h:min:s); a plain number counts as minutes. A time typed wrong gets a red outline.","A T used on several lines has a blue dot. A red dot means the tool is not the same on all its lines (hover over it to see what differs): the PDF takes the first line.","Entry tab: everything you type, in program order. PDF tab: one line per tool, times and tool life added up, the PDF’s order (by T, type, Ø, holder, code, location…) and its columns. Sorting only changes the PDF: the entry keeps its order (↑ ↓ arrows to change it).","Excel tab: every operation with the total at the end, or the same list as the PDF; in entry order or like the PDF, with its own columns.","Production’s read-only sheet and the tool prep show one line per tool."]],
    ["templates","Excel models and import",["Each page has its “Excel model”: download it, print it or fill it in.","“Import” reads an Excel or CSV file; columns are found by their titles, with a preview before importing.","Tool sheet: a box puts the tools in T1, T2, T3… order; if a tool appears twice (same T number, or the same row), BrocheStuff shows the copies and what differs, and you choose which to keep or keep them all."]],
@@ -8498,6 +8594,258 @@ async function printExcel(art){toast(t("prXlDo"));
 document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("#b-print");if(!b||route.view!=="article")return;if(printKind()!=="xlsx")return;
   e.stopImmediatePropagation();e.preventDefault();try{flushEditor()}catch(_){}const art=A(route.id);if(art)printExcel(art)},true);
 window.addEventListener("hashchange",()=>setTimeout(printBtnDraw,60));
+
+/* ===================== 2.28.0 · speed ===================== */
+// the logo is decoded once and kept small (sharp enough for print), instead of on every page of every preview
+let LOGOC=null;
+function pdfLogo(){if(!logo||!logo.data)return null;if(LOGOC&&LOGOC.src===logo.data)return LOGOC.ready||{data:logo.data,type:logo.type,p:LOGOC.p};
+  const c={src:logo.data,p:null,ready:null};LOGOC=c;
+  try{const im=new Image();im.onload=()=>{if(LOGOC!==c)return;c.p={width:im.naturalWidth,height:im.naturalHeight};
+      try{const k=Math.min(1,900/Math.max(im.naturalWidth,im.naturalHeight)),cv=document.createElement("canvas");cv.width=Math.max(1,Math.round(im.naturalWidth*k));cv.height=Math.max(1,Math.round(im.naturalHeight*k));
+        const g=cv.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,cv.width,cv.height);g.drawImage(im,0,0,cv.width,cv.height);c.ready={data:cv.toDataURL("image/jpeg",0.93),type:"JPEG",p:{width:cv.width,height:cv.height}}}catch(_){c.ready={data:logo.data,type:logo.type,p:c.p}}};
+    im.src=logo.data}catch(_){}
+  return{data:logo.data,type:logo.type,p:null}}
+// the live preview waits for a pause in typing and draws when the computer is free
+{const idle=window.requestIdleCallback?(f=>requestIdleCallback(f,{timeout:700})):(f=>setTimeout(f,0));
+  schedulePreview=function(delay=350){if(!pvOn)return;clearTimeout(pvTimer);
+    const go=()=>{if(Date.now()-lastType<700){pvTimer=setTimeout(go,350);return}idle(()=>{try{preview()}catch(e){console.error(e)}})};
+    pvTimer=setTimeout(go,Math.max(delay,delay<=30?delay:450))}}
+// opening a sheet: the table first, the preview right after
+{const s0=pvSetup;pvSetup=function(){const a=pvOn;if(!a)return s0.apply(this,arguments);pvOn=false;try{s0.apply(this,arguments)}finally{pvOn=a}pvLastKey="";schedulePreview(60)}}
+
+/* ===================== 2.28.0 · assemblies come to you ===================== */
+Object.assign(I18N.fr,{apkFor:(T,m)=>`${T} sur ${m}`,apkN:n=>`${n} ${pl(n,"assemblage","assemblages")} avec ce numéro`,apkLine:i=>`Comme la ligne ${i}`,apkLineS:"même T dans cette fiche",
+  apkSearch:"Chercher un assemblage : Ø, type, porte-outil, code, T…",apkAll:"Tous les assemblages",apkHere:m=>`Sur ${m}`,apkNone:"Aucun assemblage ne correspond.",apkNoneYet:"Pas encore d’assemblage. Remplissez la ligne puis « Créer les assemblages » sous le tableau.",
+  apkUse:"Utiliser",apkSkip:"Aucun, je remplis moi-même",apkUsed:n=>n?`${n} ${pl(n,"fiche","fiches")}`:"pas encore utilisé",apkKeys:"↑ ↓ pour choisir · Entrée pour prendre · Échap pour fermer",
+  apkCopied:(T,i)=>`${T} : infos de la ligne ${i} copiées`,apkTwin:(T,m,L)=>`${T} sur ${m} sert aussi pour ${L} : choisissez le bon dans la liste quand vous tapez ${T}.`,apkTwinS:L=>`Même T aussi : ${L}`,apkCur:"sur cette ligne",apkTwinTn:(m,tn,c)=>`${tn} est aussi le T de ${c} sur ${m}. C’est permis : en tapant ${tn} dans une fiche de ${m}, vous choisirez lequel.`});
+Object.assign(I18N.en,{apkFor:(T,m)=>`${T} on ${m}`,apkN:n=>`${n} ${pl(n,"assembly","assemblies")} with this number`,apkLine:i=>`Same as line ${i}`,apkLineS:"same T in this sheet",
+  apkSearch:"Find an assembly: Ø, type, holder, code, T…",apkAll:"All assemblies",apkHere:m=>`On ${m}`,apkNone:"No assembly matches.",apkNoneYet:"No assembly yet. Fill the row, then “Make the assemblies” under the table.",
+  apkUse:"Use",apkSkip:"None, I fill it in myself",apkUsed:n=>n?`${n} ${pl(n,"sheet","sheets")}`:"not used yet",apkKeys:"↑ ↓ to choose · Enter to take · Esc to close",
+  apkCopied:(T,i)=>`${T}: info from line ${i} copied`,apkTwin:(T,m,L)=>`${T} on ${m} is also used for ${L}: pick the right one in the list when you type ${T}.`,apkTwinS:L=>`Same T too: ${L}`,apkCur:"on this row",apkTwinTn:(m,tn,c)=>`${tn} is also the T of ${c} on ${m}. That is allowed: when you type ${tn} in a sheet of ${m}, you pick which one.`});
+
+// a little picture of the tool, from its type
+function toolGlyph(type){const s=String(type||"").toUpperCase();const P=(d)=>`<svg viewBox="0 0 40 16" aria-hidden="true" class="tg">${d}</svg>`;
+  const body='<rect x="1" y="4" width="11" height="8" rx="1" class="tgh"/>';
+  if(/TARAUD|TAP/.test(s))return P(body+'<rect x="12" y="6" width="12" height="4"/><path d="M24 5h14v6H24z" class="tgc"/><path d="M26 5l2 6M29 5l2 6M32 5l2 6M35 5l2 6" class="tgl"/>');
+  if(/FORET|DRILL|CENTR|POINT/.test(s))return P(body+'<rect x="12" y="6" width="8" height="4"/><path d="M20 5.5h14l4 2.5-4 2.5H20z" class="tgc"/><path d="M22 5.5l4 5M26 5.5l4 5M30 5.5l3 4" class="tgl"/>');
+  if(/ALES|REAM/.test(s))return P(body+'<rect x="12" y="6" width="10" height="4"/><path d="M22 5.5h16v5H22z" class="tgc"/><path d="M24 5.5v5M27 5.5v5M30 5.5v5M33 5.5v5M36 5.5v5" class="tgl"/>');
+  if(/CHANF|CHAMF|CHANFREIN/.test(s))return P(body+'<rect x="12" y="6" width="14" height="4"/><path d="M26 4h6l6 4-6 4h-6z" class="tgc"/>');
+  if(/SURFA|FACE|PLAT|DISQUE|DISC/.test(s))return P(body+'<rect x="12" y="6" width="10" height="4"/><path d="M22 2h10v12H22z" class="tgc"/><path d="M24 2v12M27 2v12M30 2v12" class="tgl"/>');
+  if(/BOUL|BALL|HEMI|TORI|TORE|R[ ]?\d/.test(s))return P(body+'<rect x="12" y="6" width="12" height="4"/><path d="M24 4.5h9a3.5 3.5 0 0 1 0 7h-9z" class="tgc"/><path d="M26 4.5l3 7M30 4.5l3 6" class="tgl"/>');
+  if(/FRAISE|MILL|FR\b|2T|3T|4T/.test(s))return P(body+'<rect x="12" y="6" width="12" height="4"/><path d="M24 4.5h14v7H24z" class="tgc"/><path d="M26 4.5l3 7M30 4.5l3 7M34 4.5l3 7" class="tgl"/>');
+  if(/PALP|PROBE|SONDE/.test(s))return P(body+'<rect x="12" y="7" width="20" height="2"/><circle cx="35" cy="8" r="3" class="tgc"/>');
+  return P(body+'<rect x="12" y="6" width="12" height="4"/><path d="M24 5h12v6H24z" class="tgc"/>')}
+const apkNorm=v=>String(v||"").toUpperCase().replace(/[ØΦ⌀]/g,"").replace(/,/g,".").replace(/\s+/g," ").trim();
+function apkHay(a){const x=a.tool||{},tn=asmTn(a);return apkNorm([a.code,x.type,x.diameter,"D"+(x.diameter||""),x.ra,x.insert,x.ls,x.oal,x.holder,x.code,...Object.entries(tn).map(([m,v])=>asmMName(m)+" "+v+" "+v)].join(" "))}
+let APK=null;   // the open picker
+let APKUSE=null;// usage counts, computed once per opening
+function apkUses(){if(APKUSE&&Date.now()-APKUSE.at<4000)return APKUSE.m;const m=new Map();asmUses().forEach((L,sig)=>{const a=asmList().find(x=>x.sig===sig);if(a)m.set(a.code,new Set(L.map(ar=>ar.id)).size)});APKUSE={at:Date.now(),m};return m}
+function apkCard(a,o){o=o||{};const x=a.tool||{},tn=asmTn(a),mid=cur&&cur.machineId,us=apkUses().get(a.code)||0;
+  const hl=String(x.holder||"").split("\n"),dim=[x.diameter?`Ø${esc(x.diameter)}`:"",clean(x.ra)?esc(x.ra):"",clean(x.ls)?`LS ${esc(x.ls)}`:"",clean(x.oal)?`LT ${esc(x.oal)}`:"",clean(x.z)?`Z${esc(x.z)}`:""].filter(Boolean).join(" · ");
+  const chips=Object.keys(tn).sort((p,q)=>(q===mid)-(p===mid)||asmMName(p).localeCompare(asmMName(q),undefined,{numeric:true})).map(m=>`<span class="apt${m===mid?" here":""}"><i>${esc(asmMName(m))}</i>${esc(tn[m])}</span>`).join("");
+  return `<div class="apc${o.on?" on":""}${o.cur?" cur":""}" role="option" data-apk="${esc(a.code)}" aria-selected="${!!o.on}">
+    <div class="apg">${toolGlyph(x.type)}<b>${esc(a.code)}</b></div>
+    <div class="apb"><div class="apl1"><b>${esc(x.type||"—")}</b>${dim?`<span>${dim}</span>`:""}</div>
+      <div class="apl2">${esc(hl[0]||"")}${hl[1]?` <small>${esc(hl.slice(1).join(" "))}</small>`:""}${clean(x.code)?` <span class="apcode">${esc(x.code)}</span>`:""}${clean(x.insert)?` <span class="apins">${esc(x.insert)}</span>`:""}</div>
+      <div class="apl3">${chips||""}<em>${esc(o.cur?t("apkCur"):t("apkUsed",us))}</em></div></div></div>`}
+function apkLineCard(j,y){const hl=String(y.holder||"").split("\n")[0];
+  return `<div class="apc line" role="option" data-apline="${j}"><div class="apg">${toolGlyph(y.type)}<b>L${j+1}</b></div><div class="apb"><div class="apl1"><b>${esc(t("apkLine",j+1))}</b><span>${esc(t("apkLineS"))}</span></div>
+    <div class="apl2"><b>${esc(y.type||"—")}</b>${clean(y.diameter)?` Ø${esc(y.diameter)}`:""}${hl?` · ${esc(hl)}`:""}${clean(y.code)?` <span class="apcode">${esc(y.code)}</span>`:""}${clean(y.asm)?` <span class="apcode">${esc(y.asm)}</span>`:""}</div></div></div>`}
+function apkClose(){if(!APK)return;const el=APK.el;APK=null;el.classList.add("out");setTimeout(()=>el.remove(),140)}
+function apkPlace(){if(!APK)return;const r=APK.anchor.getBoundingClientRect();if(!r.width&&!r.height){apkClose();return}const el=APK.el,W=Math.min(460,innerWidth-16);el.style.width=W+"px";
+  let left=Math.min(Math.max(8,r.left),innerWidth-W-8),top=r.bottom+6;const h=el.offsetHeight;if(top+h>innerHeight-8&&r.top-h-6>8)top=r.top-h-6;el.style.left=left+"px";el.style.top=Math.max(8,top)+"px"}
+// the list: same T on this machine first, then this machine's assemblies, then the rest
+function apkRank(q,T){const mid=cur&&cur.machineId,toks=apkNorm(q).split(" ").filter(Boolean),L=[];
+  asmList().forEach(a=>{const tn=asmTn(a)[mid];let sc=0;if(T&&tn===T)sc+=1000;if(tn)sc+=100;if(toks.length){const h=apkHay(a);if(!toks.every(k=>h.includes(k)))return;if(apkNorm(a.code).startsWith(toks[0]))sc+=50}L.push([sc,a])});
+  L.sort((p,q)=>q[0]-p[0]||String(p[1].code).localeCompare(String(q[1].code),undefined,{numeric:true}));return L.map(x=>x[1])}
+function apkDraw(){if(!APK)return;const {i,mode}=APK,x=cur.tools[i];if(!x){apkClose();return}const mid=cur.machineId,mN=asmMName(mid),T=normT(x.t);
+  let items=[],head="",sub="";
+  if(mode==="t"){items=[...APK.lines.map(j=>({line:j})),...APK.asms.map(a=>({a}))];head=t("apkFor",T,mN);sub=APK.asms.length?t("apkN",APK.asms.length):""}
+  else{const q=APK.q||"";const L=apkRank(q,T).slice(0,60);items=L.map(a=>({a}));head=q?"":(T&&L.some(a=>asmTn(a)[mid]===T)?t("apkFor",T,mN):t("apkAll"))}
+  APK.items=items;if(APK.sel>=items.length)APK.sel=items.length-1;if(APK.sel<0&&items.length)APK.sel=0;
+  const curCode=clean(x.asm)&&(asmKey(x.asm)||clean(x.asm).toUpperCase());
+  APK.el.innerHTML=`${mode==="q"?"":`<div class="aph"><b>${esc(head)}</b>${sub?`<span>${esc(sub)}</span>`:""}<button class="apx" data-apx aria-label="${esc(t("close"))}">✕</button></div>`}
+    ${mode==="q"&&head?`<div class="aph sm"><b>${esc(head)}</b><button class="apx" data-apx aria-label="${esc(t("close"))}">✕</button></div>`:""}
+    <div class="apls" role="listbox">${items.length?items.map((it,k)=>it.line!=null?apkLineCard(it.line,cur.tools[it.line]).replace('class="apc line"',`class="apc line${k===APK.sel?" on":""}"`):apkCard(it.a,{on:k===APK.sel,cur:curCode===it.a.code})).join(""):`<p class="apnone">${esc(asmList().length?t("apkNone"):t("apkNoneYet"))}</p>`}</div>
+    <div class="apf">${mode==="t"?`<button class="btn sm ghost" data-apskip>${esc(t("apkSkip"))}</button>`:""}<span>${esc(t("apkKeys"))}</span></div>`;
+  apkPlace();const on=APK.el.querySelector(".apc.on");if(on)on.scrollIntoView({block:"nearest"})}
+function apkOpen(i,mode,anchor){if(!cur||asmLocked(cur)||!can("article"))return;const x=cur.tools[i];if(!x)return;APKUSE=null;
+  if(APK&&APK.i===i&&APK.mode===mode){APK.anchor=anchor;apkDraw();return}apkClose();
+  const el=document.createElement("div");el.className="apk";el.setAttribute("role","dialog");document.body.append(el);
+  APK={el,i,mode,anchor,sel:0,q:"",lines:[],asms:[]};
+  if(mode==="t"){const T=normT(x.t),mid=cur.machineId;
+    APK.lines=cur.tools.map((y,j)=>j).filter(j=>j!==i&&normT(cur.tools[j].t)===T&&realTools([cur.tools[j]]).length&&ASMF.some(k=>clean(cur.tools[j][k])&&!clean(x[k]))).slice(0,1);
+    APK.asms=asmList().filter(a=>asmTn(a)[mid]===T);
+    if(!APK.lines.length&&!APK.asms.length){apkClose();return}}
+  apkDraw()}
+// take a choice
+function apkTake(k){if(!APK||!cur)return;const it=APK.items[k],i=APK.i;if(!it)return;apkClose();const x=cur.tools[i];if(!x)return;
+  if(it.line!=null){const y=cur.tools[it.line];if(!y)return;const keys=[...ASMF,"asm",...Object.keys(y).filter(f=>f.startsWith("x_"))];
+    let n=0;keys.forEach(f=>{if(!clean(x[f])&&clean(y[f])){x[f]=y[f];n++}});if(clean(y.asm)&&!clean(x.asm)){x.asm=y.asm;x.asmAuto=0}
+    renderRows();edited();try{tDupMark()}catch(_){}toast(t("apkCopied",normT(x.t),it.line+1));return}
+  const a=it.a;x.asm=a.code;x.asmAuto=0;rowFill(i,a.tool,ASMF,"asm",a.code)}
+// T typed in a row (by you): the assemblies of this machine with that T, and the same T already in the sheet
+document.addEventListener("change",e=>{const el=e.target;if(!e.isTrusted||!el||!el.matches||!el.matches('#rows input[data-k="t"]')||!cur)return;const tr=el.closest("tr[data-i]");if(!tr)return;const i=+tr.dataset.i,x=cur.tools[i];
+  if(!x||!clean(x.t)||clean(x.asm))return;setTimeout(()=>{if(cur&&cur.tools[i]===x&&$("#ov").hidden)apkOpen(i,"t",el)},30)});
+// the Assembly box: a real picker, searchable by anything
+document.addEventListener("focusin",e=>{const el=e.target;if(!el||!el.matches||!el.matches('#rows input[data-k="asm"]')||!cur)return;const tr=el.closest("tr[data-i]");if(!tr)return;
+  if(el.classList.contains("sugg")&&!clean(el.value))return;  // the "AS0003 ?" suggestion keeps its own click/Enter
+  const i=+tr.dataset.i;setTimeout(()=>{if(document.activeElement!==el||!asmList().length)return;if(APK&&APK.i===i&&APK.mode==="t")return;apkOpen(i,"q",el);if(APK){APK.q="";apkDraw()}},60)});
+document.addEventListener("input",e=>{const el=e.target;if(el&&el.matches&&el.matches('#rows input[data-k="asm"]')&&(!APK||APK.anchor!==el||APK.mode!=="q")){const tr=el.closest("tr[data-i]");if(tr&&cur){apkClose();apkOpen(+tr.dataset.i,"q",el)}}
+  if(!APK||APK.mode!=="q"||el!==APK.anchor)return;const v=el.value;APK.q=asmKey(v)?asmKey(v):v;APK.sel=0;apkDraw()});
+document.addEventListener("keydown",e=>{if(!APK)return;const a=document.activeElement,inRow=a&&a.closest&&a.closest(`#rows tr[data-i="${APK.i}"]`);
+  if(e.key==="Escape"){apkClose();e.stopPropagation();return}
+  if(!inRow&&a!==APK.anchor)return;
+  if(e.key==="ArrowDown"||e.key==="ArrowUp"){if(!APK.items.length)return;e.preventDefault();e.stopImmediatePropagation();APK.sel=(APK.sel+(e.key==="ArrowDown"?1:-1)+APK.items.length)%APK.items.length;apkDraw()}
+  else if(e.key==="Enter"&&APK.items.length&&(APK.mode==="t"||a===APK.anchor)){if(APK.mode==="q"&&asmFind(a.value)&&!APK.q)return;e.preventDefault();e.stopImmediatePropagation();const k=APK.sel;if(APK.mode==="q")a.value="";apkTake(k)}},true);
+document.addEventListener("mousedown",e=>{if(!APK)return;if(APK.el.contains(e.target)){e.preventDefault();return}if(e.target===APK.anchor)return;apkClose()},true);
+document.addEventListener("click",e=>{if(!APK||!APK.el.contains(e.target))return;if(e.target.closest("[data-apx]")){apkClose();return}if(e.target.closest("[data-apskip]")){apkClose();return}
+  const c=e.target.closest(".apc");if(!c)return;const k=[...APK.el.querySelectorAll(".apc")].indexOf(c);if(k>=0){if(APK.mode==="q"&&APK.anchor)APK.anchor.value="";apkTake(k)}});
+addEventListener("scroll",()=>{if(APK)apkPlace()},true);addEventListener("resize",()=>{if(APK)apkPlace()});
+document.addEventListener("focusout",e=>{if(!APK||APK.mode!=="q"||e.target!==APK.anchor)return;setTimeout(()=>{if(APK&&APK.mode==="q"&&document.activeElement!==APK.anchor&&!APK.el.contains(document.activeElement))apkClose()},120)});
+window.addEventListener("hashchange",apkClose);
+// the picker replaces the plain code list
+{const r0=renderRows;renderRows=function(){apkClose();const r=r0.apply(this,arguments);try{document.querySelectorAll('#rows input[data-k="asm"][list]').forEach(el=>el.removeAttribute("list"))}catch(_){}return r}}
+// hovering a linked Assembly box shows what it is
+let APH=null;
+document.addEventListener("mouseover",e=>{const el=e.target.closest&&e.target.closest('#rows input[data-k="asm"]');if(!el||APK||!cur)return;const a=asmFind(el.value);if(!a)return;clearTimeout(APH&&APH.t);
+  const t0=setTimeout(()=>{if(APK)return;let h=$("#aphov");if(!h){h=document.createElement("div");h.id="aphov";h.className="apk hov";document.body.append(h)}h.innerHTML=`<div class="apls">${apkCard(a,{cur:true})}</div>`;
+    const r=el.getBoundingClientRect(),W=Math.min(420,innerWidth-16);h.style.width=W+"px";h.style.left=Math.min(Math.max(8,r.left),innerWidth-W-8)+"px";h.style.top=(r.bottom+6+h.offsetHeight>innerHeight?r.top-h.offsetHeight-6:r.bottom+6)+"px";h.classList.add("in")},380);
+  APH={t:t0,el}});
+document.addEventListener("mouseout",e=>{if(!APH)return;const el=e.target.closest&&e.target.closest('#rows input[data-k="asm"]');if(el!==APH.el)return;clearTimeout(APH.t);APH=null;const h=$("#aphov");if(h)h.remove()});
+document.addEventListener("focusin",()=>{const h=$("#aphov");if(h&&APK)h.remove()});
+
+// assemblies sharing one T on a machine: shown on the Assemblies page, and explained when you give a T that is taken
+function asmTwins(a,mid){const tn=asmTn(a)[mid];if(!tn)return[];return asmList().filter(o=>o!==a&&asmTn(o)[mid]===tn)}
+{const d0=drawAsm;drawAsm=function(){d0.apply(this,arguments);const box=$("#asmres");if(!box)return;
+  box.querySelectorAll("tr[data-asmid]").forEach(tr=>{const a=asmList().find(x=>x.id===tr.dataset.asmid);if(!a)return;const td=tr.querySelector("td");
+    const tw=[];Object.keys(asmTn(a)).forEach(m=>asmTwins(a,m).forEach(o=>tw.push(`${asmMName(m)} ${asmTn(a)[m]} : ${o.code}`)));
+    if(tw.length&&td)td.insertAdjacentHTML("beforeend",`<div class="asmtw" title="${esc(t("apkTwin",asmTn(a)[Object.keys(asmTn(a))[0]],"",""))}">${esc(t("apkTwinS",tw.join(" · ")))}</div>`);
+    const g=td&&!td.querySelector(".tg")?document.createElement("span"):null;if(g){g.className="asmgl";g.innerHTML=toolGlyph(a.tool&&a.tool.type);td.prepend(g)}})}}
+let ASMDLG=null;{const d0=asmDialog;asmDialog=function(a){ASMDLG=a||null;return d0.apply(this,arguments)}}
+document.addEventListener("change",e=>{const el=e.target;if(!el||!el.matches||!el.matches(".asmtn [data-tnm]"))return;const v=normT(el.value),mid=el.dataset.tnm;const box=el.closest(".asmtn");let n=box.querySelector(".tnw");
+  const o=v&&asmList().find(x=>x!==ASMDLG&&asmTn(x)[mid]===v);if(!o){if(n)n.remove();return}if(!n){n=document.createElement("p");n.className="tnw";box.append(n)}n.textContent=t("apkTwinTn",asmMName(mid),v,o.code)});
+// the T picker stays while you are on its row, and goes when you move to another row
+document.addEventListener("focusin",e=>{if(!APK||APK.mode!=="t")return;const el=e.target;if(APK.el.contains(el))return;const tr=el.closest&&el.closest("#rows tr[data-i]");if(!tr||+tr.dataset.i!==APK.i)apkClose()});
+
+/* ===================== 2.28.0 · the same T on several lines: every box is compared, and you can make them match ===================== */
+Object.assign(I18N.fr,{rpOk:(T,n)=>`${T} : ${n} lignes, le même outil partout. Cliquez pour voir.`,rpMiss:(T,L)=>`${T} : des cases sont vides sur certaines lignes (${L}). Cliquez pour compléter.`,
+  rpBad:(T,L)=>`${T} : pas le même outil sur toutes les lignes (${L}). Cliquez pour choisir.`,rpTitle:(T,n)=>`${T} · ${n} lignes`,rpIntro:"Ces lignes ont le même numéro d’outil : c’est le même outil, utilisé pour plusieurs opérations. Pour chaque case qui diffère, choisissez la bonne valeur ; elle sera mise sur toutes les lignes.",
+  rpField:"Case",rpLine:i=>`Ligne ${i}`,rpEmpty:"vide",rpAllOk:"Toutes les cases sont pareilles sur ces lignes.",rpShowAll:"Voir aussi les cases pareilles",rpApply:n=>`Mettre la même chose sur les ${n} lignes`,
+  rpDone:(T,n)=>`${T} : ${n} ${pl(n,"case mise","cases mises")} à jour`,rpUndo:"Annuler",rpUndone:"Remis comme avant",rpNot:"Pas le même outil ? Changez le T d’une des lignes.",rpLocked:"Fiche validée : rien ne peut être changé."});
+Object.assign(I18N.en,{rpOk:(T,n)=>`${T}: ${n} lines, the same tool everywhere. Click to see.`,rpMiss:(T,L)=>`${T}: some boxes are empty on some lines (${L}). Click to complete.`,
+  rpBad:(T,L)=>`${T}: not the same tool on every line (${L}). Click to choose.`,rpTitle:(T,n)=>`${T} · ${n} lines`,rpIntro:"These lines have the same tool number: it is the same tool, used for several operations. For each box that differs, pick the right value; it goes on every line.",
+  rpField:"Box",rpLine:i=>`Line ${i}`,rpEmpty:"empty",rpAllOk:"Every box is the same on these lines.",rpShowAll:"Also show the boxes that match",rpApply:n=>`Put the same on the ${n} lines`,
+  rpDone:(T,n)=>`${T}: ${n} ${pl(n,"box","boxes")} updated`,rpUndo:"Undo",rpUndone:"Put back as it was",rpNot:"Not the same tool? Change the T of one of the lines.",rpLocked:"Validated sheet: nothing can be changed."});
+// the boxes that describe the tool (not the operation): the standard ones, the assembly, and your own columns
+const RPSKIP=new Set(["t","op","time","life","asmAuto","_pg"]);
+function rpFields(L){const ks=[...IDK,"asm"];L.forEach(x=>Object.keys(x).forEach(k=>{if(k.startsWith("x_")&&!ks.includes(k))ks.push(k)}));
+  // only columns that are on the sheet (or hold something)
+  let vis=null;try{const c=sheetCfg();vis=new Set(edCols(c));if(vis.has("corr")){vis.add("corrH");vis.add("corrD")}if(typeof asmUnderT==="function"&&asmUnderT(c))vis.add("asm")}catch(_){}
+  return ks.filter(k=>!RPSKIP.has(k)&&(!vis||vis.has(k)))}
+const rpNorm=(k,v)=>{v=clean(v);if(!v)return"";if(k==="asm")return asmKey(v)||v.toUpperCase();return cmpV(k,String(v).replace(/\n/g," "))};
+function rpGroups(tools){const G=new Map();tools.forEach((x,i)=>{if(!clean(x.t)||!realTools([x]).length)return;const k=normT(x.t);if(!G.has(k))G.set(k,[]);G.get(k).push(i)});return G}
+function rpState(tools,idx){const L=idx.map(i=>tools[i]),bad=[],miss=[],same=[];
+  rpFields(L).forEach(k=>{const v=L.map(x=>rpNorm(k,x[k])),f=v.filter(Boolean);if(!f.length)return;const d=new Set(f).size;if(d>1)bad.push(k);else if(f.length<v.length)miss.push(k);else same.push(k)});return{bad,miss,same}}
+const rpLab=k=>k==="corrH"?"H":k==="corrD"?"D":k==="asm"?t("colAsm"):colLabel(k,sheetCfg());
+// the dot on the T: blue = same tool everywhere, orange = boxes missing on some lines, red = different values
+tDupMark=function(){if(!cur)return;const G=rpGroups(cur.tools),S=new Map();
+  document.querySelectorAll("#rows tr[data-i]").forEach(tr=>{const i=+tr.dataset.i,x=cur.tools[i],el=tr.querySelector('input[data-k="t"]');if(!x||!el)return;
+    el.classList.remove("warn","opg","opbad");const k=normT(x.t),g=clean(x.t)?G.get(k):null,n=g?g.length:0;const td=el.closest("td");let b=td.querySelector(".tdot");
+    tr.classList.toggle("oprow",n>1&&g[0]!==i);
+    if(n<2){if(b)b.remove();el.title="";return}
+    let st=S.get(k);if(!st){st=rpState(cur.tools,g);S.set(k,st)}
+    const cls=st.bad.length?"bad":st.miss.length?"miss":"ok";
+    if(!b){b=document.createElement("button");b.type="button";b.className="tdot";td.style.position="relative";td.append(b)}
+    b.className="tdot "+cls;b.dataset.tdot=k;const L=cls==="bad"?st.bad.map(f=>`${rpLab(f)} ${[...new Set(g.map(j=>clean(cur.tools[j][f])).filter(Boolean))].map(v=>String(v).replace(/\n/g," ")).join(" / ")}`).join(" · "):st.miss.map(rpLab).join(", ");
+    b.title=cls==="bad"?t("rpBad",k,L):cls==="miss"?t("rpMiss",k,L):t("rpOk",k,n);b.setAttribute("aria-label",b.title);el.title=b.title})};
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("#rows .tdot");if(!b||!cur)return;e.preventDefault();e.stopPropagation();rpPanel(b.dataset.tdot)});
+{const r0=renderRows;renderRows=function(){const r=r0.apply(this,arguments);try{tDupMark()}catch(_){}return r}}
+// the window: one line per box that differs, one column per line; click the right value
+function rpPanel(T,showAll){if(!cur)return;const A=cur,G=rpGroups(A.tools),idx=G.get(T);if(!idx||idx.length<2)return;const L=idx.map(i=>A.tools[i]),st=rpState(A.tools,idx),locked=asmLocked(A)||!can("article");
+  const ks=showAll?[...st.bad,...st.miss,...st.same]:[...st.bad,...st.miss],pick={};
+  ks.forEach(k=>{const cnt=new Map();L.forEach((x,j)=>{const v=rpNorm(k,x[k]);if(v)cnt.set(v,(cnt.get(v)||[]).concat(j))});let best=null;cnt.forEach((js,v)=>{if(!best||js.length>best[1].length)best=[v,js]});pick[k]=best?best[1][0]:-1});
+  const show=(k,v)=>{v=clean(v);if(!v)return`<i class="rpe">${esc(t("rpEmpty"))}</i>`;return esc(String(v).replace(/\n/g," · "))};
+  const head=L.map((x,j)=>`<th><span>${esc(t("rpLine",idx[j]+1))}</span>${clean(x.op)?`<small>${esc(x.op)}</small>`:""}</th>`).join("");
+  const body=ks.map(k=>{const bad=st.bad.includes(k),miss=st.miss.includes(k);return`<tr class="${bad?"b":miss?"m":"s"}" data-rk="${k}"><th>${esc(rpLab(k))}</th>${L.map((x,j)=>{const has=clean(x[k]);
+    return`<td>${has&&!locked&&(bad||miss)?`<button type="button" class="rpv${pick[k]===j||rpNorm(k,x[k])===rpNorm(k,L[pick[k]]&&L[pick[k]][k])?" on":""}" data-rj="${j}">${show(k,x[k])}</button>`:`<span class="rpv ro">${show(k,x[k])}</span>`}</td>`}).join("")}</tr>`}).join("");
+  const ov=dialog(esc(t("rpTitle",T,L.length)),`<p class="note" style="margin:0 0 10px">${esc(t("rpIntro"))}</p>
+    ${ks.length?`<div class="rptw"><table class="rpt"><thead><tr><th>${esc(t("rpField"))}</th>${head}</tr></thead><tbody>${body}</tbody></table></div>`:`<p class="rpok">✓ ${esc(t("rpAllOk"))}</p>`}
+    <div class="rpfoot"><label class="chk"><input type="checkbox" id="rp-all" ${showAll?"checked":""}> ${esc(t("rpShowAll"))}</label><span class="dim small">${esc(locked?t("rpLocked"):t("rpNot"))}</span></div>`,
+    `<button class="btn ghost" id="rp-no">${esc(t("close"))}</button>${!locked&&(st.bad.length||st.miss.length)?`<button class="btn red" id="rp-go">${esc(t("rpApply",L.length))}</button>`:""}`);
+  ov.querySelector(".dlg").classList.add("wide");ov.querySelector(".dlg").style.width="min(860px,96vw)";
+  $("#rp-no").onclick=closeDlg;$("#rp-all").onchange=e=>{closeDlg();rpPanel(T,e.target.checked)};
+  ov.querySelectorAll(".rpt tr[data-rk]").forEach(tr=>tr.addEventListener("click",e=>{const b=e.target.closest(".rpv[data-rj]");if(!b)return;const k=tr.dataset.rk,j=+b.dataset.rj;pick[k]=j;
+    tr.querySelectorAll(".rpv[data-rj]").forEach(o=>o.classList.toggle("on",rpNorm(k,L[+o.dataset.rj][k])===rpNorm(k,L[j][k])))}));
+  const go=$("#rp-go");if(go)go.onclick=()=>{if(cur!==A){closeDlg();return}flushEditor();const before=JSON.parse(JSON.stringify(A.tools));let n=0;
+    [...st.bad,...st.miss].forEach(k=>{const j=pick[k];if(j==null||j<0)return;const v=L[j][k];L.forEach(x=>{if(String(x[k]||"")!==String(v)){x[k]=v;n++}});if(k==="asm")L.forEach(x=>x.asmAuto=0)});
+    closeDlg();renderRows();edited();toast(t("rpDone",T,n),{label:t("rpUndo"),fn:()=>{if(!db.articles.includes(A))return;A.tools=before;edited();if(cur===A)renderRows();toast(t("rpUndone"))}})}}
+
+/* ===================== 2.28.0 · Check the sheet: everything that is wrong or missing, with a button to go there ===================== */
+Object.assign(I18N.fr,{ckBtn:"Vérifier la fiche",ckBtnN:n=>`Vérifier · ${n}`,ckBtnOk:"Fiche vérifiée",ckBtnT:"Ce qui manque ou ne va pas dans cette fiche, avec un bouton pour y aller",
+  ckTitle:"Vérifier la fiche",ckAllOk:"Rien à signaler : la fiche est complète et cohérente.",ckIntro:n=>`${n} ${pl(n,"point à regarder","points à regarder")}. Rien n’est changé sans vous : chaque bouton vous emmène à l’endroit, ou propose la correction.`,
+  ckGo:"Y aller",ckFix:"Corriger",ckUse:c=>`Utiliser ${c}`,ckUpd:c=>`Mettre à jour ${c}`,ckSev:{bad:"À corriger",warn:"À vérifier",info:"Pour info"},
+  ckArt:L=>`Infos de la fiche : ${L} ${L.includes(",")?"manquent":"manque"}`,ckNoT:i=>`Ligne ${i} : pas de numéro d’outil (T)`,ckMiss:(T,L)=>`${T} : ${L} ${L.includes(",")?"manquent":"manque"}`,
+  ckRepBad:(T,n,L)=>`${T} sur ${n} lignes, mais pas le même outil (${L})`,ckRepMiss:(T,n,L)=>`${T} sur ${n} lignes : ${L} ${L.includes(",")?"vides":"vide"} sur certaines`,
+  ckAsmDiff:(T,c,L)=>`${T} ne correspond plus à l’assemblage ${c} (${L})`,ckAsmGone:(T,c)=>`${T} : l’assemblage ${c} n’existe pas`,ckAsmSug:(T,c)=>`${T} est identique à l’assemblage ${c}, sans être relié`,
+  ckAsmTwoT:(c,L)=>`L’assemblage ${c} est sur plusieurs T dans cette fiche (${L})`,ckCone:(T,c,m)=>`${T} : porte-outil ${c} sur une machine ${m}`,ckCrib:(T,c)=>`${T} : le code ${c} n’est pas dans le magasin`,
+  ckTnOther:(T,c,tn,m)=>`${T} : l’assemblage ${c} est d’habitude en ${tn} sur ${m}`,ckVal:n=>`${n} ${pl(n,"point","points")} à regarder avant de valider`,ckValSee:"Voir"});
+Object.assign(I18N.en,{ckBtn:"Check the sheet",ckBtnN:n=>`Check · ${n}`,ckBtnOk:"Sheet checked",ckBtnT:"What is missing or wrong in this sheet, with a button to go there",
+  ckTitle:"Check the sheet",ckAllOk:"Nothing to report: the sheet is complete and consistent.",ckIntro:n=>`${n} ${pl(n,"thing","things")} to look at. Nothing is changed without you: each button takes you there, or offers the fix.`,
+  ckGo:"Go there",ckFix:"Fix",ckUse:c=>`Use ${c}`,ckUpd:c=>`Update ${c}`,ckSev:{bad:"To fix",warn:"To check",info:"For information"},
+  ckArt:L=>`Sheet info: ${L} missing`,ckNoT:i=>`Line ${i}: no tool number (T)`,ckMiss:(T,L)=>`${T}: ${L} missing`,
+  ckRepBad:(T,n,L)=>`${T} on ${n} lines, but not the same tool (${L})`,ckRepMiss:(T,n,L)=>`${T} on ${n} lines: ${L} empty on some`,
+  ckAsmDiff:(T,c,L)=>`${T} no longer matches assembly ${c} (${L})`,ckAsmGone:(T,c)=>`${T}: assembly ${c} does not exist`,ckAsmSug:(T,c)=>`${T} is identical to assembly ${c} but not linked`,
+  ckAsmTwoT:(c,L)=>`Assembly ${c} is on several T in this sheet (${L})`,ckCone:(T,c,m)=>`${T}: ${c} holder on a ${m} machine`,ckCrib:(T,c)=>`${T}: code ${c} is not in the crib`,
+  ckTnOther:(T,c,tn,m)=>`${T}: assembly ${c} is usually ${tn} on ${m}`,ckVal:n=>`${n} ${pl(n,"thing","things")} to look at before validating`,ckValSee:"See"});
+function ckIssues(art){const out=[],tools=art.tools,R=(typeof reqTool==="function"?reqTool(art):[]),mid=art.machineId,mN=asmMName(mid);
+  const afl=k=>{const el=$("#a-"+k),l=el&&el.closest("label");const s=l?[...l.childNodes].filter(n=>n.nodeType===3).map(n=>n.textContent).join("").trim():"";return s||t(k)||k};
+  const am=REQ_ART.filter(k=>!clean(art.article[k]));if(am.length)out.push({sev:"warn",txt:t("ckArt",am.map(afl).join(", ")),go:{af:am[0]}});
+  const G0=rpGroups(tools),seenCrib=new Set();
+  tools.forEach((x,i)=>{if(!realTools([x]).length)return;const T=normT(x.t)||`L${i+1}`;
+    if(!clean(x.t))out.push({sev:"bad",txt:t("ckNoT",i+1),go:{i,k:"t"}});
+    // a box empty here but filled on another line with the same T is reported once, with the repeated T
+    const sib=clean(x.t)?(G0.get(normT(x.t))||[]).filter(j=>j!==i).map(j=>tools[j]):[];
+    const m=R.filter(k=>!clean(x[k])&&!sib.some(y=>clean(y[k])));if(m.length)out.push({sev:"warn",txt:t("ckMiss",T,m.map(k=>colLabel(k)).join(", ")),go:{i,k:m[0]}});
+    const v=clean(x.asm);if(v){const a=asmFind(v);if(!a)out.push({sev:"bad",txt:t("ckAsmGone",T,asmKey(v)||v.toUpperCase()),go:{i,k:"asm"}});
+      else{const d=asmDiffs(x);if(d&&d.length)out.push({sev:"warn",txt:t("ckAsmDiff",T,a.code,d.map(k=>colLabel(k)).join(", ")),go:{i,k:d[0]},fix:{upd:a.code,i}});
+        const tn=asmTn(a)[mid];if(tn&&clean(x.t)&&normT(x.t)!==tn)out.push({sev:"info",txt:t("ckTnOther",T,a.code,tn,mN),go:{i,k:"t"}})}}
+    else{try{const L=asmFits(x);if(L.length===1)out.push({sev:"info",txt:t("ckAsmSug",T,L[0].code),go:{i,k:"asm"},fix:{use:L[0].code,i}})}catch(_){}}
+    try{const c=coneClash(x.holder);if(c)out.push({sev:"warn",txt:t("ckCone",T,c,normCone(M(mid).cone)),go:{i,k:"holder"}})}catch(_){}
+    try{if(clean(x.code)&&(db.catalog||[]).length&&!asmKey(x.code)&&!seenCrib.has(normCode(x.code))&&!C_(x.code)&&seenCrib.add(normCode(x.code)))out.push({sev:"info",txt:t("ckCrib",T,normCode(x.code)),go:{i,k:"code"}})}catch(_){}});
+  G0.forEach((idx,T)=>{if(idx.length<2)return;const st=rpState(tools,idx);
+    if(st.bad.length)out.push({sev:"bad",txt:t("ckRepBad",T,idx.length,st.bad.map(rpLab).join(", ")),go:{i:idx[0],k:"t"},fix:{rep:T}});
+    else if(st.miss.length)out.push({sev:"warn",txt:t("ckRepMiss",T,idx.length,st.miss.map(rpLab).join(", ")),go:{i:idx[0],k:"t"},fix:{rep:T}})});
+  const byA=new Map();realTools(tools).forEach(x=>{const a=clean(x.asm)&&asmFind(x.asm);if(!a||!clean(x.t))return;if(!byA.has(a.code))byA.set(a.code,new Set());byA.get(a.code).add(normT(x.t))});
+  byA.forEach((s,c)=>{if(s.size>1){const i=tools.findIndex(x=>clean(x.asm)&&asmFind(x.asm)&&asmFind(x.asm).code===c);out.push({sev:"warn",txt:t("ckAsmTwoT",c,[...s].join(", ")),go:{i,k:"t"}})}});
+  const W={bad:0,warn:1,info:2},seen=new Set();return out.filter(x=>!seen.has(x.txt)&&seen.add(x.txt)).sort((p,q)=>W[p.sev]-W[q.sev])}
+function ckBtnDraw(){if(!cur||route.view!=="article")return;const td=$("#b-ops2")||$("#b-tdtog");if(!td)return;let b=$("#b-chk");
+  if(!b){b=document.createElement("button");b.type="button";b.id="b-chk";b.className="btn sm ckbtn";td.before(b)}
+  const L=ckIssues(cur),n=L.filter(x=>x.sev!=="info").length,bad=L.some(x=>x.sev==="bad");
+  b.className="btn sm ckbtn "+(bad?"bad":n?"warn":"ok");b.innerHTML=`<i aria-hidden="true">${bad||n?"!":"✓"}</i>${esc(n?t("ckBtnN",n):t("ckBtnOk"))}`;b.title=t("ckBtnT")}
+let CKT=null;const ckLater=()=>{clearTimeout(CKT);CKT=setTimeout(()=>{try{ckBtnDraw()}catch(_){}},500)};
+{const r0=renderEditor;renderEditor=function(){r0.apply(this,arguments);try{ckBtnDraw()}catch(_){}}}
+{const e0=edited;edited=function(){const r=e0.apply(this,arguments);ckLater();return r}}
+document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("#b-chk")){flushEditor();ckPanel()}});
+function ckGo(g){closeDlg();if(!g)return;if(g.af){const el=$("#a-"+g.af);if(el){el.scrollIntoView({behavior:"smooth",block:"center"});setTimeout(()=>{try{el.focus()}catch(_){}},250)}return}
+  const tr=$(`#rows tr[data-i="${g.i}"]`);if(!tr)return;if(edMode!=="saisie")setEdMode("saisie");tr.scrollIntoView({behavior:"smooth",block:"center"});tr.classList.remove("ckflash");void tr.offsetWidth;tr.classList.add("ckflash");
+  setTimeout(()=>{const el=tr.querySelector(`[data-k="${g.k}"]:not([disabled])`)||tr.querySelector("input:not([disabled])");if(el)try{el.focus({preventScroll:true})}catch(_){}},300)}
+function ckPanel(){if(!cur)return;const A=cur,L=ckIssues(A),locked=asmLocked(A)||!can("article");const n=L.filter(x=>x.sev!=="info").length;
+  const sec=s=>{const G=L.filter(x=>x.sev===s);if(!G.length)return"";return`<div class="cks ${s}"><h4>${esc(t("ckSev")[s])} <span>${G.length}</span></h4>${G.map(x=>{const k=L.indexOf(x);
+    const fx=x.fix&&!locked?(x.fix.rep?`<button class="btn sm" data-ckfix="${k}">${esc(t("ckFix"))}</button>`:x.fix.use?`<button class="btn sm" data-ckfix="${k}">${esc(t("ckUse",x.fix.use))}</button>`:x.fix.upd?`<button class="btn sm ghost" data-ckfix="${k}">${esc(t("ckUpd",x.fix.upd))}</button>`:""):"";
+    return`<div class="cki"><span class="ckd"></span><p>${esc(x.txt)}</p><div class="ckb">${fx}${x.go?`<button class="btn sm ghost" data-ckgo="${k}">${esc(t("ckGo"))}</button>`:""}</div></div>`}).join("")}</div>`};
+  const ov=dialog(esc(t("ckTitle")),L.length?`<p class="note" style="margin:0 0 12px">${esc(t("ckIntro",L.length))}</p>${sec("bad")}${sec("warn")}${sec("info")}`:`<p class="rpok">✓ ${esc(t("ckAllOk"))}</p>`,`<button class="btn" id="ck-ok">${esc(t("close"))}</button>`);
+  ov.querySelector(".dlg").classList.add("wide");ov.querySelector(".dlg").style.width="min(720px,96vw)";$("#ck-ok").onclick=closeDlg;
+  ov.querySelectorAll("[data-ckgo]").forEach(b=>b.onclick=()=>ckGo(L[+b.dataset.ckgo].go));
+  ov.querySelectorAll("[data-ckfix]").forEach(b=>b.onclick=()=>{const f=L[+b.dataset.ckfix].fix;if(cur!==A){closeDlg();return}
+    if(f.rep){closeDlg();setTimeout(()=>rpPanel(f.rep),60);return}
+    if(f.use){const a=asmFind(f.use),x=A.tools[f.i];closeDlg();if(a&&x){x.asm=a.code;x.asmAuto=0;rowFill(f.i,a.tool,ASMF,"asm",a.code)}setTimeout(ckBtnDraw,400);return}
+    if(f.upd){const a=asmFind(f.upd),x=A.tools[f.i];closeDlg();if(a&&x)asmUpdateFrom(a,x);setTimeout(ckBtnDraw,400)}})}
+// validating: the check is shown in the validation window
+{const v0=validateArticle;validateArticle=function(){const r=v0.apply(this,arguments);try{if(!cur)return r;const L=ckIssues(cur).filter(x=>x.sev!=="info");if(!L.length)return r;
+  const body=document.querySelector("#ov .dlg .bd")||document.querySelector("#ov .dlg");if(!body)return r;const p=document.createElement("div");p.className="ckval"+(L.some(x=>x.sev==="bad")?" bad":"");
+  p.innerHTML=`<span>${esc(t("ckVal",L.length))}</span><button class="btn sm ghost" type="button">${esc(t("ckValSee"))}</button>`;p.querySelector("button").onclick=()=>{closeDlg();setTimeout(ckPanel,60)};
+  body.append(p)}catch(_){}return r}}
 
 </script>
 </body></html>
