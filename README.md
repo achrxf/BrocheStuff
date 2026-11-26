@@ -6,7 +6,7 @@ Tool lists, tool crib and holders for a CNC machining shop: every machine, its a
 |---|---|---|
 | **Web** | [achrxf.github.io/BrocheStuff/Web](https://achrxf.github.io/BrocheStuff/Web/) | The program in the browser. Starts empty; your data stays in your browser. |
 | **Demo** | [achrxf.github.io/BrocheStuff/Demo](https://achrxf.github.io/BrocheStuff/Demo/) | The same program filled with a made-up workshop, with a step-by-step tutorial (French / English) linked at the bottom of every page: 20 machines (3, 4 and 5 axes; BT30 / BT40 / BT50 / HSK63), 500 articles, ~500 tool codes, ~130 holders and a month of stock moves. |
-| **App** | [App/BrocheStuff-Setup-2.27.4.exe](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Setup-2.27.4.exe) | The Windows program (10/11, 64-bit) with sign-in accounts and a shared data folder. Run the installer (no admin rights needed), then open BrocheStuff from the Start menu; first sign-in **admin / admin**. Portable version: [BrocheStuff-Windows.zip](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Windows.zip). See [`App/README.txt`](App/README.txt). |
+| **App** | [App/BrocheStuff-Setup-2.27.5.exe](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Setup-2.27.5.exe) | The Windows program (10/11, 64-bit) with sign-in accounts and a shared data folder. Run the installer (no admin rights needed), then open BrocheStuff from the Start menu; first sign-in **admin / admin**. Portable version: [BrocheStuff-Windows.zip](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Windows.zip). See [`App/README.txt`](App/README.txt). |
 
 The web version has a **Download the app** button at the top right. The demo stands on its own: it has no link to the real version and no download, so it can be shared safely.
 
@@ -15,7 +15,7 @@ The web version has a **Download the app** button at the top right. The demo sta
 ```
 Web/   index.html   the web version (one file, works offline once opened)
 Demo/  index.html   the web version with demo data (kept apart from your real data)
-App/   BrocheStuff-Setup-2.27.4.exe (installer), BrocheStuff-Windows.zip (portable), README.txt, FOR_IT.txt, checksums
+App/   BrocheStuff-Setup-2.27.5.exe (installer), BrocheStuff-Windows.zip (portable), README.txt, FOR_IT.txt, checksums
 ```
 
 ## What it does
@@ -33,6 +33,8 @@ App/   BrocheStuff-Setup-2.27.4.exe (installer), BrocheStuff-Windows.zip (portab
 **Reading a CNC program.** "Read a program" gives every tool change in the program's order, a line per call: a tool used twice gives two lines (two operations), named from the comment written before the tool change (`(CONTOURNAGE EBAUCHE)`, `; PERCAGE`). Compressed blocks (`N30T1M6`, `M06T12`) are read too. The operation columns switch on by themselves, the PDF keeps one line per tool with the times added up.
 
 **Assemblies with their T number per machine.** An assembly (tool + holder, code AS0001…) is no longer made by itself while you type: "Make the assemblies" under a sheet's table makes them for its complete rows, or "+ New assembly" on the Assemblies page. Each assembly keeps its **T number on each machine**: typing its code in a sheet fills the row and the T for that machine; changing the T in a sheet changes the assembly's T for that machine; another machine can have another T. Changing an assembly updates every sheet that uses it (validated sheets keep theirs); changing a linked row offers to update the assembly. "Delete the unused ones" clears the old automatic ones nobody uses.
+
+**Print follows the page.** On a sheet, Print prints the PDF (one line per tool) or the Excel (the rows as in the Excel, repeats included), depending on where you are: the Excel tab, or the Excel preview while typing, prints the Excel; anywhere else the PDF. The button shows PDF or Excel next to it.
 
 **Reading a program into a sheet that is already filled.** The sheet is put in the program's order, a tool used twice gives two lines, and everything you typed (holder, LS, code, Ø, assembly…) is kept and copied onto each repeat; the program only fills empty boxes. Tools that are not in the program stay at the end. A preview shows the result first, and Undo puts the sheet back.
 
@@ -94,11 +96,11 @@ BrocheStuff regroupe les machines CNC, leurs articles et leurs outils, produit u
 
 - **Web** : https://achrxf.github.io/BrocheStuff/Web/ — le programme dans le navigateur, vide au départ.
 - **Démo** : https://achrxf.github.io/BrocheStuff/Demo/ — atelier fictif de 20 machines et 500 articles.
-- **Programme Windows** : [App/BrocheStuff-Setup-2.27.4.exe](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Setup-2.27.4.exe) — installez-le (sans droits administrateur), ouvrez BrocheStuff depuis le menu Démarrer, première connexion **admin / admin**. Comptes par personne, dossier de données partagé en réseau, page Administration, démo intégrée (voir `README.txt`).
+- **Programme Windows** : [App/BrocheStuff-Setup-2.27.5.exe](https://github.com/achrxf/BrocheStuff/raw/main/App/BrocheStuff-Setup-2.27.5.exe) — installez-le (sans droits administrateur), ouvrez BrocheStuff depuis le menu Démarrer, première connexion **admin / admin**. Comptes par personne, dossier de données partagé en réseau, page Administration, démo intégrée (voir `README.txt`).
 
 Au démarrage, choisissez votre service : Préparateur méthode, Préparateur outil, Production, ou Accès admin. Les données restent sur l'ordinateur qui les utilise (navigateur, ou `Documents\BrocheStuff` pour le programme). **Sauvegarder / Restaurer** pour les déplacer ; une copie automatique est gardée toutes les 5 minutes.
 
-Nouveau en 2.27 : « Lire un programme » donne tous les outils dans l’ordre des opérations, répétitions comprises ; les assemblages ne se créent plus tout seuls, se modifient vraiment (les fiches suivent) et gardent leur **numéro T par machine**. Les colonnes d’opération ne s’affichent que si vous les demandez (bouton à côté de « Masquer le schéma »). Lire un programme dans une fiche déjà remplie la remet dans l’ordre du programme (répétitions comprises) en gardant tout ce que vous aviez tapé ; les outils absents du programme restent à la fin, et « Annuler » remet la fiche comme avant.
+Nouveau en 2.27 : « Lire un programme » donne tous les outils dans l’ordre des opérations, répétitions comprises ; les assemblages ne se créent plus tout seuls, se modifient vraiment (les fiches suivent) et gardent leur **numéro T par machine**. Les colonnes d’opération ne s’affichent que si vous les demandez (bouton à côté de « Masquer le schéma »). Lire un programme dans une fiche déjà remplie la remet dans l’ordre du programme (répétitions comprises) en gardant tout ce que vous aviez tapé ; les outils absents du programme restent à la fin, et « Annuler » remet la fiche comme avant. « Imprimer » imprime le PDF ou l’Excel selon l’onglet où vous êtes (Excel = les lignes répétées comme dans les opérations).
 
 Nouveau en 2.27.1 : **tout en MAJUSCULES** (types, porte-outils, codes, plaquettes, opérations, vos colonnes), y compris ce qui existait déjà, sauf les fiches validées. Pour écrire comme tapé, désactivez « Majuscules automatiques » dans le menu ⋯.
 

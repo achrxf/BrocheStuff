@@ -1,3 +1,3 @@
-23decc702c5d81c701dce650d5308e9635390384b2deb176a70dcef7252e71cf  BrocheStuff-Setup-2.27.4.exe
-75373d229cc46b995434057580e1268d8a9ffec69f60bdc1af2ea110266342ef  BrocheStuff-Update-2.27.4.neu
-c0461574886a12343544ad37e63db5dde70af0ddf7ada51635edd1718891a4f0  BrocheStuff-Windows.zip
+ba2fcab70abc3a31bd7722a206e4bcfcbabf687b752abe25dc76eb7463a8c6f2  BrocheStuff-Setup-2.27.5.exe
+6af00b3100d478a5b3354511b7b4ea378e0c8b67758417f11da0ba0005625d80  BrocheStuff-Update-2.27.5.neu
+89d2aa3ddcff1d962a7d521aa74d1f908386e20e46e5d7a72754fcad47a8b623  BrocheStuff-Windows.zip

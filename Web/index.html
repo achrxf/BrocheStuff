@@ -2307,6 +2307,11 @@ html:not(.noup) .tt td:is([data-col="type"],[data-col="insert"],[data-col="holde
 .pgt .pgn{border-color:#2563eb;color:#2563eb}
 .pgt .pgk{border-style:dashed}
 .pgo{display:flex;gap:8px;align-items:center;margin-top:10px;font-size:13.5px}
+
+/* 2.27.5: the print button says what it prints */
+#b-print .pmode{font:700 10px var(--mono,monospace);letter-spacing:.04em;padding:1px 5px;border:1px solid currentColor;border-radius:2px;opacity:.75;margin-left:2px}
+#b-print .pmode.xl{color:#1d6f42;border-color:#1d6f42;opacity:1}
+html.at.dark #b-print .pmode.xl,html.dark #b-print .pmode.xl{color:#5fc48c;border-color:#5fc48c}
 </style></head>
 <body>
 <script>try{if(localStorage.getItem("bs.skin")!=="classic")document.documentElement.classList.add("at")}catch(e){document.documentElement.classList.add("at")}</script>
@@ -6447,7 +6452,7 @@ Object.assign(I18N.en,{getApp:"Get the app", getAppT:"Download the Windows insta
   demoBar:"Demo: made-up workshop with 20 machines and 500 articles. Changes stay in this browser only.", demoShort:"Made-up data", demoReset:"Reset the demo", demoResetQ:"Reset the demo data? Everything changed here is lost.", demoGo:"Real version"});
 Object.assign(I18N.fr,{getApp:"Télécharger l'app", getAppT:"Télécharger l’installateur Windows",
   demoBar:"Démo : atelier fictif de 20 machines et 500 articles. Vos changements restent dans ce navigateur.", demoShort:"Données fictives", demoReset:"Réinitialiser la démo", demoResetQ:"Réinitialiser les données de la démo ? Tout ce qui a été changé ici sera perdu.", demoGo:"Version réelle"});
-const APP_ZIP="BrocheStuff-Setup-2.27.4.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
+const APP_ZIP="BrocheStuff-Setup-2.27.5.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
 function appUrl(){
   // on the site (…/Web/ or …/Demo/) the program sits next door in …/App/; anywhere else, take it from the site
   if(/^https?:/.test(location.protocol)&&/\/(Web|Demo)\/(index\.html)?$/i.test(location.pathname))return new URL("../App/"+APP_ZIP,location.href).href;
@@ -8465,6 +8470,34 @@ function pgDialog(sheet,ctx,fname,sheets,goOther){const A=cur,seq=sheet.nc.seqTo
   try{const s=sheets&&sheets.find(x=>x.nc&&x.nc.seqTools&&x.nc.seqTools.length);
     if(kind==="tools"&&ctx&&!ctx.plan&&s&&cur&&route.view==="article"&&realTools(cur.tools).length&&!asmLocked(cur)){pgDialog(s,ctx,fname,sheets,()=>d0.apply(self,a));return}}catch(e){console.error(e)}
   return d0.apply(this,arguments)}}
+
+/* ===================== 2.27.5: Print follows the page — PDF or Excel ===================== */
+Object.assign(I18N.fr,{prPdfT:"Imprimer la fiche PDF (un outil par ligne)",prXlT:"Imprimer l’Excel (les lignes comme dans l’Excel, répétitions comprises)",prXlDo:"Impression de l’Excel…"});
+Object.assign(I18N.en,{prPdfT:"Print the PDF sheet (one line per tool)",prXlT:"Print the Excel (the rows as in the Excel, repeats included)",prXlDo:"Printing the Excel…"});
+// which one: the Excel tab, or the Excel preview while typing → the Excel; otherwise the PDF
+function printKind(){if(route.view!=="article")return"pdf";if(edMode==="excel")return"xlsx";if(edMode==="pdf")return"pdf";return pvOn&&pvMode==="xlsx"?"xlsx":"pdf"}
+function printBtnDraw(){const b=$("#b-print");if(!b)return;const k=route.view==="article"?printKind():"pdf";let s=b.querySelector(".pmode");
+  if(route.view!=="article"){if(s)s.remove();return}
+  if(!s){s=document.createElement("span");s.className="pmode";b.append(s)}s.textContent=k==="xlsx"?"Excel":"PDF";s.classList.toggle("xl",k==="xlsx");b.title=t(k==="xlsx"?"prXlT":"prPdfT")}
+{const r0=render;render=function(){const r=r0.apply(this,arguments);try{printBtnDraw()}catch(_){}return r}}
+{const s0=setEdMode;setEdMode=function(){s0.apply(this,arguments);try{printBtnDraw()}catch(_){}}}
+document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("[data-pvm],#b-pv"))setTimeout(printBtnDraw,0)});
+// the Excel as it looks in the preview, without the A B C / 1 2 3 headers, fitted to the A4 width
+async function printExcel(art){toast(t("prXlDo"));
+  const host=document.createElement("div");host.style.cssText="position:fixed;left:-30000px;top:0;visibility:hidden";host.innerHTML=xlPreviewHTML(art);document.body.append(host);
+  try{await xlFillImgs(host,art)}catch(_){}
+  const tb=host.querySelector("table.xlpv"),thH=(tb.tHead&&tb.tHead.offsetHeight)||21,W=Math.max(1,tb.offsetWidth-30),H=tb.offsetHeight-thH;
+  const pW=733,lW=1062,land=W>pW*1.25,aW=land?lW:pW,aH=(land?pW:lW)-4;let z=Math.min(1,aW/W);if(H*z>aH&&H*z<=aH*1.3)z=aH/H;   // a one-page sheet stays on one page
+  const wrap=host.querySelector(".xlwrap");wrap.style.setProperty("--xlth",thH+"px");const body=host.innerHTML;host.remove();
+  let css="";const want=/xlpv|xlwrap|xlimg/;
+  for(const sh of document.styleSheets){let rules;try{rules=sh.cssRules}catch(_){continue}for(const r of rules){if(r.type===5&&/IBM Plex|Barlow/i.test(r.cssText))css+=r.cssText;else if(r.selectorText&&want.test(r.selectorText))css+=r.cssText}}
+  css+=`@page{margin:8mm}body{background:#fff}.xlout{overflow:hidden;width:${Math.ceil(W*z)+2}px}.xlin{zoom:${z.toFixed(4)}}
+    .xlwrap{position:relative;margin:-${thH}px 0 0 -30px}table.xlpv th.xlc,table.xlpv th.xlr{visibility:hidden;border-color:transparent!important}
+    table.xlpv tr{break-inside:avoid}.xlimg{position:absolute}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}`;
+  await printHTML({css,body:`<div class="xlout"><div class="xlin">${body}</div></div>`},land)}
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("#b-print");if(!b||route.view!=="article")return;if(printKind()!=="xlsx")return;
+  e.stopImmediatePropagation();e.preventDefault();try{flushEditor()}catch(_){}const art=A(route.id);if(art)printExcel(art)},true);
+window.addEventListener("hashchange",()=>setTimeout(printBtnDraw,60));
 
 </script>
 </body></html>
