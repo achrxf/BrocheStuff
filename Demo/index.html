@@ -2269,6 +2269,24 @@ html:not(.at) .cab .cbody,html:not(.at) .plan .side{border-radius:8px}
 @media (prefers-reduced-motion:reduce){.drw,.drw.on,.plan .it{animation:none!important;transition:none!important}}
 .plan .sfoot .btn svg,.plan .btn svg{width:15px;height:15px;flex:0 0 auto}
 
+
+/* 2.27: T per machine in the assembly window and list */
+.asmtn{display:flex;flex-direction:column;gap:8px;padding:12px;border:1px solid var(--hair);background:var(--fill);border-radius:4px}
+html.at .asmtn{border-radius:2px}
+.asmtn .tnh{display:flex;flex-direction:column;gap:2px}
+.asmtn .tnh b{font:700 13px var(--display);letter-spacing:.04em}
+.asmtn .tnh span{font-size:12.5px;color:var(--mid)}
+.asmtn .tng{display:flex;flex-wrap:wrap;gap:6px}
+.asmtn .tnr{display:inline-flex;align-items:stretch;border:1px solid var(--line2);background:var(--paper)}
+.asmtn .tnr span{display:flex;align-items:center;padding:0 8px;background:var(--ink);color:var(--bg);font:700 12px var(--mono)}
+.asmtn .tnr input{width:62px;border:0;padding:6px 8px;background:transparent;color:var(--ink);font:600 13px var(--mono)}
+.asmtn .tnr input:focus{outline:2px solid var(--red);outline-offset:-2px}
+.asmtn .tnadd{max-width:260px}
+.asmtnl{display:flex;flex-wrap:wrap;gap:3px;margin-top:4px}
+.asmtnl span{display:inline-flex;border:1px solid var(--line2);font:600 11px var(--mono);color:var(--ink)}
+.asmtnl span i{font-style:normal;padding:0 4px;background:var(--fill);color:var(--mid);border-right:1px solid var(--line2)}
+.asmtnl span{padding-right:4px}
+.asmtnl span i{margin-right:4px}
 </style></head>
 <body>
 <script>try{if(localStorage.getItem("bs.skin")!=="classic")document.documentElement.classList.add("at")}catch(e){document.documentElement.classList.add("at")}</script>
@@ -5588,7 +5606,7 @@ async function readTable(file){
   if(ext==="pdf"){const r=await readSheetPDF(new Uint8Array(await file.arrayBuffer()));if(!r)throw new Error("nodata");return [{name:file.name,rows:ncRows(r.tools),art:r}]}
   if(!/^(xlsx|xls|xlsm|xlsb|ods|csv)$/.test(ext)){const txt=await file.text();
     if(ext==="json"||/^\s*[\[{]/.test(txt)){try{const r=parseCAMJson(JSON.parse(txt));if(r&&r.length)return [{name:file.name,rows:ncRows(r)}]}catch(e){}}
-    if(looksNC(txt)){const r=parseNC(txt,file.name);if(r.tools.length)return [{name:file.name,rows:ncRows(r.tools),nc:r}]}
+    if(looksNC(txt)){const r=parseNC(txt,file.name);if(r.tools.length)return [{name:file.name,rows:ncRows(r.seqTools),nc:r}]}
     if(ext!=="txt")return [{name:file.name,rows:parseCSV(txt)}]}
   if(ext==="csv"||ext==="txt"){let txt=await file.text();if(txt.includes("�")){try{txt=new TextDecoder("windows-1252").decode(await file.arrayBuffer())}catch(e){}}
     return [{name:file.name,rows:parseCSV(txt)}]}
@@ -5620,7 +5638,7 @@ async function startImport(kind,ctx){if(!hasRight("import")){toast(t("noRight"))
 function importDialog(kind,ctx,fname,sheets){
   // tool columns come from the current column setup (renamed and added columns included)
   let fields=(kind==="tools"?TOOLF:kind==="articles"?[...IMPF.articles,...TOOLF]:IMPF[kind]).filter(([f])=>!(kind==="articles"&&f==="machine"&&ctx.machineId));
-  let si=0,hdr,map,mode="add",sortT=false;try{sortT=localStorage.getItem("bs.impsort")==="1"}catch(e){}
+  let si=0,hdr,map,mode="add",sortT=false;try{sortT=localStorage.getItem("bs.impsort")==="1"}catch(e){}if(sheets&&sheets.some(s=>s.nc))sortT=false;
   const setup=()=>{const rows=sheets[si].rows;const h=findHeader(rows,fields);hdr=h.row;map=hdr>=0?autoMap(rows[hdr],fields):{};
     if(fields.some(([f])=>f==="code")){const cc=codeColumn(rows.slice(hdr+1));
       // never steal a column whose title already says what it is (e.g. "Machine" with M1, M2…)
@@ -5664,7 +5682,8 @@ function importDialog(kind,ctx,fname,sheets){
     const rows=dataRows();if(!rows.length){err(t("impEmpty"));return}
     ctx.sortT=sortT;
     // tool sheet: the same tool twice (in the file, or already on the sheet) → ask which to keep
-    if(kind==="tools"&&!ctx.plan){const groups=impDupGroups(mode==="replace"?[]:cur.tools,rows,val,hdr);
+    if(kind==="tools"&&!ctx.plan){let groups=impDupGroups(mode==="replace"?[]:cur.tools,rows,val,hdr);
+      if(sheets[si].nc&&groups.length){groups.forEach(g=>{if(g.copies.every(c=>c.src!=="sheet"))g.choice=-1});if(groups.every(g=>g.choice===-1)){ctx.plan=groups;groups=[]}}
       if(groups.length){impDupStep(groups,()=>{ctx.plan=groups;$("#d-imp").onclick=go;go()},()=>{draw();$("#d-imp").onclick=go});return}}
     const r=applyImport(kind,ctx,rows,val,mode,err);delete ctx.plan;if(!r)return;
     // the article block of the file fills the article's empty fields
@@ -5736,6 +5755,7 @@ function applyImport(kind,ctx,rows,val,mode,err){
     let out=[...keepB,...got];
     if(ctx.sortT)out=sortByT(out);
     cur.tools=out.length?out:[{t:"T01"}];
+    {const ts=realTools(cur.tools).map(x=>tNum(x.t)).filter(n=>n!=null);if(!cur.ops&&(got.some(x=>clean(x.op))||new Set(ts).size<ts.length)){cur.ops=true;try{refreshCols(cur)}catch(_){}const A=cur;setTimeout(()=>{if(cur===A&&route.view==="article")renderEditor(A)},0)}}
     return t("impDoneTools",got.length)+(dropped?" · "+t("impDupOut",dropped):"");
   }
   if(kind==="articles"){
@@ -6407,7 +6427,7 @@ Object.assign(I18N.en,{getApp:"Get the app", getAppT:"Download the Windows insta
   demoBar:"Demo: made-up workshop with 20 machines and 500 articles. Changes stay in this browser only.", demoShort:"Made-up data", demoReset:"Reset the demo", demoResetQ:"Reset the demo data? Everything changed here is lost.", demoGo:"Real version"});
 Object.assign(I18N.fr,{getApp:"Télécharger l'app", getAppT:"Télécharger l’installateur Windows",
   demoBar:"Démo : atelier fictif de 20 machines et 500 articles. Vos changements restent dans ce navigateur.", demoShort:"Données fictives", demoReset:"Réinitialiser la démo", demoResetQ:"Réinitialiser les données de la démo ? Tout ce qui a été changé ici sera perdu.", demoGo:"Version réelle"});
-const APP_ZIP="BrocheStuff-Setup-2.26.0.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
+const APP_ZIP="BrocheStuff-Setup-2.27.0.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
 function appUrl(){
   // on the site (…/Web/ or …/Demo/) the program sits next door in …/App/; anywhere else, take it from the site
   if(/^https?:/.test(location.protocol)&&/\/(Web|Demo)\/(index\.html)?$/i.test(location.pathname))return new URL("../App/"+APP_ZIP,location.href).href;
@@ -6560,9 +6580,11 @@ function describeTool(txt){
   if(!o.type){const clean0=String(txt||"").replace(/^\s*T\s*\d+\s*[-|:]?\s*/i,"").replace(/\|.*$/,"").trim();if(clean0&&clean0.length<=40)o.type=clean0.toUpperCase()}
   return o;
 }
+// the operation comment before a tool change, e.g. (CONTOURNAGE EBAUCHE) — not the tool's own description or the program header
+const ncOp=c=>{c=String(c||"").trim();if(!c||c.length>70)return"";if(/^\s*T\s*\d/i.test(c)||/^\s*TOOL\b|DIA\.?\s*OFF|LEN\.?\s*-|PROGRAM|PROGRAMME|DATE|TIME|HEURE|MCX|NC FILE|MATERIAL|MATIERE|POST|^O\d+$/i.test(c))return"";return c.replace(/\s+/g," ")};
 function parseNC(text,fname){
   const lines=String(text||"").replace(/\r/g,"").split("\n");
-  let program="",pendingT=null;const order=[],info=new Map(),calls=new Map(),corr=new Map();
+  let program="",pendingT=null;const order=[],info=new Map(),calls=new Map(),corr=new Map(),seq=[];let opBuf="";
   const tkey=n=>"T"+String(parseInt(n,10)).padStart(2,"0");
   const note=(k,txt)=>{if(!txt)return;if(!info.has(k))info.set(k,[]);info.get(k).push(txt)};
   const seen=k=>{if(!order.includes(k))order.push(k);calls.set(k,(calls.get(k)||0)+1)};
@@ -6580,17 +6602,17 @@ function parseNC(text,fname){
     }
     // tool calls: T12 M6 · M6 T12 · T12 (then M6) · TOOL CALL 12 · T="NAME"
     let call=null;const hc=code.match(/TOOL CALL\s+(\d+)/);if(hc)call=tkey(hc[1]);
-    else{const tm=code.match(/\bT\s*(\d{1,4})\b/);const m6=/\bM0?6\b/.test(code);
+    else{const tm=code.match(/(?:^|[^A-Z])T\s*(\d{1,4})(?!\d)/);const m6=/(?:^|[^A-Z])M0*6(?![\d.])/.test(code);
       if(tm&&m6)call=tkey(tm[1]);else if(tm&&!m6)pendingT=tkey(tm[1]);else if(m6&&pendingT){call=pendingT;pendingT=null}}
     if(lastTool||call){const tk=call||lastTool,h=code.match(/\bG43\b[^()]*?\bH\s*(\d{1,4})\b/),dd=code.match(/\bG4[12]\b[^()]*?\bD\s*(\d{1,4})\b/);
       if(h&&!corr.has(tk+"H"))corr.set(tk+"H",String(+h[1]));if(dd&&!corr.has(tk+"D"))corr.set(tk+"D",String(+dd[1]))}
-    if(call){seen(call);lastTool=call;afterCall=2;
+    if(call){seen(call);seq.push({k:call,op:opBuf});opBuf="";lastTool=call;afterCall=2;
       comments.forEach(c=>{if(!/^\s*T\s*\d/i.test(c))note(call,c)});
       if(lastComment&&!info.has(call))note(call,lastComment);
       lastComment="";continue}
     if(comments.length){const c=comments.join(" ");
-      if(afterCall>0&&lastTool&&!/^\s*T\s*\d/i.test(c)&&!/OPERATION|PROGRAM|DATE|TIME|MCX|NC FILE|MATERIAL|POST/i.test(c)){note(lastTool,c);afterCall=0}
-      else lastComment=c}
+      if(afterCall>0&&lastTool&&!/^\s*T\s*\d/i.test(c)&&!/OPERATION|PROGRAM|DATE|TIME|MCX|NC FILE|MATERIAL|POST/i.test(c)){note(lastTool,c);afterCall=0;if(/^\s*(?:N?\d+\s*)?;/.test(line)&&ncOp(c))opBuf=ncOp(c)}
+      else{lastComment=c;if(ncOp(c)&&!/^\s*[O:%]\d/.test(code.trim()))opBuf=ncOp(c)}}
     else if(afterCall>0)afterCall--;
   }
   const tools=order.map(k=>{const d={};for(const txt of (info.get(k)||[])){const o=describeTool(txt);for(const f in o)if(!d[f])d[f]=o[f]}
@@ -6598,9 +6620,12 @@ function parseNC(text,fname){
     const c=x.code&&C_(x.code);if(c){[["type","type"],["diameter","diameter"],["ra","ra"],["insert","insert"],["z","z"],["oal","oal"]].forEach(([a,b])=>{if(!x[a]&&c[b])x[a]=c[b]})}
     return x}).sort((a,b)=>parseInt(a.t.slice(1))-parseInt(b.t.slice(1)));
   const base=String(fname||"").replace(/\.[^.]+$/,"");
-  return{program:program||base,name:base,tools,calls:Object.fromEntries(calls)};
+  // the tools in the order the program uses them, a line for every tool change (a tool used twice = two operations)
+  const byK=new Map(tools.map(x=>[x.t,x]));const seqTools=seq.map(s=>({...byK.get(s.k),...(s.op?{op:s.op}:{})}));
+  tools.forEach(x=>{if(!seq.some(s=>s.k===x.t))seqTools.push({...x})});
+  return{program:program||base,name:base,tools,seqTools,calls:Object.fromEntries(calls)};
 }
-const looksNC=txt=>/\bM0?6\b|TOOL CALL|\bG0?[0123]\b[\s\S]{0,400}\bG0?[0123]\b/i.test(txt.slice(0,200000))&&/\n/.test(txt);
+const looksNC=txt=>/(?:^|\n)\s*(?:N\d+\s*)?(?:T\d{1,4}\s*M0?6|M0?6\s*T\d{1,4})(?!\d)/i.test(txt.slice(0,200000))||/\bM0?6\b|TOOL CALL|\bG0?[0123]\b[\s\S]{0,400}\bG0?[0123]\b/i.test(txt.slice(0,200000))&&/\n/.test(txt);
 // Fusion 360 / HSM / Inventor CAM tool library (.json): {data:[{type, description, geometry:{DC,NOF,OAL,RE,LCF,SIG}, "post-process":{number}}]}
 function parseCAMJson(obj){
   const list=Array.isArray(obj)?obj:Array.isArray(obj.data)?obj.data:[];if(!list.length)return null;
@@ -6610,7 +6635,7 @@ function parseCAMJson(obj){
       ls:"",oal:g.OAL!=null?num_(g.OAL):"",z:g.NOF!=null?String(g.NOF):"",holder:x.holder&&x.holder.description?String(x.holder.description):"",code:String(x["product-id"]||x.productId||"").toUpperCase(),cutLength:g.LCF!=null?num_(g.LCF):""}});
 }
 const NC_HEAD=["T number","Type","Diameter","Radius / angle","Insert","LS","LT","Z","Offset H","Offset D","Holder","Code"];
-const ncRows=tools=>{const ex=sheetCfg().extra;return [[...NC_HEAD,...ex.map(e=>e.label)],...tools.map(x=>[x.t,x.type,x.diameter,x.ra,x.insert||"",x.ls,x.oal,x.z,x.corrH||"",x.corrD||"",x.holder,x.code,...ex.map(e=>x[xKey(e.id)]||"")])]};
+const ncRows=tools=>{const ex=sheetCfg().extra,op=tools.some(x=>clean(x.op));return [[...NC_HEAD,...(op?["Operation"]:[]),...ex.map(e=>e.label)],...tools.map(x=>[x.t,x.type,x.diameter,x.ra,x.insert||"",x.ls,x.oal,x.z,x.corrH||"",x.corrD||"",x.holder,x.code,...(op?[x.op||""]:[]),...ex.map(e=>x[xKey(e.id)]||"")])]};
 // many programs at once: one article each, on this machine
 function pickFiles(accept){return new Promise(res=>{const i=document.createElement("input");i.type="file";i.multiple=true;i.accept=accept;i.onchange=()=>res([...i.files]);i.click()})}
 async function importPrograms(m){if(!hasRight("import")){toast(t("noRight"));return}
@@ -6620,11 +6645,11 @@ async function importPrograms(m){if(!hasRight("import")){toast(t("noRight"));ret
   const ok=items.filter(it=>it.r&&it.r.tools.length&&!exists(it));
   dialog(esc(t("ncTitle")),`<p class="note" style="margin:0">${esc(t("ncFiles",items.length))} → <b>${esc(mLabel(m))}</b></p>
     <div class="list"><table class="lt"><thead><tr><th>${esc(t("ncNum"))}</th><th>${esc(t("ncProg"))}</th><th>${esc(t("sTools"))}</th><th></th></tr></thead><tbody>
-    ${items.map(it=>`<tr><td><b class="an">${esc(it.r?it.r.name:it.f.name)}</b></td><td class="m">${esc(it.r?it.r.program:"")}</td><td>${it.r&&it.r.tools.length?esc(it.r.tools.map(x=>x.t).join(" ")):`<span class="dim">${esc(t("ncNone"))}</span>`}</td>
+    ${items.map(it=>`<tr><td><b class="an">${esc(it.r?it.r.name:it.f.name)}</b></td><td class="m">${esc(it.r?it.r.program:"")}</td><td>${it.r&&it.r.tools.length?esc(it.r.seqTools.map(x=>x.t).join(" ")):`<span class="dim">${esc(t("ncNone"))}</span>`}</td>
       <td>${it.r&&it.r.tools.length&&exists(it)?`<span class="dim small">${esc(t("ncExists"))}</span>`:""}</td></tr>`).join("")}</tbody></table></div>`,
     `<button class="btn ghost" id="d-cancel">${esc(t("cancel"))}</button><button class="btn red" id="d-ok" ${ok.length?"":"disabled"}>${esc(t("ncCreate",ok.length))}</button>`);
   $(".dlg").classList.add("wide");$("#d-cancel").onclick=closeDlg;
-  $("#d-ok").onclick=()=>{const now=Date.now();ok.forEach(it=>{const art={id:uid(),machineId:m.id,article:{number:it.r.name,index:"A",program:it.r.program,date:today()},tools:it.r.tools,status:"progress",createdAt:now,updatedAt:now,history:[]};
+  $("#d-ok").onclick=()=>{const now=Date.now();ok.forEach(it=>{const art={id:uid(),machineId:m.id,article:{number:it.r.name,index:"A",program:it.r.program,date:today()},tools:it.r.seqTools.map(x=>({...x})),...(it.r.seqTools.length>it.r.tools.length||it.r.seqTools.some(x=>clean(x.op))?{ops:true}:{}),status:"progress",createdAt:now,updatedAt:now,history:[]};
       addHist(art,"create",{src:it.f.name});db.articles.push(art)});saveDB();closeDlg();render();toast(t("ncDone",ok.length,items.length-ok.length))};
 }
 
@@ -7441,7 +7466,7 @@ function drawHistory(){
    admin page, demo switch. The web version doesn't use any of this.
    ===================================================================== */
 const DESKDEMO=/*DESKDEMO*/null;
-const APP_VER="2.26.0";
+const APP_VER="2.27.0";
 let DEMO_ON=false, ACC=null, USERS=null, PCNAME="", realDIR="", loginFails=0, loginWait=0, lastAct=Date.now();
 Object.assign(I18N.en,{
   loginT:"Sign in", loginP:"Enter your name or code and your password.", loginName:"Name or code", loginPw:"Password", loginGo:"Sign in",
@@ -7911,7 +7936,7 @@ const GUIDE={
    ["mag","Magasins des machines",["Ce qui est chargé dans chaque machine, poche par poche, avec qui l’a changé.","« Comparer avec un article » montre les outils à charger ou à échanger, et charge tout en un clic.","Après un échange, les outils retirés du magasin peuvent être remis au magasin outils (+1 en stock) d’un clic."]],
    ["log","Journal",["Chaque sortie, entrée et comptage : qui, quand, combien et pourquoi.","Cliquez sur une ligne pour lire un commentaire en entier ou ouvrir la fiche de l’outil.","« Exporter (CSV) » pour Excel."]],
    ["reports","Rapports",["Outils sortis par mois, les plus sortis, par machine et par personne.","Codes jamais utilisés et outils sans mouvement depuis 90 jours. Export CSV."]],
-   ["asm","Assemblages",["Chaque outil avec son porte-outil est gardé sous un code (AS0001…), tout seul, dès qu’une ligne de fiche a un porte-outil et un code outil (ou un type et un Ø).","La colonne « Assemblage » de la fiche montre le code de chaque ligne. Tapez un code d’assemblage dans cette colonne (ou un code outil dans la colonne Code) : les cases vides se remplissent. Si une case contient déjà autre chose, BrocheStuff montre la différence et ne remplace que ce que vous cochez. Une ligne qui ne correspond plus à son assemblage est surlignée en orange.","La page Assemblages les liste, montre les fiches qui les utilisent, et permet d’en créer, modifier ou supprimer."]],
+   ["asm","Assemblages",["Un assemblage, c’est un outil avec son porte-outil, gardé sous un code (AS0001…). Il ne se crée plus tout seul : sous le tableau d’une fiche, « Créer les assemblages » en fait un pour chaque ligne complète (porte-outil + code outil, ou type + Ø), ou bien « + Nouvel assemblage » sur la page Assemblages.","Chaque assemblage garde son numéro d’outil par machine. Tapez son code dans la colonne Assemblage (ou dans la colonne Code) : la ligne se remplit, et le T aussi s’il est connu pour cette machine. Changez le T dans la fiche, et l’assemblage retient le nouveau T pour cette machine. Sur une autre machine, il peut avoir un autre T.","Modifier un assemblage (page Assemblages, clic sur la ligne) met à jour toutes les fiches qui l’utilisent, sauf les fiches validées qui gardent l’ancien. La fenêtre montre aussi le T sur chaque machine, à changer ou à ajouter.","Si vous changez l’outil d’une ligne reliée (Ø, LS, porte-outil…), elle passe en orange et BrocheStuff propose « Mettre à jour » l’assemblage. Pour détacher une ligne, videz sa case Assemblage. « Supprimer les inutilisés » nettoie les anciens assemblages créés tout seuls que plus aucune fiche n’utilise."]],
    ["print","Colonnes sur le PDF et l’Excel",["Chaque colonne du tableau d’outils a une case au-dessus : cochée, la colonne est sur le PDF et l’Excel de cette fiche ; décochée, elle reste dans la fiche mais n’est pas imprimée.","Par défaut, la case suit la mise en page (bouton Colonnes, case « PDF / Excel » de chaque colonne). La colonne Assemblage n’est pas imprimée par défaut.","Les onglets PDF et Excel au-dessus du tableau montrent aussi ces cases : l’Excel peut avoir ses propres colonnes, différentes du PDF."]],
    ["sort","Opérations : Saisie, PDF et Excel",["Une fiche peut avoir une ligne par opération. « + Colonnes d’opération » (sous le tableau) ajoute Opération, Temps et Vie outil à cette fiche ; l’admin peut aussi les mettre dans une mise en page.","Le + bleu au bout d’une ligne ajoute une opération juste dessous, pour le même T, avec les données de l’outil recopiées : il ne reste que l’opération, le temps et la vie outil à taper.","Les temps se tapent 12:30 (min:s) ou 02:54:12 (h:min:s) ; un nombre seul compte en minutes. Un temps mal tapé est entouré de rouge.","Un T utilisé sur plusieurs lignes a un point bleu. Un point rouge veut dire que l’outil n’est pas le même sur toutes ses lignes (passez la souris dessus pour voir ce qui diffère) : le PDF prend la première ligne.","Onglet Saisie : tout ce que vous tapez, dans l’ordre du programme. Onglet PDF : une ligne par outil, temps et vie outil additionnés, l’ordre du PDF (par T, type, Ø, porte-outil, code, emplacement…) et ses colonnes. Trier ne change que le PDF : la saisie garde son ordre (flèches ↑ ↓ pour la changer).","Onglet Excel : toutes les opérations avec le total à la fin, ou la même liste que le PDF ; dans l’ordre de saisie ou comme le PDF, avec ses propres colonnes.","La fiche en lecture seule de la production et la Préparation montrent une ligne par outil."]],
    ["templates","Modèles Excel et import",["Chaque page a son « Modèle Excel » : le télécharger, l’imprimer ou le remplir.","« Importer » lit un fichier Excel ou CSV ; les colonnes sont reconnues par leur titre, avec un aperçu avant d’importer.","Fiche outils : une case met les outils dans l’ordre T1, T2, T3… ; si un outil apparaît deux fois (même numéro T, ou la même ligne), BrocheStuff montre les copies et ce qui diffère, et vous choisissez celle à garder ou gardez tout."]],
@@ -7937,7 +7962,7 @@ const GUIDE={
    ["mag","Machine magazines",["What is loaded in each machine, pocket by pocket, and who changed it.","“Compare with an article” shows the tools to load or swap, and loads them in one click.","After a swap, the tools taken out of the magazine can go back to the crib (+1 in stock) in one click."]],
    ["log","Stock log",["Every move out, in and count: who, when, how many and why.","Click a line to read a comment in full or open the tool’s card.","“Export (CSV)” for Excel."]],
    ["reports","Reports",["Tools taken per month, most taken, per machine and per person.","Codes never used and tools without a move for 90 days. CSV export."]],
-   ["asm","Assemblies",["Each tool with its holder is kept under a code (AS0001…), by itself, as soon as a sheet row has a holder and a tool code (or a type and a Ø).","The sheet’s “Assembly” column shows each row’s code. Type an assembly code in that column (or a tool code in the Code column): the empty boxes fill in. If a box already holds something else, BrocheStuff shows the difference and only replaces what you tick. A row that no longer matches its assembly is shown in orange.","The Assemblies page lists them, shows the sheets using each one, and lets you add, change or delete them."]],
+   ["asm","Assemblies",["An assembly is a tool with its holder, kept under a code (AS0001…). It is no longer made by itself: under a sheet’s table, “Make the assemblies” makes one for each complete row (holder + tool code, or type + Ø), or use “+ New assembly” on the Assemblies page.","Each assembly keeps its tool number per machine. Type its code in the Assembly column (or the Code column): the row fills in, and the T too when it is known for this machine. Change the T in the sheet and the assembly remembers the new T for that machine. On another machine it can have another T.","Changing an assembly (Assemblies page, click its row) updates every sheet that uses it, except validated sheets, which keep the old one. The window also shows the T on each machine, to change or add.","If you change the tool of a linked row (Ø, LS, holder…), it turns orange and BrocheStuff offers to “Update” the assembly. To unlink a row, empty its Assembly box. “Delete the unused ones” clears the old automatic assemblies that no sheet uses any more."]],
    ["print","Columns on the PDF and the Excel",["Each column of the tools table has a box above it: ticked, the column is on this sheet’s PDF and Excel; unticked, it stays in the sheet but is not printed.","By default the box follows the layout (Columns button, “PDF / Excel” box of each column). The Assembly column is not printed by default.","The PDF and Excel tabs above the table show these boxes too: the Excel can have its own columns, different from the PDF."]],
    ["sort","Operations: Entry, PDF and Excel",["A sheet can have one line per operation. “+ Operation columns” (under the table) adds Operation, Time and Tool life to that sheet; the admin can also put them in a layout.","The blue + at the end of a line adds an operation right below it, for the same T, with the tool’s data copied: only the operation, time and tool life are left to type.","Times are typed 12:30 (min:s) or 02:54:12 (h:min:s); a plain number counts as minutes. A time typed wrong gets a red outline.","A T used on several lines has a blue dot. A red dot means the tool is not the same on all its lines (hover over it to see what differs): the PDF takes the first line.","Entry tab: everything you type, in program order. PDF tab: one line per tool, times and tool life added up, the PDF’s order (by T, type, Ø, holder, code, location…) and its columns. Sorting only changes the PDF: the entry keeps its order (↑ ↓ arrows to change it).","Excel tab: every operation with the total at the end, or the same list as the PDF; in entry order or like the PDF, with its own columns.","Production’s read-only sheet and the tool prep show one line per tool."]],
    ["templates","Excel models and import",["Each page has its “Excel model”: download it, print it or fill it in.","“Import” reads an Excel or CSV file; columns are found by their titles, with a preview before importing.","Tool sheet: a box puts the tools in T1, T2, T3… order; if a tool appears twice (same T number, or the same row), BrocheStuff shows the copies and what differs, and you choose which to keep or keep them all."]],
@@ -8189,6 +8214,119 @@ function setCribView(v){cribView=v;try{localStorage.setItem("bs.cribview",v)}cat
   seg.innerHTML=`<button type="button" data-cview="list" aria-pressed="${cribView==="list"}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>${esc(t("planList"))}</button><button type="button" data-cview="plan" aria-pressed="${cribView==="plan"}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 3h7v18H4zM13 3h7v18h-7zM4 9h7M4 15h7M13 9h7M13 15h7"/></svg>${esc(t("planMap"))}</button>`;
   anchor.before(seg);seg.onclick=e=>{const b=e.target.closest("[data-cview]");if(!b||b.dataset.cview===cribView)return;setCribView(b.dataset.cview);drawCrib();if(isAt()&&!atRM()){const p=$("#cres .plan, #cres .list");if(p)p.animate([{opacity:0,transform:"translateY(8px)"},{opacity:1,transform:"none"}],{duration:320,easing:"cubic-bezier(.2,.8,.2,1)"})}}}}
 {const a0=afterLoc;afterLoc=function(){a0.apply(this,arguments);try{if($("#cres .plan"))drawCrib()}catch(_){}}}
+
+/* ===================== 2.27: assemblies that you control, with their tool number per machine ===================== */
+Object.assign(I18N.fr,{asmMk:n=>n?`Créer les assemblages (${n})`:"Créer les assemblages",asmMkT:"Chaque ligne avec un porte-outil et un code outil (ou un type et un Ø) devient un assemblage, avec son numéro T pour cette machine. Rien n’est plus créé tout seul.",
+  asmMkDone:(n,l)=>`${n} ${pl(n,"assemblage créé","assemblages créés")}${l?` · ${l} ${pl(l,"ligne reliée","lignes reliées")} à un assemblage existant`:""}`,asmMkNone:"Toutes les lignes complètes ont déjà leur assemblage.",
+  asmTn:"Numéro d’outil par machine",asmTnP:"Le T de cet assemblage sur chaque machine. Il remplit la case T quand vous tapez le code de l’assemblage dans une fiche de cette machine, et il se met à jour quand vous changez le T dans une fiche.",
+  asmTnNone:"Pas encore utilisé sur une machine.",asmTnAdd:"Ajouter une machine",asmTnChip:(m,tn)=>`${m} ${tn}`,
+  asmPushed:(c,n)=>`${c} enregistré · ${n} ${pl(n,"fiche mise à jour","fiches mises à jour")}`,asmLockedN:n=>`${n} ${pl(n,"fiche validée garde","fiches validées gardent")} l’ancien`,
+  asmRowDiff:(T,c)=>`${T} n’est plus pareil que l’assemblage ${c}`,asmRowUpd:c=>`Mettre à jour ${c}`,asmUpdOk:(c,n)=>`${c} mis à jour${n?` · ${n} autre${n>1?"s":""} fiche${n>1?"s":""}`:""}`,
+  asmTnSet:(c,m,tn)=>`${c} : ${tn} sur ${m}`,asmTFill:(T,c)=>`${T} vient de l’assemblage ${c} pour cette machine`,
+  asmPurge:n=>`Supprimer les inutilisés (${n})`,asmPurgeT:"Les assemblages créés tout seuls par les anciennes versions, qu’aucune fiche n’utilise et que vous n’avez pas gardés.",asmPurgeQ:n=>`Supprimer ${n} ${pl(n,"assemblage inutilisé","assemblages inutilisés")} ? Les fiches ne changent pas.`,asmPurged:n=>`${n} ${pl(n,"assemblage supprimé","assemblages supprimés")}`,
+  asmNoneP2:"Créez-les depuis une fiche outils (« Créer les assemblages » sous le tableau) ou ici avec « + Nouvel assemblage ».",
+  asmDelRows:n=>n?` · ${n} ${pl(n,"ligne détachée","lignes détachées")}`:""});
+Object.assign(I18N.en,{asmMk:n=>n?`Make the assemblies (${n})`:"Make the assemblies",asmMkT:"Each row with a holder and a tool code (or a type and a Ø) becomes an assembly, with its T number for this machine. Nothing is made by itself any more.",
+  asmMkDone:(n,l)=>`${n} ${pl(n,"assembly made","assemblies made")}${l?` · ${l} ${pl(l,"row linked","rows linked")} to an existing assembly`:""}`,asmMkNone:"Every complete row already has its assembly.",
+  asmTn:"Tool number per machine",asmTnP:"The T of this assembly on each machine. It fills the T box when you type the assembly code in a sheet of that machine, and it follows when you change the T in a sheet.",
+  asmTnNone:"Not used on a machine yet.",asmTnAdd:"Add a machine",asmTnChip:(m,tn)=>`${m} ${tn}`,
+  asmPushed:(c,n)=>`${c} saved · ${n} ${pl(n,"sheet updated","sheets updated")}`,asmLockedN:n=>`${n} validated ${pl(n,"sheet keeps","sheets keep")} the old one`,
+  asmRowDiff:(T,c)=>`${T} no longer matches assembly ${c}`,asmRowUpd:c=>`Update ${c}`,asmUpdOk:(c,n)=>`${c} updated${n?` · ${n} other ${pl(n,"sheet","sheets")}`:""}`,
+  asmTnSet:(c,m,tn)=>`${c}: ${tn} on ${m}`,asmTFill:(T,c)=>`${T} comes from assembly ${c} for this machine`,
+  asmPurge:n=>`Delete the unused ones (${n})`,asmPurgeT:"Assemblies made by themselves by older versions, used by no sheet and not kept.",asmPurgeQ:n=>`Delete ${n} unused ${pl(n,"assembly","assemblies")}? The sheets do not change.`,asmPurged:n=>`${n} ${pl(n,"assembly","assemblies")} deleted`,
+  asmNoneP2:"Make them from a tool sheet (“Make the assemblies” under the table) or here with “+ New assembly”.",
+  asmDelRows:n=>n?` · ${n} ${pl(n,"row","rows")} unlinked`:""});
+
+const asmLocked=ar=>!!(ar&&ar.validated&&ar.status==="done");
+const asmByCode=v=>{const k=asmKey(v)||clean(v).toUpperCase();return k?asmList().find(a=>a.code===k)||null:null};
+const asmTn=a=>(a&&a.tnum&&typeof a.tnum==="object")?a.tnum:{};
+function asmSetTn(a,mid,tn){if(!a||!mid)return false;tn=normT(tn);const o={...asmTn(a)};if(!tn){if(!(mid in o))return false;delete o[mid]}else{if(o[mid]===tn)return false;o[mid]=tn}a.tnum=o;a.updatedAt=Date.now();return true}
+const asmMName=id=>{const m=M(id);return m?(clean(m.abbr)||clean(m.name)):"?"};
+
+// usage is by the code written in the row, not by the look-alike values: editing an assembly never "loses" its sheets
+asmUses=function(){const U=new Map(),by=new Map(asmList().map(a=>[a.code,a]));
+  db.articles.forEach(ar=>realTools(ar.tools).forEach(x=>{const v=clean(x.asm);if(!v)return;const a=by.get(asmKey(v)||v.toUpperCase());if(!a)return;if(!U.has(a.sig))U.set(a.sig,[]);U.get(a.sig).push(ar)}));return U};
+// a row that already has a code keeps it; only an empty one takes the assembly it is identical to
+asmLink=function(art){let ch=0;if(!art||!Array.isArray(art.tools))return 0;realTools(art.tools).forEach(x=>{if(clean(x.asm))return;const a=asmOfTool(x);if(!a)return;x.asm=a.code;x.asmAuto=1;ch++;
+    if(!asmTn(a)[art.machineId]&&clean(x.t))asmSetTn(a,art.machineId,x.t)});return ch};
+// nothing is made by itself any more while you type: rows are only linked, and the T of linked rows is remembered for the machine
+asmSync=function(){asmDirty=false;return 0};
+asmLater=function(){asmDirty=true;clearTimeout(asmTimer);asmTimer=setTimeout(()=>{asmDirty=false;if(!cur)return;let ch=asmLink(cur);
+  realTools(cur.tools).forEach(x=>{const a=clean(x.asm)&&asmByCode(x.asm);if(a&&clean(x.t)&&!asmTn(a)[cur.machineId]&&asmSetTn(a,cur.machineId,x.t))ch++});
+  if(ch){saveDB();asmChips()}asmMkCount()},1200)};
+
+// "Make the assemblies" under the tool table
+function asmMissing(art){return realTools(art.tools).filter(x=>!clean(x.asm)&&asmReady(x))}
+function asmMakeFor(art){if(!art)return;flushEditor();const L=asmList();let made=0,linked=0;
+  asmMissing(art).forEach(x=>{let a=asmOfTool(x);
+    if(a)linked++;else{const tool={};ASMF.forEach(k=>{if(clean(x[k]))tool[k]=String(x[k]).trim()});a={id:uid(),code:asmNext(),tool,sig:asmSig(tool),auto:0,src:art.id,keep:1,createdAt:Date.now()};L.push(a);made++}
+    x.asm=a.code;x.asmAuto=0;if(clean(x.t)&&!asmTn(a)[art.machineId])asmSetTn(a,art.machineId,x.t)});
+  if(!made&&!linked){toast(t("asmMkNone"));return}
+  saveDB();if(route.view==="article"){renderRows();edited()}asmChips();asmMkCount();toast(t("asmMkDone",made,linked))}
+function asmMkCount(){const b=$("#b-mkasm");if(!b||!cur)return;const n=asmMissing(cur).length;b.textContent=t("asmMk",n);b.disabled=!n||!can("article")||asmLocked(cur)}
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("#b-mkasm");if(b&&cur)asmMakeFor(cur)});
+{const r0=renderEditor;renderEditor=function(art){r0.apply(this,arguments);try{const ops=$("#b-ops");if(ops&&!$("#b-mkasm")){const b=document.createElement("button");b.className="btn ghost";b.id="b-mkasm";b.type="button";b.title=t("asmMkT");ops.after(b)}asmMkCount()}catch(_){}}}
+
+// typing an assembly code in a row: its T for this machine comes with it (or the row's T is remembered when the machine has none yet)
+{const rf0=rowFill;rowFill=function(i,src,keys,kind,label){if(kind==="asm"&&cur){const x=cur.tools[i],a=asmByCode(label);
+    if(x&&a){const tn=asmTn(a)[cur.machineId];if(tn&&normT(x.t)!==tn){x.t=tn}else if(!tn&&clean(x.t)){asmSetTn(a,cur.machineId,x.t)}}}
+  return rf0.apply(this,arguments)}}
+
+// in a sheet: changing the T of a linked row moves the assembly's T for this machine; changing the tool itself offers to update the assembly
+document.addEventListener("change",e=>{const el=e.target,k=el&&el.dataset&&el.dataset.k;if(!k||!cur)return;const tr=el.closest&&el.closest("#rows tr[data-i]");if(!tr)return;
+  const x=cur.tools[+tr.dataset.i];if(!x)return;const a=clean(x.asm)&&asmByCode(x.asm);if(!a)return;
+  if(k==="t"){if(clean(x.t)&&asmSetTn(a,cur.machineId,x.t)){saveDB();toast(t("asmTnSet",a.code,asmMName(cur.machineId),normT(x.t)))}return}
+  if(!ASMF.includes(k))return;
+  setTimeout(()=>{if(!cur||cur.tools[+tr.dataset.i]!==x)return;const d=asmDiffs(x);if(!d||!d.length||!can("article"))return;
+    toast(t("asmRowDiff",normT(x.t)||"",a.code),{label:t("asmRowUpd",a.code),fn:()=>asmUpdateFrom(a,x)})},350)});
+function asmUpdateFrom(a,x){const tool={};ASMF.forEach(k=>{const v=clean(x[k])?String(x[k]).trim():clean(a.tool[k])?a.tool[k]:"";if(v)tool[k]=k==="code"?normCode(v):v});
+  if(!asmReady(tool)){toast(t("asmNeed"));return}const s=asmSig(tool),other=asmList().find(o=>o!==a&&o.sig===s);if(other){toast(t("asmSame",other.code));return}
+  a.tool=tool;a.sig=s;a.updatedAt=Date.now();const r=asmPush(a,cur);saveDB();if(route.view==="article"){asmChips();renderRows()}toast(t("asmUpdOk",a.code,r.n))}
+// an assembly's tool goes into every sheet that uses it (validated sheets are locked and keep theirs); its T per machine too
+function asmPush(a,skip){let n=0,locked=0;db.articles.forEach(ar=>{if(ar===skip)return;let ch=false;
+  realTools(ar.tools).forEach(x=>{if(!clean(x.asm)||asmByCode(x.asm)!==a)return;
+    if(asmLocked(ar)){if(asmDiffs(x)?.length)locked++;return}
+    ASMF.forEach(k=>{const v=a.tool[k]||"";if(String(x[k]||"")!==v){x[k]=v;ch=true}});
+    const tn=asmTn(a)[ar.machineId];if(tn&&normT(x.t)!==tn){x.t=tn;ch=true}});
+  if(ch){ar.updatedAt=Date.now();n++}});return{n,locked}}
+
+// the assembly window: T per machine, and saving updates the sheets
+{const d0=asmDialog;asmDialog=function(a){d0.apply(this,arguments);const form=$(".dlg .asmform");if(!form)return;const isNew=!a;
+  const tn={...asmTn(a)},used=new Set(Object.keys(tn));if(a)(asmUses().get(a.sig)||[]).forEach(ar=>used.add(ar.machineId));
+  const ms=db.machines.filter(m=>used.has(m.id)),rest=db.machines.filter(m=>!used.has(m.id));
+  const box=document.createElement("div");box.className="c6 asmtn";
+  const row=m=>`<label class="tnr"><span>${esc(clean(m.abbr)||clean(m.name))}</span><input data-tnm="${m.id}" class="m up" value="${esc(tn[m.id]||"")}" placeholder="T…" autocomplete="off"></label>`;
+  box.innerHTML=`<div class="tnh"><b>${esc(t("asmTn"))}</b><span>${esc(t("asmTnP"))}</span></div><div class="tng">${ms.map(row).join("")||`<span class="dim small" id="tn-none">${esc(t("asmTnNone"))}</span>`}</div>
+    ${rest.length?`<label class="f tnadd"><select id="tn-add"><option value="">${esc(t("asmTnAdd"))}…</option>${rest.map(m=>`<option value="${m.id}">${esc(mLabel(m))}</option>`).join("")}</select></label>`:""}`;
+  const keep=form.querySelector("#as-keep");(keep?keep.closest("label"):form.lastElementChild).before(box);
+  const add=box.querySelector("#tn-add");if(add)add.onchange=()=>{const m=M(add.value);if(!m)return;const n=box.querySelector("#tn-none");if(n)n.remove();box.querySelector(".tng").insertAdjacentHTML("beforeend",row(m));add.querySelector(`option[value="${m.id}"]`).remove();add.value="";box.querySelector(`[data-tnm="${m.id}"]`).focus()};
+  const ok=$("#as-ok");if(!ok)return;
+  ok.addEventListener("click",()=>{const vals={};box.querySelectorAll("[data-tnm]").forEach(i=>{const v=normT(i.value);if(v)vals[i.dataset.tnm]=v});const n0=asmList().length,before=a?JSON.stringify(a.tool)+JSON.stringify(asmTn(a)):"";
+    setTimeout(()=>{if($("#as-err")&&!$("#as-err").hidden)return;const tgt=isNew?(asmList().length>n0?asmList()[asmList().length-1]:null):a;if(!tgt)return;tgt.tnum=vals;
+      if(isNew)return void saveDB();
+      if(JSON.stringify(tgt.tool)+JSON.stringify(asmTn(tgt))!==before){const r=asmPush(tgt,null);saveDB();try{drawAsm()}catch(_){}toast(t("asmPushed",tgt.code,r.n)+(r.locked?" · "+t("asmLockedN",r.locked):""))}else saveDB()},0)},true);
+  const del=$("#as-del");if(del)del.addEventListener("click",()=>{setTimeout(()=>{const go=$("#as-delok");if(go)go.addEventListener("click",()=>{let n=0;db.articles.forEach(ar=>{if(asmLocked(ar))return;realTools(ar.tools).forEach(x=>{if(clean(x.asm)&&(asmKey(x.asm)||clean(x.asm).toUpperCase())===a.code){x.asm="";x.asmAuto=0;n++}})});
+    if(n){saveDB();setTimeout(()=>toast(t("asmDelOk",a.code)+t("asmDelRows",n)),50)}},true)},0)})}}
+
+// the assemblies page: T per machine under each code, and a clean-up of the unused automatic ones
+{const d0=drawAsm;drawAsm=function(){d0.apply(this,arguments);const box=$("#asmres");if(!box)return;
+  box.querySelectorAll("tr[data-asmid]").forEach(tr=>{const a=asmList().find(x=>x.id===tr.dataset.asmid);if(!a)return;const tn=asmTn(a),ks=Object.keys(tn);if(!ks.length)return;
+    const td=tr.querySelector("td");if(td)td.insertAdjacentHTML("beforeend",`<div class="asmtnl">${ks.sort((p,q)=>asmMName(p).localeCompare(asmMName(q),undefined,{numeric:true})).map(id=>`<span><i>${esc(asmMName(id))}</i>${esc(tn[id])}</span>`).join("")}</div>`)});
+  const e=box.querySelector(".empty p");if(e&&!asmList().length)e.textContent=t("asmNoneP2");asmPurgeBtn()}}
+function asmUnused(){const U=asmUses();return asmList().filter(a=>a.auto&&!a.keep&&!U.has(a.sig))}
+function asmPurgeBtn(){const ph=$("#view .asmp .ph");if(!ph)return;let b=$("#asm-purge");const n=asmUnused().length;
+  if(!n||!can("article")){if(b)b.remove();return}
+  if(!b){b=document.createElement("button");b.className="btn ghost";b.id="asm-purge";b.title=t("asmPurgeT");const nw=$("#asm-new");nw?nw.before(b):ph.appendChild(b);
+    b.onclick=()=>{const L=asmUnused();dialog(esc(t("asmPurge",L.length)),`<p style="margin:0">${esc(t("asmPurgeQ",L.length))}</p>`,`<button class="btn ghost" id="d-cancel">${esc(t("cancel"))}</button><button class="btn red" id="pg-ok">${esc(t("asmDel"))}</button>`);
+      $("#d-cancel").onclick=closeDlg;$("#pg-ok").onclick=()=>{const S=new Set(L);db.assemblies=asmList().filter(a=>!S.has(a));saveDB();closeDlg();drawAsm();toast(t("asmPurged",L.length))}}}
+  b.textContent=t("asmPurge",n)}
+
+// first start with 2.27: remember the T of the rows already linked, machine by machine
+function asmT27(){try{if(!db||db.asmT27||!Array.isArray(db.articles))return;let ch=0;
+  [...db.articles].sort((p,q)=>(q.updatedAt||0)-(p.updatedAt||0)).forEach(ar=>realTools(ar.tools).forEach(x=>{const a=clean(x.asm)&&asmByCode(x.asm);if(a&&clean(x.t)&&!asmTn(a)[ar.machineId]&&asmSetTn(a,ar.machineId,x.t))ch++}));
+  db.asmT27=1;saveDB()}catch(_){}}
+// nothing is made by itself at the first start either (older versions filled the library from every sheet)
+{const b0=asmBoot;asmBoot=function(){try{if(db&&Array.isArray(db.articles)&&!db.asmSeeded){db.asmSeeded=1;db.asmLinked=1}}catch(_){}b0.apply(this,arguments);asmT27()}}
 
 </script>
 </body></html>

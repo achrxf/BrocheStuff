@@ -72,6 +72,8 @@ module.exports = {
         const side = v.querySelector("#planside .its"), on = plan.querySelector(".drw.on small");
         if (side && on && side.children.length !== +on.textContent) out.push({ title: "Cabinet map: drawer panel lists a different number of tools than the drawer", detail: side.children.length + " vs " + on.textContent, severity: "high" });
       }
+      const codes = (db.assemblies || []).map(a => a.code); if (new Set(codes).size !== codes.length) out.push({ title: "Two assemblies with the same code", severity: "high" });
+      for (const a of (db.assemblies || [])) for (const [m, tn] of Object.entries(a.tnum || {})) if (!/^T\d+$/.test(tn) || !db.machines.some(x => x.id === m)) { out.push({ title: "Assembly T per machine is invalid", detail: a.code + " " + m + " " + tn, severity: "high" }); break; }
       const t = v.querySelector('.tile4[data-cf="all"] b'); if (t && !document.documentElement.classList.contains("navin") && +t.textContent !== (db.catalog || []).length) out.push({ title: "Crib tile count wrong", detail: t.textContent + " vs " + db.catalog.length, severity: "high" });
       return out;
     });

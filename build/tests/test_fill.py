@@ -9,7 +9,7 @@ SEED="""db.machines.push({id:'m1',abbr:'S3',name:'TOYODA',cone:'BT50',createdAt:
   {t:'T09',corrH:'9',type:'TOURTEAU',insert:'RPHT1204',diameter:'63',ra:'R6',ls:'40',holder:'MANDRIN À TENON Ø22',code:'F863'}],createdAt:1,updatedAt:1});
  db.articles.push({id:'a2',machineId:'m1',article:{number:'2000',index:'B'},tools:[{t:'T01'},{t:'T02',type:'FRAISE 2T'},{t:'T03',diameter:'16'},{t:'T04'},{t:'T05'}],createdAt:2,updatedAt:2});
  db.layouts=[{id:'lold',name:'Ancienne',labels:{},extra:[],hidden:['oal','z'],order:['corr','type','diameter','ra','insert','ls','oal','z','holder','code']},{id:'lown',name:'Colonne',labels:{},extra:[],hidden:['oal','z'],joinTo:{insert:'type'},asmOwn:true}];db.layoutDefault='lown';
- delete db.asmSeeded;db.assemblies=[];saveDB()"""
+ db.asmSeeded=1;db.assemblies=[];db.articles.forEach(a=>{if(a.id==='a1')asmMakeFor(a)});saveDB()"""
 def cell(pg,i,k):return pg.locator(f'#rows tr[data-i="{i}"] input[data-k="{k}"]').first
 def typ(pg,i,k,v):el=cell(pg,i,k);el.fill(v);el.dispatch_event("change");pg.wait_for_timeout(350)
 with sync_playwright() as p:
@@ -24,7 +24,7 @@ with sync_playwright() as p:
   # 1 empty row + assembly code -> filled, no question
   typ(pg,0,"asm","as1");x=pg.evaluate("cur.tools[0]")
   ok("empty row: filled from AS0001, no dialog",x.get("type")=="FRAISE HFS CW" and x.get("code")=="F941" and x.get("asm")=="AS0001" and pg.locator("#fill-go").count()==0,x)
-  ok("T number kept",x["t"]=="T01")
+  ok("T number comes from the assembly on this machine (2.27)",x["t"]=="T52",x["t"])
   # 2 row with a different type -> dialog, keep by default
   typ(pg,1,"asm","AS0001")
   ok("different type: dialog shown",pg.locator("#fill-go").count()==1)
@@ -53,13 +53,13 @@ with sync_playwright() as p:
   typ(pg,0,"asm","AS0001");ok("already matching: no dialog",pg.locator("#fill-go").count()==0 and "correspond" in pg.inner_text("#toast"))
   # 8 a new complete row gets its code by itself
   pg.evaluate("cur.tools.push({t:'T06',type:'FORET',diameter:'8',holder:'PINCE ER32',code:'M100'});renderRows();edited()");pg.wait_for_timeout(2900)
-  ok("new row gets a new assembly code",cell(pg,5,"asm").input_value()=="AS0003",cell(pg,5,"asm").input_value())
+  ok("a new row is not made into an assembly by itself (2.27)",cell(pg,5,"asm").input_value()=="",cell(pg,5,"asm").input_value())
   # 9 history: real edits recorded, without the assembly field
   pg.evaluate("flushEditor()");h=pg.evaluate("JSON.stringify((A('a2').history||[])[0]||{})")
   ok("history records the edit",'"edit"' in h,h[:200])
   # 10 the other pages
   pg.evaluate("location.hash='#v-a2'");pg.wait_for_timeout(900)
-  ok("read-only view shows Assemblage","Assemblage" in pg.inner_text(".avt thead") and "AS0002" in pg.inner_text(".avt"))
+  ok("read-only view shows Assemblage","ASSEMBLAGE" in pg.inner_text(".avt thead").upper() and "AS0002" in pg.inner_text(".avt"))
   pg.evaluate("location.hash='#a-a2'");pg.wait_for_timeout(900)
   pg.click("#b-cols");pg.wait_for_timeout(600);ok("layout editor lists Assemblage","Assemblage" in pg.inner_text(".dlg"));pg.evaluate("closeDlg()")
   n=pg.evaluate("makePDF(sheetData(A('a2'))).getNumberOfPages()");ok("PDF still builds",n>=1)
