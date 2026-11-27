@@ -1,0 +1,5 @@
+/* 2.28.1: the width grip sits inside the sheet (it made a sideways scrollbar) */
+.ed .form>.wgrip{right:0;width:8px}
+/* without the preview, a wide screen gives the table more room (holders and types no longer cut) */
+.ed.nopv .form{max-width:var(--pagew,clamp(1440px,86vw,2050px))}
+.ed .form>.guidefoot{padding:18px 0 4px}

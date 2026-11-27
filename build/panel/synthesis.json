@@ -1,0 +1,108 @@
+{
+ "date": "26 novembre 2026 · BrocheStuff 2.28.0 démo",
+ "verdict": "Everyone recognised a tool made by someone from the trade (vocabulary, H/D, LS, cones, index A/B/C, cabinet map), and 10 of 11 would use part of it tomorrow, average 6.5/10. What holds the scores at 5–7 is trust, not features: a few things that are wrong on paper or in the records (a validated sheet whose note can still be edited, an index that disappears from the table, the program reader putting an operation name in the Type box, “RP1.5” on the PDF for a tap) and counters that don't add up (500 vs 514 articles, journal totals). After those, the sheet screen is too busy: four PDF/Excel controls, a menu that overflows, cut-off holder names, small grey text, signs without a legend. Fix the trust bugs first; each one costs more trust than a missing feature.",
+ "answers": [
+  {
+   "q": "Bugs I checked myself (real)",
+   "a": "1) The note on a validated sheet can still be edited (the box is not locked). 2) When a new index is created, the previous index disappears from the index table if its validation has no saved snapshot (case of the demo data; the fix also protects older real data). 3) Reading a Heidenhain program: the comment written before the NEXT TOOL CALL becomes the Type of the previous tool (T22 drill → type “FINITION POCHE”). 4) The Ø written in the program comments (D50, D12, D8.5) is not read. 5) “P1.5” typed in R/∠ for a tap is shown as “RP1.5” on the PDF. 6) The demo banner says 500 articles, the app counts 514. 7) Searching “B2” finds tools in the drawers but not the B2 machine or its sheets."
+  },
+  {
+   "q": "Reported, to check before fixing",
+   "a": "The search card's PDF gives the draft index when the sheet gives the validated one (Anas). History and index diff don't name the same tools (Claire, Hassan). PDF date and “Établi par” not updated at validation (Hassan, Mohamed). Journal / stock alert / holder counts that don't add up (Léa, Omar, Hassan, Fatima). A validated sheet still shows “Vérifier · 3” (Léa)."
+  },
+  {
+   "q": "Who is it best for right now?",
+   "a": "Methods technicians who make sheets every day (Karim 7, Salma 7) and the tool crib for finding a tool (Fatima: “le plan des armoires, c'est magnifique”). Least convinced: quality (Claire 5) and the English-speaking sceptic (Erik 5), both because of the trust bugs; IT (Omar 6) because the admin side is described but not shown in the demo."
+  }
+ ],
+ "themes": [
+  {
+   "title": "Validation and indexes must be unbreakable",
+   "who": "5 of 11 (Claire, Hassan, Anas, Mohamed, Salma)",
+   "detail": "Note editable on a validated sheet, index C disappeared, history ≠ diff, PDF date not updated, “Terminé” (list) vs “Validée” (sheet), draft PDF from the search, a junior can validate a sheet with empty codes. Claire: “pas présentable en audit tant que ce n'est pas corrigé”."
+  },
+  {
+   "title": "The program reader is close but not right",
+   "who": "5 of 11 (Erik, Karim, Salma, Claire, Hassan)",
+   "detail": "An Excel-style column-mapping window opens for a .nc file, with English labels (“A: T number”, “I: Offset H”); no Ø even for “PERCAGE D8.5”; Heidenhain comments shifted onto the wrong tool; the article created from the file is named “tnc” and you stay on the list afterwards. Erik: “Wrong data on a tool sheet is worse than no data”."
+  },
+  {
+   "title": "Numbers that don't add up",
+   "who": "7 of 11",
+   "detail": "500 vs 514 articles (everyone saw it), journal 764 + 855 ≠ 1100, stock alert 67/95 vs page 54/79, holders 126 vs 127, reports 380 vs the per-machine sum. In a shop, one wrong number makes people doubt all the others."
+  },
+  {
+   "title": "The sheet screen is too busy",
+   "who": "7 of 11 (Léa, Karim, Mohamed, Anas, Hassan, Erik, Salma)",
+   "detail": "Four places for PDF/Excel (tabs, preview toggle, red PDF button, printer with a “PDF” tag); the top menu overflows on the sheet (JOURNAL cut off, MAGASINS and RAPPORTS gone); holder, type and location cut with “…”; the row of checkboxes under the headers and the coloured dots without a legend; small light-grey text."
+  },
+  {
+   "title": "Repeated T numbers and assemblies",
+   "who": "4 of 11 (Karim, Léa, Erik, Salma)",
+   "detail": "After reading a program, Karim fills T01 and the second T01 line stays empty: he expects every line with the same T to follow. The AS box is tiny, with no label, under the T; the demo has 0 assemblies so the suggestions show nothing the first time. Once understood: “le meilleur du programme”."
+  },
+  {
+   "title": "Popups that break typing",
+   "who": "3 of 11 (Mohamed, Karim, Erik)",
+   "detail": "Typing a crib code + Tab opens “Différences avec la fiche outil” (an unclear sentence: “des cases vides… contiennent déjà autre chose”) and grabs focus. The toasts cover the next row."
+  },
+  {
+   "title": "Shop floor and phone",
+   "who": "3 of 11 (Youssef, Anas, Fatima)",
+   "detail": "No search by machine (“B2 → Rien trouvé, vérifiez l'orthographe”); no “broken / missing tool” button that warns the crib; red “Sortir 1” buttons for someone who only consults; the info block takes a whole screen on a phone before the tools."
+  },
+  {
+   "title": "Tool crib",
+   "who": "Fatima, Léa, Claire, Erik",
+   "detail": "Order list = a CSV file only (she wants a printable page); taking a tool out without saying for which machine or operator; “Magasin outils” vs “Magasins” (machine magazines): same word, two things."
+  },
+  {
+   "title": "Admin and IT",
+   "who": "Omar, Hassan",
+   "detail": "No admin page (users, rights, data folder) in the demo even though the tutorial mentions it; the Journal = stock only (no log of validations, deletions, logins); no automatic backup just before “Tout supprimer” or a restore; no version / “À propos”."
+  },
+  {
+   "title": "Small first-contact things",
+   "who": "6 of 11",
+   "detail": "The language window puts EN first on a French PC; the name field is pre-filled “Admin”; the red lock logs you out without asking; red delete buttons everywhere; red triangles on the machine cards with no explanation; no Help button on each page; LS/LT/Z/LD/LU never defined in words."
+  }
+ ],
+ "actions": [
+  {
+   "what": "Trust patch: fully lock a validated sheet (note included), never lose an index, date and names on the PDF at validation, validated index everywhere in production, P1.5 → pitch, one status vocabulary",
+   "why": "The 4 items an auditor or a chef d'atelier would find first; each one costs more than a missing feature."
+  },
+  {
+   "what": "Program reader: no column mapping for a CNC file, read Ø/R/type from the comments (D8.5, R0.5), Heidenhain comment = next TOOL CALL, program number for the name, open the sheet after reading",
+   "why": "It's the promise that saves time; today you have to check every line again."
+  },
+  {
+   "what": "Recount every counter (banner, journal, alerts, holders, reports) and test the totals",
+   "why": "7 of 11 saw it; it's cheap to fix."
+  },
+  {
+   "what": "Tidy up the sheet: one Saisie/PDF/Excel switch that also drives the preview, one clearly labelled Print and Export, a “Plus” menu when the top bar is full, full text on hover/focus for cut cells, a legend for the dots and checkboxes, a text-size setting",
+   "why": "The main screen, used all day."
+  },
+  {
+   "what": "Repeated T: when you fill a box on a T01, offer (or do, with Undo) the same on the other T01 lines that are empty; assemblies visible by default and examples in the demo",
+   "why": "Karim's single “one change first”."
+  },
+  {
+   "what": "Shop floor: tap a machine / type B2 to see its sheets, a “Signaler outil cassé/manquant” button that reaches the crib, a consult mode without “Sortir 1”",
+   "why": "Youssef and Anas would use it every shift."
+  },
+  {
+   "what": "Crib: an on-screen, printable order list; taking a tool out with machine + operator; rename “Magasins” to “Magasins machines”",
+   "why": "Fatima keeps her notebook until then."
+  },
+  {
+   "what": "Admin page in the demo (fake users), a journal of sheets (validations, deletions, reopenings), a backup before any mass delete/restore, version number",
+   "why": "What decides whether IT and the manager say yes."
+  },
+  {
+   "what": "Crib-code clash = an orange mark + an entry in “Vérifier”, not a popup that takes the cursor",
+   "why": "Typing must never be interrupted."
+  }
+ ]
+}

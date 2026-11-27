@@ -2408,6 +2408,11 @@ html.at .cki{border-radius:2px}
 .ckval.bad{border-color:var(--red,#b00);background:rgba(176,0,0,.06)}
 .ckval span{flex:1}
 .apc.line .apl1 span{font:500 12px var(--body,inherit);color:var(--mid,#777)}
+/* 2.28.1: the width grip sits inside the sheet (it made a sideways scrollbar) */
+.ed .form>.wgrip{right:0;width:8px}
+/* without the preview, a wide screen gives the table more room (holders and types no longer cut) */
+.ed.nopv .form{max-width:var(--pagew,clamp(1440px,86vw,2050px))}
+.ed .form>.guidefoot{padding:18px 0 4px}
 </style></head>
 <body>
 <script>try{if(localStorage.getItem("bs.skin")!=="classic")document.documentElement.classList.add("at")}catch(e){document.documentElement.classList.add("at")}</script>
@@ -6548,7 +6553,7 @@ Object.assign(I18N.en,{getApp:"Get the app", getAppT:"Download the Windows insta
   demoBar:"Demo: made-up workshop with 20 machines and 500 articles. Changes stay in this browser only.", demoShort:"Made-up data", demoReset:"Reset the demo", demoResetQ:"Reset the demo data? Everything changed here is lost.", demoGo:"Real version"});
 Object.assign(I18N.fr,{getApp:"Télécharger l'app", getAppT:"Télécharger l’installateur Windows",
   demoBar:"Démo : atelier fictif de 20 machines et 500 articles. Vos changements restent dans ce navigateur.", demoShort:"Données fictives", demoReset:"Réinitialiser la démo", demoResetQ:"Réinitialiser les données de la démo ? Tout ce qui a été changé ici sera perdu.", demoGo:"Version réelle"});
-const APP_ZIP="BrocheStuff-Setup-2.28.0.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
+const APP_ZIP="BrocheStuff-Setup-2.28.1.exe",SITE="https://achrxf.github.io/BrocheStuff/",REPO="https://github.com/achrxf/BrocheStuff";
 function appUrl(){
   // on the site (…/Web/ or …/Demo/) the program sits next door in …/App/; anywhere else, take it from the site
   if(/^https?:/.test(location.protocol)&&/\/(Web|Demo)\/(index\.html)?$/i.test(location.pathname))return new URL("../App/"+APP_ZIP,location.href).href;
@@ -8846,6 +8851,22 @@ function ckPanel(){if(!cur)return;const A=cur,L=ckIssues(A),locked=asmLocked(A)|
   const body=document.querySelector("#ov .dlg .bd")||document.querySelector("#ov .dlg");if(!body)return r;const p=document.createElement("div");p.className="ckval"+(L.some(x=>x.sev==="bad")?" bad":"");
   p.innerHTML=`<span>${esc(t("ckVal",L.length))}</span><button class="btn sm ghost" type="button">${esc(t("ckValSee"))}</button>`;p.querySelector("button").onclick=()=>{closeDlg();setTimeout(ckPanel,60)};
   body.append(p)}catch(_){}return r}}
+
+/* ===================== 2.28.1 · one scrollbar, no sideways bar, the sheet uses the screen ===================== */
+// the demo's tutorial button goes at the end of the sheet instead of under it (it made a second scrollbar)
+function edFootIn(){const v=$("#view");if(!v)return;const f=v.querySelector(":scope > .guidefoot"),fm=v.querySelector(".ed > .form");if(f&&fm)fm.appendChild(f)}
+{const r0=render;render=function(){const r=r0.apply(this,arguments);try{edFootIn()}catch(_){}return r}}
+new MutationObserver(()=>{try{edFootIn()}catch(_){}}).observe(document.getElementById("view")||document.body,{childList:true});
+// a wide table: the room Type doesn't need goes to the boxes that are cut (holder, insert, code, location, your columns)
+function ttGive(){const tw=document.querySelector(".ed .tw"),tb=tw&&tw.querySelector("table.tt");if(!tb||window.innerWidth<761)return;
+  const ths=[...tb.querySelectorAll("thead tr:first-child th[data-ck]")],typ=ths.find(th=>th.dataset.ck==="type");if(!typ||typ.style.width)return;
+  const idx=th=>[...th.parentElement.children].indexOf(th),rows=[...tb.querySelectorAll("tbody tr[data-i]")].slice(0,80);
+  const need=th=>{const i=idx(th);let m=0;rows.forEach(tr=>{const td=tr.children[i];if(!td)return;td.querySelectorAll("input,textarea,.loctag span,.cellv").forEach(el=>{m=Math.max(m,el.scrollWidth-el.clientWidth>0?el.scrollWidth+(el.closest(".loctag")?34:0):0)})});return m};
+  let spare=Math.round(typ.getBoundingClientRect().width)-Math.max(160,need(typ)+30);if(spare<20)return;
+  const CAP={holder:340,insert:220,code:220,loc:220};
+  ths.filter(th=>/^(holder|insert|code|loc)$|^x_/.test(th.dataset.ck)).forEach(th=>{if(spare<10)return;const cur=Math.round(th.getBoundingClientRect().width),n=need(th);if(!n)return;
+    const want=Math.min(CAP[th.dataset.ck]||200,n+22)-cur;if(want<=0)return;const g=Math.min(want,spare);th.style.width=(cur+g)+"px";spare-=g})}
+{const f0=ttFit;ttFit=function(){const r=f0.apply(this,arguments);try{ttGive()}catch(_){}return r}}
 
 </script>
 </body></html>
